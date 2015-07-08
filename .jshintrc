@@ -1,0 +1,6 @@
+{
+	"esnext": true,
+	"globals": {
+		"require": true
+	}
+}
