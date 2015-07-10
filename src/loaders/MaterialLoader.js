@@ -2,13 +2,11 @@ import { THREE } from '../Three';
 import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$DefaultLoadingManager } from './LoadingManager';
 
-var THREE$MaterialLoader;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$MaterialLoader = function ( manager ) {
+function THREE$MaterialLoader ( manager ) {
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 

@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Math } from '../math/Math';
 
-var THREE$MeshFaceMaterial;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$MeshFaceMaterial = function ( materials ) {
+function THREE$MeshFaceMaterial ( materials ) {
 
 	this.uuid = THREE$Math.generateUUID();
 

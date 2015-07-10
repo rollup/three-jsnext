@@ -4,8 +4,6 @@ import { THREE$Vector2 } from '../math/Vector2';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Color } from '../math/Color';
 
-var THREE$MeshPhongMaterial;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
@@ -54,7 +52,7 @@ var THREE$MeshPhongMaterial;
  * }
  */
 
-THREE$MeshPhongMaterial = function ( parameters ) {
+function THREE$MeshPhongMaterial ( parameters ) {
 
 	THREE$Material.call( this );
 

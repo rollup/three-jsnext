@@ -3,8 +3,6 @@ import { THREE$OrthographicCamera } from '../cameras/OrthographicCamera';
 import { THREE$PerspectiveCamera } from '../cameras/PerspectiveCamera';
 import { THREE$Ray } from '../math/Ray';
 
-var THREE$Raycaster;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author bhouston / http://exocortex.com/
@@ -13,7 +11,7 @@ var THREE$Raycaster;
 
 ( function ( THREE ) {
 
-	THREE$Raycaster = function ( origin, direction, near, far ) {
+	function THREE$Raycaster ( origin, direction, near, far ) {
 
 		this.ray = new THREE$Ray( origin, direction );
 		// direction is assumed to be normalized (for accurate distance calculations)

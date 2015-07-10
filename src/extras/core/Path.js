@@ -9,7 +9,6 @@ import { THREE$LineCurve } from '../curves/LineCurve';
 import { THREE$CurvePath } from './CurvePath';
 
 var THREE$PathActions;
-var THREE$Path;
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
@@ -17,7 +16,7 @@ var THREE$Path;
  *
  **/
 
-THREE$Path = function ( points ) {
+function THREE$Path ( points ) {
 
 	THREE$CurvePath.call(this);
 

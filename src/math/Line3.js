@@ -2,13 +2,11 @@ import { THREE } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 import { THREE$Math } from './Math';
 
-var THREE$Line3;
-
 /**
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Line3 = function ( start, end ) {
+function THREE$Line3 ( start, end ) {
 
 	this.start = ( start !== undefined ) ? start : new THREE$Vector3();
 	this.end = ( end !== undefined ) ? end : new THREE$Vector3();

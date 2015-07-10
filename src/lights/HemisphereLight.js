@@ -2,13 +2,11 @@ import { THREE } from '../Three';
 import { THREE$Light } from './Light';
 import { THREE$Color } from '../math/Color';
 
-var THREE$HemisphereLight;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$HemisphereLight = function ( skyColor, groundColor, intensity ) {
+function THREE$HemisphereLight ( skyColor, groundColor, intensity ) {
 
 	THREE$Light.call( this, skyColor );
 

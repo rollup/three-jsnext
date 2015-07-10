@@ -2,15 +2,13 @@ import { THREE, THREE$LinearFilter } from '../Three';
 import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$CompressedTexture } from '../textures/CompressedTexture';
 
-var THREE$CompressedTextureLoader;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  *
  * Abstract Base class to block based textures loader (dds, pvr, ...)
  */
 
-THREE$CompressedTextureLoader = function () {
+function THREE$CompressedTextureLoader () {
 
 	// override in sub classes
 	this._parser = null;

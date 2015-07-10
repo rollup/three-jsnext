@@ -7,14 +7,12 @@ import { THREE$Matrix4 } from '../../math/Matrix4';
 import { THREE$SphereGeometry } from '../geometries/SphereGeometry';
 import { THREE$Color } from '../../math/Color';
 
-var THREE$HemisphereLightHelper;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$HemisphereLightHelper = function ( light, sphereSize ) {
+function THREE$HemisphereLightHelper ( light, sphereSize ) {
 
 	THREE$Object3D.call( this );
 

@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Texture } from './Texture';
 
-var THREE$DataTexture;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$DataTexture = function ( data, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
+function THREE$DataTexture ( data, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
 
 	THREE$Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 

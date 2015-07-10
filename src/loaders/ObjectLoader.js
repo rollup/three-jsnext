@@ -30,13 +30,11 @@ import { THREE$BufferGeometryLoader } from './BufferGeometryLoader';
 import { THREE$JSONLoader } from './JSONLoader';
 import { THREE$XHRLoader } from './XHRLoader';
 
-var THREE$ObjectLoader;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$ObjectLoader = function ( manager ) {
+function THREE$ObjectLoader ( manager ) {
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 	this.texturePath = '';

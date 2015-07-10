@@ -5,14 +5,12 @@ import { THREE$Matrix3 } from '../../math/Matrix3';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$VertexNormalsHelper;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
 */
 
-THREE$VertexNormalsHelper = function ( object, size, hex, linewidth ) {
+function THREE$VertexNormalsHelper ( object, size, hex, linewidth ) {
 
 	this.object = object;
 

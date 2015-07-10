@@ -12,8 +12,6 @@ import { THREE$Vector2 } from '../math/Vector2';
 import { THREE$Color } from '../math/Color';
 import { THREE$Math } from '../math/Math';
 
-var THREE$Geometry;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author kile / http://kile.stravaganza.org/
@@ -23,7 +21,7 @@ var THREE$Geometry;
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Geometry = function () {
+function THREE$Geometry () {
 
 	Object.defineProperty( this, 'id', { value: THREE$GeometryIdCount() } );
 

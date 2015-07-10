@@ -10,13 +10,12 @@ import { THREE$LineBasicMaterial } from '../materials/LineBasicMaterial';
 
 var THREE$LinePieces;
 var THREE$LineStrip;
-var THREE$Line;
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$Line = function ( geometry, material, mode ) {
+function THREE$Line ( geometry, material, mode ) {
 
 	THREE$Object3D.call( this );
 

@@ -6,8 +6,6 @@ import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector2 } from '../../math/Vector2';
 
-var THREE$TubeGeometry;
-
 /**
  * @author WestLangley / https://github.com/WestLangley
  * @author zz85 / https://github.com/zz85
@@ -22,7 +20,7 @@ var THREE$TubeGeometry;
  * http://www.cs.indiana.edu/pub/techreports/TR425.pdf
  */
 
-THREE$TubeGeometry = function ( path, segments, radius, radialSegments, closed, taper ) {
+function THREE$TubeGeometry ( path, segments, radius, radialSegments, closed, taper ) {
 
 	THREE$Geometry.call( this );
 

@@ -6,15 +6,13 @@ import { THREE$MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
 import { THREE$Matrix4 } from '../../math/Matrix4';
 import { THREE$CylinderGeometry } from '../geometries/CylinderGeometry';
 
-var THREE$SpotLightHelper;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
 */
 
-THREE$SpotLightHelper = function ( light ) {
+function THREE$SpotLightHelper ( light ) {
 
 	THREE$Object3D.call( this );
 

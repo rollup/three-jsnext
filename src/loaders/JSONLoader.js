@@ -7,14 +7,12 @@ import { THREE$Face3 } from '../core/Face3';
 import { THREE$Geometry } from '../core/Geometry';
 import { THREE$Loader } from './Loader';
 
-var THREE$JSONLoader;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$JSONLoader = function ( showStatus ) {
+function THREE$JSONLoader ( showStatus ) {
 
 	THREE$Loader.call( this, showStatus );
 

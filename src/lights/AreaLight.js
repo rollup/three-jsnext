@@ -2,14 +2,12 @@ import { THREE } from '../Three';
 import { THREE$Light } from './Light';
 import { THREE$Vector3 } from '../math/Vector3';
 
-var THREE$AreaLight;
-
 /**
  * @author MPanknin / http://www.redplant.de/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$AreaLight = function ( color, intensity ) {
+function THREE$AreaLight ( color, intensity ) {
 
 	THREE$Light.call( this, color );
 

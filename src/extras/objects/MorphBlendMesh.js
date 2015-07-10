@@ -2,13 +2,11 @@ import { THREE, THREE$warn } from '../../Three';
 import { THREE$Math } from '../../math/Math';
 import { THREE$Mesh } from '../../objects/Mesh';
 
-var THREE$MorphBlendMesh;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$MorphBlendMesh = function( geometry, material ) {
+function THREE$MorphBlendMesh( geometry, material ) {
 
 	THREE$Mesh.call( this, geometry, material );
 

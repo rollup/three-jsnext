@@ -2,13 +2,11 @@ import { THREE } from '../Three';
 import { THREE$Cache } from './Cache';
 import { THREE$DefaultLoadingManager } from './LoadingManager';
 
-var THREE$XHRLoader;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$XHRLoader = function ( manager ) {
+function THREE$XHRLoader ( manager ) {
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 

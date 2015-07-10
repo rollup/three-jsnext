@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Vector2 } from './Vector2';
 
-var THREE$Box2;
-
 /**
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Box2 = function ( min, max ) {
+function THREE$Box2 ( min, max ) {
 
 	this.min = ( min !== undefined ) ? min : new THREE$Vector2( Infinity, Infinity );
 	this.max = ( max !== undefined ) ? max : new THREE$Vector2( - Infinity, - Infinity );

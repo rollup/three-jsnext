@@ -1,14 +1,12 @@
 import { THREE } from '../Three';
 import { THREE$Color } from '../math/Color';
 
-var THREE$Fog;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Fog = function ( color, near, far ) {
+function THREE$Fog ( color, near, far ) {
 
 	this.name = '';
 

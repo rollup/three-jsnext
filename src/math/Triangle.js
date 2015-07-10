@@ -2,14 +2,12 @@ import { THREE } from '../Three';
 import { THREE$Plane } from './Plane';
 import { THREE$Vector3 } from './Vector3';
 
-var THREE$Triangle;
-
 /**
  * @author bhouston / http://exocortex.com
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$Triangle = function ( a, b, c ) {
+function THREE$Triangle ( a, b, c ) {
 
 	this.a = ( a !== undefined ) ? a : new THREE$Vector3();
 	this.b = ( b !== undefined ) ? b : new THREE$Vector3();

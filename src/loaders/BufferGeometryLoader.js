@@ -6,13 +6,11 @@ import { THREE$BufferGeometry } from '../core/BufferGeometry';
 import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$DefaultLoadingManager } from './LoadingManager';
 
-var THREE$BufferGeometryLoader;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$BufferGeometryLoader = function ( manager ) {
+function THREE$BufferGeometryLoader ( manager ) {
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 

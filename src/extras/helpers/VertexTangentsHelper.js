@@ -4,14 +4,12 @@ import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$VertexTangentsHelper;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
 */
 
-THREE$VertexTangentsHelper = function ( object, size, hex, linewidth ) {
+function THREE$VertexTangentsHelper ( object, size, hex, linewidth ) {
 
 	this.object = object;
 

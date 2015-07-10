@@ -2,8 +2,6 @@ import { THREE, THREE$NoColors, THREE$SmoothShading, THREE$MultiplyOperation } f
 import { THREE$Material } from './Material';
 import { THREE$Color } from '../math/Color';
 
-var THREE$MeshBasicMaterial;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
@@ -41,7 +39,7 @@ var THREE$MeshBasicMaterial;
  * }
  */
 
-THREE$MeshBasicMaterial = function ( parameters ) {
+function THREE$MeshBasicMaterial ( parameters ) {
 
 	THREE$Material.call( this );
 

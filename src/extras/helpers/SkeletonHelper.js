@@ -7,8 +7,6 @@ import { THREE$Color } from '../../math/Color';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$SkeletonHelper;
-
 /**
  * @author Sean Griffin / http://twitter.com/sgrif
  * @author Michael Guerrero / http://realitymeltdown.com
@@ -16,7 +14,7 @@ var THREE$SkeletonHelper;
  * @author ikerr / http://verold.com
  */
 
-THREE$SkeletonHelper = function ( object ) {
+function THREE$SkeletonHelper ( object ) {
 
 	this.bones = this.getBoneList( object );
 

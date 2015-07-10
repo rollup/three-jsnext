@@ -4,8 +4,6 @@ import { THREE$WebGLRenderTargetCube } from '../renderers/WebGLRenderTargetCube'
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$PerspectiveCamera } from './PerspectiveCamera';
 
-var THREE$CubeCamera;
-
 /**
  * Camera for rendering cube maps
  *	- renders scene into axis-aligned cube
@@ -13,7 +11,7 @@ var THREE$CubeCamera;
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$CubeCamera = function ( near, far, cubeResolution ) {
+function THREE$CubeCamera ( near, far, cubeResolution ) {
 
 	THREE$Object3D.call( this );
 

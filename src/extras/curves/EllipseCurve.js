@@ -2,13 +2,11 @@ import { THREE } from '../../Three';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Curve } from '../core/Curve';
 
-var THREE$EllipseCurve;
-
 /**************************************************************
  *	Ellipse curve
  **************************************************************/
 
-THREE$EllipseCurve = function ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise ) {
+function THREE$EllipseCurve ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise ) {
 
 	this.aX = aX;
 	this.aY = aY;

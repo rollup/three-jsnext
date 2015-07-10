@@ -10,14 +10,12 @@ import { THREE$Matrix3 } from '../math/Matrix3';
 import { THREE$Math } from '../math/Math';
 import { THREE$GeometryIdCount } from './Geometry';
 
-var THREE$BufferGeometry;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$BufferGeometry = function () {
+function THREE$BufferGeometry () {
 
 	Object.defineProperty( this, 'id', { value: THREE$GeometryIdCount() } );
 

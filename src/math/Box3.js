@@ -4,14 +4,12 @@ import { THREE$Sphere } from './Sphere';
 import { THREE$BufferGeometry } from '../core/BufferGeometry';
 import { THREE$Geometry } from '../core/Geometry';
 
-var THREE$Box3;
-
 /**
  * @author bhouston / http://exocortex.com
  * @author WestLangley / http://github.com/WestLangley
  */
 
-THREE$Box3 = function ( min, max ) {
+function THREE$Box3 ( min, max ) {
 
 	this.min = ( min !== undefined ) ? min : new THREE$Vector3( Infinity, Infinity, Infinity );
 	this.max = ( max !== undefined ) ? max : new THREE$Vector3( - Infinity, - Infinity, - Infinity );

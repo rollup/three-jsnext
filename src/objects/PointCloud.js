@@ -7,14 +7,11 @@ import { THREE$Matrix4 } from '../math/Matrix4';
 import { THREE$PointCloudMaterial } from '../materials/PointCloudMaterial';
 import { THREE$Geometry } from '../core/Geometry';
 
-var THREE$ParticleSystem;
-var THREE$PointCloud;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$PointCloud = function ( geometry, material ) {
+function THREE$PointCloud ( geometry, material ) {
 
 	THREE$Object3D.call( this );
 
@@ -167,7 +164,7 @@ THREE$PointCloud.prototype.clone = function ( object ) {
 
 // Backwards compatibility
 
-THREE$ParticleSystem = function ( geometry, material ) {
+function THREE$ParticleSystem ( geometry, material ) {
 
 	THREE$warn( 'THREE.ParticleSystem has been renamed to THREE.PointCloud.' );
 	return new THREE$PointCloud( geometry, material );

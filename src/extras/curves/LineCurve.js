@@ -1,13 +1,11 @@
 import { THREE } from '../../Three';
 import { THREE$Curve } from '../core/Curve';
 
-var THREE$LineCurve;
-
 /**************************************************************
  *	Line
  **************************************************************/
 
-THREE$LineCurve = function ( v1, v2 ) {
+function THREE$LineCurve ( v1, v2 ) {
 
 	this.v1 = v1;
 	this.v2 = v2;

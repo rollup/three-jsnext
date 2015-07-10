@@ -3,8 +3,6 @@ import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector2 } from '../../math/Vector2';
 
-var THREE$ParametricGeometry;
-
 /**
  * @author zz85 / https://github.com/zz85
  * Parametric Surfaces Geometry
@@ -14,7 +12,7 @@ var THREE$ParametricGeometry;
  *
  */
 
-THREE$ParametricGeometry = function ( func, slices, stacks ) {
+function THREE$ParametricGeometry ( func, slices, stacks ) {
 
 	THREE$Geometry.call( this );
 

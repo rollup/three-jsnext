@@ -5,8 +5,6 @@ import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$LineCurve } from '../curves/LineCurve';
 import { THREE$Curve } from './Curve';
 
-var THREE$CurvePath;
-
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
  *
@@ -17,7 +15,7 @@ var THREE$CurvePath;
  *  curves, but retains the api of a curve
  **************************************************************/
 
-THREE$CurvePath = function () {
+function THREE$CurvePath () {
 
 	this.curves = [];
 	this.bends = [];

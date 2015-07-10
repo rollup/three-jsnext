@@ -2,13 +2,11 @@ import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
 
-var THREE$DodecahedronGeometry;
-
 /**
  * @author Abe Pazos / https://hamoid.com
  */
 
-THREE$DodecahedronGeometry = function ( radius, detail ) {
+function THREE$DodecahedronGeometry ( radius, detail ) {
 
 	this.parameters = {
 		radius: radius,

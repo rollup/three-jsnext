@@ -5,13 +5,11 @@ import { THREE$Texture } from '../textures/Texture';
 import { THREE$ShaderMaterial } from '../materials/ShaderMaterial';
 import { THREE$ImageLoader } from './ImageLoader';
 
-var THREE$Loader;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Loader = function ( showStatus ) {
+function THREE$Loader ( showStatus ) {
 
 	this.showStatus = showStatus;
 	this.statusDomElement = showStatus ? THREE$Loader.prototype.addStatusElement() : null;

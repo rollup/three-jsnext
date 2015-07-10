@@ -1,15 +1,13 @@
 import { THREE } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 
-var THREE$Bone;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  * @author ikerr / http://verold.com
  */
 
-THREE$Bone = function ( skin ) {
+function THREE$Bone ( skin ) {
 
 	THREE$Object3D.call( this );
 

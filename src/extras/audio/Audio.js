@@ -2,13 +2,11 @@ import { THREE, THREE$warn } from '../../Three';
 import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Vector3 } from '../../math/Vector3';
 
-var THREE$Audio;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$Audio = function ( listener ) {
+function THREE$Audio ( listener ) {
 
 	THREE$Object3D.call( this );
 

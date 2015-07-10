@@ -5,15 +5,13 @@ import { THREE$Line } from '../../objects/Line';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$DirectionalLightHelper;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
  */
 
-THREE$DirectionalLightHelper = function ( light, size ) {
+function THREE$DirectionalLightHelper ( light, size ) {
 
 	THREE$Object3D.call( this );
 

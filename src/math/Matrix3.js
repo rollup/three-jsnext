@@ -1,15 +1,13 @@
 import { THREE, THREE$warn, THREE$error } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 
-var THREE$Matrix3;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author WestLangley / http://github.com/WestLangley
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Matrix3 = function () {
+function THREE$Matrix3 () {
 
 	this.elements = new Float32Array( [
 

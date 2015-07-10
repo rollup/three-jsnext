@@ -4,15 +4,13 @@ import { THREE$Quaternion } from './Quaternion';
 import { THREE$Matrix4 } from './Matrix4';
 import { THREE$Math } from './Math';
 
-var THREE$Euler;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Euler = function ( x, y, z, order ) {
+function THREE$Euler ( x, y, z, order ) {
 
 	this._x = x || 0;
 	this._y = y || 0;

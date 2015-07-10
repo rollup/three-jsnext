@@ -5,8 +5,6 @@ import { THREE$Shape } from '../core/Shape';
 import { THREE$ExtrudeGeometry } from './ExtrudeGeometry';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$ShapeGeometry;
-
 /**
  * @author jonobr1 / http://jonobr1.com
  *
@@ -23,7 +21,7 @@ var THREE$ShapeGeometry;
  * }
  **/
 
-THREE$ShapeGeometry = function ( shapes, options ) {
+function THREE$ShapeGeometry ( shapes, options ) {
 
 	THREE$Geometry.call( this );
 

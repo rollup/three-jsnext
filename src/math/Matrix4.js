@@ -3,8 +3,6 @@ import { THREE$Math } from './Math';
 import { THREE$Vector3 } from './Vector3';
 import { THREE$Euler } from './Euler';
 
-var THREE$Matrix4;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author supereggbert / http://www.paulbrunt.co.uk/
@@ -18,7 +16,7 @@ var THREE$Matrix4;
  * @author WestLangley / http://github.com/WestLangley
  */
 
-THREE$Matrix4 = function () {
+function THREE$Matrix4 () {
 
 	this.elements = new Float32Array( [
 

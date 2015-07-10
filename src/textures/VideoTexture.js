@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Texture } from './Texture';
 
-var THREE$VideoTexture;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$VideoTexture = function ( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+function THREE$VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 
 	THREE$Texture.call( this, video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 

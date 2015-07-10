@@ -1,21 +1,10 @@
 import { THREE, THREE$warn } from '../Three';
 
-var THREE$Float64Attribute;
-var THREE$Float32Attribute;
-var THREE$Uint32Attribute;
-var THREE$Int32Attribute;
-var THREE$Uint16Attribute;
-var THREE$Int16Attribute;
-var THREE$Uint8ClampedAttribute;
-var THREE$Uint8Attribute;
-var THREE$Int8Attribute;
-var THREE$BufferAttribute;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$BufferAttribute = function ( array, itemSize ) {
+function THREE$BufferAttribute ( array, itemSize ) {
 
 	this.array = array;
 	this.itemSize = itemSize;
@@ -129,21 +118,21 @@ THREE$BufferAttribute.prototype = {
 
 //
 
-THREE$Int8Attribute = function ( data, itemSize ) {
+function THREE$Int8Attribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Int8Attribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );
 
 };
 
-THREE$Uint8Attribute = function ( data, itemSize ) {
+function THREE$Uint8Attribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Uint8Attribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );
 
 };
 
-THREE$Uint8ClampedAttribute = function ( data, itemSize ) {
+function THREE$Uint8ClampedAttribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Uint8ClampedAttribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );
@@ -151,42 +140,42 @@ THREE$Uint8ClampedAttribute = function ( data, itemSize ) {
 
 };
 
-THREE$Int16Attribute = function ( data, itemSize ) {
+function THREE$Int16Attribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Int16Attribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );
 
 };
 
-THREE$Uint16Attribute = function ( data, itemSize ) {
+function THREE$Uint16Attribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Uint16Attribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );
 
 };
 
-THREE$Int32Attribute = function ( data, itemSize ) {
+function THREE$Int32Attribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Int32Attribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );
 
 };
 
-THREE$Uint32Attribute = function ( data, itemSize ) {
+function THREE$Uint32Attribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Uint32Attribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );
 
 };
 
-THREE$Float32Attribute = function ( data, itemSize ) {
+function THREE$Float32Attribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Float32Attribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );
 
 };
 
-THREE$Float64Attribute = function ( data, itemSize ) {
+function THREE$Float64Attribute ( data, itemSize ) {
 
 	THREE$warn( 'THREE.Float64Attribute has been removed. Use THREE.BufferAttribute( array, itemSize ) instead.' );
 	return new THREE$BufferAttribute( data, itemSize );

@@ -1,13 +1,11 @@
 import { THREE } from '../../Three';
 
-var THREE$MorphAnimation;
-
 /**
  * @author mrdoob / http://mrdoob.com
  * @author willy-vvu / http://willy-vvu.github.io
  */
 
-THREE$MorphAnimation = function ( mesh ) {
+function THREE$MorphAnimation ( mesh ) {
 
 	this.mesh = mesh;
 	this.frames = mesh.morphTargetInfluences.length;

@@ -3,7 +3,6 @@ import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$DataTexture } from '../textures/DataTexture';
 
 var THREE$DataTextureLoader;
-var THREE$BinaryTextureLoader;
 
 /**
  * @author Nikos M. / https://github.com/foo123/
@@ -11,7 +10,7 @@ var THREE$BinaryTextureLoader;
  * Abstract Base class to load generic binary textures formats (rgbe, hdr, ...)
  */
 
-THREE$DataTextureLoader = THREE$BinaryTextureLoader = function () {
+THREE$DataTextureLoader = function THREE$BinaryTextureLoader () {
 
 	// override in sub classes
 	this._parser = null;

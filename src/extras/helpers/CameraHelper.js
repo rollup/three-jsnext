@@ -6,8 +6,6 @@ import { THREE$Color } from '../../math/Color';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$CameraHelper;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  *
@@ -17,7 +15,7 @@ var THREE$CameraHelper;
  *		http://evanw.github.com/lightgl.js/tests/shadowmap.html
  */
 
-THREE$CameraHelper = function ( camera ) {
+function THREE$CameraHelper ( camera ) {
 
 	var geometry = new THREE$Geometry();
 	var material = new THREE$LineBasicMaterial( { color: 0xffffff, vertexColors: THREE$FaceColors } );

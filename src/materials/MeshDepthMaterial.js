@@ -1,8 +1,6 @@
 import { THREE } from '../Three';
 import { THREE$Material } from './Material';
 
-var THREE$MeshDepthMaterial;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
@@ -19,7 +17,7 @@ var THREE$MeshDepthMaterial;
  * }
  */
 
-THREE$MeshDepthMaterial = function ( parameters ) {
+function THREE$MeshDepthMaterial ( parameters ) {
 
 	THREE$Material.call( this );
 

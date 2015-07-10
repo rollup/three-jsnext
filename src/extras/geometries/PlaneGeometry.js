@@ -2,14 +2,12 @@ import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$PlaneBufferGeometry } from './PlaneBufferGeometry';
 
-var THREE$PlaneGeometry;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * based on http://papervision3d.googlecode.com/svn/trunk/as3/trunk/src/org/papervision3d/objects/primitives/Plane.as
  */
 
-THREE$PlaneGeometry = function ( width, height, widthSegments, heightSegments ) {
+function THREE$PlaneGeometry ( width, height, widthSegments, heightSegments ) {
 
 	console.info( 'THREE.PlaneGeometry: Consider using THREE.PlaneBufferGeometry for lower memory footprint.' );
 

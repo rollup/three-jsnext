@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$ShaderMaterial } from './ShaderMaterial';
 
-var THREE$RawShaderMaterial;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$RawShaderMaterial = function ( parameters ) {
+function THREE$RawShaderMaterial ( parameters ) {
 
 	THREE$ShaderMaterial.call( this, parameters );
 

@@ -5,13 +5,11 @@ import { THREE$BufferAttribute } from '../../core/BufferAttribute';
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$WireframeHelper;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$WireframeHelper = function ( object, hex ) {
+function THREE$WireframeHelper ( object, hex ) {
 
 	var color = ( hex !== undefined ) ? hex : 0xffffff;
 

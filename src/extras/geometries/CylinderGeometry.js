@@ -4,13 +4,11 @@ import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Vector3 } from '../../math/Vector3';
 
-var THREE$CylinderGeometry;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$CylinderGeometry = function ( radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength ) {
+function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength ) {
 
 	THREE$Geometry.call( this );
 

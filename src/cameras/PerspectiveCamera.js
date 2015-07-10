@@ -2,15 +2,13 @@ import { THREE } from '../Three';
 import { THREE$Camera } from './Camera';
 import { THREE$Math } from '../math/Math';
 
-var THREE$PerspectiveCamera;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author greggman / http://games.greggman.com/
  * @author zz85 / http://www.lab4games.net/zz85/blog
  */
 
-THREE$PerspectiveCamera = function ( fov, aspect, near, far ) {
+function THREE$PerspectiveCamera ( fov, aspect, near, far ) {
 
 	THREE$Camera.call( this );
 

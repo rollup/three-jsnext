@@ -3,15 +3,13 @@ import { THREE$EventDispatcher } from '../core/EventDispatcher';
 import { THREE$Vector2 } from '../math/Vector2';
 import { THREE$Math } from '../math/Math';
 
-var THREE$Texture;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  * @author szimek / https://github.com/szimek/
  */
 
-THREE$Texture = function ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+function THREE$Texture ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 
 	Object.defineProperty( this, 'id', { value: THREE$TextureIdCount() } );
 

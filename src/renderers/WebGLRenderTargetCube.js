@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$WebGLRenderTarget } from './WebGLRenderTarget';
 
-var THREE$WebGLRenderTargetCube;
-
 /**
  * @author alteredq / http://alteredqualia.com
  */
 
-THREE$WebGLRenderTargetCube = function ( width, height, options ) {
+function THREE$WebGLRenderTargetCube ( width, height, options ) {
 
 	THREE$WebGLRenderTarget.call( this, width, height, options );
 

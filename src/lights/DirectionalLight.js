@@ -3,14 +3,12 @@ import { THREE$Light } from './Light';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Object3D } from '../core/Object3D';
 
-var THREE$DirectionalLight;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$DirectionalLight = function ( color, intensity ) {
+function THREE$DirectionalLight ( color, intensity ) {
 
 	THREE$Light.call( this, color );
 

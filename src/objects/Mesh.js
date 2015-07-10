@@ -11,8 +11,6 @@ import { THREE$Ray } from '../math/Ray';
 import { THREE$Matrix4 } from '../math/Matrix4';
 import { THREE$MeshBasicMaterial } from '../materials/MeshBasicMaterial';
 
-var THREE$Mesh;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
@@ -20,7 +18,7 @@ var THREE$Mesh;
  * @author jonobr1 / http://jonobr1.com/
  */
 
-THREE$Mesh = function ( geometry, material ) {
+function THREE$Mesh ( geometry, material ) {
 
 	THREE$Object3D.call( this );
 

@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Texture } from './Texture';
 
-var THREE$CompressedTexture;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$CompressedTexture = function ( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
+function THREE$CompressedTexture ( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
 
 	THREE$Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 

@@ -12,14 +12,12 @@ import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Color } from '../math/Color';
 import { THREE$Math } from '../math/Math';
 
-var THREE$Material;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Material = function () {
+function THREE$Material () {
 
 	Object.defineProperty( this, 'id', { value: THREE$MaterialIdCount() } );
 

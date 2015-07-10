@@ -17,13 +17,11 @@ import { THREE$UniformsUtils } from '../../shaders/UniformsUtils';
 import { THREE$ShaderLib } from '../../shaders/ShaderLib';
 import { THREE$Frustum } from '../../../math/Frustum';
 
-var THREE$ShadowMapPlugin;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$ShadowMapPlugin = function ( _renderer, _lights, _webglObjects, _webglObjectsImmediate ) {
+function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObjectsImmediate ) {
 
 	var _gl = _renderer.context;
 

@@ -1,8 +1,6 @@
 import { THREE } from '../../Three';
 import { THREE$AnimationHandler } from './AnimationHandler';
 
-var THREE$KeyFrameAnimation;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author mrdoob / http://mrdoob.com/
@@ -11,7 +9,7 @@ var THREE$KeyFrameAnimation;
  * @author erik kitson
  */
 
-THREE$KeyFrameAnimation = function ( data ) {
+function THREE$KeyFrameAnimation ( data ) {
 
 	this.root = data.node;
 	this.data = THREE$AnimationHandler.init( data );

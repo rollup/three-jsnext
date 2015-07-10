@@ -2,8 +2,6 @@ import { THREE, THREE$warn } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 import { THREE$Euler } from './Euler';
 
-var THREE$Quaternion;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
@@ -11,7 +9,7 @@ var THREE$Quaternion;
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Quaternion = function ( x, y, z, w ) {
+function THREE$Quaternion ( x, y, z, w ) {
 
 	this._x = x || 0;
 	this._y = y || 0;

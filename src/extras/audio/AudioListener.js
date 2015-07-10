@@ -3,13 +3,11 @@ import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Quaternion } from '../../math/Quaternion';
 
-var THREE$AudioListener;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$AudioListener = function () {
+function THREE$AudioListener () {
 
 	THREE$Object3D.call( this );
 

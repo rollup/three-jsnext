@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 
-var THREE$Ray;
-
 /**
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Ray = function ( origin, direction ) {
+function THREE$Ray ( origin, direction ) {
 
 	this.origin = ( origin !== undefined ) ? origin : new THREE$Vector3();
 	this.direction = ( direction !== undefined ) ? direction : new THREE$Vector3();

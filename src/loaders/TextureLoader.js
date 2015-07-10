@@ -3,13 +3,11 @@ import { THREE$Texture } from '../textures/Texture';
 import { THREE$ImageLoader } from './ImageLoader';
 import { THREE$DefaultLoadingManager } from './LoadingManager';
 
-var THREE$TextureLoader;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$TextureLoader = function ( manager ) {
+function THREE$TextureLoader ( manager ) {
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 

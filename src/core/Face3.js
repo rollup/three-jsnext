@@ -2,14 +2,12 @@ import { THREE } from '../Three';
 import { THREE$Color } from '../math/Color';
 import { THREE$Vector3 } from '../math/Vector3';
 
-var THREE$Face3;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Face3 = function ( a, b, c, normal, color, materialIndex ) {
+function THREE$Face3 ( a, b, c, normal, color, materialIndex ) {
 
 	this.a = a;
 	this.b = b;

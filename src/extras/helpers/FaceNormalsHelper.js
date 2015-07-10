@@ -5,14 +5,12 @@ import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$FaceNormalsHelper;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
 */
 
-THREE$FaceNormalsHelper = function ( object, size, hex, linewidth ) {
+function THREE$FaceNormalsHelper ( object, size, hex, linewidth ) {
 
 	this.object = object;
 

@@ -3,13 +3,11 @@ import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Curve } from '../core/Curve';
 import { THREE$Shape } from '../core/Shape';
 
-var THREE$CubicBezierCurve;
-
 /**************************************************************
  *	Cubic Bezier curve
  **************************************************************/
 
-THREE$CubicBezierCurve = function ( v0, v1, v2, v3 ) {
+function THREE$CubicBezierCurve ( v0, v1, v2, v3 ) {
 
 	this.v0 = v0;
 	this.v1 = v1;

@@ -2,8 +2,6 @@ import { THREE } from '../Three';
 import { THREE$Material } from './Material';
 import { THREE$Color } from '../math/Color';
 
-var THREE$SpriteMaterial;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  *
@@ -23,7 +21,7 @@ var THREE$SpriteMaterial;
  * }
  */
 
-THREE$SpriteMaterial = function ( parameters ) {
+function THREE$SpriteMaterial ( parameters ) {
 
 	THREE$Material.call( this );
 

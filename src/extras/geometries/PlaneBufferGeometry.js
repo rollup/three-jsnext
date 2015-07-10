@@ -2,14 +2,12 @@ import { THREE } from '../../Three';
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
 
-var THREE$PlaneBufferGeometry;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * based on http://papervision3d.googlecode.com/svn/trunk/as3/trunk/src/org/papervision3d/objects/primitives/Plane.as
  */
 
-THREE$PlaneBufferGeometry = function ( width, height, widthSegments, heightSegments ) {
+function THREE$PlaneBufferGeometry ( width, height, widthSegments, heightSegments ) {
 
 	THREE$BufferGeometry.call( this );
 

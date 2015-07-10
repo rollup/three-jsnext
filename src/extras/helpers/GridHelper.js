@@ -5,13 +5,11 @@ import { THREE$Color } from '../../math/Color';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$GridHelper;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$GridHelper = function ( size, step ) {
+function THREE$GridHelper ( size, step ) {
 
 	var geometry = new THREE$Geometry();
 	var material = new THREE$LineBasicMaterial( { vertexColors: THREE$VertexColors } );

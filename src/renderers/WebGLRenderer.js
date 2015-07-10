@@ -50,8 +50,6 @@ import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Frustum } from '../math/Frustum';
 import { THREE$Color } from '../math/Color';
 
-var THREE$WebGLRenderer;
-
 /**
  * @author supereggbert / http://www.paulbrunt.co.uk/
  * @author mrdoob / http://mrdoob.com/
@@ -59,9 +57,9 @@ var THREE$WebGLRenderer;
  * @author szimek / https://github.com/szimek/
  */
 
-THREE$WebGLRenderer = function ( parameters ) {
+function THREE$WebGLRenderer ( parameters ) {
 
-	console.log( 'THREE.WebGLRenderer', THREE$REVISION );
+	console.log( 'THREE.WebGLRenderer', "jsnext" );
 
 	parameters = parameters || {};
 

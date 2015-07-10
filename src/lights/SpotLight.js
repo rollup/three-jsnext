@@ -2,13 +2,11 @@ import { THREE } from '../Three';
 import { THREE$Light } from './Light';
 import { THREE$Object3D } from '../core/Object3D';
 
-var THREE$SpotLight;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$SpotLight = function ( color, intensity, distance, angle, exponent, decay ) {
+function THREE$SpotLight ( color, intensity, distance, angle, exponent, decay ) {
 
 	THREE$Light.call( this, color );
 

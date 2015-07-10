@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Camera } from './Camera';
 
-var THREE$OrthographicCamera;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$OrthographicCamera = function ( left, right, top, bottom, near, far ) {
+function THREE$OrthographicCamera ( left, right, top, bottom, near, far ) {
 
 	THREE$Camera.call( this );
 

@@ -17,8 +17,6 @@ import { THREE$Euler } from '../math/Euler';
 import { THREE$Matrix4 } from '../math/Matrix4';
 import { THREE$Math } from '../math/Math';
 
-var THREE$Object3D;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author mikael emtinger / http://gomo.se/
@@ -26,7 +24,7 @@ var THREE$Object3D;
  * @author WestLangley / http://github.com/WestLangley
  */
 
-THREE$Object3D = function () {
+function THREE$Object3D () {
 
 	Object.defineProperty( this, 'id', { value: THREE$Object3DIdCount() } );
 

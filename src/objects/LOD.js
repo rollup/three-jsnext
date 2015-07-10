@@ -2,15 +2,13 @@ import { THREE } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Vector3 } from '../math/Vector3';
 
-var THREE$LOD;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$LOD = function () {
+function THREE$LOD () {
 
 	THREE$Object3D.call( this );
 

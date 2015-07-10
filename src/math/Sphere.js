@@ -2,14 +2,12 @@ import { THREE } from '../Three';
 import { THREE$Box3 } from './Box3';
 import { THREE$Vector3 } from './Vector3';
 
-var THREE$Sphere;
-
 /**
  * @author bhouston / http://exocortex.com
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$Sphere = function ( center, radius ) {
+function THREE$Sphere ( center, radius ) {
 
 	this.center = ( center !== undefined ) ? center : new THREE$Vector3();
 	this.radius = ( radius !== undefined ) ? radius : 0;

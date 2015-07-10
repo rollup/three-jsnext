@@ -4,14 +4,12 @@ import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Vector3 } from '../../math/Vector3';
 
-var THREE$BoxGeometry;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * based on http://papervision3d.googlecode.com/svn/trunk/as3/trunk/src/org/papervision3d/objects/primitives/Cube.as
  */
 
-THREE$BoxGeometry = function ( width, height, depth, widthSegments, heightSegments, depthSegments ) {
+function THREE$BoxGeometry ( width, height, depth, widthSegments, heightSegments, depthSegments ) {
 
 	THREE$Geometry.call( this );
 

@@ -110,6 +110,8 @@ export default class Module {
 
 		walk( this.ast, {
 			enter ( node, parent ) {
+				if ( node._skip ) return this.skip();
+
 				if ( node._scope ) {
 					scope = node._scope;
 				}
@@ -125,11 +127,18 @@ export default class Module {
 					const keypath = getKeypath( node.left );
 
 					if ( isExport( keypath ) ) {
-						const alias = keypath.replace( '.', '$' );
+						const alias = createAlias( keypath );
 
 						if ( /^THREE\.\w+IdCount$/.test( keypath ) ) {
 							magicString.overwrite( node.start, node.end, `var count = 0;\nfunction ${alias} () { return count++; }` );
 							return this.skip();
+						} else if ( node.right.type === 'FunctionExpression' ) {
+							// THREE.Geometry = function () {...} becomes
+							// function THREE$Geometry () {...}
+							magicString.overwrite( node.start, node.right.start, '' );
+							magicString.insert( node.right.start + 8, ' ' + alias );
+							node.left._skip = true;
+							return;
 						} else {
 							varsToDeclare[ alias ] = true;
 						}
@@ -152,7 +161,7 @@ export default class Module {
 					const keypath = getKeypath( node );
 
 					if ( isExport( keypath ) ) {
-						const alias = keypath.replace( '.', '$' );
+						const alias = createAlias( keypath );
 						magicString.overwrite( node.start, node.end, alias );
 					}
 				}

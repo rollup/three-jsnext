@@ -1,13 +1,12 @@
 import { THREE } from '../Three';
 
 var THREE$DefaultLoadingManager;
-var THREE$LoadingManager;
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$LoadingManager = function ( onLoad, onProgress, onError ) {
+function THREE$LoadingManager ( onLoad, onProgress, onError ) {
 
 	var scope = this;
 

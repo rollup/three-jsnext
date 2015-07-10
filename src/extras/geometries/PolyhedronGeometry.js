@@ -5,15 +5,13 @@ import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Sphere } from '../../math/Sphere';
 
-var THREE$PolyhedronGeometry;
-
 /**
  * @author clockworkgeek / https://github.com/clockworkgeek
  * @author timothypratley / https://github.com/timothypratley
  * @author WestLangley / http://github.com/WestLangley
 */
 
-THREE$PolyhedronGeometry = function ( vertices, indices, radius, detail ) {
+function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 	THREE$Geometry.call( this );
 

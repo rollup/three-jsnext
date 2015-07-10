@@ -1,13 +1,12 @@
 import { THREE } from '../Three';
 
 var THREE$ColorKeywords;
-var THREE$Color;
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$Color = function ( color ) {
+function THREE$Color ( color ) {
 
 	if ( arguments.length === 3 ) {
 

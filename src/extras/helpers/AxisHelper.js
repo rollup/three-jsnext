@@ -4,14 +4,12 @@ import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 
-var THREE$AxisHelper;
-
 /**
  * @author sroucheray / http://sroucheray.org/
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$AxisHelper = function ( size ) {
+function THREE$AxisHelper ( size ) {
 
 	size = size || 1;
 

@@ -5,15 +5,13 @@ import { THREE$Skeleton } from './Skeleton';
 import { THREE$Bone } from './Bone';
 import { THREE$Matrix4 } from '../math/Matrix4';
 
-var THREE$SkinnedMesh;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  * @author ikerr / http://verold.com
  */
 
-THREE$SkinnedMesh = function ( geometry, material, useVertexTexture ) {
+function THREE$SkinnedMesh ( geometry, material, useVertexTexture ) {
 
 	THREE$Mesh.call( this, geometry, material );
 

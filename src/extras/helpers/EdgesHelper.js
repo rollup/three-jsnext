@@ -6,8 +6,6 @@ import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 import { THREE$Math } from '../../math/Math';
 
-var THREE$EdgesHelper;
-
 /**
  * @author WestLangley / http://github.com/WestLangley
  * @param object THREE.Mesh whose geometry will be used
@@ -18,7 +16,7 @@ var THREE$EdgesHelper;
  * an edge is only rendered if the angle is at least 10 degrees.
  */
 
-THREE$EdgesHelper = function ( object, hex, thresholdAngle ) {
+function THREE$EdgesHelper ( object, hex, thresholdAngle ) {
 
 	var color = ( hex !== undefined ) ? hex : 0xffffff;
 	thresholdAngle = ( thresholdAngle !== undefined ) ? thresholdAngle : 1;

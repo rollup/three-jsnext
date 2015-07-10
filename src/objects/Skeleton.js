@@ -2,8 +2,6 @@ import { THREE, THREE$warn, THREE$NearestFilter, THREE$FloatType, THREE$RGBAForm
 import { THREE$Matrix4 } from '../math/Matrix4';
 import { THREE$DataTexture } from '../textures/DataTexture';
 
-var THREE$Skeleton;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
@@ -11,7 +9,7 @@ var THREE$Skeleton;
  * @author ikerr / http://verold.com
  */
 
-THREE$Skeleton = function ( bones, boneInverses, useVertexTexture ) {
+function THREE$Skeleton ( bones, boneInverses, useVertexTexture ) {
 
 	this.useVertexTexture = useVertexTexture !== undefined ? useVertexTexture : true;
 

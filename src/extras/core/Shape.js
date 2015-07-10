@@ -4,8 +4,6 @@ import { THREE$ShapeGeometry } from '../geometries/ShapeGeometry';
 import { THREE$ExtrudeGeometry } from '../geometries/ExtrudeGeometry';
 import { THREE$Path } from './Path';
 
-var THREE$Shape;
-
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
  * Defines a 2d shape plane using paths.
@@ -17,7 +15,7 @@ var THREE$Shape;
 // STEP 3a - Extract points from each shape, turn to vertices
 // STEP 3b - Triangulate each shape, add faces.
 
-THREE$Shape = function () {
+function THREE$Shape () {
 
 	THREE$Path.apply( this, arguments );
 	this.holes = [];

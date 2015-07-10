@@ -6,8 +6,6 @@ import { THREE$Shape } from '../core/Shape';
 import { THREE$TubeGeometry } from './TubeGeometry';
 import { THREE$Geometry } from '../../core/Geometry';
 
-var THREE$ExtrudeGeometry;
-
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
  *
@@ -34,7 +32,7 @@ var THREE$ExtrudeGeometry;
  * }
  **/
 
-THREE$ExtrudeGeometry = function ( shapes, options ) {
+function THREE$ExtrudeGeometry ( shapes, options ) {
 
 	if ( typeof( shapes ) === "undefined" ) {
 		shapes = [];

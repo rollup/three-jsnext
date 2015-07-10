@@ -3,14 +3,12 @@ import { THREE$Mesh } from '../../objects/Mesh';
 import { THREE$MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
 import { THREE$SphereGeometry } from '../geometries/SphereGeometry';
 
-var THREE$PointLightHelper;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$PointLightHelper = function ( light, sphereSize ) {
+function THREE$PointLightHelper ( light, sphereSize ) {
 
 	this.light = light;
 	this.light.updateMatrixWorld();

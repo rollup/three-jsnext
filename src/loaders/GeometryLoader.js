@@ -5,13 +5,11 @@ import { THREE$Geometry } from '../core/Geometry';
 import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$DefaultLoadingManager } from './LoadingManager';
 
-var THREE$GeometryLoader;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$GeometryLoader = function ( manager ) {
+function THREE$GeometryLoader ( manager ) {
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 

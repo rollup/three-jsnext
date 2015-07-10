@@ -1,8 +1,6 @@
 import { THREE } from '../Three';
 import { THREE$Material } from './Material';
 
-var THREE$MeshNormalMaterial;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  *
@@ -19,7 +17,7 @@ var THREE$MeshNormalMaterial;
  * }
  */
 
-THREE$MeshNormalMaterial = function ( parameters ) {
+function THREE$MeshNormalMaterial ( parameters ) {
 
 	THREE$Material.call( this, parameters );
 

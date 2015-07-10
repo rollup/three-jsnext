@@ -2,8 +2,6 @@ import { THREE } from '../../Three';
 import { THREE$ExtrudeGeometry } from './ExtrudeGeometry';
 import { THREE$FontUtils } from '../FontUtils';
 
-var THREE$TextGeometry;
-
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
  * @author alteredq / http://alteredqualia.com/
@@ -42,7 +40,7 @@ var THREE$TextGeometry;
 */
 
 
-THREE$TextGeometry = function ( text, parameters ) {
+function THREE$TextGeometry ( text, parameters ) {
 
 	parameters = parameters || {};
 

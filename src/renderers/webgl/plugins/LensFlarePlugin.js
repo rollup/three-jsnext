@@ -2,14 +2,12 @@ import { THREE } from '../../../Three';
 import { THREE$Vector2 } from '../../../math/Vector2';
 import { THREE$Vector3 } from '../../../math/Vector3';
 
-var THREE$LensFlarePlugin;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$LensFlarePlugin = function ( renderer, flares ) {
+function THREE$LensFlarePlugin ( renderer, flares ) {
 
 	var gl = renderer.context;
 

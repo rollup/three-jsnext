@@ -4,8 +4,6 @@ import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector3 } from '../../math/Vector3';
 
-var THREE$LatheGeometry;
-
 /**
  * @author astrodud / http://astrodud.isgreat.org/
  * @author zz85 / https://github.com/zz85
@@ -19,7 +17,7 @@ var THREE$LatheGeometry;
 // phiLength - the radian (0 to 2*PI) range of the lathed section
 //    2*pi is a closed lathe, less than 2PI is a portion.
 
-THREE$LatheGeometry = function ( points, segments, phiStart, phiLength ) {
+function THREE$LatheGeometry ( points, segments, phiStart, phiLength ) {
 
 	THREE$Geometry.call( this );
 

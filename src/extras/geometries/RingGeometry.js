@@ -5,13 +5,11 @@ import { THREE$Sphere } from '../../math/Sphere';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector2 } from '../../math/Vector2';
 
-var THREE$RingGeometry;
-
 /**
  * @author Kaleb Murphy
  */
 
-THREE$RingGeometry = function ( innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength ) {
+function THREE$RingGeometry ( innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength ) {
 
 	THREE$Geometry.call( this );
 

@@ -5,13 +5,11 @@ import { THREE$Sphere } from '../../math/Sphere';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector2 } from '../../math/Vector2';
 
-var THREE$SphereGeometry;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$SphereGeometry = function ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
+function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
 
 	THREE$Geometry.call( this );
 

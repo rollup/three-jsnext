@@ -3,13 +3,11 @@ import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Quaternion } from '../../math/Quaternion';
 import { THREE$Object3D } from '../../core/Object3D';
 
-var THREE$Gyroscope;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Gyroscope = function () {
+function THREE$Gyroscope () {
 
 	THREE$Object3D.call( this );
 

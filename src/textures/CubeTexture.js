@@ -1,13 +1,11 @@
 import { THREE, THREE$CubeReflectionMapping } from '../Three';
 import { THREE$Texture } from './Texture';
 
-var THREE$CubeTexture;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$CubeTexture = function ( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+function THREE$CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 
 	mapping = mapping !== undefined ? mapping : THREE$CubeReflectionMapping;
 	

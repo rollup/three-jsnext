@@ -2,14 +2,12 @@ import { THREE, THREE$UnsignedByteType, THREE$RGBAFormat, THREE$LinearMipMapLine
 import { THREE$EventDispatcher } from '../core/EventDispatcher';
 import { THREE$Vector2 } from '../math/Vector2';
 
-var THREE$WebGLRenderTarget;
-
 /**
  * @author szimek / https://github.com/szimek/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$WebGLRenderTarget = function ( width, height, options ) {
+function THREE$WebGLRenderTarget ( width, height, options ) {
 
 	this.width = width;
 	this.height = height;

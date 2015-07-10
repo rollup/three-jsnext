@@ -4,8 +4,6 @@ import { THREE$Matrix4 } from './Matrix4';
 import { THREE$Quaternion } from './Quaternion';
 import { THREE$Euler } from './Euler';
 
-var THREE$Vector3;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author *kile / http://kile.stravaganza.org/
@@ -15,7 +13,7 @@ var THREE$Vector3;
  * @author WestLangley / http://github.com/WestLangley
  */
 
-THREE$Vector3 = function ( x, y, z ) {
+function THREE$Vector3 ( x, y, z ) {
 
 	this.x = x || 0;
 	this.y = y || 0;

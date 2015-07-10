@@ -3,15 +3,13 @@ import { THREE$AnimationHandler } from './AnimationHandler';
 import { THREE$Quaternion } from '../../math/Quaternion';
 import { THREE$Vector3 } from '../../math/Vector3';
 
-var THREE$Animation;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Animation = function ( root, data ) {
+function THREE$Animation ( root, data ) {
 
 	this.root = root;
 	this.data = THREE$AnimationHandler.init( data );

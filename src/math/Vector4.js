@@ -1,7 +1,5 @@
 import { THREE, THREE$warn } from '../Three';
 
-var THREE$Vector4;
-
 /**
  * @author supereggbert / http://www.paulbrunt.co.uk/
  * @author philogb / http://blog.thejit.org/
@@ -10,7 +8,7 @@ var THREE$Vector4;
  * @author WestLangley / http://github.com/WestLangley
  */
 
-THREE$Vector4 = function ( x, y, z, w ) {
+function THREE$Vector4 ( x, y, z, w ) {
 
 	this.x = x || 0;
 	this.y = y || 0;

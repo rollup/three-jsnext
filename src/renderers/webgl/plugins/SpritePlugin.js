@@ -5,14 +5,12 @@ import { THREE$Texture } from '../../../textures/Texture';
 import { THREE$Vector3 } from '../../../math/Vector3';
 import { THREE$Quaternion } from '../../../math/Quaternion';
 
-var THREE$SpritePlugin;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$SpritePlugin = function ( renderer, sprites ) {
+function THREE$SpritePlugin ( renderer, sprites ) {
 
 	var gl = renderer.context;
 

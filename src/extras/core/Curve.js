@@ -1,7 +1,5 @@
 import { THREE, THREE$warn } from '../../Three';
 
-var THREE$Curve;
-
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
  * Extensible curve object
@@ -38,7 +36,7 @@ var THREE$Curve;
  *	Abstract Curve base class
  **************************************************************/
 
-THREE$Curve = function () {
+function THREE$Curve () {
 
 };
 

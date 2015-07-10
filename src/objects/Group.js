@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 
-var THREE$Group;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$Group = function () {
+function THREE$Group () {
 
 	THREE$Object3D.call( this );
 

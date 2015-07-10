@@ -2,13 +2,11 @@ import { THREE } from '../Three';
 import { THREE$Matrix3 } from './Matrix3';
 import { THREE$Vector3 } from './Vector3';
 
-var THREE$Plane;
-
 /**
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Plane = function ( normal, constant ) {
+function THREE$Plane ( normal, constant ) {
 
 	this.normal = ( normal !== undefined ) ? normal : new THREE$Vector3( 1, 0, 0 );
 	this.constant = ( constant !== undefined ) ? constant : 0;

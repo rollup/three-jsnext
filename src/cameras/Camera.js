@@ -4,15 +4,13 @@ import { THREE$Matrix4 } from '../math/Matrix4';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Quaternion } from '../math/Quaternion';
 
-var THREE$Camera;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author mikael emtinger / http://gomo.se/
  * @author WestLangley / http://github.com/WestLangley
 */
 
-THREE$Camera = function () {
+function THREE$Camera () {
 
 	THREE$Object3D.call( this );
 

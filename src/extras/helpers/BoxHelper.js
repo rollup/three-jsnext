@@ -4,13 +4,11 @@ import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 
-var THREE$BoxHelper;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$BoxHelper = function ( object ) {
+function THREE$BoxHelper ( object ) {
 
 	var geometry = new THREE$BufferGeometry();
 	geometry.addAttribute( 'position', new THREE$BufferAttribute( new Float32Array( 72 ), 3 ) );

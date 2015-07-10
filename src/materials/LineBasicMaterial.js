@@ -2,8 +2,6 @@ import { THREE, THREE$NoColors } from '../Three';
 import { THREE$Material } from './Material';
 import { THREE$Color } from '../math/Color';
 
-var THREE$LineBasicMaterial;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
@@ -26,7 +24,7 @@ var THREE$LineBasicMaterial;
  * }
  */
 
-THREE$LineBasicMaterial = function ( parameters ) {
+function THREE$LineBasicMaterial ( parameters ) {
 
 	THREE$Material.call( this );
 

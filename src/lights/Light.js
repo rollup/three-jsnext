@@ -2,14 +2,12 @@ import { THREE } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Color } from '../math/Color';
 
-var THREE$Light;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Light = function ( color ) {
+function THREE$Light ( color ) {
 
 	THREE$Object3D.call( this );
 

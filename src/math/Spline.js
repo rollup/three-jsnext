@@ -1,8 +1,6 @@
 import { THREE } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 
-var THREE$Spline;
-
 /**
  * Spline from Tween.js, slightly optimized (and trashed)
  * http://sole.github.com/tween.js/examples/05_spline.html
@@ -11,7 +9,7 @@ var THREE$Spline;
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Spline = function ( points ) {
+function THREE$Spline ( points ) {
 
 	this.points = points;
 

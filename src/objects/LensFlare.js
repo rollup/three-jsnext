@@ -3,14 +3,12 @@ import { THREE$Color } from '../math/Color';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Vector3 } from '../math/Vector3';
 
-var THREE$LensFlare;
-
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$LensFlare = function ( texture, size, distance, blending, color ) {
+function THREE$LensFlare ( texture, size, distance, blending, color ) {
 
 	THREE$Object3D.call( this );
 

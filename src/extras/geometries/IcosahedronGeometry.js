@@ -2,13 +2,11 @@ import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
 
-var THREE$IcosahedronGeometry;
-
 /**
  * @author timothypratley / https://github.com/timothypratley
  */
 
-THREE$IcosahedronGeometry = function ( radius, detail ) {
+function THREE$IcosahedronGeometry ( radius, detail ) {
 
 	var t = ( 1 + Math.sqrt( 5 ) ) / 2;
 

@@ -3,15 +3,13 @@ import { THREE$Vector3 } from './Vector3';
 import { THREE$Sphere } from './Sphere';
 import { THREE$Plane } from './Plane';
 
-var THREE$Frustum;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  * @author bhouston / http://exocortex.com
  */
 
-THREE$Frustum = function ( p0, p1, p2, p3, p4, p5 ) {
+function THREE$Frustum ( p0, p1, p2, p3, p4, p5 ) {
 
 	this.planes = [
 

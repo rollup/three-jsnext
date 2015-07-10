@@ -2,8 +2,6 @@ import { THREE } from '../Three';
 import { THREE$Material } from './Material';
 import { THREE$Color } from '../math/Color';
 
-var THREE$LineDashedMaterial;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  *
@@ -27,7 +25,7 @@ var THREE$LineDashedMaterial;
  * }
  */
 
-THREE$LineDashedMaterial = function ( parameters ) {
+function THREE$LineDashedMaterial ( parameters ) {
 
 	THREE$Material.call( this );
 

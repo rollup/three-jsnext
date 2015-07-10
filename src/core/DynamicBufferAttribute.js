@@ -1,14 +1,12 @@
 import { THREE } from '../Three';
 import { THREE$BufferAttribute } from './BufferAttribute';
 
-var THREE$DynamicBufferAttribute;
-
 /**
  * @author benaadams / https://twitter.com/ben_a_adams
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$DynamicBufferAttribute = function ( array, itemSize ) {
+function THREE$DynamicBufferAttribute ( array, itemSize ) {
 
 	THREE$BufferAttribute.call( this, array, itemSize );
 

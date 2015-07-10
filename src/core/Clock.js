@@ -1,12 +1,10 @@
 import { THREE } from '../Three';
 
-var THREE$Clock;
-
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Clock = function ( autoStart ) {
+function THREE$Clock ( autoStart ) {
 
 	this.autoStart = ( autoStart !== undefined ) ? autoStart : true;
 

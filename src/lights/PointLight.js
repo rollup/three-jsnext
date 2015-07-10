@@ -1,13 +1,11 @@
 import { THREE } from '../Three';
 import { THREE$Light } from './Light';
 
-var THREE$PointLight;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$PointLight = function ( color, intensity, distance, decay ) {
+function THREE$PointLight ( color, intensity, distance, decay ) {
 
 	THREE$Light.call( this, color );
 

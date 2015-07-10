@@ -4,14 +4,12 @@ import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector2 } from '../../math/Vector2';
 
-var THREE$TorusKnotGeometry;
-
 /**
  * @author oosmoxiecode
  * based on http://code.google.com/p/away3d/source/browse/trunk/fp10/Away3D/src/away3d/primitives/TorusKnot.as?spec=svn2473&r=2473
  */
 
-THREE$TorusKnotGeometry = function ( radius, tube, radialSegments, tubularSegments, p, q, heightScale ) {
+function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments, p, q, heightScale ) {
 
 	THREE$Geometry.call( this );
 
