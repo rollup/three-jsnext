@@ -1,5 +1,5 @@
-import { dirname, relative, resolve } from 'path';
-import { readFileSync } from 'sander';
+import { basename, dirname, extname, relative, resolve } from 'path';
+import { readdirSync, readFileSync } from 'sander';
 import { parse } from 'acorn';
 import MagicString from 'magic-string';
 import attachScopes from './ast/attachScopes';
@@ -39,6 +39,19 @@ export default class Module {
 		this.dir = dirname( file );
 
 		this.src = readFileSync( file ).toString();
+
+		// special case - ShaderChunk.js. We need to inline all the shaders
+		if ( basename( file ) === 'ShaderChunk.js' ) {
+			readdirSync( file, '../ShaderChunk' ).forEach( shaderFile => {
+				if ( extname( shaderFile ) === '.glsl' ) {
+					const name = shaderFile.slice( 0, -5 );
+					const definition = JSON.stringify( readFileSync( file, '../ShaderChunk', shaderFile ).toString() );
+
+					this.src += `\nTHREE.ShaderChunk["${name}"] = ${definition};`;
+				}
+			});
+		}
+
 		this.magicString = new MagicString( this.src );
 
 		// Attempt to parse with acorn
@@ -50,9 +63,7 @@ export default class Module {
 			throw err;
 		}
 
-		this.internalDependencies = {};
 		this.exportDependencies = {};
-
 		this.exports = {};
 
 		this.analyse();
@@ -62,15 +73,12 @@ export default class Module {
 
 	analyse () {
 		let scope = attachScopes( this.ast );
+		let names = scope.names;
 
 		walk( this.ast, {
 			enter: ( node, parent ) => {
 				if ( node._scope ) {
 					scope = node._scope;
-				}
-
-				if ( isIdentifier( node, parent ) && !scope.contains( node.name ) ) {
-					this.internalDependencies[ node.name ] = true;
 				}
 
 				const keypath = getKeypath( node );
@@ -96,12 +104,7 @@ export default class Module {
 		});
 	}
 
-	render ({
-		pathByExportName,
-		exportNamesByPath,
-		pathByInternalName,
-		internalNamesByPath
-	}) {
+	render ({ pathByExportName, exportNamesByPath }) {
 		const self = this;
 		const magicString = this.magicString;
 
@@ -189,10 +192,6 @@ export default class Module {
 			dependencies[ relativePath ].push( name );
 		};
 
-		Object.keys( this.internalDependencies ).forEach( name => {
-			addDependency( pathByInternalName[ name ], name );
-		});
-
 		Object.keys( this.exportDependencies ).forEach( keypath => {
 			const keys = keypath.split( '.' );
 			let owner;
@@ -228,9 +227,7 @@ export default class Module {
 		}
 
 		let shouldExport = dedupe(
-			exportNamesByPath[ this.file ]
-				.map( createAlias )
-				.concat( internalNamesByPath[ this.file ])
+			exportNamesByPath[ this.file ].map( createAlias )
 		);
 
 		const exportBlock = shouldExport.length > 4 ?

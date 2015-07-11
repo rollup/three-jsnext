@@ -22,12 +22,8 @@ export default function () {
 	let pathByExportName = {};
 	let exportNamesByPath = {};
 
-	let pathByInternalName = {};
-	let internalNamesByPath = {};
-
 	modules.forEach( module => {
 		exportNamesByPath[ module.file ] = [];
-		internalNamesByPath[ module.file ] = [];
 
 		Object.keys( module.exports ).forEach( name => {
 			if ( !!pathByExportName[ name ] ) {
@@ -37,19 +33,12 @@ export default function () {
 			pathByExportName[ name ] = module.file;
 			exportNamesByPath[ module.file ].push( name );
 		});
-
-		module.definitions.forEach( name => {
-			pathByInternalName[ name ] = module.file;
-			internalNamesByPath[ module.file ].push( name );
-		});
 	});
 
 	modules.forEach( module => {
 		const rendered = module.render({
 			pathByExportName,
-			exportNamesByPath,
-			pathByInternalName,
-			internalNamesByPath
+			exportNamesByPath
 		});
 
 		if ( rendered ) {
