@@ -82,6 +82,8 @@ Early tests suggests a typical app, once minified, includes around **245kb** of 
 
 This is a new and experimental project; it may not yet reproduce all of Three.js's functionality. If you find a bug, please raise an issue.
 
+Note that we're using the dev branch of Three.js, rather than the master branch, so it may not be 100% stable.
+
 
 ## License
 
