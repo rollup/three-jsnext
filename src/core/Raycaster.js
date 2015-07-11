@@ -1,4 +1,3 @@
-import { THREE$warn, THREE$error } from '../Three';
 import { THREE$OrthographicCamera } from '../cameras/OrthographicCamera';
 import { THREE$PerspectiveCamera } from '../cameras/PerspectiveCamera';
 import { THREE$Ray } from '../math/Ray';
@@ -38,6 +37,8 @@ import { THREE$Ray } from '../math/Ray';
 
 	var intersectObject = function ( object, raycaster, intersects, recursive ) {
 
+		if ( object.visible === false ) return;
+
 		object.raycast( raycaster, intersects );
 
 		if ( recursive === true ) {
@@ -60,7 +61,6 @@ import { THREE$Ray } from '../math/Ray';
 
 		constructor: THREE$Raycaster,
 
-		precision: 0.0001,
 		linePrecision: 1,
 
 		set: function ( origin, direction ) {
@@ -73,12 +73,10 @@ import { THREE$Ray } from '../math/Ray';
 
 		setFromCamera: function ( coords, camera ) {
 
-			// camera is assumed _not_ to be a child of a transformed object
-
 			if ( (camera && camera.isPerspectiveCamera) ) {
 
-				this.ray.origin.copy( camera.position );
-				this.ray.direction.set( coords.x, coords.y, 0.5 ).unproject( camera ).sub( camera.position ).normalize();
+				this.ray.origin.setFromMatrixPosition( camera.matrixWorld );
+				this.ray.direction.set( coords.x, coords.y, 0.5 ).unproject( camera ).sub( this.ray.origin ).normalize();
 
 			} else if ( (camera && camera.isOrthographicCamera) ) {
 
@@ -87,7 +85,7 @@ import { THREE$Ray } from '../math/Ray';
 
 			} else {
 
-				THREE$error( 'THREE.Raycaster: Unsupported camera type.' );
+				console.error( 'THREE.Raycaster: Unsupported camera type.' );
 
 			}
 
@@ -109,9 +107,9 @@ import { THREE$Ray } from '../math/Ray';
 
 			var intersects = [];
 
-			if ( objects instanceof Array === false ) {
+			if ( Array.isArray( objects ) === false ) {
 
-				THREE$warn( 'THREE.Raycaster.intersectObjects: objects is not an Array.' );
+				console.warn( 'THREE.Raycaster.intersectObjects: objects is not an Array.' );
 				return intersects;
 
 			}

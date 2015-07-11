@@ -23,8 +23,8 @@ function THREE$PlaneBufferGeometry ( width, height, widthSegments, heightSegment
 	var width_half = width / 2;
 	var height_half = height / 2;
 
-	var gridX = widthSegments || 1;
-	var gridY = heightSegments || 1;
+	var gridX = Math.floor( widthSegments ) || 1;
+	var gridY = Math.floor( heightSegments ) || 1;
 
 	var gridX1 = gridX + 1;
 	var gridY1 = gridY + 1;

@@ -1,5 +1,3 @@
-import { THREE$warn } from '../../Three';
-
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
  * Extensible curve object
@@ -46,7 +44,7 @@ function THREE$Curve () {
 
 THREE$Curve.prototype.getPoint = function ( t ) {
 
-	THREE$warn( "THREE.Curve: Warning, getPoint() not implemented!" );
+	console.warn( "THREE.Curve: Warning, getPoint() not implemented!" );
 	return null;
 
 };
@@ -113,7 +111,7 @@ THREE$Curve.prototype.getLengths = function ( divisions ) {
 	if ( ! divisions ) divisions = (this.__arcLengthDivisions) ? (this.__arcLengthDivisions) : 200;
 
 	if ( this.cacheArcLengths
-		&& ( this.cacheArcLengths.length == divisions + 1 )
+		&& ( this.cacheArcLengths.length === divisions + 1 )
 		&& ! this.needsUpdate) {
 
 		//console.log( "cached", this.cacheArcLengths );
@@ -150,7 +148,7 @@ THREE$Curve.prototype.updateArcLengths = function() {
 	this.getLengths();
 };
 
-// Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equi distance
+// Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
 
 THREE$Curve.prototype.getUtoTmapping = function ( u, distance ) {
 
@@ -205,14 +203,14 @@ THREE$Curve.prototype.getUtoTmapping = function ( u, distance ) {
 
 	//console.log('b' , i, low, high, Date.now()- time);
 
-	if ( arcLengths[ i ] == targetArcLength ) {
+	if ( arcLengths[ i ] === targetArcLength ) {
 
 		var t = i / ( il - 1 );
 		return t;
 
 	}
 
-	// we could get finer grain at lengths, or use simple interpolatation between two points
+	// we could get finer grain at lengths, or use simple interpolation between two points
 
 	var lengthBefore = arcLengths[ i ];
 	var lengthAfter = arcLengths[ i + 1 ];

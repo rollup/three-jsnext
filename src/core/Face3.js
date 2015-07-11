@@ -6,7 +6,7 @@ import { THREE$Vector3 } from '../math/Vector3';
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$Face3 ( a, b, c, normal, color, materialIndex ) {
+function THREE$Face3 ( a, b, c, normal, color ) {
 	this.isFace3 = true;
 
 	this.a = a;
@@ -14,14 +14,12 @@ function THREE$Face3 ( a, b, c, normal, color, materialIndex ) {
 	this.c = c;
 
 	this.normal = (normal && normal.isVector3) ? normal : new THREE$Vector3();
-	this.vertexNormals = normal instanceof Array ? normal : [];
+	this.vertexNormals = Array.isArray( normal ) ? normal : [];
 
 	this.color = (color && color.isColor) ? color : new THREE$Color();
-	this.vertexColors = color instanceof Array ? color : [];
+	this.vertexColors = Array.isArray( color ) ? color : [];
 
 	this.vertexTangents = [];
-
-	this.materialIndex = materialIndex !== undefined ? materialIndex : 0;
 
 };
 
@@ -35,8 +33,6 @@ THREE$Face3.prototype = {
 
 		face.normal.copy( this.normal );
 		face.color.copy( this.color );
-
-		face.materialIndex = this.materialIndex;
 
 		for ( var i = 0, il = this.vertexNormals.length; i < il; i ++ ) {
 

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -32,7 +31,10 @@
 		<div id="info"><a href="http://threejs.org" target="_blank">three.js</a> - custom attributes example - particles - billboards</div>
 		<div id="container"></div>
 
-		<script src="../three.min.js"></script>
+		<script src="../lib/three.min.js"></script>
+
+		<script src="../lib/Detector.js"></script>
+		<script src="../lib/stats.min.js"></script>
 
 		<script type="x-shader/x-vertex" id="vertexshader">
 
@@ -77,6 +79,8 @@
 
 
 		<script>
+
+		if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 		var renderer, scene, camera, stats;
 
@@ -166,6 +170,11 @@
 			var container = document.getElementById( 'container' );
 			container.appendChild( renderer.domElement );
 
+			stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0px';
+			container.appendChild( stats.domElement );
+
 			//
 
 			window.addEventListener( 'resize', onWindowResize, false );
@@ -186,6 +195,7 @@
 			requestAnimationFrame( animate );
 
 			render();
+			stats.update();
 
 		}
 

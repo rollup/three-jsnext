@@ -44,6 +44,14 @@ export {
   THREE$AddOperation as AddOperation,
   THREE$MixOperation as MixOperation,
   THREE$MultiplyOperation as MultiplyOperation,
+  THREE$NotEqualDepth as NotEqualDepth,
+  THREE$GreaterDepth as GreaterDepth,
+  THREE$GreaterEqualDepth as GreaterEqualDepth,
+  THREE$EqualDepth as EqualDepth,
+  THREE$LessEqualDepth as LessEqualDepth,
+  THREE$LessDepth as LessDepth,
+  THREE$AlwaysDepth as AlwaysDepth,
+  THREE$NeverDepth as NeverDepth,
   THREE$SrcAlphaSaturateFactor as SrcAlphaSaturateFactor,
   THREE$OneMinusDstColorFactor as OneMinusDstColorFactor,
   THREE$DstColorFactor as DstColorFactor,
@@ -84,10 +92,7 @@ export {
   THREE$CullFaceFront as CullFaceFront,
   THREE$CullFaceBack as CullFaceBack,
   THREE$CullFaceNone as CullFaceNone,
-  THREE$MOUSE as MOUSE,
-  THREE$error as error,
-  THREE$warn as warn,
-  THREE$log as log
+  THREE$MOUSE as MOUSE
 } from './Three.js';
 export { THREE$Camera as Camera } from './cameras/Camera.js';
 export { THREE$CubeCamera as CubeCamera } from './cameras/CubeCamera.js';
@@ -107,11 +112,17 @@ export {
 } from './core/BufferAttribute.js';
 export { THREE$BufferGeometry as BufferGeometry } from './core/BufferGeometry.js';
 export { THREE$Clock as Clock } from './core/Clock.js';
+export { THREE$DirectGeometry as DirectGeometry } from './core/DirectGeometry.js';
 export { THREE$DynamicBufferAttribute as DynamicBufferAttribute } from './core/DynamicBufferAttribute.js';
 export { THREE$EventDispatcher as EventDispatcher } from './core/EventDispatcher.js';
 export { THREE$Face3 as Face3 } from './core/Face3.js';
 export { THREE$Face4 as Face4 } from './core/Face4.js';
 export { THREE$GeometryIdCount as GeometryIdCount, THREE$Geometry as Geometry } from './core/Geometry.js';
+export { THREE$InstancedBufferAttribute as InstancedBufferAttribute } from './core/InstancedBufferAttribute.js';
+export { THREE$InstancedBufferGeometry as InstancedBufferGeometry } from './core/InstancedBufferGeometry.js';
+export { THREE$InstancedInterleavedBuffer as InstancedInterleavedBuffer } from './core/InstancedInterleavedBuffer.js';
+export { THREE$InterleavedBuffer as InterleavedBuffer } from './core/InterleavedBuffer.js';
+export { THREE$InterleavedBufferAttribute as InterleavedBufferAttribute } from './core/InterleavedBufferAttribute.js';
 export { THREE$Object3DIdCount as Object3DIdCount, THREE$Object3D as Object3D } from './core/Object3D.js';
 export { THREE$Raycaster as Raycaster } from './core/Raycaster.js';
 export { THREE$typeface_js as typeface_js, THREE$FontUtils as FontUtils } from './extras/FontUtils.js';
@@ -130,6 +141,7 @@ export { THREE$Gyroscope as Gyroscope } from './extras/core/Gyroscope.js';
 export { THREE$PathActions as PathActions, THREE$Path as Path } from './extras/core/Path.js';
 export { THREE$Shape as Shape } from './extras/core/Shape.js';
 export { THREE$ArcCurve as ArcCurve } from './extras/curves/ArcCurve.js';
+export { THREE$CatmullRomCurve3 as CatmullRomCurve3 } from './extras/curves/CatmullRomCurve3.js';
 export { THREE$ClosedSplineCurve3 as ClosedSplineCurve3 } from './extras/curves/ClosedSplineCurve3.js';
 export { THREE$CubicBezierCurve as CubicBezierCurve } from './extras/curves/CubicBezierCurve.js';
 export { THREE$CubicBezierCurve3 as CubicBezierCurve3 } from './extras/curves/CubicBezierCurve3.js';
@@ -140,11 +152,12 @@ export { THREE$QuadraticBezierCurve as QuadraticBezierCurve } from './extras/cur
 export { THREE$QuadraticBezierCurve3 as QuadraticBezierCurve3 } from './extras/curves/QuadraticBezierCurve3.js';
 export { THREE$SplineCurve as SplineCurve } from './extras/curves/SplineCurve.js';
 export { THREE$SplineCurve3 as SplineCurve3 } from './extras/curves/SplineCurve3.js';
-export { THREE$BoxGeometry as BoxGeometry } from './extras/geometries/BoxGeometry.js';
+export { THREE$CubeGeometry as CubeGeometry, THREE$BoxGeometry as BoxGeometry } from './extras/geometries/BoxGeometry.js';
+export { THREE$CircleBufferGeometry as CircleBufferGeometry } from './extras/geometries/CircleBufferGeometry.js';
 export { THREE$CircleGeometry as CircleGeometry } from './extras/geometries/CircleGeometry.js';
-export { THREE$CubeGeometry as CubeGeometry } from './extras/geometries/CubeGeometry.js';
 export { THREE$CylinderGeometry as CylinderGeometry } from './extras/geometries/CylinderGeometry.js';
 export { THREE$DodecahedronGeometry as DodecahedronGeometry } from './extras/geometries/DodecahedronGeometry.js';
+export { THREE$EdgesGeometry as EdgesGeometry } from './extras/geometries/EdgesGeometry.js';
 export { THREE$ExtrudeGeometry as ExtrudeGeometry } from './extras/geometries/ExtrudeGeometry.js';
 export { THREE$IcosahedronGeometry as IcosahedronGeometry } from './extras/geometries/IcosahedronGeometry.js';
 export { THREE$LatheGeometry as LatheGeometry } from './extras/geometries/LatheGeometry.js';
@@ -155,12 +168,14 @@ export { THREE$PlaneGeometry as PlaneGeometry } from './extras/geometries/PlaneG
 export { THREE$PolyhedronGeometry as PolyhedronGeometry } from './extras/geometries/PolyhedronGeometry.js';
 export { THREE$RingGeometry as RingGeometry } from './extras/geometries/RingGeometry.js';
 export { THREE$ShapeGeometry as ShapeGeometry } from './extras/geometries/ShapeGeometry.js';
+export { THREE$SphereBufferGeometry as SphereBufferGeometry } from './extras/geometries/SphereBufferGeometry.js';
 export { THREE$SphereGeometry as SphereGeometry } from './extras/geometries/SphereGeometry.js';
 export { THREE$TetrahedronGeometry as TetrahedronGeometry } from './extras/geometries/TetrahedronGeometry.js';
 export { THREE$TextGeometry as TextGeometry } from './extras/geometries/TextGeometry.js';
 export { THREE$TorusGeometry as TorusGeometry } from './extras/geometries/TorusGeometry.js';
 export { THREE$TorusKnotGeometry as TorusKnotGeometry } from './extras/geometries/TorusKnotGeometry.js';
 export { THREE$TubeGeometry as TubeGeometry } from './extras/geometries/TubeGeometry.js';
+export { THREE$WireframeGeometry as WireframeGeometry } from './extras/geometries/WireframeGeometry.js';
 export { THREE$ArrowHelper as ArrowHelper } from './extras/helpers/ArrowHelper.js';
 export { THREE$AxisHelper as AxisHelper } from './extras/helpers/AxisHelper.js';
 export { THREE$BoundingBoxHelper as BoundingBoxHelper } from './extras/helpers/BoundingBoxHelper.js';
@@ -235,6 +250,7 @@ export { THREE$Group as Group } from './objects/Group.js';
 export { THREE$LOD as LOD } from './objects/LOD.js';
 export { THREE$LensFlare as LensFlare } from './objects/LensFlare.js';
 export { THREE$LinePieces as LinePieces, THREE$LineStrip as LineStrip, THREE$Line as Line } from './objects/Line.js';
+export { THREE$LineSegments as LineSegments } from './objects/LineSegments.js';
 export { THREE$Mesh as Mesh } from './objects/Mesh.js';
 export { THREE$MorphAnimMesh as MorphAnimMesh } from './objects/MorphAnimMesh.js';
 export { THREE$ParticleSystem as ParticleSystem, THREE$PointCloud as PointCloud } from './objects/PointCloud.js';
@@ -249,12 +265,15 @@ export { THREE$ShaderLib as ShaderLib } from './renderers/shaders/ShaderLib.js';
 export { THREE$UniformsLib as UniformsLib } from './renderers/shaders/UniformsLib.js';
 export { THREE$UniformsUtils as UniformsUtils } from './renderers/shaders/UniformsUtils.js';
 export { THREE$WebGLExtensions as WebGLExtensions } from './renderers/webgl/WebGLExtensions.js';
+export { THREE$WebGLGeometries as WebGLGeometries } from './renderers/webgl/WebGLGeometries.js';
+export { THREE$WebGLObjects as WebGLObjects } from './renderers/webgl/WebGLObjects.js';
 export { THREE$WebGLProgram as WebGLProgram } from './renderers/webgl/WebGLProgram.js';
+export { THREE$WebGLProperties as WebGLProperties } from './renderers/webgl/WebGLProperties.js';
 export { THREE$WebGLShader as WebGLShader } from './renderers/webgl/WebGLShader.js';
+export { THREE$WebGLShadowMap as WebGLShadowMap } from './renderers/webgl/WebGLShadowMap.js';
 export { THREE$WebGLState as WebGLState } from './renderers/webgl/WebGLState.js';
 export { THREE$WebGLTextures as WebGLTextures } from './renderers/webgl/WebGLTextures.js';
 export { THREE$LensFlarePlugin as LensFlarePlugin } from './renderers/webgl/plugins/LensFlarePlugin.js';
-export { THREE$ShadowMapPlugin as ShadowMapPlugin } from './renderers/webgl/plugins/ShadowMapPlugin.js';
 export { THREE$SpritePlugin as SpritePlugin } from './renderers/webgl/plugins/SpritePlugin.js';
 export { THREE$Fog as Fog } from './scenes/Fog.js';
 export { THREE$FogExp2 as FogExp2 } from './scenes/FogExp2.js';

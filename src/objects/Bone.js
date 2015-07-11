@@ -20,5 +20,15 @@ function THREE$Bone ( skin ) {
 THREE$Bone.prototype = Object.create( THREE$Object3D.prototype );
 THREE$Bone.prototype.constructor = THREE$Bone;
 
+THREE$Bone.prototype.clone = function ( object ) {
+
+	if ( object === undefined ) object = new THREE$Bone( this.skin );
+
+	THREE$Object3D.prototype.clone.call( this, object );
+	object.skin = this.skin; 
+
+	return object;
+
+};
 
 export { THREE$Bone };

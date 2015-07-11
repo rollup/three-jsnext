@@ -11,6 +11,8 @@ import { THREE$Vector2 } from '../../math/Vector2';
 function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
 	this.isSphereGeometry = true;
 
+	console.log( 'THREE.SphereGeometry: Consider using THREE.SphereBufferGeometry for lower memory footprint.' );
+
 	THREE$Geometry.call( this );
 
 	this.type = 'SphereGeometry';
@@ -22,7 +24,7 @@ function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart,
 		phiStart: phiStart,
 		phiLength: phiLength,
 		thetaStart: thetaStart,
-		thetaLength: thetaLength 
+		thetaLength: thetaLength
 	};
 
 	radius = radius || 50;

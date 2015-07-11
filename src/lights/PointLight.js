@@ -1,3 +1,4 @@
+import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Light } from './Light';
 
 /**
@@ -31,6 +32,19 @@ THREE$PointLight.prototype.clone = function () {
 	light.decay = this.decay;
 
 	return light;
+
+};
+
+THREE$PointLight.prototype.toJSON = function ( meta ) {
+
+	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+
+	data.object.color = this.color.getHex();
+	data.object.intensity = this.intensity;
+	data.object.distance = this.distance;
+	data.object.decay = this.decay;
+
+	return data;
 
 };
 

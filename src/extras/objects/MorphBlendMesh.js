@@ -1,5 +1,4 @@
 import { THREE$Math } from '../../math/Math';
-import { THREE$warn } from '../../Three';
 import { THREE$Mesh } from '../../objects/Mesh';
 
 /**
@@ -225,7 +224,7 @@ THREE$MorphBlendMesh.prototype.playAnimation = function ( name ) {
 
 	} else {
 
-		THREE$warn( "THREE.MorphBlendMesh: animation[" + name + "] undefined in .playAnimation()" );
+		console.warn( "THREE.MorphBlendMesh: animation[" + name + "] undefined in .playAnimation()" );
 
 	}
 

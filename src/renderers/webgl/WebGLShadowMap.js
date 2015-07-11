@@ -1,38 +1,39 @@
-import { THREE$MeshFaceMaterial } from '../../../materials/MeshFaceMaterial';
-import { THREE$Vector3 } from '../../../math/Vector3';
-import { THREE$DirectionalLight } from '../../../lights/DirectionalLight';
-import { THREE$CullFaceFront, THREE$error, THREE$RGBAFormat, THREE$NearestFilter, THREE$PCFSoftShadowMap, THREE$LinearFilter } from '../../../Three';
-import { THREE$BufferGeometry } from '../../../core/BufferGeometry';
-import { THREE$SkinnedMesh } from '../../../objects/SkinnedMesh';
-import { THREE$CameraHelper } from '../../../extras/helpers/CameraHelper';
-import { THREE$OrthographicCamera } from '../../../cameras/OrthographicCamera';
-import { THREE$PerspectiveCamera } from '../../../cameras/PerspectiveCamera';
-import { THREE$SpotLight } from '../../../lights/SpotLight';
-import { THREE$Matrix4 } from '../../../math/Matrix4';
-import { THREE$Vector2 } from '../../../math/Vector2';
-import { THREE$WebGLRenderTarget } from '../../WebGLRenderTarget';
-import { THREE$Gyroscope } from '../../../extras/core/Gyroscope';
-import { THREE$ShaderMaterial } from '../../../materials/ShaderMaterial';
-import { THREE$UniformsUtils } from '../../shaders/UniformsUtils';
-import { THREE$ShaderLib } from '../../shaders/ShaderLib';
-import { THREE$Frustum } from '../../../math/Frustum';
+import { THREE$MeshFaceMaterial } from '../../materials/MeshFaceMaterial';
+import { THREE$Vector3 } from '../../math/Vector3';
+import { THREE$DirectionalLight } from '../../lights/DirectionalLight';
+import { THREE$CullFaceFront, THREE$RGBAFormat, THREE$NearestFilter, THREE$PCFSoftShadowMap, THREE$LinearFilter, THREE$PCFShadowMap } from '../../Three';
+import { THREE$SkinnedMesh } from '../../objects/SkinnedMesh';
+import { THREE$CameraHelper } from '../../extras/helpers/CameraHelper';
+import { THREE$OrthographicCamera } from '../../cameras/OrthographicCamera';
+import { THREE$PerspectiveCamera } from '../../cameras/PerspectiveCamera';
+import { THREE$SpotLight } from '../../lights/SpotLight';
+import { THREE$Matrix4 } from '../../math/Matrix4';
+import { THREE$Vector2 } from '../../math/Vector2';
+import { THREE$WebGLRenderTarget } from '../WebGLRenderTarget';
+import { THREE$Gyroscope } from '../../extras/core/Gyroscope';
+import { THREE$ShaderMaterial } from '../../materials/ShaderMaterial';
+import { THREE$UniformsUtils } from '../shaders/UniformsUtils';
+import { THREE$ShaderLib } from '../shaders/ShaderLib';
+import { THREE$Frustum } from '../../math/Frustum';
 
 /**
  * @author alteredq / http://alteredqualia.com/
+ * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObjectsImmediate ) {
-	this.isShadowMapPlugin = true;
+function THREE$WebGLShadowMap ( _renderer, _lights, _objects ) {
+	this.isWebGLShadowMap = true;
 
-	var _gl = _renderer.context;
-
-	var _depthMaterial, _depthMaterialMorph, _depthMaterialSkin, _depthMaterialMorphSkin,
-
+	var _gl = _renderer.context,
+	_state = _renderer.state,
 	_frustum = new THREE$Frustum(),
 	_projScreenMatrix = new THREE$Matrix4(),
 
 	_min = new THREE$Vector3(),
 	_max = new THREE$Vector3(),
+
+	_webglObjects = _objects.objects,
+	_webglObjectsImmediate = _objects.objectsImmediate,
 
 	_matrixPosition = new THREE$Vector3(),
 
@@ -43,27 +44,27 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 	var depthShader = THREE$ShaderLib[ "depthRGBA" ];
 	var depthUniforms = THREE$UniformsUtils.clone( depthShader.uniforms );
 
-	_depthMaterial = new THREE$ShaderMaterial( {
+	var _depthMaterial = new THREE$ShaderMaterial( {
 		uniforms: depthUniforms,
 		vertexShader: depthShader.vertexShader,
 		fragmentShader: depthShader.fragmentShader
 	 } );
 
-	_depthMaterialMorph = new THREE$ShaderMaterial( {
+	var _depthMaterialMorph = new THREE$ShaderMaterial( {
 		uniforms: depthUniforms,
 		vertexShader: depthShader.vertexShader,
 		fragmentShader: depthShader.fragmentShader,
 		morphTargets: true
 	} );
 
-	_depthMaterialSkin = new THREE$ShaderMaterial( {
+	var _depthMaterialSkin = new THREE$ShaderMaterial( {
 		uniforms: depthUniforms,
 		vertexShader: depthShader.vertexShader,
 		fragmentShader: depthShader.fragmentShader,
 		skinning: true
 	} );
 
-	_depthMaterialMorphSkin = new THREE$ShaderMaterial( {
+	var _depthMaterialMorphSkin = new THREE$ShaderMaterial( {
 		uniforms: depthUniforms,
 		vertexShader: depthShader.vertexShader,
 		fragmentShader: depthShader.fragmentShader,
@@ -76,15 +77,28 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 	_depthMaterialSkin._shadowPass = true;
 	_depthMaterialMorphSkin._shadowPass = true;
 
+	//
+
+	var scope = this;
+
+	this.enabled = false;
+
+	this.autoUpdate = true;
+	this.needsUpdate = false;
+
+	this.type = THREE$PCFShadowMap;
+	this.cullFace = THREE$CullFaceFront;
+	this.cascade = false;
+
 	this.render = function ( scene, camera ) {
 
-		if ( _renderer.shadowMapEnabled === false ) return;
+		if ( scope.enabled === false ) return;
+		if ( scope.autoUpdate === false && scope.needsUpdate === false ) return;
 
 		var i, il, j, jl, n,
 
 		shadowMap, shadowMatrix, shadowCamera,
-		buffer, material,
-		webglObject, object, light,
+		webglObject, object, material, light,
 
 		lights = [],
 		k = 0,
@@ -94,12 +108,12 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 		// set GL state for depth map
 
 		_gl.clearColor( 1, 1, 1, 1 );
-		_gl.disable( _gl.BLEND );
+		_state.disable( _gl.BLEND );
 
-		_gl.enable( _gl.CULL_FACE );
+		_state.enable( _gl.CULL_FACE );
 		_gl.frontFace( _gl.CCW );
 
-		if ( _renderer.shadowMapCullFace === THREE$CullFaceFront ) {
+		if ( scope.cullFace === THREE$CullFaceFront ) {
 
 			_gl.cullFace( _gl.FRONT );
 
@@ -109,7 +123,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 		}
 
-		_renderer.state.setDepthTest( true );
+		_state.setDepthTest( true );
 
 		// preprocess lights
 		// 	- skip lights that are not casting shadows
@@ -176,7 +190,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 				var shadowFilter = THREE$LinearFilter;
 
-				if ( _renderer.shadowMapType === THREE$PCFSoftShadowMap ) {
+				if ( scope.type === THREE$PCFSoftShadowMap ) {
 
 					shadowFilter = THREE$NearestFilter;
 
@@ -203,7 +217,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 				} else {
 
-					THREE$error( "THREE.ShadowMapPlugin: Unsupported light type for shadow", light );
+					console.error( "THREE.ShadowMapPlugin: Unsupported light type for shadow", light );
 					continue;
 
 				}
@@ -271,7 +285,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 			_renderList.length = 0;
 
-			projectObject( scene, scene, shadowCamera );
+			projectObject( scene, shadowCamera );
 
 
 			// render regular objects
@@ -283,9 +297,8 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 				webglObject = _renderList[ j ];
 
 				object = webglObject.object;
-				buffer = webglObject.buffer;
 
-				// culling is overriden globally for all objects
+				// culling is overridden globally for all objects
 				// while rendering depth map
 
 				// need to deal with MeshFaceMaterial somehow
@@ -318,16 +331,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 				}
 
 				_renderer.setMaterialFaces( objectMaterial );
-
-				if ( (buffer && buffer.isBufferGeometry) ) {
-
-					_renderer.renderBufferDirect( shadowCamera, _lights, fog, material, buffer, object );
-
-				} else {
-
-					_renderer.renderBuffer( shadowCamera, _lights, fog, material, buffer, object );
-
-				}
+				_renderer.renderBufferDirect( shadowCamera, _lights, fog, material, object );
 
 			}
 
@@ -356,9 +360,9 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 		clearAlpha = _renderer.getClearAlpha();
 
 		_gl.clearColor( clearColor.r, clearColor.g, clearColor.b, clearAlpha );
-		_gl.enable( _gl.BLEND );
+		_state.enable( _gl.BLEND );
 
-		if ( _renderer.shadowMapCullFace === THREE$CullFaceFront ) {
+		if ( scope.cullFace === THREE$CullFaceFront ) {
 
 			_gl.cullFace( _gl.BACK );
 
@@ -366,30 +370,26 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 		_renderer.resetGLState();
 
+		scope.needsUpdate = false;
+
 	};
 
-	function projectObject( scene, object, shadowCamera ) {
+	function projectObject( object, shadowCamera ) {
 
-		if ( object.visible ) {
+		if ( object.visible === true ) {
 
-			var webglObjects = _webglObjects[ object.id ];
+			var webglObject = _objects.objects[ object.id ];
 
-			if ( webglObjects && object.castShadow && (object.frustumCulled === false || _frustum.intersectsObject( object ) === true) ) {
+			if ( webglObject && object.castShadow && ( object.frustumCulled === false || _frustum.intersectsObject( object ) === true ) ) {
 
-				for ( var i = 0, l = webglObjects.length; i < l; i ++ ) {
-
-					var webglObject = webglObjects[ i ];
-
-					object._modelViewMatrix.multiplyMatrices( shadowCamera.matrixWorldInverse, object.matrixWorld );
-					_renderList.push( webglObject );
-
-				}
+				object._modelViewMatrix.multiplyMatrices( shadowCamera.matrixWorldInverse, object.matrixWorld );
+				_renderList.push( webglObject );
 
 			}
 
 			for ( var i = 0, l = object.children.length; i < l; i ++ ) {
 
-				projectObject( scene, object.children[ i ], shadowCamera );
+				projectObject( object.children[ i ], shadowCamera );
 
 			}
 
@@ -537,9 +537,9 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 			? object.material.materials[ 0 ]
 			: object.material;
 
-	};
+	}
 
 };
 
 
-export { THREE$ShadowMapPlugin };
+export { THREE$WebGLShadowMap };

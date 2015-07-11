@@ -1,3 +1,4 @@
+import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Light } from './Light';
 
 /**
@@ -23,6 +24,16 @@ THREE$AmbientLight.prototype.clone = function () {
 	THREE$Light.prototype.clone.call( this, light );
 
 	return light;
+
+};
+
+THREE$AmbientLight.prototype.toJSON = function ( meta ) {
+
+	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+
+	data.object.color = this.color.getHex();
+
+	return data;
 
 };
 

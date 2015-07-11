@@ -1,15 +1,8 @@
 import { THREE$EventDispatcher } from '../core/EventDispatcher';
-import { THREE$SpriteMaterial } from './SpriteMaterial';
-import { THREE$ShaderMaterial } from './ShaderMaterial';
-import { THREE$NormalBlending, THREE$NoColors, THREE$FrontSide, THREE$SmoothShading, THREE$warn, THREE$AddEquation, THREE$OneMinusSrcAlphaFactor, THREE$SrcAlphaFactor } from '../Three';
-import { THREE$PointCloudMaterial } from './PointCloudMaterial';
-import { THREE$MeshDepthMaterial } from './MeshDepthMaterial';
-import { THREE$MeshNormalMaterial } from './MeshNormalMaterial';
-import { THREE$MeshPhongMaterial } from './MeshPhongMaterial';
-import { THREE$MeshLambertMaterial } from './MeshLambertMaterial';
-import { THREE$MeshBasicMaterial } from './MeshBasicMaterial';
-import { THREE$Vector3 } from '../math/Vector3';
+import { THREE$FrontSide, THREE$NormalBlending, THREE$SmoothShading, THREE$NoColors, THREE$LessEqualDepth, THREE$AddEquation, THREE$OneMinusSrcAlphaFactor, THREE$SrcAlphaFactor } from '../Three';
+import { THREE$Texture } from '../textures/Texture';
 import { THREE$Color } from '../math/Color';
+import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Math } from '../math/Math';
 
 /**
@@ -41,6 +34,7 @@ function THREE$Material () {
 	this.blendDstAlpha = null;
 	this.blendEquationAlpha = null;
 
+	this.depthFunc = THREE$LessEqualDepth;
 	this.depthTest = true;
 	this.depthWrite = true;
 
@@ -88,7 +82,7 @@ THREE$Material.prototype = {
 
 			if ( newValue === undefined ) {
 
-				THREE$warn( "THREE.Material: '" + key + "' parameter is undefined." );
+				console.warn( "THREE.Material: '" + key + "' parameter is undefined." );
 				continue;
 
 			}
@@ -105,9 +99,9 @@ THREE$Material.prototype = {
 
 					currentValue.copy( newValue );
 
-				} else if ( key == 'overdraw' ) {
+				} else if ( key === 'overdraw' ) {
 
-					// ensure overdraw is backwards-compatable with legacy boolean type
+					// ensure overdraw is backwards-compatible with legacy boolean type
 					this[ key ] = Number( newValue );
 
 				} else {
@@ -122,83 +116,56 @@ THREE$Material.prototype = {
 
 	},
 
-	toJSON: function () {
+	toJSON: function ( meta ) {
 
-		var output = {
+		var data = {
 			metadata: {
-				version: 4.2,
-				type: 'material',
-				generator: 'MaterialExporter'
-			},
-			uuid: this.uuid,
-			type: this.type
+				version: 4.4,
+				type: 'Material',
+				generator: 'Material.toJSON'
+			}
 		};
 
-		if ( this.name !== "" ) output.name = this.name;
+		// standard Material serialization
+		data.uuid = this.uuid;
+		data.type = this.type;
+		if ( this.name !== '' ) data.name = this.name;
 
-		if ( (this && this.isMeshBasicMaterial) ) {
+		if ( (this.color && this.color.isColor) ) data.color = this.color.getHex();
+		if ( (this.emissive && this.emissive.isColor) ) data.emissive = this.emissive.getHex();
+		if ( (this.specular && this.specular.isColor) ) data.specular = this.specular.getHex();
+		if ( this.shininess !== undefined ) data.shininess = this.shininess;
 
-			output.color = this.color.getHex();
-			if ( this.vertexColors !== THREE$NoColors ) output.vertexColors = this.vertexColors;
-			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
-			if ( this.side !== THREE$FrontSide ) output.side = this.side;
-
-		} else if ( (this && this.isMeshLambertMaterial) ) {
-
-			output.color = this.color.getHex();
-			output.emissive = this.emissive.getHex();
-			if ( this.vertexColors !== THREE$NoColors ) output.vertexColors = this.vertexColors;
-			if ( this.shading !== THREE$SmoothShading ) output.shading = this.shading;
-			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
-			if ( this.side !== THREE$FrontSide ) output.side = this.side;
-
-		} else if ( (this && this.isMeshPhongMaterial) ) {
-
-			output.color = this.color.getHex();
-			output.emissive = this.emissive.getHex();
-			output.specular = this.specular.getHex();
-			output.shininess = this.shininess;
-			if ( this.vertexColors !== THREE$NoColors ) output.vertexColors = this.vertexColors;
-			if ( this.shading !== THREE$SmoothShading ) output.shading = this.shading;
-			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
-			if ( this.side !== THREE$FrontSide ) output.side = this.side;
-
-		} else if ( (this && this.isMeshNormalMaterial) ) {
-
-			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
-			if ( this.side !== THREE$FrontSide ) output.side = this.side;
-
-		} else if ( (this && this.isMeshDepthMaterial) ) {
-
-			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
-			if ( this.side !== THREE$FrontSide ) output.side = this.side;
-
-		} else if ( (this && this.isPointCloudMaterial) ) {
-
-			output.size  = this.size;
-			output.sizeAttenuation = this.sizeAttenuation;
-			output.color = this.color.getHex();
-
-			if ( this.vertexColors !== THREE$NoColors ) output.vertexColors = this.vertexColors;
-			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
-
-		} else if ( (this && this.isShaderMaterial) ) {
-
-			output.uniforms = this.uniforms;
-			output.vertexShader = this.vertexShader;
-			output.fragmentShader = this.fragmentShader;
-
-		} else if ( (this && this.isSpriteMaterial) ) {
-
-			output.color = this.color.getHex();
-
+		if ( (this.map && this.map.isTexture) ) data.map = this.map.toJSON( meta ).uuid;
+		if ( (this.alphaMap && this.alphaMap.isTexture) ) data.alphaMap = this.alphaMap.toJSON( meta ).uuid;
+		if ( (this.lightMap && this.lightMap.isTexture) ) data.lightMap = this.lightMap.toJSON( meta ).uuid;
+		if ( (this.bumpMap && this.bumpMap.isTexture) ) {
+			data.bumpMap = this.bumpMap.toJSON( meta ).uuid;
+			data.bumpScale = this.bumpScale;
+		}
+		if ( (this.normalMap && this.normalMap.isTexture) ) {
+			data.normalMap = this.normalMap.toJSON( meta ).uuid;
+			data.normalScale = this.normalScale; // Removed for now, causes issue in editor ui.js
+		}
+		if ( (this.specularMap && this.specularMap.isTexture) ) data.specularMap = this.specularMap.toJSON( meta ).uuid;
+		if ( (this.envMap && this.envMap.isTexture) ) {
+			data.envMap = this.envMap.toJSON( meta ).uuid;
+			data.reflectivity = this.reflectivity; // Scale behind envMap
 		}
 
-		if ( this.opacity < 1 ) output.opacity = this.opacity;
-		if ( this.transparent !== false ) output.transparent = this.transparent;
-		if ( this.wireframe !== false ) output.wireframe = this.wireframe;
+		if ( this.size !== undefined ) data.size = this.size;
+		if ( this.sizeAttenuation !== undefined ) data.sizeAttenuation = this.sizeAttenuation;
 
-		return output;
+		if ( this.vertexColors !== undefined && this.vertexColors !== THREE$NoColors ) data.vertexColors = this.vertexColors;
+		if ( this.shading !== undefined && this.shading !== THREE$SmoothShading ) data.shading = this.shading;
+		if ( this.blending !== undefined && this.blending !== THREE$NormalBlending ) data.blending = this.blending;
+		if ( this.side !== undefined && this.side !== THREE$FrontSide ) data.side = this.side;
+
+		if ( this.opacity < 1 ) data.opacity = this.opacity;
+		if ( this.transparent === true ) data.transparent = this.transparent;
+		if ( this.wireframe === true ) data.wireframe = this.wireframe;
+
+		return data;
 
 	},
 
@@ -222,6 +189,7 @@ THREE$Material.prototype = {
 		material.blendDstAlpha = this.blendDstAlpha;
 		material.blendEquationAlpha = this.blendEquationAlpha;
 
+		material.depthFunc = this.depthFunc;
 		material.depthTest = this.depthTest;
 		material.depthWrite = this.depthWrite;
 

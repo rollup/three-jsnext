@@ -33,7 +33,7 @@ THREE$CompressedTextureLoader.prototype = {
 		var loader = new THREE$XHRLoader();
 		loader.setResponseType( 'arraybuffer' );
 
-		if ( url instanceof Array ) {
+		if ( Array.isArray( url ) ) {
 
 			var loaded = 0;
 
@@ -54,7 +54,7 @@ THREE$CompressedTextureLoader.prototype = {
 
 					if ( loaded === 6 ) {
 
-						if (texDatas.mipmapCount == 1)
+						if (texDatas.mipmapCount === 1)
  							texture.minFilter = THREE$LinearFilter;
 
 						texture.format = texDatas.format;

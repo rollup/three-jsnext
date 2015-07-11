@@ -1,3 +1,4 @@
+import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Light } from './Light';
 import { THREE$Color } from '../math/Color';
 
@@ -32,6 +33,17 @@ THREE$HemisphereLight.prototype.clone = function () {
 	light.intensity = this.intensity;
 
 	return light;
+
+};
+
+THREE$HemisphereLight.prototype.toJSON = function ( meta ) {
+
+	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+
+	data.object.color = this.color.getHex();
+	data.object.groundColor = this.groundColor.getHex();
+
+	return data;
 
 };
 

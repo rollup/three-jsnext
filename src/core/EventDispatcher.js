@@ -3,7 +3,7 @@
  */
 
 function THREE$EventDispatcher () {
-	this.isEventDispatcher = true;}
+	this.isEventDispatcher = true;};
 
 THREE$EventDispatcher.prototype = {
 

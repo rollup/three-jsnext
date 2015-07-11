@@ -1,5 +1,6 @@
 import { THREE$Texture } from '../../textures/Texture';
 import { THREE$Matrix4 } from '../../math/Matrix4';
+import { THREE$Matrix3 } from '../../math/Matrix3';
 import { THREE$Vector4 } from '../../math/Vector4';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Vector2 } from '../../math/Vector2';
@@ -49,12 +50,13 @@ THREE$UniformsUtils = {
 					 (parameter_src && parameter_src.isVector2) ||
 					 (parameter_src && parameter_src.isVector3) ||
 					 (parameter_src && parameter_src.isVector4) ||
+					 (parameter_src && parameter_src.isMatrix3) ||
 					 (parameter_src && parameter_src.isMatrix4) ||
 					 (parameter_src && parameter_src.isTexture) ) {
 
 					uniforms_dst[ u ][ p ] = parameter_src.clone();
 
-				} else if ( parameter_src instanceof Array ) {
+				} else if ( Array.isArray( parameter_src ) ) {
 
 					uniforms_dst[ u ][ p ] = parameter_src.slice();
 

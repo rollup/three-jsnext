@@ -1,6 +1,5 @@
 import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$warn } from '../../Three';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -61,7 +60,7 @@ THREE$Audio.prototype.play = function () {
 
 	if ( this.isPlaying === true ) {
 
-		THREE$warn( 'THREE.Audio: Audio is already playing.' );
+		console.warn( 'THREE.Audio: Audio is already playing.' );
 		return;
 
 	}

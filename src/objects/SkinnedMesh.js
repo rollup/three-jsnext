@@ -1,5 +1,4 @@
 import { THREE$Mesh } from './Mesh';
-import { THREE$warn } from '../Three';
 import { THREE$Geometry } from '../core/Geometry';
 import { THREE$Skeleton } from './Skeleton';
 import { THREE$Bone } from './Bone';
@@ -156,7 +155,7 @@ THREE$SkinnedMesh.prototype.updateMatrixWorld = function( force ) {
 
 	} else {
 
-		THREE$warn( 'THREE.SkinnedMesh unreckognized bindMode: ' + this.bindMode );
+		console.warn( 'THREE.SkinnedMesh unrecognized bindMode: ' + this.bindMode );
 
 	}
 

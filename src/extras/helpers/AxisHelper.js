@@ -1,4 +1,4 @@
-import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
+import { THREE$LineSegments } from '../../objects/LineSegments';
 import { THREE$VertexColors } from '../../Three';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
@@ -32,11 +32,11 @@ function THREE$AxisHelper ( size ) {
 
 	var material = new THREE$LineBasicMaterial( { vertexColors: THREE$VertexColors } );
 
-	THREE$Line.call( this, geometry, material, THREE$LinePieces );
+	THREE$LineSegments.call( this, geometry, material );
 
 };
 
-THREE$AxisHelper.prototype = Object.create( THREE$Line.prototype );
+THREE$AxisHelper.prototype = Object.create( THREE$LineSegments.prototype );
 THREE$AxisHelper.prototype.constructor = THREE$AxisHelper;
 
 

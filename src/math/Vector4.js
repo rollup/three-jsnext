@@ -1,5 +1,3 @@
-import { THREE$warn } from '../Three';
-
 /**
  * @author supereggbert / http://www.paulbrunt.co.uk/
  * @author philogb / http://blog.thejit.org/
@@ -108,7 +106,7 @@ THREE$Vector4.prototype = {
 
 		if ( w !== undefined ) {
 
-			THREE$warn( 'THREE.Vector4: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
+			console.warn( 'THREE.Vector4: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
 			return this.addVectors( v, w );
 
 		}
@@ -148,7 +146,7 @@ THREE$Vector4.prototype = {
 
 		if ( w !== undefined ) {
 
-			THREE$warn( 'THREE.Vector4: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
+			console.warn( 'THREE.Vector4: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
 			return this.subVectors( v, w );
 
 		}

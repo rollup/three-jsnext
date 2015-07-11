@@ -1,5 +1,5 @@
-import { THREE$Light } from './Light';
 import { THREE$Object3D } from '../core/Object3D';
+import { THREE$Light } from './Light';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -82,6 +82,21 @@ THREE$SpotLight.prototype.clone = function () {
 	light.shadowMapHeight = this.shadowMapHeight;
 
 	return light;
+
+};
+
+THREE$SpotLight.prototype.toJSON = function ( meta ) {
+
+	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+
+	data.object.color = this.color.getHex();
+	data.object.intensity = this.intensity;
+	data.object.distance = this.distance;
+	data.object.angle = this.angle;
+	data.object.exponent = this.exponent;
+	data.object.decay = this.decay;
+
+	return data;
 
 };
 

@@ -1,6 +1,6 @@
 import { THREE$Bone } from '../../objects/Bone';
 import { THREE$Matrix4 } from '../../math/Matrix4';
-import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
+import { THREE$LineSegments } from '../../objects/LineSegments';
 import { THREE$VertexColors } from '../../Three';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Color } from '../../math/Color';
@@ -36,9 +36,11 @@ function THREE$SkeletonHelper ( object ) {
 
 	}
 
+	geometry.dynamic = true;
+
 	var material = new THREE$LineBasicMaterial( { vertexColors: THREE$VertexColors, depthTest: false, depthWrite: false, transparent: true } );
 
-	THREE$Line.call( this, geometry, material, THREE$LinePieces );
+	THREE$LineSegments.call( this, geometry, material );
 
 	this.root = object;
 
@@ -50,7 +52,7 @@ function THREE$SkeletonHelper ( object ) {
 };
 
 
-THREE$SkeletonHelper.prototype = Object.create( THREE$Line.prototype );
+THREE$SkeletonHelper.prototype = Object.create( THREE$LineSegments.prototype );
 THREE$SkeletonHelper.prototype.constructor = THREE$SkeletonHelper;
 
 THREE$SkeletonHelper.prototype.getBoneList = function( object ) {

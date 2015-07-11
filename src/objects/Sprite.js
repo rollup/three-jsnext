@@ -47,9 +47,10 @@ THREE$Sprite.prototype.raycast = ( function () {
 
 		matrixPosition.setFromMatrixPosition( this.matrixWorld );
 
-		var distance = raycaster.ray.distanceToPoint( matrixPosition );
-
-		if ( distance > this.scale.x ) {
+		var distanceSq = raycaster.ray.distanceSqToPoint( matrixPosition );
+		var guessSizeSq = this.scale.x * this.scale.y;
+		
+		if ( distanceSq > guessSizeSq ) {
 
 			return;
 
@@ -57,7 +58,7 @@ THREE$Sprite.prototype.raycast = ( function () {
 
 		intersects.push( {
 
-			distance: distance,
+			distance: Math.sqrt( distanceSq ),
 			point: this.position,
 			face: null,
 			object: this
@@ -75,6 +76,21 @@ THREE$Sprite.prototype.clone = function ( object ) {
 	THREE$Object3D.prototype.clone.call( this, object );
 
 	return object;
+
+};
+
+THREE$Sprite.prototype.toJSON = function ( meta ) {
+
+	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+
+	// only serialize if not in meta materials cache
+	if ( meta.materials[ this.material.uuid ] === undefined ) {
+		meta.materials[ this.material.uuid ] = this.material.toJSON();
+	}
+
+	data.object.material = this.material.uuid;
+
+	return data;
 
 };
 

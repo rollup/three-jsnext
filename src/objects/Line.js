@@ -1,6 +1,7 @@
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Geometry } from '../core/Geometry';
 import { THREE$BufferGeometry } from '../core/BufferGeometry';
+import { THREE$LineSegments } from './LineSegments';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Sphere } from '../math/Sphere';
 import { THREE$Ray } from '../math/Ray';
@@ -17,6 +18,12 @@ var THREE$LineStrip;
 function THREE$Line ( geometry, material, mode ) {
 	this.isLine = true;
 
+	if ( mode === 1 ) {
+
+		console.error( 'THREE.Line: THREE.LinePieces mode has been removed. Use THREE.LineSegments instead.' );
+
+	}
+
 	THREE$Object3D.call( this );
 
 	this.type = 'Line';
@@ -24,12 +31,7 @@ function THREE$Line ( geometry, material, mode ) {
 	this.geometry = geometry !== undefined ? geometry : new THREE$Geometry();
 	this.material = material !== undefined ? material : new THREE$LineBasicMaterial( { color: Math.random() * 0xffffff } );
 
-	this.mode = mode !== undefined ? mode : THREE$LineStrip;
-
 };
-
-THREE$LineStrip = 0;
-THREE$LinePieces = 1;
 
 THREE$Line.prototype = Object.create( THREE$Object3D.prototype );
 THREE$Line.prototype.constructor = THREE$Line;
@@ -67,7 +69,7 @@ THREE$Line.prototype.raycast = ( function () {
 		var vEnd = new THREE$Vector3();
 		var interSegment = new THREE$Vector3();
 		var interRay = new THREE$Vector3();
-		var step = this.mode === THREE$LineStrip ? 1 : 2;
+		var step = (this && this.isLineSegments) ? 2 : 1;
 
 		if ( (geometry && geometry.isBufferGeometry) ) {
 
@@ -197,13 +199,39 @@ THREE$Line.prototype.raycast = ( function () {
 
 THREE$Line.prototype.clone = function ( object ) {
 
-	if ( object === undefined ) object = new THREE$Line( this.geometry, this.material, this.mode );
+	if ( object === undefined ) object = new THREE[ this.type ]( this.geometry, this.material );
 
 	THREE$Object3D.prototype.clone.call( this, object );
 
 	return object;
 
 };
+
+THREE$Line.prototype.toJSON = function ( meta ) {
+
+	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+
+	// only serialize if not in meta geometries cache
+	if ( meta.geometries[ this.geometry.uuid ] === undefined ) {
+		meta.geometries[ this.geometry.uuid ] = this.geometry.toJSON();
+	}
+
+	// only serialize if not in meta materials cache
+	if ( meta.materials[ this.material.uuid ] === undefined ) {
+		meta.materials[ this.material.uuid ] = this.material.toJSON();
+	}
+
+	data.object.geometry = this.geometry.uuid;
+	data.object.material = this.material.uuid;
+
+	return data;
+
+};
+
+// DEPRECATED
+
+THREE$LineStrip = 0;
+THREE$LinePieces = 1;
 
 
 export { THREE$LinePieces, THREE$LineStrip, THREE$Line };

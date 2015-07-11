@@ -1,6 +1,7 @@
 import { THREE$EventDispatcher } from '../core/EventDispatcher';
 import { THREE$UnsignedByteType, THREE$RGBAFormat, THREE$LinearMipMapLinearFilter, THREE$LinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
 import { THREE$Vector2 } from '../math/Vector2';
+import { THREE$Math } from '../math/Math';
 
 /**
  * @author szimek / https://github.com/szimek/
@@ -9,6 +10,8 @@ import { THREE$Vector2 } from '../math/Vector2';
 
 function THREE$WebGLRenderTarget ( width, height, options ) {
 	this.isWebGLRenderTarget = true;
+
+	this.uuid = THREE$Math.generateUUID();
 
 	this.width = width;
 	this.height = height;
@@ -44,9 +47,14 @@ THREE$WebGLRenderTarget.prototype = {
 
 	setSize: function ( width, height ) {
 
-		this.width = width;
-		this.height = height;
+		if ( this.width !== width || this.height !== height ) {
 
+			this.width = width;
+			this.height = height;
+
+			this.dispose();
+
+		}
 	},
 
 	clone: function () {

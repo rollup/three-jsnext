@@ -1,9 +1,11 @@
+import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Light } from './Light';
 import { THREE$Vector3 } from '../math/Vector3';
 
 /**
  * @author MPanknin / http://www.redplant.de/
  * @author alteredq / http://alteredqualia.com/
+ * @author prafullit
  */
 
 function THREE$AreaLight ( color, intensity ) {
@@ -30,6 +32,34 @@ function THREE$AreaLight ( color, intensity ) {
 THREE$AreaLight.prototype = Object.create( THREE$Light.prototype );
 THREE$AreaLight.prototype.constructor = THREE$AreaLight;
 
+THREE$AreaLight.prototype.clone = function () {
+
+	var light = new THREE$AreaLight();
+
+	THREE$Light.prototype.clone.call( this, light );
+
+	light.normal.copy(this.normal);
+	light.right.copy(this.right);
+	light.intensity = this.intensity;
+	light.width = this.width;
+	light.height = this.height;
+	light.constantAttenuation = this.constantAttenuation;
+	light.linearAttenuation = this.linearAttenuation;
+	light.quadraticAttenuation = this.quadraticAttenuation
+
+	return light;
+
+};
+
+THREE$AreaLight.prototype.toJSON = function ( meta ) {
+
+	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+
+	data.object.color = this.color.getHex();
+	data.object.intensity = this.intensity;
+
+	return data;
+};
 
 
 export { THREE$AreaLight };

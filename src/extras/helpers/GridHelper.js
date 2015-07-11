@@ -1,4 +1,4 @@
-import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
+import { THREE$LineSegments } from '../../objects/LineSegments';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Color } from '../../math/Color';
 import { THREE$VertexColors } from '../../Three';
@@ -31,11 +31,11 @@ function THREE$GridHelper ( size, step ) {
 
 	}
 
-	THREE$Line.call( this, geometry, material, THREE$LinePieces );
+	THREE$LineSegments.call( this, geometry, material );
 
 };
 
-THREE$GridHelper.prototype = Object.create( THREE$Line.prototype );
+THREE$GridHelper.prototype = Object.create( THREE$LineSegments.prototype );
 THREE$GridHelper.prototype.constructor = THREE$GridHelper;
 
 THREE$GridHelper.prototype.setColors = function( colorCenterLine, colorGrid ) {
@@ -45,7 +45,7 @@ THREE$GridHelper.prototype.setColors = function( colorCenterLine, colorGrid ) {
 
 	this.geometry.colorsNeedUpdate = true;
 
-}
+};
 
 
 export { THREE$GridHelper };

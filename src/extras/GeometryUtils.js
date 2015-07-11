@@ -1,4 +1,3 @@
-import { THREE$warn } from '../Three';
 import { THREE$Mesh } from '../objects/Mesh';
 
 var THREE$GeometryUtils;
@@ -11,7 +10,7 @@ THREE$GeometryUtils = {
 
 	merge: function ( geometry1, geometry2, materialIndexOffset ) {
 
-		THREE$warn( 'THREE.GeometryUtils: .merge() has been moved to Geometry. Use geometry.merge( geometry2, matrix, materialIndexOffset ) instead.' );
+		console.warn( 'THREE.GeometryUtils: .merge() has been moved to Geometry. Use geometry.merge( geometry2, matrix, materialIndexOffset ) instead.' );
 
 		var matrix;
 
@@ -30,7 +29,7 @@ THREE$GeometryUtils = {
 
 	center: function ( geometry ) {
 
-		THREE$warn( 'THREE.GeometryUtils: .center() has been moved to Geometry. Use geometry.center() instead.' );
+		console.warn( 'THREE.GeometryUtils: .center() has been moved to Geometry. Use geometry.center() instead.' );
 		return geometry.center();
 
 	}

@@ -1,5 +1,5 @@
 import { THREE$Object3D } from '../core/Object3D';
-import { THREE$DoubleSide, THREE$BackSide, THREE$warn } from '../Three';
+import { THREE$DoubleSide, THREE$BackSide } from '../Three';
 import { THREE$MeshFaceMaterial } from '../materials/MeshFaceMaterial';
 import { THREE$Geometry } from '../core/Geometry';
 import { THREE$Triangle } from '../math/Triangle';
@@ -24,7 +24,7 @@ function THREE$Mesh ( geometry, material ) {
 	THREE$Object3D.call( this );
 
 	this.type = 'Mesh';
-	
+
 	this.geometry = geometry !== undefined ? geometry : new THREE$Geometry();
 	this.material = material !== undefined ? material : new THREE$MeshBasicMaterial( { color: Math.random() * 0xffffff } );
 
@@ -63,7 +63,7 @@ THREE$Mesh.prototype.getMorphTargetIndexByName = function ( name ) {
 
 	}
 
-	THREE$warn( 'THREE.Mesh.getMorphTargetIndexByName: morph target ' + name + ' does not exist. Returning 0.' );
+	console.warn( 'THREE.Mesh.getMorphTargetIndexByName: morph target ' + name + ' does not exist. Returning 0.' );
 
 	return 0;
 
@@ -83,6 +83,9 @@ THREE$Mesh.prototype.raycast = ( function () {
 	return function ( raycaster, intersects ) {
 
 		var geometry = this.geometry;
+		var material = this.material;
+
+		if ( material === undefined ) return;
 
 		// Checking boundingSphere distance to ray
 
@@ -112,16 +115,11 @@ THREE$Mesh.prototype.raycast = ( function () {
 
 		}
 
+		var a, b, c;
+
 		if ( (geometry && geometry.isBufferGeometry) ) {
 
-			var material = this.material;
-
-			if ( material === undefined ) return;
-
 			var attributes = geometry.attributes;
-
-			var a, b, c;
-			var precision = raycaster.precision;
 
 			if ( attributes.index !== undefined ) {
 
@@ -167,14 +165,14 @@ THREE$Mesh.prototype.raycast = ( function () {
 
 						var distance = raycaster.ray.origin.distanceTo( intersectionPoint );
 
-						if ( distance < precision || distance < raycaster.near || distance > raycaster.far ) continue;
+						if ( distance < raycaster.near || distance > raycaster.far ) continue;
 
 						intersects.push( {
 
 							distance: distance,
 							point: intersectionPoint,
 							face: new THREE$Face3( a, b, c, THREE$Triangle.normal( vA, vB, vC ) ),
-							faceIndex: null,
+							faceIndex: Math.floor( i / 3 ), // triangle number in indices buffer semantics
 							object: this
 
 						} );
@@ -213,14 +211,14 @@ THREE$Mesh.prototype.raycast = ( function () {
 
 					var distance = raycaster.ray.origin.distanceTo( intersectionPoint );
 
-					if ( distance < precision || distance < raycaster.near || distance > raycaster.far ) continue;
+					if ( distance < raycaster.near || distance > raycaster.far ) continue;
 
 					intersects.push( {
 
 						distance: distance,
 						point: intersectionPoint,
 						face: new THREE$Face3( a, b, c, THREE$Triangle.normal( vA, vB, vC ) ),
-						faceIndex: null,
+						index: Math.floor(i/3), // triangle number in positions buffer semantics
 						object: this
 
 					} );
@@ -231,27 +229,24 @@ THREE$Mesh.prototype.raycast = ( function () {
 
 		} else if ( (geometry && geometry.isGeometry) ) {
 
-			var isFaceMaterial = (this.material && this.material.isMeshFaceMaterial);
-			var objectMaterials = isFaceMaterial === true ? this.material.materials : null;
-
-			var a, b, c;
-			var precision = raycaster.precision;
+			var isFaceMaterial = (material && material.isMeshFaceMaterial);
+			var materials = isFaceMaterial === true ? material.materials : null;
 
 			var vertices = geometry.vertices;
+			var faces = geometry.faces;
 
-			for ( var f = 0, fl = geometry.faces.length; f < fl; f ++ ) {
+			for ( var f = 0, fl = faces.length; f < fl; f ++ ) {
 
-				var face = geometry.faces[ f ];
+				var face = faces[ f ];
+				var faceMaterial = isFaceMaterial === true ? materials[ face.materialIndex ] : material;
 
-				var material = isFaceMaterial === true ? objectMaterials[ face.materialIndex ] : this.material;
-
-				if ( material === undefined ) continue;
+				if ( faceMaterial === undefined ) continue;
 
 				a = vertices[ face.a ];
 				b = vertices[ face.b ];
 				c = vertices[ face.c ];
 
-				if ( material.morphTargets === true ) {
+				if ( faceMaterial.morphTargets === true ) {
 
 					var morphTargets = geometry.morphTargets;
 					var morphInfluences = this.morphTargetInfluences;
@@ -292,13 +287,13 @@ THREE$Mesh.prototype.raycast = ( function () {
 
 				}
 
-				if ( material.side === THREE$BackSide ) {
+				if ( faceMaterial.side === THREE$BackSide ) {
 
 					var intersectionPoint = ray.intersectTriangle( c, b, a, true );
 
 				} else {
 
-					var intersectionPoint = ray.intersectTriangle( a, b, c, material.side !== THREE$DoubleSide );
+					var intersectionPoint = ray.intersectTriangle( a, b, c, faceMaterial.side !== THREE$DoubleSide );
 
 				}
 
@@ -308,7 +303,7 @@ THREE$Mesh.prototype.raycast = ( function () {
 
 				var distance = raycaster.ray.origin.distanceTo( intersectionPoint );
 
-				if ( distance < precision || distance < raycaster.near || distance > raycaster.far ) continue;
+				if ( distance < raycaster.near || distance > raycaster.far ) continue;
 
 				intersects.push( {
 
@@ -335,6 +330,27 @@ THREE$Mesh.prototype.clone = function ( object, recursive ) {
 	THREE$Object3D.prototype.clone.call( this, object, recursive );
 
 	return object;
+
+};
+
+THREE$Mesh.prototype.toJSON = function ( meta ) {
+
+	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+
+	// only serialize if not in meta geometries cache
+	if ( meta.geometries[ this.geometry.uuid ] === undefined ) {
+		meta.geometries[ this.geometry.uuid ] = this.geometry.toJSON( meta );
+	}
+
+	// only serialize if not in meta materials cache
+	if ( meta.materials[ this.material.uuid ] === undefined ) {
+		meta.materials[ this.material.uuid ] = this.material.toJSON( meta );
+	}
+
+	data.object.geometry = this.geometry.uuid;
+	data.object.material = this.material.uuid;
+
+	return data;
 
 };
 

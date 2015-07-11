@@ -1,6 +1,6 @@
 import { THREE$Camera } from '../../cameras/Camera';
 import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
+import { THREE$LineSegments } from '../../objects/LineSegments';
 import { THREE$Color } from '../../math/Color';
 import { THREE$FaceColors } from '../../Three';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
@@ -100,7 +100,7 @@ function THREE$CameraHelper ( camera ) {
 
 	}
 
-	THREE$Line.call( this, geometry, material, THREE$LinePieces );
+	THREE$LineSegments.call( this, geometry, material );
 
 	this.camera = camera;
 	this.matrix = camera.matrixWorld;
@@ -112,13 +112,13 @@ function THREE$CameraHelper ( camera ) {
 
 };
 
-THREE$CameraHelper.prototype = Object.create( THREE$Line.prototype );
+THREE$CameraHelper.prototype = Object.create( THREE$LineSegments.prototype );
 THREE$CameraHelper.prototype.constructor = THREE$CameraHelper;
 
 THREE$CameraHelper.prototype.update = function () {
 
 	var geometry, pointMap;
-	
+
 	var vector = new THREE$Vector3();
 	var camera = new THREE$Camera();
 

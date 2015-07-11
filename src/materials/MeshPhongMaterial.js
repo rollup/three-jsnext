@@ -1,7 +1,6 @@
 import { THREE$Material } from './Material';
 import { THREE$NoColors, THREE$SmoothShading, THREE$MultiplyOperation } from '../Three';
 import { THREE$Vector2 } from '../math/Vector2';
-import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Color } from '../math/Color';
 
 /**
@@ -18,6 +17,12 @@ import { THREE$Color } from '../math/Color';
  *  map: new THREE.Texture( <Image> ),
  *
  *  lightMap: new THREE.Texture( <Image> ),
+ *  lightMapIntensity: <float>
+ *
+ *  aoMap: new THREE.Texture( <Image> ),
+ *  aoMapIntensity: <float>
+ *
+ *  emissiveMap: new THREE.Texture( <Image> ),
  *
  *  bumpMap: new THREE.Texture( <Image> ),
  *  bumpScale: <float>,
@@ -66,12 +71,15 @@ function THREE$MeshPhongMaterial ( parameters ) {
 
 	this.metal = false;
 
-	this.wrapAround = false;
-	this.wrapRGB = new THREE$Vector3( 1, 1, 1 );
-
 	this.map = null;
 
 	this.lightMap = null;
+	this.lightMapIntensity = 1.0;
+
+	this.aoMap = null;
+	this.aoMapIntensity = 1.0;
+
+	this.emissiveMap = null;
 
 	this.bumpMap = null;
 	this.bumpScale = 1;
@@ -123,12 +131,15 @@ THREE$MeshPhongMaterial.prototype.clone = function () {
 
 	material.metal = this.metal;
 
-	material.wrapAround = this.wrapAround;
-	material.wrapRGB.copy( this.wrapRGB );
-
 	material.map = this.map;
 
 	material.lightMap = this.lightMap;
+	material.lightMapIntensity = this.lightMapIntensity;
+
+	material.aoMap = this.aoMap;
+	material.aoMapIntensity = this.aoMapIntensity;
+
+	material.emissiveMap = this.emissiveMap;
 
 	material.bumpMap = this.bumpMap;
 	material.bumpScale = this.bumpScale;

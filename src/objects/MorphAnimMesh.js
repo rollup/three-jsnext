@@ -1,6 +1,5 @@
 import { THREE$Mesh } from './Mesh';
 import { THREE$Math } from '../math/Math';
-import { THREE$warn } from '../Three';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -113,7 +112,7 @@ THREE$MorphAnimMesh.prototype.playAnimation = function ( label, fps ) {
 
 	} else {
 
-		THREE$warn( 'THREE.MorphAnimMesh: animation[' + label + '] undefined in .playAnimation()' );
+		console.warn( 'THREE.MorphAnimMesh: animation[' + label + '] undefined in .playAnimation()' );
 
 	}
 

@@ -1,5 +1,5 @@
-import { THREE$warn, THREE$NoColors } from '../Three';
 import { THREE$Material } from './Material';
+import { THREE$NoColors } from '../Three';
 import { THREE$Color } from '../math/Color';
 
 /**
@@ -75,7 +75,7 @@ THREE$PointCloudMaterial.prototype.clone = function () {
 function THREE$ParticleBasicMaterial ( parameters ) {
 	this.isParticleBasicMaterial = true;
 
-	THREE$warn( 'THREE.ParticleBasicMaterial has been renamed to THREE.PointCloudMaterial.' );
+	console.warn( 'THREE.ParticleBasicMaterial has been renamed to THREE.PointCloudMaterial.' );
 	return new THREE$PointCloudMaterial( parameters );
 
 };
@@ -83,7 +83,7 @@ function THREE$ParticleBasicMaterial ( parameters ) {
 function THREE$ParticleSystemMaterial ( parameters ) {
 	this.isParticleSystemMaterial = true;
 
-	THREE$warn( 'THREE.ParticleSystemMaterial has been renamed to THREE.PointCloudMaterial.' );
+	console.warn( 'THREE.ParticleSystemMaterial has been renamed to THREE.PointCloudMaterial.' );
 	return new THREE$PointCloudMaterial( parameters );
 
 };

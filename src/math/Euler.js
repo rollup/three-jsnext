@@ -1,7 +1,6 @@
 import { THREE$Vector3 } from './Vector3';
 import { THREE$Quaternion } from './Quaternion';
 import { THREE$Matrix4 } from './Matrix4';
-import { THREE$warn } from '../Three';
 import { THREE$Math } from './Math';
 
 /**
@@ -219,7 +218,7 @@ THREE$Euler.prototype = {
 
 		} else {
 
-			THREE$warn( 'THREE.Euler: .setFromRotationMatrix() given unsupported order: ' + order )
+			console.warn( 'THREE.Euler: .setFromRotationMatrix() given unsupported order: ' + order )
 
 		}
 

@@ -24,8 +24,17 @@ THREE$XHRLoader.prototype = {
 
 		if ( cached !== undefined ) {
 
-			if ( onLoad ) onLoad( cached );
-			return;
+			if ( onLoad ) {
+
+				setTimeout( function () {
+
+					onLoad( cached );
+
+				}, 0 );
+
+			}
+
+			return cached;
 
 		}
 
@@ -68,6 +77,8 @@ THREE$XHRLoader.prototype = {
 		request.send( null );
 
 		scope.manager.itemStart( url );
+
+		return request;
 
 	},
 
