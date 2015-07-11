@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Texture } from './Texture';
 
 /**
@@ -6,6 +5,7 @@ import { THREE$Texture } from './Texture';
  */
 
 function THREE$VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+	this.isVideoTexture = true;
 
 	THREE$Texture.call( this, video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 

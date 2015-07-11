@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 import { THREE$Sphere } from './Sphere';
 import { THREE$BufferGeometry } from '../core/BufferGeometry';
@@ -10,6 +9,7 @@ import { THREE$Geometry } from '../core/Geometry';
  */
 
 function THREE$Box3 ( min, max ) {
+	this.isBox3 = true;
 
 	this.min = ( min !== undefined ) ? min : new THREE$Vector3( Infinity, Infinity, Infinity );
 	this.max = ( max !== undefined ) ? max : new THREE$Vector3( - Infinity, - Infinity, - Infinity );
@@ -81,7 +81,7 @@ THREE$Box3.prototype = {
 
 				if ( geometry !== undefined ) {
 
-					if ( geometry instanceof THREE$Geometry ) {
+					if ( (geometry && geometry.isGeometry) ) {
 
 						var vertices = geometry.vertices;
 
@@ -95,7 +95,7 @@ THREE$Box3.prototype = {
 
 						}
 
-					} else if ( geometry instanceof THREE$BufferGeometry && geometry.attributes[ 'position' ] !== undefined ) {
+					} else if ( (geometry && geometry.isBufferGeometry) && geometry.attributes[ 'position' ] !== undefined ) {
 
 						var positions = geometry.attributes[ 'position' ].array;
 

@@ -1,7 +1,7 @@
-import { THREE, THREE$CullFaceFront, THREE$error, THREE$RGBAFormat, THREE$NearestFilter, THREE$PCFSoftShadowMap, THREE$LinearFilter } from '../../../Three';
 import { THREE$MeshFaceMaterial } from '../../../materials/MeshFaceMaterial';
 import { THREE$Vector3 } from '../../../math/Vector3';
 import { THREE$DirectionalLight } from '../../../lights/DirectionalLight';
+import { THREE$CullFaceFront, THREE$error, THREE$RGBAFormat, THREE$NearestFilter, THREE$PCFSoftShadowMap, THREE$LinearFilter } from '../../../Three';
 import { THREE$BufferGeometry } from '../../../core/BufferGeometry';
 import { THREE$SkinnedMesh } from '../../../objects/SkinnedMesh';
 import { THREE$CameraHelper } from '../../../extras/helpers/CameraHelper';
@@ -22,6 +22,7 @@ import { THREE$Frustum } from '../../../math/Frustum';
  */
 
 function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObjectsImmediate ) {
+	this.isShadowMapPlugin = true;
 
 	var _gl = _renderer.context;
 
@@ -120,7 +121,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 			if ( ! light.castShadow ) continue;
 
-			if ( ( light instanceof THREE$DirectionalLight ) && light.shadowCascade ) {
+			if ( ( (light && light.isDirectionalLight) ) && light.shadowCascade ) {
 
 				for ( n = 0; n < light.shadowCascadeCount; n ++ ) {
 
@@ -192,11 +193,11 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 			if ( ! light.shadowCamera ) {
 
-				if ( light instanceof THREE$SpotLight ) {
+				if ( (light && light.isSpotLight) ) {
 
 					light.shadowCamera = new THREE$PerspectiveCamera( light.shadowCameraFov, light.shadowMapWidth / light.shadowMapHeight, light.shadowCameraNear, light.shadowCameraFar );
 
-				} else if ( light instanceof THREE$DirectionalLight ) {
+				} else if ( (light && light.isDirectionalLight) ) {
 
 					light.shadowCamera = new THREE$OrthographicCamera( light.shadowCameraLeft, light.shadowCameraRight, light.shadowCameraTop, light.shadowCameraBottom, light.shadowCameraNear, light.shadowCameraFar );
 
@@ -296,7 +297,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 				objectMaterial = getObjectMaterial( object );
 
 				useMorphing = object.geometry.morphTargets !== undefined && object.geometry.morphTargets.length > 0 && objectMaterial.morphTargets;
-				useSkinning = object instanceof THREE$SkinnedMesh && objectMaterial.skinning;
+				useSkinning = (object && object.isSkinnedMesh) && objectMaterial.skinning;
 
 				if ( object.customDepthMaterial ) {
 
@@ -318,7 +319,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 				_renderer.setMaterialFaces( objectMaterial );
 
-				if ( buffer instanceof THREE$BufferGeometry ) {
+				if ( (buffer && buffer.isBufferGeometry) ) {
 
 					_renderer.renderBufferDirect( shadowCamera, _lights, fog, material, buffer, object );
 
@@ -532,7 +533,7 @@ function THREE$ShadowMapPlugin ( _renderer, _lights, _webglObjects, _webglObject
 
 	function getObjectMaterial( object ) {
 
-		return object.material instanceof THREE$MeshFaceMaterial
+		return (object.material && object.material.isMeshFaceMaterial)
 			? object.material.materials[ 0 ]
 			: object.material;
 

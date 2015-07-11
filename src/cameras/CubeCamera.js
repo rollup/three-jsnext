@@ -1,5 +1,5 @@
-import { THREE, THREE$LinearFilter, THREE$RGBFormat } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
+import { THREE$LinearFilter, THREE$RGBFormat } from '../Three';
 import { THREE$WebGLRenderTargetCube } from '../renderers/WebGLRenderTargetCube';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$PerspectiveCamera } from './PerspectiveCamera';
@@ -12,6 +12,7 @@ import { THREE$PerspectiveCamera } from './PerspectiveCamera';
  */
 
 function THREE$CubeCamera ( near, far, cubeResolution ) {
+	this.isCubeCamera = true;
 
 	THREE$Object3D.call( this );
 

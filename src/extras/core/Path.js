@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Shape } from './Shape';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$SplineCurve } from '../curves/SplineCurve';
@@ -17,6 +16,7 @@ var THREE$PathActions;
  **/
 
 function THREE$Path ( points ) {
+	this.isPath = true;
 
 	THREE$CurvePath.call(this);
 

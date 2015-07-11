@@ -1,12 +1,13 @@
-import { THREE, THREE$warn } from '../Three';
 import { THREE$Mesh } from './Mesh';
 import { THREE$Math } from '../math/Math';
+import { THREE$warn } from '../Three';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
 function THREE$MorphAnimMesh ( geometry, material ) {
+	this.isMorphAnimMesh = true;
 
 	THREE$Mesh.call( this, geometry, material );
 

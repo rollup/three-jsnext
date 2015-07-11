@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Camera } from './Camera';
 
 /**
@@ -6,6 +5,7 @@ import { THREE$Camera } from './Camera';
  */
 
 function THREE$OrthographicCamera ( left, right, top, bottom, near, far ) {
+	this.isOrthographicCamera = true;
 
 	THREE$Camera.call( this );
 

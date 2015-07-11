@@ -1,7 +1,7 @@
-import { THREE, THREE$FaceColors } from '../../Three';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Mesh } from '../../objects/Mesh';
+import { THREE$FaceColors } from '../../Three';
 import { THREE$MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
 import { THREE$Matrix4 } from '../../math/Matrix4';
 import { THREE$SphereGeometry } from '../geometries/SphereGeometry';
@@ -13,6 +13,7 @@ import { THREE$Color } from '../../math/Color';
  */
 
 function THREE$HemisphereLightHelper ( light, sphereSize ) {
+	this.isHemisphereLightHelper = true;
 
 	THREE$Object3D.call( this );
 

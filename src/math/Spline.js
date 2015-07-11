@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 
 /**
@@ -10,6 +9,7 @@ import { THREE$Vector3 } from './Vector3';
  */
 
 function THREE$Spline ( points ) {
+	this.isSpline = true;
 
 	this.points = points;
 

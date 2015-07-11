@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Texture } from '../textures/Texture';
 import { THREE$ImageLoader } from './ImageLoader';
 import { THREE$DefaultLoadingManager } from './LoadingManager';
@@ -8,6 +7,7 @@ import { THREE$DefaultLoadingManager } from './LoadingManager';
  */
 
 function THREE$TextureLoader ( manager ) {
+	this.isTextureLoader = true;
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 

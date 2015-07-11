@@ -1,10 +1,11 @@
-import { THREE, THREE$CustomBlending, THREE$MultiplyBlending, THREE$SubtractiveBlending, THREE$AdditiveBlending, THREE$NoBlending } from '../../Three';
+import { THREE$CustomBlending, THREE$MultiplyBlending, THREE$SubtractiveBlending, THREE$AdditiveBlending, THREE$NoBlending } from '../../Three';
 
 /**
 * @author mrdoob / http://mrdoob.com/
 */
 
 function THREE$WebGLState ( gl, paramThreeToGL ) {
+	this.isWebGLState = true;
 
 	var newAttributes = new Uint8Array( 16 );
 	var enabledAttributes = new Uint8Array( 16 );

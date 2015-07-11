@@ -1,5 +1,5 @@
-import { THREE, THREE$VertexColors, THREE$FaceColors, THREE$DoubleSide, THREE$BackSide, THREE$MirroredRepeatWrapping, THREE$RepeatWrapping } from '../Three';
 import { THREE$Vector2 } from '../math/Vector2';
+import { THREE$VertexColors, THREE$FaceColors, THREE$DoubleSide, THREE$BackSide, THREE$MirroredRepeatWrapping, THREE$RepeatWrapping } from '../Three';
 import { THREE$Math } from '../math/Math';
 import { THREE$Texture } from '../textures/Texture';
 import { THREE$ShaderMaterial } from '../materials/ShaderMaterial';
@@ -10,6 +10,7 @@ import { THREE$ImageLoader } from './ImageLoader';
  */
 
 function THREE$Loader ( showStatus ) {
+	this.isLoader = true;
 
 	this.showStatus = showStatus;
 	this.statusDomElement = showStatus ? THREE$Loader.prototype.addStatusElement() : null;
@@ -100,7 +101,7 @@ THREE$Loader.prototype = {
 
 			var m = materials[ i ];
 
-			if ( m instanceof THREE$ShaderMaterial ) return true;
+			if ( (m && m.isShaderMaterial) ) return true;
 
 		}
 

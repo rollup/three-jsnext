@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Texture } from './Texture';
 
 /**
@@ -6,6 +5,7 @@ import { THREE$Texture } from './Texture';
  */
 
 function THREE$CompressedTexture ( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
+	this.isCompressedTexture = true;
 
 	THREE$Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 

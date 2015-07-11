@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$PlaneBufferGeometry } from './PlaneBufferGeometry';
 
@@ -8,6 +7,7 @@ import { THREE$PlaneBufferGeometry } from './PlaneBufferGeometry';
  */
 
 function THREE$PlaneGeometry ( width, height, widthSegments, heightSegments ) {
+	this.isPlaneGeometry = true;
 
 	console.info( 'THREE.PlaneGeometry: Consider using THREE.PlaneBufferGeometry for lower memory footprint.' );
 

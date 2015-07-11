@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
@@ -10,6 +9,7 @@ import { THREE$Geometry } from '../../core/Geometry';
 */
 
 function THREE$VertexTangentsHelper ( object, size, hex, linewidth ) {
+	this.isVertexTangentsHelper = true;
 
 	this.object = object;
 

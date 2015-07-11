@@ -1,4 +1,4 @@
-import { THREE, THREE$LinearFilter, THREE$LinearMipMapLinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
+import { THREE$LinearFilter, THREE$LinearMipMapLinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
 import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$DataTexture } from '../textures/DataTexture';
 
@@ -11,6 +11,7 @@ var THREE$DataTextureLoader;
  */
 
 THREE$DataTextureLoader = function THREE$BinaryTextureLoader () {
+	this.isBinaryTextureLoader = true;
 
 	// override in sub classes
 	this._parser = null;

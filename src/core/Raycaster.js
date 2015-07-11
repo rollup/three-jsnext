@@ -1,4 +1,4 @@
-import { THREE, THREE$warn, THREE$error } from '../Three';
+import { THREE$warn, THREE$error } from '../Three';
 import { THREE$OrthographicCamera } from '../cameras/OrthographicCamera';
 import { THREE$PerspectiveCamera } from '../cameras/PerspectiveCamera';
 import { THREE$Ray } from '../math/Ray';
@@ -12,6 +12,7 @@ import { THREE$Ray } from '../math/Ray';
 ( function ( THREE ) {
 
 	function THREE$Raycaster ( origin, direction, near, far ) {
+	this.isRaycaster = true;
 
 		this.ray = new THREE$Ray( origin, direction );
 		// direction is assumed to be normalized (for accurate distance calculations)
@@ -74,12 +75,12 @@ import { THREE$Ray } from '../math/Ray';
 
 			// camera is assumed _not_ to be a child of a transformed object
 
-			if ( camera instanceof THREE$PerspectiveCamera ) {
+			if ( (camera && camera.isPerspectiveCamera) ) {
 
 				this.ray.origin.copy( camera.position );
 				this.ray.direction.set( coords.x, coords.y, 0.5 ).unproject( camera ).sub( camera.position ).normalize();
 
-			} else if ( camera instanceof THREE$OrthographicCamera ) {
+			} else if ( (camera && camera.isOrthographicCamera) ) {
 
 				this.ray.origin.set( coords.x, coords.y, - 1 ).unproject( camera );
 				this.ray.direction.set( 0, 0, - 1 ).transformDirection( camera.matrixWorld );

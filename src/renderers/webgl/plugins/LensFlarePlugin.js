@@ -1,4 +1,3 @@
-import { THREE } from '../../../Three';
 import { THREE$Vector2 } from '../../../math/Vector2';
 import { THREE$Vector3 } from '../../../math/Vector3';
 
@@ -8,6 +7,7 @@ import { THREE$Vector3 } from '../../../math/Vector3';
  */
 
 function THREE$LensFlarePlugin ( renderer, flares ) {
+	this.isLensFlarePlugin = true;
 
 	var gl = renderer.context;
 

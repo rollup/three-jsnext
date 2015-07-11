@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Plane } from './Plane';
 import { THREE$Vector3 } from './Vector3';
 
@@ -8,6 +7,7 @@ import { THREE$Vector3 } from './Vector3';
  */
 
 function THREE$Triangle ( a, b, c ) {
+	this.isTriangle = true;
 
 	this.a = ( a !== undefined ) ? a : new THREE$Vector3();
 	this.b = ( b !== undefined ) ? b : new THREE$Vector3();

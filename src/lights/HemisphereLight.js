@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Light } from './Light';
 import { THREE$Color } from '../math/Color';
 
@@ -7,6 +6,7 @@ import { THREE$Color } from '../math/Color';
  */
 
 function THREE$HemisphereLight ( skyColor, groundColor, intensity ) {
+	this.isHemisphereLight = true;
 
 	THREE$Light.call( this, skyColor );
 

@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Sphere } from '../math/Sphere';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Geometry } from '../core/Geometry';
@@ -10,6 +9,7 @@ import { THREE$DefaultLoadingManager } from './LoadingManager';
  */
 
 function THREE$GeometryLoader ( manager ) {
+	this.isGeometryLoader = true;
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 

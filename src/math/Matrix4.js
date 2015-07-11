@@ -1,6 +1,6 @@
-import { THREE, THREE$error, THREE$warn } from '../Three';
 import { THREE$Math } from './Math';
 import { THREE$Vector3 } from './Vector3';
+import { THREE$error, THREE$warn } from '../Three';
 import { THREE$Euler } from './Euler';
 
 /**
@@ -17,6 +17,7 @@ import { THREE$Euler } from './Euler';
  */
 
 function THREE$Matrix4 () {
+	this.isMatrix4 = true;
 
 	this.elements = new Float32Array( [
 
@@ -153,7 +154,7 @@ THREE$Matrix4.prototype = {
 
 	makeRotationFromEuler: function ( euler ) {
 
-		if ( euler instanceof THREE$Euler === false ) {
+		if ( (euler && euler.isEuler) === false ) {
 
 			THREE$error( 'THREE.Matrix: .makeRotationFromEuler() now expects a Euler rotation rather than a Vector3 and order.' );
 

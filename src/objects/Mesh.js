@@ -1,5 +1,5 @@
-import { THREE, THREE$DoubleSide, THREE$BackSide, THREE$warn } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
+import { THREE$DoubleSide, THREE$BackSide, THREE$warn } from '../Three';
 import { THREE$MeshFaceMaterial } from '../materials/MeshFaceMaterial';
 import { THREE$Geometry } from '../core/Geometry';
 import { THREE$Triangle } from '../math/Triangle';
@@ -19,6 +19,7 @@ import { THREE$MeshBasicMaterial } from '../materials/MeshBasicMaterial';
  */
 
 function THREE$Mesh ( geometry, material ) {
+	this.isMesh = true;
 
 	THREE$Object3D.call( this );
 
@@ -111,7 +112,7 @@ THREE$Mesh.prototype.raycast = ( function () {
 
 		}
 
-		if ( geometry instanceof THREE$BufferGeometry ) {
+		if ( (geometry && geometry.isBufferGeometry) ) {
 
 			var material = this.material;
 
@@ -228,9 +229,9 @@ THREE$Mesh.prototype.raycast = ( function () {
 
 			}
 
-		} else if ( geometry instanceof THREE$Geometry ) {
+		} else if ( (geometry && geometry.isGeometry) ) {
 
-			var isFaceMaterial = this.material instanceof THREE$MeshFaceMaterial;
+			var isFaceMaterial = (this.material && this.material.isMeshFaceMaterial);
 			var objectMaterials = isFaceMaterial === true ? this.material.materials : null;
 
 			var a, b, c;

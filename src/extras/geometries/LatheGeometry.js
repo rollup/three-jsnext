@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Face3 } from '../../core/Face3';
@@ -18,6 +17,7 @@ import { THREE$Vector3 } from '../../math/Vector3';
 //    2*pi is a closed lathe, less than 2PI is a portion.
 
 function THREE$LatheGeometry ( points, segments, phiStart, phiLength ) {
+	this.isLatheGeometry = true;
 
 	THREE$Geometry.call( this );
 

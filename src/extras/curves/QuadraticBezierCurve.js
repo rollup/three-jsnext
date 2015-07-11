@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Curve } from '../core/Curve';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Shape } from '../core/Shape';
@@ -9,6 +8,7 @@ import { THREE$Shape } from '../core/Shape';
 
 
 function THREE$QuadraticBezierCurve ( v0, v1, v2 ) {
+	this.isQuadraticBezierCurve = true;
 
 	this.v0 = v0;
 	this.v1 = v1;

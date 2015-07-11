@@ -1,6 +1,6 @@
-import { THREE, THREE$warn, THREE$error } from '../Three';
 import { THREE$Color } from '../math/Color';
 import { THREE$Vector3 } from '../math/Vector3';
+import { THREE$warn, THREE$error } from '../Three';
 import { THREE$Vector4 } from '../math/Vector4';
 import { THREE$Vector2 } from '../math/Vector2';
 import { THREE$Face3 } from '../core/Face3';
@@ -13,6 +13,7 @@ import { THREE$Loader } from './Loader';
  */
 
 function THREE$JSONLoader ( showStatus ) {
+	this.isJSONLoader = true;
 
 	THREE$Loader.call( this, showStatus );
 

@@ -1,5 +1,5 @@
-import { THREE, THREE$VertexColors } from '../../Three';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
+import { THREE$VertexColors } from '../../Three';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
@@ -10,6 +10,7 @@ import { THREE$BufferGeometry } from '../../core/BufferGeometry';
  */
 
 function THREE$AxisHelper ( size ) {
+	this.isAxisHelper = true;
 
 	size = size || 1;
 

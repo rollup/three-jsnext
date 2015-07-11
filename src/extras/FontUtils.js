@@ -1,4 +1,4 @@
-import { THREE, THREE$warn } from '../Three';
+import { THREE$warn } from '../Three';
 import { THREE$Shape } from './core/Shape';
 import { THREE$Path } from './core/Path';
 

@@ -1,4 +1,4 @@
-import { THREE, THREE$warn, THREE$error } from '../../Three';
+import { THREE$warn, THREE$error } from '../../Three';
 
 var THREE$WebGLShader;
 

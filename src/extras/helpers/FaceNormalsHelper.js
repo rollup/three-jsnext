@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$Matrix3 } from '../../math/Matrix3';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
@@ -11,6 +10,7 @@ import { THREE$Geometry } from '../../core/Geometry';
 */
 
 function THREE$FaceNormalsHelper ( object, size, hex, linewidth ) {
+	this.isFaceNormalsHelper = true;
 
 	this.object = object;
 

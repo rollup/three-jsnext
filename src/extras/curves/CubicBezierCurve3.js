@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Shape } from '../core/Shape';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Curve } from '../core/Curve';

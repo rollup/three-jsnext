@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Matrix3 } from './Matrix3';
 import { THREE$Vector3 } from './Vector3';
 
@@ -7,6 +6,7 @@ import { THREE$Vector3 } from './Vector3';
  */
 
 function THREE$Plane ( normal, constant ) {
+	this.isPlane = true;
 
 	this.normal = ( normal !== undefined ) ? normal : new THREE$Vector3( 1, 0, 0 );
 	this.constant = ( constant !== undefined ) ? constant : 0;

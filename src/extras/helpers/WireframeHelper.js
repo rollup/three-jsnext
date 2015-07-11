@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
@@ -10,6 +9,7 @@ import { THREE$Geometry } from '../../core/Geometry';
  */
 
 function THREE$WireframeHelper ( object, hex ) {
+	this.isWireframeHelper = true;
 
 	var color = ( hex !== undefined ) ? hex : 0xffffff;
 
@@ -19,7 +19,7 @@ function THREE$WireframeHelper ( object, hex ) {
 	var keys = [ 'a', 'b', 'c' ];
 	var geometry = new THREE$BufferGeometry();
 
-	if ( object.geometry instanceof THREE$Geometry ) {
+	if ( (object.geometry && object.geometry.isGeometry) ) {
 
 		var vertices = object.geometry.vertices;
 		var faces = object.geometry.faces;
@@ -72,7 +72,7 @@ function THREE$WireframeHelper ( object, hex ) {
 
 		geometry.addAttribute( 'position', new THREE$BufferAttribute( coords, 3 ) );
 
-	} else if ( object.geometry instanceof THREE$BufferGeometry ) {
+	} else if ( (object.geometry && object.geometry.isBufferGeometry) ) {
 
 		if ( object.geometry.attributes.index !== undefined ) { // Indexed BufferGeometry
 

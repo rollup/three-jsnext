@@ -1,6 +1,6 @@
-import { THREE, THREE$NoColors, THREE$SmoothShading } from '../Three';
 import { THREE$UniformsUtils } from '../renderers/shaders/UniformsUtils';
 import { THREE$Material } from './Material';
+import { THREE$NoColors, THREE$SmoothShading } from '../Three';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -33,6 +33,7 @@ import { THREE$Material } from './Material';
  */
 
 function THREE$ShaderMaterial ( parameters ) {
+	this.isShaderMaterial = true;
 
 	THREE$Material.call( this );
 

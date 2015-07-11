@@ -1,10 +1,9 @@
-import { THREE } from '../../Three';
-
 /**
 * @author mrdoob / http://mrdoob.com/
 */
 
 function THREE$WebGLTextures ( gl ) {
+	this.isWebGLTextures = true;
 
 	var textures = {};
 

@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Mesh } from '../../objects/Mesh';
 import { THREE$MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
 import { THREE$SphereGeometry } from '../geometries/SphereGeometry';
@@ -9,6 +8,7 @@ import { THREE$SphereGeometry } from '../geometries/SphereGeometry';
  */
 
 function THREE$PointLightHelper ( light, sphereSize ) {
+	this.isPointLightHelper = true;
 
 	this.light = light;
 	this.light.updateMatrixWorld();

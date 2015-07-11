@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$EllipseCurve } from './EllipseCurve';
 
 /**************************************************************
@@ -6,6 +5,7 @@ import { THREE$EllipseCurve } from './EllipseCurve';
  **************************************************************/
 
 function THREE$ArcCurve ( aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise ) {
+	this.isArcCurve = true;
 
 	THREE$EllipseCurve.call( this, aX, aY, aRadius, aRadius, aStartAngle, aEndAngle, aClockwise );
 };

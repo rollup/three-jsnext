@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 
 /**
@@ -6,6 +5,7 @@ import { THREE$Vector3 } from './Vector3';
  */
 
 function THREE$Ray ( origin, direction ) {
+	this.isRay = true;
 
 	this.origin = ( origin !== undefined ) ? origin : new THREE$Vector3();
 	this.direction = ( direction !== undefined ) ? direction : new THREE$Vector3();

@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Color } from '../math/Color';
 
@@ -8,6 +7,7 @@ import { THREE$Color } from '../math/Color';
  */
 
 function THREE$Light ( color ) {
+	this.isLight = true;
 
 	THREE$Object3D.call( this );
 

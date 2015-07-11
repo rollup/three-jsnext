@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$Vector2 } from '../../math/Vector2';
@@ -16,6 +15,7 @@ import { THREE$Curve } from './Curve';
  **************************************************************/
 
 function THREE$CurvePath () {
+	this.isCurvePath = true;
 
 	this.curves = [];
 	this.bends = [];
@@ -155,7 +155,7 @@ THREE$CurvePath.prototype.getBoundingBox = function () {
 
 	var p, i, il, sum;
 
-	var v3 = points[0] instanceof THREE$Vector3;
+	var v3 = (points[0] && points[0].isVector3);
 
 	sum = v3 ? new THREE$Vector3() : new THREE$Vector2();
 

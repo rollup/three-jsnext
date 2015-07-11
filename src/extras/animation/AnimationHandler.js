@@ -1,6 +1,6 @@
-import { THREE, THREE$warn } from '../../Three';
 import { THREE$SkinnedMesh } from '../../objects/SkinnedMesh';
 import { THREE$Quaternion } from '../../math/Quaternion';
+import { THREE$warn } from '../../Three';
 
 var THREE$AnimationHandler;
 
@@ -45,7 +45,7 @@ THREE$AnimationHandler = {
 				// create quaternions
 
 				if ( data.hierarchy[ h ].keys[ k ].rot !== undefined &&
-				  ! ( data.hierarchy[ h ].keys[ k ].rot instanceof THREE$Quaternion ) ) {
+				  ! ( (data.hierarchy[ h ].keys[ k ].rot && data.hierarchy[ h ].keys[ k ].rot.isQuaternion) ) ) {
 
 					var quat = data.hierarchy[ h ].keys[ k ].rot;
 					data.hierarchy[ h ].keys[ k ].rot = new THREE$Quaternion().fromArray( quat );
@@ -155,7 +155,7 @@ THREE$AnimationHandler = {
 
 		var hierarchy = [];
 
-		if ( root instanceof THREE$SkinnedMesh ) {
+		if ( (root && root.isSkinnedMesh) ) {
 
 			for ( var b = 0; b < root.skeleton.bones.length; b ++ ) {
 

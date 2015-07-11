@@ -1,4 +1,4 @@
-import { THREE, THREE$RGBFormat, THREE$error } from '../Three';
+import { THREE$RGBFormat, THREE$error } from '../Three';
 import { THREE$DataTexture } from '../textures/DataTexture';
 import { THREE$CubeTexture } from '../textures/CubeTexture';
 import { THREE$ImageLoader } from '../loaders/ImageLoader';

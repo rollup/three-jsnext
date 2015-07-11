@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Quaternion } from '../../math/Quaternion';
 import { THREE$Object3D } from '../../core/Object3D';
@@ -8,6 +7,7 @@ import { THREE$Object3D } from '../../core/Object3D';
  */
 
 function THREE$Gyroscope () {
+	this.isGyroscope = true;
 
 	THREE$Object3D.call( this );
 

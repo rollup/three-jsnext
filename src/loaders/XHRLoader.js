@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Cache } from './Cache';
 import { THREE$DefaultLoadingManager } from './LoadingManager';
 
@@ -7,6 +6,7 @@ import { THREE$DefaultLoadingManager } from './LoadingManager';
  */
 
 function THREE$XHRLoader ( manager ) {
+	this.isXHRLoader = true;
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 

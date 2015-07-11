@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$WebGLRenderTarget } from './WebGLRenderTarget';
 
 /**
@@ -6,6 +5,7 @@ import { THREE$WebGLRenderTarget } from './WebGLRenderTarget';
  */
 
 function THREE$WebGLRenderTargetCube ( width, height, options ) {
+	this.isWebGLRenderTargetCube = true;
 
 	THREE$WebGLRenderTarget.call( this, width, height, options );
 

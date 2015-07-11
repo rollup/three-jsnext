@@ -1,4 +1,4 @@
-import { THREE, THREE$warn } from '../Three';
+import { THREE$warn } from '../Three';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -8,6 +8,7 @@ import { THREE, THREE$warn } from '../Three';
  */
 
 function THREE$Vector2 ( x, y ) {
+	this.isVector2 = true;
 
 	this.x = x || 0;
 	this.y = y || 0;

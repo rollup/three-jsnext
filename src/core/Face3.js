@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Color } from '../math/Color';
 import { THREE$Vector3 } from '../math/Vector3';
 
@@ -8,15 +7,16 @@ import { THREE$Vector3 } from '../math/Vector3';
  */
 
 function THREE$Face3 ( a, b, c, normal, color, materialIndex ) {
+	this.isFace3 = true;
 
 	this.a = a;
 	this.b = b;
 	this.c = c;
 
-	this.normal = normal instanceof THREE$Vector3 ? normal : new THREE$Vector3();
+	this.normal = (normal && normal.isVector3) ? normal : new THREE$Vector3();
 	this.vertexNormals = normal instanceof Array ? normal : [];
 
-	this.color = color instanceof THREE$Color ? color : new THREE$Color();
+	this.color = (color && color.isColor) ? color : new THREE$Color();
 	this.vertexColors = color instanceof Array ? color : [];
 
 	this.vertexTangents = [];

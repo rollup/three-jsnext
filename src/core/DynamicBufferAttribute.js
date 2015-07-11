@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$BufferAttribute } from './BufferAttribute';
 
 /**
@@ -7,6 +6,7 @@ import { THREE$BufferAttribute } from './BufferAttribute';
  */
 
 function THREE$DynamicBufferAttribute ( array, itemSize ) {
+	this.isDynamicBufferAttribute = true;
 
 	THREE$BufferAttribute.call( this, array, itemSize );
 

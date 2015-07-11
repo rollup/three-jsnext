@@ -1,5 +1,5 @@
-import { THREE, THREE$warn } from '../../Three';
 import { THREE$FontUtils } from '../FontUtils';
+import { THREE$warn } from '../../Three';
 import { THREE$ShapeGeometry } from '../geometries/ShapeGeometry';
 import { THREE$ExtrudeGeometry } from '../geometries/ExtrudeGeometry';
 import { THREE$Path } from './Path';
@@ -16,6 +16,7 @@ import { THREE$Path } from './Path';
 // STEP 3b - Triangulate each shape, add faces.
 
 function THREE$Shape () {
+	this.isShape = true;
 
 	THREE$Path.apply( this, arguments );
 	this.holes = [];

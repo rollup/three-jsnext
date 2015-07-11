@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Material } from './Material';
 import { THREE$Color } from '../math/Color';
 
@@ -26,6 +25,7 @@ import { THREE$Color } from '../math/Color';
  */
 
 function THREE$LineDashedMaterial ( parameters ) {
+	this.isLineDashedMaterial = true;
 
 	THREE$Material.call( this );
 

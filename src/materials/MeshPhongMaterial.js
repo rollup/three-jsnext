@@ -1,5 +1,5 @@
-import { THREE, THREE$NoColors, THREE$SmoothShading, THREE$MultiplyOperation } from '../Three';
 import { THREE$Material } from './Material';
+import { THREE$NoColors, THREE$SmoothShading, THREE$MultiplyOperation } from '../Three';
 import { THREE$Vector2 } from '../math/Vector2';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Color } from '../math/Color';
@@ -53,6 +53,7 @@ import { THREE$Color } from '../math/Color';
  */
 
 function THREE$MeshPhongMaterial ( parameters ) {
+	this.isMeshPhongMaterial = true;
 
 	THREE$Material.call( this );
 

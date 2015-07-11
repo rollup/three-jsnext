@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
@@ -17,6 +16,7 @@ import { THREE$Math } from '../../math/Math';
  */
 
 function THREE$EdgesHelper ( object, hex, thresholdAngle ) {
+	this.isEdgesHelper = true;
 
 	var color = ( hex !== undefined ) ? hex : 0xffffff;
 	thresholdAngle = ( thresholdAngle !== undefined ) ? thresholdAngle : 1;
@@ -31,7 +31,7 @@ function THREE$EdgesHelper ( object, hex, thresholdAngle ) {
 
 	var geometry2;
 
-	if ( object.geometry instanceof THREE$BufferGeometry ) {
+	if ( (object.geometry && object.geometry.isBufferGeometry) ) {
 
 		geometry2 = new THREE$Geometry();
 		geometry2.fromBufferGeometry( object.geometry );

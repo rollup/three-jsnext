@@ -1,5 +1,5 @@
-import { THREE, THREE$warn } from '../../Three';
 import { THREE$Math } from '../../math/Math';
+import { THREE$warn } from '../../Three';
 import { THREE$Mesh } from '../../objects/Mesh';
 
 /**
@@ -7,6 +7,7 @@ import { THREE$Mesh } from '../../objects/Mesh';
  */
 
 function THREE$MorphBlendMesh( geometry, material ) {
+	this.isMorphBlendMesh = true;
 
 	THREE$Mesh.call( this, geometry, material );
 

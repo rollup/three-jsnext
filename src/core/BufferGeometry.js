@@ -1,5 +1,5 @@
-import { THREE, THREE$error, THREE$warn, THREE$VertexColors, THREE$FaceColors, THREE$NoColors } from '../Three';
 import { THREE$EventDispatcher } from './EventDispatcher';
+import { THREE$error, THREE$warn, THREE$VertexColors, THREE$FaceColors, THREE$NoColors } from '../Three';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Vector2 } from '../math/Vector2';
 import { THREE$BufferAttribute } from './BufferAttribute';
@@ -16,6 +16,7 @@ import { THREE$GeometryIdCount } from './Geometry';
  */
 
 function THREE$BufferGeometry () {
+	this.isBufferGeometry = true;
 
 	Object.defineProperty( this, 'id', { value: THREE$GeometryIdCount() } );
 
@@ -41,7 +42,7 @@ THREE$BufferGeometry.prototype = {
 
 	addAttribute: function ( name, attribute ) {
 
-		if ( attribute instanceof THREE$BufferAttribute === false ) {
+		if ( (attribute && attribute.isBufferAttribute) === false ) {
 
 			THREE$warn( 'THREE.BufferGeometry: .addAttribute() now expects ( name, attribute ).' );
 
@@ -787,7 +788,7 @@ THREE$BufferGeometry.prototype = {
 
 	merge: function ( geometry, offset ) {
 
-		if ( geometry instanceof THREE$BufferGeometry === false ) {
+		if ( (geometry && geometry.isBufferGeometry) === false ) {
 
 			THREE$error( 'THREE.BufferGeometry.merge(): geometry not an instance of THREE.BufferGeometry.', geometry );
 			return;

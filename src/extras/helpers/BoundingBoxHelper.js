@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Mesh } from '../../objects/Mesh';
 import { THREE$MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
 import { THREE$BoxGeometry } from '../geometries/BoxGeometry';
@@ -11,6 +10,7 @@ import { THREE$Box3 } from '../../math/Box3';
 // a helper to show the world-axis-aligned bounding box for an object
 
 function THREE$BoundingBoxHelper ( object, hex ) {
+	this.isBoundingBoxHelper = true;
 
 	var color = ( hex !== undefined ) ? hex : 0x888888;
 

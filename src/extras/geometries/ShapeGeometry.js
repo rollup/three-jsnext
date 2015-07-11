@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Shape } from '../core/Shape';
@@ -22,6 +21,7 @@ import { THREE$Geometry } from '../../core/Geometry';
  **/
 
 function THREE$ShapeGeometry ( shapes, options ) {
+	this.isShapeGeometry = true;
 
 	THREE$Geometry.call( this );
 

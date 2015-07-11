@@ -1,4 +1,4 @@
-import { THREE, THREE$warn, THREE$error } from '../Three';
+import { THREE$warn, THREE$error } from '../Three';
 import { THREE$Math } from './Math';
 import { THREE$Matrix4 } from './Matrix4';
 import { THREE$Quaternion } from './Quaternion';
@@ -14,6 +14,7 @@ import { THREE$Euler } from './Euler';
  */
 
 function THREE$Vector3 ( x, y, z ) {
+	this.isVector3 = true;
 
 	this.x = x || 0;
 	this.y = y || 0;
@@ -212,7 +213,7 @@ THREE$Vector3.prototype = {
 
 		return function ( euler ) {
 
-			if ( euler instanceof THREE$Euler === false ) {
+			if ( (euler && euler.isEuler) === false ) {
 
 				THREE$error( 'THREE.Vector3: .applyEuler() now expects a Euler rotation rather than a Vector3 and order.' );
 

@@ -1,4 +1,3 @@
-import { THREE } from '../../../Three';
 import { THREE$FogExp2 } from '../../../scenes/FogExp2';
 import { THREE$Fog } from '../../../scenes/Fog';
 import { THREE$Texture } from '../../../textures/Texture';
@@ -11,6 +10,7 @@ import { THREE$Quaternion } from '../../../math/Quaternion';
  */
 
 function THREE$SpritePlugin ( renderer, sprites ) {
+	this.isSpritePlugin = true;
 
 	var gl = renderer.context;
 
@@ -130,7 +130,7 @@ function THREE$SpritePlugin ( renderer, sprites ) {
 
 			gl.uniform3f( uniforms.fogColor, fog.color.r, fog.color.g, fog.color.b );
 
-			if ( fog instanceof THREE$Fog ) {
+			if ( (fog && fog.isFog) ) {
 
 				gl.uniform1f( uniforms.fogNear, fog.near );
 				gl.uniform1f( uniforms.fogFar, fog.far );
@@ -139,7 +139,7 @@ function THREE$SpritePlugin ( renderer, sprites ) {
 				oldFogType = 1;
 				sceneFogType = 1;
 
-			} else if ( fog instanceof THREE$FogExp2 ) {
+			} else if ( (fog && fog.isFogExp2) ) {
 
 				gl.uniform1f( uniforms.fogDensity, fog.density );
 

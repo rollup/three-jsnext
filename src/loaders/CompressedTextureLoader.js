@@ -1,4 +1,4 @@
-import { THREE, THREE$LinearFilter } from '../Three';
+import { THREE$LinearFilter } from '../Three';
 import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$CompressedTexture } from '../textures/CompressedTexture';
 
@@ -9,6 +9,7 @@ import { THREE$CompressedTexture } from '../textures/CompressedTexture';
  */
 
 function THREE$CompressedTextureLoader () {
+	this.isCompressedTextureLoader = true;
 
 	// override in sub classes
 	this._parser = null;

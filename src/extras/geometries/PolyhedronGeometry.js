@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Face3 } from '../../core/Face3';
@@ -12,6 +11,7 @@ import { THREE$Sphere } from '../../math/Sphere';
 */
 
 function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
+	this.isPolyhedronGeometry = true;
 
 	THREE$Geometry.call( this );
 

@@ -1,5 +1,5 @@
-import { THREE, THREE$warn, THREE$NearestFilter, THREE$FloatType, THREE$RGBAFormat } from '../Three';
 import { THREE$Matrix4 } from '../math/Matrix4';
+import { THREE$warn, THREE$NearestFilter, THREE$FloatType, THREE$RGBAFormat } from '../Three';
 import { THREE$DataTexture } from '../textures/DataTexture';
 
 /**
@@ -10,6 +10,7 @@ import { THREE$DataTexture } from '../textures/DataTexture';
  */
 
 function THREE$Skeleton ( bones, boneInverses, useVertexTexture ) {
+	this.isSkeleton = true;
 
 	this.useVertexTexture = useVertexTexture !== undefined ? useVertexTexture : true;
 

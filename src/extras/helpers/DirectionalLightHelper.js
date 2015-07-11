@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Line } from '../../objects/Line';
@@ -12,6 +11,7 @@ import { THREE$Geometry } from '../../core/Geometry';
  */
 
 function THREE$DirectionalLightHelper ( light, size ) {
+	this.isDirectionalLightHelper = true;
 
 	THREE$Object3D.call( this );
 

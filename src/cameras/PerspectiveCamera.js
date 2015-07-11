@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Camera } from './Camera';
 import { THREE$Math } from '../math/Math';
 
@@ -9,6 +8,7 @@ import { THREE$Math } from '../math/Math';
  */
 
 function THREE$PerspectiveCamera ( fov, aspect, near, far ) {
+	this.isPerspectiveCamera = true;
 
 	THREE$Camera.call( this );
 

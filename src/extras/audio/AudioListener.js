@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Quaternion } from '../../math/Quaternion';
@@ -8,6 +7,7 @@ import { THREE$Quaternion } from '../../math/Quaternion';
  */
 
 function THREE$AudioListener () {
+	this.isAudioListener = true;
 
 	THREE$Object3D.call( this );
 

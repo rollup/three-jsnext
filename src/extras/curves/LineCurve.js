@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Curve } from '../core/Curve';
 
 /**************************************************************
@@ -6,6 +5,7 @@ import { THREE$Curve } from '../core/Curve';
  **************************************************************/
 
 function THREE$LineCurve ( v1, v2 ) {
+	this.isLineCurve = true;
 
 	this.v1 = v1;
 	this.v2 = v2;

@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Geometry } from '../core/Geometry';
 import { THREE$BufferGeometry } from '../core/BufferGeometry';
@@ -16,6 +15,7 @@ var THREE$LineStrip;
  */
 
 function THREE$Line ( geometry, material, mode ) {
+	this.isLine = true;
 
 	THREE$Object3D.call( this );
 
@@ -69,7 +69,7 @@ THREE$Line.prototype.raycast = ( function () {
 		var interRay = new THREE$Vector3();
 		var step = this.mode === THREE$LineStrip ? 1 : 2;
 
-		if ( geometry instanceof THREE$BufferGeometry ) {
+		if ( (geometry && geometry.isBufferGeometry) ) {
 
 			var attributes = geometry.attributes;
 
@@ -159,7 +159,7 @@ THREE$Line.prototype.raycast = ( function () {
 
 			}
 
-		} else if ( geometry instanceof THREE$Geometry ) {
+		} else if ( (geometry && geometry.isGeometry) ) {
 
 			var vertices = geometry.vertices;
 			var nbVertices = vertices.length;

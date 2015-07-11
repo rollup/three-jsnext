@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Light } from './Light';
 import { THREE$Object3D } from '../core/Object3D';
 
@@ -7,6 +6,7 @@ import { THREE$Object3D } from '../core/Object3D';
  */
 
 function THREE$SpotLight ( color, intensity, distance, angle, exponent, decay ) {
+	this.isSpotLight = true;
 
 	THREE$Light.call( this, color );
 

@@ -1,5 +1,5 @@
-import { THREE, THREE$UnsignedByteType, THREE$RGBAFormat, THREE$LinearMipMapLinearFilter, THREE$LinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
 import { THREE$EventDispatcher } from '../core/EventDispatcher';
+import { THREE$UnsignedByteType, THREE$RGBAFormat, THREE$LinearMipMapLinearFilter, THREE$LinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
 import { THREE$Vector2 } from '../math/Vector2';
 
 /**
@@ -8,6 +8,7 @@ import { THREE$Vector2 } from '../math/Vector2';
  */
 
 function THREE$WebGLRenderTarget ( width, height, options ) {
+	this.isWebGLRenderTarget = true;
 
 	this.width = width;
 	this.height = height;

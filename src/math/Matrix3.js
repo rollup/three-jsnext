@@ -1,4 +1,4 @@
-import { THREE, THREE$warn, THREE$error } from '../Three';
+import { THREE$warn, THREE$error } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 
 /**
@@ -8,6 +8,7 @@ import { THREE$Vector3 } from './Vector3';
  */
 
 function THREE$Matrix3 () {
+	this.isMatrix3 = true;
 
 	this.elements = new Float32Array( [
 

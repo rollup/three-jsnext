@@ -1,8 +1,8 @@
-import { THREE, THREE$FaceColors } from '../../Three';
 import { THREE$Camera } from '../../cameras/Camera';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$Color } from '../../math/Color';
+import { THREE$FaceColors } from '../../Three';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Geometry } from '../../core/Geometry';
 
@@ -16,6 +16,7 @@ import { THREE$Geometry } from '../../core/Geometry';
  */
 
 function THREE$CameraHelper ( camera ) {
+	this.isCameraHelper = true;
 
 	var geometry = new THREE$Geometry();
 	var material = new THREE$LineBasicMaterial( { color: 0xffffff, vertexColors: THREE$FaceColors } );

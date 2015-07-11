@@ -1,7 +1,7 @@
-import { THREE, THREE$VertexColors } from '../../Three';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Color } from '../../math/Color';
+import { THREE$VertexColors } from '../../Three';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Geometry } from '../../core/Geometry';
 
@@ -10,6 +10,7 @@ import { THREE$Geometry } from '../../core/Geometry';
  */
 
 function THREE$GridHelper ( size, step ) {
+	this.isGridHelper = true;
 
 	var geometry = new THREE$Geometry();
 	var material = new THREE$LineBasicMaterial( { vertexColors: THREE$VertexColors } );

@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$ShaderChunk } from './ShaderChunk';
 import { THREE$UniformsLib } from './UniformsLib';
 import { THREE$UniformsUtils } from './UniformsUtils';

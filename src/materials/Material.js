@@ -1,7 +1,7 @@
-import { THREE, THREE$NormalBlending, THREE$NoColors, THREE$FrontSide, THREE$SmoothShading, THREE$warn, THREE$AddEquation, THREE$OneMinusSrcAlphaFactor, THREE$SrcAlphaFactor } from '../Three';
 import { THREE$EventDispatcher } from '../core/EventDispatcher';
 import { THREE$SpriteMaterial } from './SpriteMaterial';
 import { THREE$ShaderMaterial } from './ShaderMaterial';
+import { THREE$NormalBlending, THREE$NoColors, THREE$FrontSide, THREE$SmoothShading, THREE$warn, THREE$AddEquation, THREE$OneMinusSrcAlphaFactor, THREE$SrcAlphaFactor } from '../Three';
 import { THREE$PointCloudMaterial } from './PointCloudMaterial';
 import { THREE$MeshDepthMaterial } from './MeshDepthMaterial';
 import { THREE$MeshNormalMaterial } from './MeshNormalMaterial';
@@ -18,6 +18,7 @@ import { THREE$Math } from '../math/Math';
  */
 
 function THREE$Material () {
+	this.isMaterial = true;
 
 	Object.defineProperty( this, 'id', { value: THREE$MaterialIdCount() } );
 
@@ -96,11 +97,11 @@ THREE$Material.prototype = {
 
 				var currentValue = this[ key ];
 
-				if ( currentValue instanceof THREE$Color ) {
+				if ( (currentValue && currentValue.isColor) ) {
 
 					currentValue.set( newValue );
 
-				} else if ( currentValue instanceof THREE$Vector3 && newValue instanceof THREE$Vector3 ) {
+				} else if ( (currentValue && currentValue.isVector3) && (newValue && newValue.isVector3) ) {
 
 					currentValue.copy( newValue );
 
@@ -135,14 +136,14 @@ THREE$Material.prototype = {
 
 		if ( this.name !== "" ) output.name = this.name;
 
-		if ( this instanceof THREE$MeshBasicMaterial ) {
+		if ( (this && this.isMeshBasicMaterial) ) {
 
 			output.color = this.color.getHex();
 			if ( this.vertexColors !== THREE$NoColors ) output.vertexColors = this.vertexColors;
 			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
 			if ( this.side !== THREE$FrontSide ) output.side = this.side;
 
-		} else if ( this instanceof THREE$MeshLambertMaterial ) {
+		} else if ( (this && this.isMeshLambertMaterial) ) {
 
 			output.color = this.color.getHex();
 			output.emissive = this.emissive.getHex();
@@ -151,7 +152,7 @@ THREE$Material.prototype = {
 			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
 			if ( this.side !== THREE$FrontSide ) output.side = this.side;
 
-		} else if ( this instanceof THREE$MeshPhongMaterial ) {
+		} else if ( (this && this.isMeshPhongMaterial) ) {
 
 			output.color = this.color.getHex();
 			output.emissive = this.emissive.getHex();
@@ -162,17 +163,17 @@ THREE$Material.prototype = {
 			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
 			if ( this.side !== THREE$FrontSide ) output.side = this.side;
 
-		} else if ( this instanceof THREE$MeshNormalMaterial ) {
+		} else if ( (this && this.isMeshNormalMaterial) ) {
 
 			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
 			if ( this.side !== THREE$FrontSide ) output.side = this.side;
 
-		} else if ( this instanceof THREE$MeshDepthMaterial ) {
+		} else if ( (this && this.isMeshDepthMaterial) ) {
 
 			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
 			if ( this.side !== THREE$FrontSide ) output.side = this.side;
 
-		} else if ( this instanceof THREE$PointCloudMaterial ) {
+		} else if ( (this && this.isPointCloudMaterial) ) {
 
 			output.size  = this.size;
 			output.sizeAttenuation = this.sizeAttenuation;
@@ -181,13 +182,13 @@ THREE$Material.prototype = {
 			if ( this.vertexColors !== THREE$NoColors ) output.vertexColors = this.vertexColors;
 			if ( this.blending !== THREE$NormalBlending ) output.blending = this.blending;
 
-		} else if ( this instanceof THREE$ShaderMaterial ) {
+		} else if ( (this && this.isShaderMaterial) ) {
 
 			output.uniforms = this.uniforms;
 			output.vertexShader = this.vertexShader;
 			output.fragmentShader = this.fragmentShader;
 
-		} else if ( this instanceof THREE$SpriteMaterial ) {
+		} else if ( (this && this.isSpriteMaterial) ) {
 
 			output.color = this.color.getHex();
 

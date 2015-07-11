@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector2 } from '../../math/Vector2';
@@ -13,6 +12,7 @@ import { THREE$Vector2 } from '../../math/Vector2';
  */
 
 function THREE$ParametricGeometry ( func, slices, stacks ) {
+	this.isParametricGeometry = true;
 
 	THREE$Geometry.call( this );
 

@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 import { THREE$Math } from './Math';
 
@@ -7,6 +6,7 @@ import { THREE$Math } from './Math';
  */
 
 function THREE$Line3 ( start, end ) {
+	this.isLine3 = true;
 
 	this.start = ( start !== undefined ) ? start : new THREE$Vector3();
 	this.end = ( end !== undefined ) ? end : new THREE$Vector3();

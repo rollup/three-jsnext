@@ -1,4 +1,4 @@
-import { THREE, THREE$warn } from '../../Three';
+import { THREE$warn } from '../../Three';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
@@ -37,6 +37,7 @@ import { THREE, THREE$warn } from '../../Three';
  **************************************************************/
 
 function THREE$Curve () {
+	this.isCurve = true;
 
 };
 

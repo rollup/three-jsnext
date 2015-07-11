@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Mesh } from '../../objects/Mesh';
@@ -13,6 +12,7 @@ import { THREE$CylinderGeometry } from '../geometries/CylinderGeometry';
 */
 
 function THREE$SpotLightHelper ( light ) {
+	this.isSpotLightHelper = true;
 
 	THREE$Object3D.call( this );
 

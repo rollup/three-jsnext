@@ -1,4 +1,3 @@
-import { THREE, THREE$warn, THREE$error } from '../Three';
 import { THREE$EventDispatcher } from './EventDispatcher';
 import { THREE$Sprite } from '../objects/Sprite';
 import { THREE$Line } from '../objects/Line';
@@ -14,6 +13,7 @@ import { THREE$PerspectiveCamera } from '../cameras/PerspectiveCamera';
 import { THREE$Vector3 } from '../math/Vector3';
 import { THREE$Quaternion } from '../math/Quaternion';
 import { THREE$Euler } from '../math/Euler';
+import { THREE$warn, THREE$error } from '../Three';
 import { THREE$Matrix4 } from '../math/Matrix4';
 import { THREE$Math } from '../math/Math';
 
@@ -25,6 +25,7 @@ import { THREE$Math } from '../math/Math';
  */
 
 function THREE$Object3D () {
+	this.isObject3D = true;
 
 	Object.defineProperty( this, 'id', { value: THREE$Object3DIdCount() } );
 
@@ -337,7 +338,7 @@ THREE$Object3D.prototype = {
 
 		}
 
-		if ( object instanceof THREE$Object3D ) {
+		if ( (object && object.isObject3D) ) {
 
 			if ( object.parent !== undefined ) {
 
@@ -665,14 +666,14 @@ THREE$Object3D.prototype = {
 			if ( JSON.stringify( object.userData ) !== '{}' ) data.userData = object.userData;
 			if ( object.visible !== true ) data.visible = object.visible;
 
-			if ( object instanceof THREE$PerspectiveCamera ) {
+			if ( (object && object.isPerspectiveCamera) ) {
 
 				data.fov = object.fov;
 				data.aspect = object.aspect;
 				data.near = object.near;
 				data.far = object.far;
 
-			} else if ( object instanceof THREE$OrthographicCamera ) {
+			} else if ( (object && object.isOrthographicCamera) ) {
 
 				data.left = object.left;
 				data.right = object.right;
@@ -681,23 +682,23 @@ THREE$Object3D.prototype = {
 				data.near = object.near;
 				data.far = object.far;
 
-			} else if ( object instanceof THREE$AmbientLight ) {
+			} else if ( (object && object.isAmbientLight) ) {
 
 				data.color = object.color.getHex();
 
-			} else if ( object instanceof THREE$DirectionalLight ) {
+			} else if ( (object && object.isDirectionalLight) ) {
 
 				data.color = object.color.getHex();
 				data.intensity = object.intensity;
 
-			} else if ( object instanceof THREE$PointLight ) {
+			} else if ( (object && object.isPointLight) ) {
 
 				data.color = object.color.getHex();
 				data.intensity = object.intensity;
 				data.distance = object.distance;
 				data.decay = object.decay;
 
-			} else if ( object instanceof THREE$SpotLight ) {
+			} else if ( (object && object.isSpotLight) ) {
 
 				data.color = object.color.getHex();
 				data.intensity = object.intensity;
@@ -706,19 +707,19 @@ THREE$Object3D.prototype = {
 				data.exponent = object.exponent;
 				data.decay = object.decay;
 
-			} else if ( object instanceof THREE$HemisphereLight ) {
+			} else if ( (object && object.isHemisphereLight) ) {
 
 				data.color = object.color.getHex();
 				data.groundColor = object.groundColor.getHex();
 
-			} else if ( object instanceof THREE$Mesh || object instanceof THREE$Line || object instanceof THREE$PointCloud ) {
+			} else if ( (object && object.isMesh) || (object && object.isLine) || (object && object.isPointCloud) ) {
 
 				data.geometry = parseGeometry( object.geometry );
 				data.material = parseMaterial( object.material );
 
-				if ( object instanceof THREE$Line ) data.mode = object.mode;
+				if ( (object && object.isLine) ) data.mode = object.mode;
 
-			} else if ( object instanceof THREE$Sprite ) {
+			} else if ( (object && object.isSprite) ) {
 
 				data.material = parseMaterial( object.material );
 

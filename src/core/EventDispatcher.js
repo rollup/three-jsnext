@@ -1,10 +1,9 @@
-import { THREE } from '../Three';
-
 /**
  * https://github.com/mrdoob/eventdispatcher.js/
  */
 
-function THREE$EventDispatcher () {}
+function THREE$EventDispatcher () {
+	this.isEventDispatcher = true;}
 
 THREE$EventDispatcher.prototype = {
 

@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$ShaderMaterial } from './ShaderMaterial';
 
 /**
@@ -6,6 +5,7 @@ import { THREE$ShaderMaterial } from './ShaderMaterial';
  */
 
 function THREE$RawShaderMaterial ( parameters ) {
+	this.isRawShaderMaterial = true;
 
 	THREE$ShaderMaterial.call( this, parameters );
 

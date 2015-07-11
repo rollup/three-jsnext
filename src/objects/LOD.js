@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Vector3 } from '../math/Vector3';
 
@@ -9,6 +8,7 @@ import { THREE$Vector3 } from '../math/Vector3';
  */
 
 function THREE$LOD () {
+	this.isLOD = true;
 
 	THREE$Object3D.call( this );
 

@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Curve } from '../core/Curve';
 import { THREE$Vector2 } from '../../math/Vector2';
 
@@ -7,6 +6,7 @@ import { THREE$Vector2 } from '../../math/Vector2';
  **************************************************************/
 
 function THREE$SplineCurve ( points /* array of Vector2 */ ) {
+	this.isSplineCurve = true;
 
 	this.points = ( points == undefined ) ? [] : points;
 

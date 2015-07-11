@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
@@ -9,6 +8,7 @@ import { THREE$BufferGeometry } from '../../core/BufferGeometry';
  */
 
 function THREE$BoxHelper ( object ) {
+	this.isBoxHelper = true;
 
 	var geometry = new THREE$BufferGeometry();
 	geometry.addAttribute( 'position', new THREE$BufferAttribute( new Float32Array( 72 ), 3 ) );

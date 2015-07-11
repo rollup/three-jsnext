@@ -1,5 +1,3 @@
-import { THREE } from '../Three';
-
 var THREE$ColorKeywords;
 
 /**
@@ -7,6 +5,7 @@ var THREE$ColorKeywords;
  */
 
 function THREE$Color ( color ) {
+	this.isColor = true;
 
 	if ( arguments.length === 3 ) {
 
@@ -26,7 +25,7 @@ THREE$Color.prototype = {
 
 	set: function ( value ) {
 
-		if ( value instanceof THREE$Color ) {
+		if ( (value && value.isColor) ) {
 
 			this.copy( value );
 

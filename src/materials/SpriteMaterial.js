@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Material } from './Material';
 import { THREE$Color } from '../math/Color';
 
@@ -22,6 +21,7 @@ import { THREE$Color } from '../math/Color';
  */
 
 function THREE$SpriteMaterial ( parameters ) {
+	this.isSpriteMaterial = true;
 
 	THREE$Material.call( this );
 

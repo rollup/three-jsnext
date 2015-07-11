@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Color } from '../math/Color';
 
 /**
@@ -7,6 +6,7 @@ import { THREE$Color } from '../math/Color';
  */
 
 function THREE$FogExp2 ( color, density ) {
+	this.isFogExp2 = true;
 
 	this.name = '';
 

@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$AnimationHandler } from './AnimationHandler';
 import { THREE$Quaternion } from '../../math/Quaternion';
 import { THREE$Vector3 } from '../../math/Vector3';
@@ -10,6 +9,7 @@ import { THREE$Vector3 } from '../../math/Vector3';
  */
 
 function THREE$Animation ( root, data ) {
+	this.isAnimation = true;
 
 	this.root = root;
 	this.data = THREE$AnimationHandler.init( data );

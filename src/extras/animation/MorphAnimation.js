@@ -1,11 +1,10 @@
-import { THREE } from '../../Three';
-
 /**
  * @author mrdoob / http://mrdoob.com
  * @author willy-vvu / http://willy-vvu.github.io
  */
 
 function THREE$MorphAnimation ( mesh ) {
+	this.isMorphAnimation = true;
 
 	this.mesh = mesh;
 	this.frames = mesh.morphTargetInfluences.length;

@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Math } from '../../math/Math';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Matrix4 } from '../../math/Matrix4';
@@ -21,6 +20,7 @@ import { THREE$Vector2 } from '../../math/Vector2';
  */
 
 function THREE$TubeGeometry ( path, segments, radius, radialSegments, closed, taper ) {
+	this.isTubeGeometry = true;
 
 	THREE$Geometry.call( this );
 

@@ -1,10 +1,11 @@
-import { THREE, THREE$warn } from '../../Three';
+import { THREE$warn } from '../../Three';
 
 /**
 * @author mrdoob / http://mrdoob.com/
 */
 
 function THREE$WebGLExtensions ( gl ) {
+	this.isWebGLExtensions = true;
 
 	var extensions = {};
 

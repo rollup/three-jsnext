@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
 import { THREE$Matrix3 } from '../../math/Matrix3';
@@ -11,6 +10,7 @@ import { THREE$Geometry } from '../../core/Geometry';
 */
 
 function THREE$VertexNormalsHelper ( object, size, hex, linewidth ) {
+	this.isVertexNormalsHelper = true;
 
 	this.object = object;
 

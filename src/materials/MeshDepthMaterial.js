@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Material } from './Material';
 
 /**
@@ -18,6 +17,7 @@ import { THREE$Material } from './Material';
  */
 
 function THREE$MeshDepthMaterial ( parameters ) {
+	this.isMeshDepthMaterial = true;
 
 	THREE$Material.call( this );
 

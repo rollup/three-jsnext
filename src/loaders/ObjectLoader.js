@@ -1,4 +1,3 @@
-import { THREE, THREE$warn } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Group } from '../objects/Group';
 import { THREE$Sprite } from '../objects/Sprite';
@@ -13,6 +12,7 @@ import { THREE$AmbientLight } from '../lights/AmbientLight';
 import { THREE$OrthographicCamera } from '../cameras/OrthographicCamera';
 import { THREE$PerspectiveCamera } from '../cameras/PerspectiveCamera';
 import { THREE$Scene } from '../scenes/Scene';
+import { THREE$warn } from '../Three';
 import { THREE$Matrix4 } from '../math/Matrix4';
 import { THREE$Vector2 } from '../math/Vector2';
 import { THREE$Texture } from '../textures/Texture';
@@ -35,6 +35,7 @@ import { THREE$XHRLoader } from './XHRLoader';
  */
 
 function THREE$ObjectLoader ( manager ) {
+	this.isObjectLoader = true;
 
 	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 	this.texturePath = '';

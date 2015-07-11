@@ -1,4 +1,4 @@
-import { THREE, THREE$warn } from '../Three';
+import { THREE$warn } from '../Three';
 import { THREE$Mesh } from '../objects/Mesh';
 
 var THREE$GeometryUtils;
@@ -15,7 +15,7 @@ THREE$GeometryUtils = {
 
 		var matrix;
 
-		if ( geometry2 instanceof THREE$Mesh ) {
+		if ( (geometry2 && geometry2.isMesh) ) {
 
 			geometry2.matrixAutoUpdate && geometry2.updateMatrix();
 

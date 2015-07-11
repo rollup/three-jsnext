@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Sphere } from '../../math/Sphere';
@@ -10,6 +9,7 @@ import { THREE$Vector2 } from '../../math/Vector2';
  */
 
 function THREE$RingGeometry ( innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength ) {
+	this.isRingGeometry = true;
 
 	THREE$Geometry.call( this );
 

@@ -1,5 +1,5 @@
-import { THREE, THREE$NoColors } from '../Three';
 import { THREE$Material } from './Material';
+import { THREE$NoColors } from '../Three';
 import { THREE$Color } from '../math/Color';
 
 /**
@@ -25,6 +25,7 @@ import { THREE$Color } from '../math/Color';
  */
 
 function THREE$LineBasicMaterial ( parameters ) {
+	this.isLineBasicMaterial = true;
 
 	THREE$Material.call( this );
 

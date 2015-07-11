@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$ExtrudeGeometry } from './ExtrudeGeometry';
 import { THREE$FontUtils } from '../FontUtils';
 
@@ -41,6 +40,7 @@ import { THREE$FontUtils } from '../FontUtils';
 
 
 function THREE$TextGeometry ( text, parameters ) {
+	this.isTextGeometry = true;
 
 	parameters = parameters || {};
 

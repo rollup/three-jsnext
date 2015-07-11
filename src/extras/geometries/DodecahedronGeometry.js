@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
 
@@ -7,6 +6,7 @@ import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
  */
 
 function THREE$DodecahedronGeometry ( radius, detail ) {
+	this.isDodecahedronGeometry = true;
 
 	this.parameters = {
 		radius: radius,

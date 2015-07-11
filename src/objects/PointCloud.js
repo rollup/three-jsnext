@@ -1,4 +1,4 @@
-import { THREE, THREE$warn } from '../Three';
+import { THREE$warn } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$BufferGeometry } from '../core/BufferGeometry';
 import { THREE$Vector3 } from '../math/Vector3';
@@ -12,6 +12,7 @@ import { THREE$Geometry } from '../core/Geometry';
  */
 
 function THREE$PointCloud ( geometry, material ) {
+	this.isPointCloud = true;
 
 	THREE$Object3D.call( this );
 
@@ -78,7 +79,7 @@ THREE$PointCloud.prototype.raycast = ( function () {
 
 		};
 
-		if ( geometry instanceof THREE$BufferGeometry ) {
+		if ( (geometry && geometry.isBufferGeometry) ) {
 
 			var attributes = geometry.attributes;
 			var positions = attributes.position.array;
@@ -165,6 +166,7 @@ THREE$PointCloud.prototype.clone = function ( object ) {
 // Backwards compatibility
 
 function THREE$ParticleSystem ( geometry, material ) {
+	this.isParticleSystem = true;
 
 	THREE$warn( 'THREE.ParticleSystem has been renamed to THREE.PointCloud.' );
 	return new THREE$PointCloud( geometry, material );

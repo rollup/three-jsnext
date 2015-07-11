@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Object3D } from '../core/Object3D';
 
 /**
@@ -6,6 +5,7 @@ import { THREE$Object3D } from '../core/Object3D';
  */
 
 function THREE$Group () {
+	this.isGroup = true;
 
 	THREE$Object3D.call( this );
 

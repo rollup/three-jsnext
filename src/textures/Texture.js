@@ -1,5 +1,5 @@
-import { THREE, THREE$UVMapping, THREE$UnsignedByteType, THREE$RGBAFormat, THREE$LinearMipMapLinearFilter, THREE$LinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
 import { THREE$EventDispatcher } from '../core/EventDispatcher';
+import { THREE$UVMapping, THREE$UnsignedByteType, THREE$RGBAFormat, THREE$LinearMipMapLinearFilter, THREE$LinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
 import { THREE$Vector2 } from '../math/Vector2';
 import { THREE$Math } from '../math/Math';
 
@@ -10,6 +10,7 @@ import { THREE$Math } from '../math/Math';
  */
 
 function THREE$Texture ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+	this.isTexture = true;
 
 	Object.defineProperty( this, 'id', { value: THREE$TextureIdCount() } );
 

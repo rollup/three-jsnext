@@ -1,4 +1,4 @@
-import { THREE, THREE$NormalBlending } from '../Three';
+import { THREE$NormalBlending } from '../Three';
 import { THREE$Color } from '../math/Color';
 import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Vector3 } from '../math/Vector3';
@@ -9,6 +9,7 @@ import { THREE$Vector3 } from '../math/Vector3';
  */
 
 function THREE$LensFlare ( texture, size, distance, blending, color ) {
+	this.isLensFlare = true;
 
 	THREE$Object3D.call( this );
 

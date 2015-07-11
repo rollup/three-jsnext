@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$AnimationHandler } from './AnimationHandler';
 
 /**
@@ -10,6 +9,7 @@ import { THREE$AnimationHandler } from './AnimationHandler';
  */
 
 function THREE$KeyFrameAnimation ( data ) {
+	this.isKeyFrameAnimation = true;
 
 	this.root = data.node;
 	this.data = THREE$AnimationHandler.init( data );

@@ -1,5 +1,5 @@
-import { THREE, THREE$error } from '../Three';
 import { THREE$EventDispatcher } from './EventDispatcher';
+import { THREE$error } from '../Three';
 import { THREE$Mesh } from '../objects/Mesh';
 import { THREE$Face3 } from './Face3';
 import { THREE$Matrix3 } from '../math/Matrix3';
@@ -22,6 +22,7 @@ import { THREE$Math } from '../math/Math';
  */
 
 function THREE$Geometry () {
+	this.isGeometry = true;
 
 	Object.defineProperty( this, 'id', { value: THREE$GeometryIdCount() } );
 
@@ -599,7 +600,7 @@ THREE$Geometry.prototype = {
 
 	merge: function ( geometry, matrix, materialIndexOffset ) {
 
-		if ( geometry instanceof THREE$Geometry === false ) {
+		if ( (geometry && geometry.isGeometry) === false ) {
 
 			THREE$error( 'THREE.Geometry.merge(): geometry not an instance of THREE.Geometry.', geometry );
 			return;
@@ -709,7 +710,7 @@ THREE$Geometry.prototype = {
 
 	mergeMesh: function ( mesh ) {
 
-		if ( mesh instanceof THREE$Mesh === false ) {
+		if ( (mesh && mesh.isMesh) === false ) {
 
 			THREE$error( 'THREE.Geometry.mergeMesh(): mesh not an instance of THREE.Mesh.', mesh );
 			return;

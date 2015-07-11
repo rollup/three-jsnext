@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 import { THREE$Sphere } from './Sphere';
 import { THREE$Plane } from './Plane';
@@ -10,6 +9,7 @@ import { THREE$Plane } from './Plane';
  */
 
 function THREE$Frustum ( p0, p1, p2, p3, p4, p5 ) {
+	this.isFrustum = true;
 
 	this.planes = [
 

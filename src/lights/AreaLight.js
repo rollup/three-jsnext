@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Light } from './Light';
 import { THREE$Vector3 } from '../math/Vector3';
 
@@ -8,6 +7,7 @@ import { THREE$Vector3 } from '../math/Vector3';
  */
 
 function THREE$AreaLight ( color, intensity ) {
+	this.isAreaLight = true;
 
 	THREE$Light.call( this, color );
 

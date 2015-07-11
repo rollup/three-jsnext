@@ -1,7 +1,7 @@
-import { THREE, THREE$VertexColors } from '../../Three';
 import { THREE$Bone } from '../../objects/Bone';
 import { THREE$Matrix4 } from '../../math/Matrix4';
 import { THREE$Line, THREE$LinePieces } from '../../objects/Line';
+import { THREE$VertexColors } from '../../Three';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Color } from '../../math/Color';
 import { THREE$Vector3 } from '../../math/Vector3';
@@ -15,6 +15,7 @@ import { THREE$Geometry } from '../../core/Geometry';
  */
 
 function THREE$SkeletonHelper ( object ) {
+	this.isSkeletonHelper = true;
 
 	this.bones = this.getBoneList( object );
 
@@ -24,7 +25,7 @@ function THREE$SkeletonHelper ( object ) {
 
 		var bone = this.bones[ i ];
 
-		if ( bone.parent instanceof THREE$Bone ) {
+		if ( (bone.parent && bone.parent.isBone) ) {
 
 			geometry.vertices.push( new THREE$Vector3() );
 			geometry.vertices.push( new THREE$Vector3() );
@@ -56,7 +57,7 @@ THREE$SkeletonHelper.prototype.getBoneList = function( object ) {
 
 	var boneList = [];
 
-	if ( object instanceof THREE$Bone ) {
+	if ( (object && object.isBone) ) {
 
 		boneList.push( object );
 
@@ -86,7 +87,7 @@ THREE$SkeletonHelper.prototype.update = function () {
 
 		var bone = this.bones[ i ];
 
-		if ( bone.parent instanceof THREE$Bone ) {
+		if ( (bone.parent && bone.parent.isBone) ) {
 
 			boneMatrix.multiplyMatrices( matrixWorldInv, bone.matrixWorld );
 			geometry.vertices[ j ].setFromMatrixPosition( boneMatrix );

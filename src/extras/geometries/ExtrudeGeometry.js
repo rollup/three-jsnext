@@ -1,7 +1,7 @@
-import { THREE, THREE$error } from '../../Three';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Face3 } from '../../core/Face3';
 import { THREE$Vector3 } from '../../math/Vector3';
+import { THREE$error } from '../../Three';
 import { THREE$Shape } from '../core/Shape';
 import { THREE$TubeGeometry } from './TubeGeometry';
 import { THREE$Geometry } from '../../core/Geometry';
@@ -33,6 +33,7 @@ import { THREE$Geometry } from '../../core/Geometry';
  **/
 
 function THREE$ExtrudeGeometry ( shapes, options ) {
+	this.isExtrudeGeometry = true;
 
 	if ( typeof( shapes ) === "undefined" ) {
 		shapes = [];

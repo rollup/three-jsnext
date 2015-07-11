@@ -1,5 +1,3 @@
-import { THREE } from '../Three';
-
 var THREE$DefaultLoadingManager;
 
 /**
@@ -7,6 +5,7 @@ var THREE$DefaultLoadingManager;
  */
 
 function THREE$LoadingManager ( onLoad, onProgress, onError ) {
+	this.isLoadingManager = true;
 
 	var scope = this;
 

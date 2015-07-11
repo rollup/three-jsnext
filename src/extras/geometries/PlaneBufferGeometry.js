@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
 
@@ -8,6 +7,7 @@ import { THREE$BufferAttribute } from '../../core/BufferAttribute';
  */
 
 function THREE$PlaneBufferGeometry ( width, height, widthSegments, heightSegments ) {
+	this.isPlaneBufferGeometry = true;
 
 	THREE$BufferGeometry.call( this );
 

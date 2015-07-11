@@ -1,4 +1,4 @@
-import { THREE, THREE$warn, THREE$error, THREE$AddOperation, THREE$MixOperation, THREE$MultiplyOperation, THREE$EquirectangularRefractionMapping, THREE$CubeRefractionMapping, THREE$SphericalReflectionMapping, THREE$EquirectangularReflectionMapping, THREE$CubeReflectionMapping, THREE$PCFSoftShadowMap, THREE$PCFShadowMap } from '../../Three';
+import { THREE$warn, THREE$error, THREE$AddOperation, THREE$MixOperation, THREE$MultiplyOperation, THREE$EquirectangularRefractionMapping, THREE$CubeRefractionMapping, THREE$SphericalReflectionMapping, THREE$EquirectangularReflectionMapping, THREE$CubeReflectionMapping, THREE$PCFSoftShadowMap, THREE$PCFShadowMap } from '../../Three';
 import { THREE$WebGLShader } from './WebGLShader';
 import { THREE$RawShaderMaterial } from '../../materials/RawShaderMaterial';
 
@@ -155,7 +155,7 @@ THREE$WebGLProgram = ( function () {
 
 		var prefix_vertex, prefix_fragment;
 
-		if ( material instanceof THREE$RawShaderMaterial ) {
+		if ( (material && material.isRawShaderMaterial) ) {
 
 			prefix_vertex = '';
 			prefix_fragment = '';

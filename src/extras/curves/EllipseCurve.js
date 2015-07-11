@@ -1,4 +1,3 @@
-import { THREE } from '../../Three';
 import { THREE$Vector2 } from '../../math/Vector2';
 import { THREE$Curve } from '../core/Curve';
 
@@ -7,6 +6,7 @@ import { THREE$Curve } from '../core/Curve';
  **************************************************************/
 
 function THREE$EllipseCurve ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise ) {
+	this.isEllipseCurve = true;
 
 	this.aX = aX;
 	this.aY = aY;

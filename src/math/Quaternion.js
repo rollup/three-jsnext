@@ -1,4 +1,4 @@
-import { THREE, THREE$warn } from '../Three';
+import { THREE$warn } from '../Three';
 import { THREE$Vector3 } from './Vector3';
 import { THREE$Euler } from './Euler';
 
@@ -10,6 +10,7 @@ import { THREE$Euler } from './Euler';
  */
 
 function THREE$Quaternion ( x, y, z, w ) {
+	this.isQuaternion = true;
 
 	this._x = x || 0;
 	this._y = y || 0;
@@ -104,7 +105,7 @@ THREE$Quaternion.prototype = {
 
 	setFromEuler: function ( euler, update ) {
 
-		if ( euler instanceof THREE$Euler === false ) {
+		if ( (euler && euler.isEuler) === false ) {
 
 			throw new Error( 'THREE.Quaternion: .setFromEuler() now expects a Euler rotation rather than a Vector3 and order.' );
 		}

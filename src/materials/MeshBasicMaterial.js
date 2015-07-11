@@ -1,5 +1,5 @@
-import { THREE, THREE$NoColors, THREE$SmoothShading, THREE$MultiplyOperation } from '../Three';
 import { THREE$Material } from './Material';
+import { THREE$NoColors, THREE$SmoothShading, THREE$MultiplyOperation } from '../Three';
 import { THREE$Color } from '../math/Color';
 
 /**
@@ -40,6 +40,7 @@ import { THREE$Color } from '../math/Color';
  */
 
 function THREE$MeshBasicMaterial ( parameters ) {
+	this.isMeshBasicMaterial = true;
 
 	THREE$Material.call( this );
 

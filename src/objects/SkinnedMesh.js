@@ -1,5 +1,5 @@
-import { THREE, THREE$warn } from '../Three';
 import { THREE$Mesh } from './Mesh';
+import { THREE$warn } from '../Three';
 import { THREE$Geometry } from '../core/Geometry';
 import { THREE$Skeleton } from './Skeleton';
 import { THREE$Bone } from './Bone';
@@ -12,6 +12,7 @@ import { THREE$Matrix4 } from '../math/Matrix4';
  */
 
 function THREE$SkinnedMesh ( geometry, material, useVertexTexture ) {
+	this.isSkinnedMesh = true;
 
 	THREE$Mesh.call( this, geometry, material );
 
@@ -113,7 +114,7 @@ THREE$SkinnedMesh.prototype.pose = function () {
 
 THREE$SkinnedMesh.prototype.normalizeSkinWeights = function () {
 
-	if ( this.geometry instanceof THREE$Geometry ) {
+	if ( (this.geometry && this.geometry.isGeometry) ) {
 
 		for ( var i = 0; i < this.geometry.skinIndices.length; i ++ ) {
 

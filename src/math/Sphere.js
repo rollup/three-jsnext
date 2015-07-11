@@ -1,4 +1,3 @@
-import { THREE } from '../Three';
 import { THREE$Box3 } from './Box3';
 import { THREE$Vector3 } from './Vector3';
 
@@ -8,6 +7,7 @@ import { THREE$Vector3 } from './Vector3';
  */
 
 function THREE$Sphere ( center, radius ) {
+	this.isSphere = true;
 
 	this.center = ( center !== undefined ) ? center : new THREE$Vector3();
 	this.radius = ( radius !== undefined ) ? radius : 0;
