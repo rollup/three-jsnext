@@ -10,7 +10,7 @@
     "build": "node generate && rollup -i src/index.js -o dist/three.js -f umd -n THREE && uglifyjs -c -m -o dist/three.min.js -- dist/three.js",
     "test": "echo 'tests coming soon...'",
     "pretest": "npm run build",
-    "update-three": "rm -rf three.js && git clone https://github.com/mrdoob/three.js"
+    "update-three": "rm -rf three.js && git clone https://github.com/mrdoob/three.js && cd three.js && git checkout dev"
   },
   "files": [
     "src/",
