@@ -137,9 +137,16 @@ export default class Module {
 							return this.skip();
 						} else if ( node.right.type === 'FunctionExpression' ) {
 							// THREE.Geometry = function () {...} becomes
-							// function THREE$Geometry () {...}
+							// function THREE$Geometry () {...}, to avoid
+							// tricky cyclical headaches.
 							magicString.overwrite( node.start, node.right.start, '' );
 							magicString.insert( node.right.start + 8, ' ' + alias );
+
+							// We also add this.isGeometry = true, to avoid
+							// instanceof checks
+							const fnBody = node.right.body;
+							magicString.insert( fnBody.start + 1, `\n\tthis.is${alias.slice(6)} = true;` );
+
 							node.left._skip = true;
 							return;
 						} else {
@@ -158,14 +165,30 @@ export default class Module {
 					}
 				}
 
-				// rewrite all instances of `THREE.whatever` to `THREE$whatever`, but be
-				// careful with e.g. `d3.ns.qualify` -> `d3$ns.qualify`
+				// rewrite all instances of `THREE.whatever` to `THREE$whatever`
 				if ( node.type === 'MemberExpression' ) {
 					const keypath = getKeypath( node );
 
 					if ( isExport( keypath ) ) {
 						const alias = createAlias( keypath );
 						magicString.overwrite( node.start, node.end, alias );
+					}
+				}
+
+				// rewrite `object instanceof THREE.Geometry` to
+				// `(object && object.isGeometry)`
+				if ( node.type === 'BinaryExpression' && node.operator === 'instanceof' ) {
+					if ( node.right.type === 'MemberExpression' ) {
+						const keypath = getKeypath( node.right );
+
+						if ( isExport( keypath ) ) {
+							const left = magicString.slice( node.left.start, node.left.end );
+							const name = keypath.slice( 6 );
+
+							magicString.overwrite( node.start, node.end, `(${left} && ${left}.is${name})` );
+
+							node.right._skip = true;
+						}
 					}
 				}
 			},
