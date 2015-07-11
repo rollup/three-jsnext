@@ -9,14 +9,26 @@
 
 Three.js is an incredible library, which makes it possible for us front-end mortals to tap into the power of WebGL. Without it, creating the simplest of scenes involves a vertiginous learning curve.
 
-It's also monolithic and a bit on the chunky side.
+It's also monolithic and a *bit* on the chunky side.
 
 You could piece together your own WebGL solution using various [small modules](medium.com/@Rich_Harris/small-modules-it-s-not-quite-that-simple-3ca532d65de4), but when you're learning a whole new way of thinking, being able to use a well-thought-through, philosophically coherent library (with [loads of examples](http://threejs.org/examples/) and an active community of people on Stack Overflow waiting to help you) can make the difference between shipping and failing.
 
 
 ## Having your cake and eating it
 
-Or, more accurately, having the whole cake but only eating the bits you like. Let me explain: Normally, when you use a library, you use the whole library, whether as a script tag on the page (`<script src='three.min.js'>`) or as a module (`var THREE = require('three')`). But in the vast majority of situations you're only using a fraction of the library's capabilities.
+Or, more accurately, having the whole cake but only eating the bits you like. Let me explain: Normally, when you use a library, you use the whole library, whether as a script tag on the page...
+
+```html
+<script src='three.min.js'>
+```
+
+...or as a module...
+
+```js
+var THREE = require('three');
+```
+
+...but in the vast majority of situations you're only using a fraction of the library's capabilities.
 
 ES6 modules change everything. Now, you can import components from a library individually. Instead of this...
 
