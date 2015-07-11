@@ -12184,6 +12184,457 @@
 
 
   /**
+   * @author alteredq / http://alteredqualia.com/
+   */
+
+  function THREE$DataTexture ( data, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
+
+  	THREE$Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
+
+  	this.image = { data: data, width: width, height: height };
+
+  }
+
+  THREE$DataTexture.prototype = Object.create( THREE$Texture.prototype );
+  THREE$DataTexture.prototype.constructor = THREE$DataTexture;
+
+  THREE$DataTexture.prototype.clone = function () {
+
+  	var texture = new THREE$DataTexture();
+
+  	THREE$Texture.prototype.clone.call( this, texture );
+
+  	return texture;
+
+  };
+
+
+
+  /**
+   * @author mrdoob / http://mrdoob.com/
+   */
+
+  function THREE$CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+
+  	mapping = mapping !== undefined ? mapping : THREE$CubeReflectionMapping;
+  	
+  	THREE$Texture.call( this, images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
+
+  	this.images = images;
+
+  }
+
+  THREE$CubeTexture.prototype = Object.create( THREE$Texture.prototype );
+  THREE$CubeTexture.prototype.constructor = THREE$CubeTexture;
+
+  THREE$CubeTexture.clone = function ( texture ) {
+
+  	if ( texture === undefined ) texture = new THREE$CubeTexture();
+
+  	THREE$Texture.prototype.clone.call( this, texture );
+
+  	texture.images = this.images;
+
+  	return texture;
+
+  };
+
+
+  var THREE$DefaultLoadingManager;
+
+
+  /**
+   * @author mrdoob / http://mrdoob.com/
+   */
+
+  function THREE$LoadingManager ( onLoad, onProgress, onError ) {
+
+  	var scope = this;
+
+  	var loaded = 0, total = 0;
+
+  	this.onLoad = onLoad;
+  	this.onProgress = onProgress;
+  	this.onError = onError;
+
+  	this.itemStart = function ( url ) {
+
+  		total ++;
+
+  	};
+
+  	this.itemEnd = function ( url ) {
+
+  		loaded ++;
+
+  		if ( scope.onProgress !== undefined ) {
+
+  			scope.onProgress( url, loaded, total );
+
+  		}
+
+  		if ( loaded === total && scope.onLoad !== undefined ) {
+
+  			scope.onLoad();
+
+  		}
+
+  	};
+
+  }
+
+  THREE$DefaultLoadingManager = new THREE$LoadingManager();
+
+
+  var THREE$Cache;
+
+
+  /**
+   * @author mrdoob / http://mrdoob.com/
+   */
+
+  THREE$Cache = {
+
+  	files: {},
+
+  	add: function ( key, file ) {
+
+  		// console.log( 'THREE.Cache', 'Adding key:', key );
+
+  		this.files[ key ] = file;
+
+  	},
+
+  	get: function ( key ) {
+
+  		// console.log( 'THREE.Cache', 'Checking key:', key );
+
+  		return this.files[ key ];
+
+  	},
+
+  	remove: function ( key ) {
+
+  		delete this.files[ key ];
+
+  	},
+
+  	clear: function () {
+
+  		this.files = {}
+
+  	}
+
+  };
+
+
+
+  /**
+   * @author mrdoob / http://mrdoob.com/
+   */
+
+  function THREE$ImageLoader ( manager ) {
+
+  	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
+
+  }
+
+  THREE$ImageLoader.prototype = {
+
+  	constructor: THREE$ImageLoader,
+
+  	load: function ( url, onLoad, onProgress, onError ) {
+
+  		var scope = this;
+
+  		var cached = THREE$Cache.get( url );
+
+  		if ( cached !== undefined ) {
+
+  			onLoad( cached );
+  			return;
+
+  		}
+
+  		var image = document.createElement( 'img' );
+
+  		image.addEventListener( 'load', function ( event ) {
+
+  			THREE$Cache.add( url, this );
+
+  			if ( onLoad ) onLoad( this );
+  			
+  			scope.manager.itemEnd( url );
+
+  		}, false );
+
+  		if ( onProgress !== undefined ) {
+
+  			image.addEventListener( 'progress', function ( event ) {
+
+  				onProgress( event );
+
+  			}, false );
+
+  		}
+
+  		if ( onError !== undefined ) {
+
+  			image.addEventListener( 'error', function ( event ) {
+
+  				onError( event );
+
+  			}, false );
+
+  		}
+
+  		if ( this.crossOrigin !== undefined ) image.crossOrigin = this.crossOrigin;
+
+  		image.src = url;
+
+  		scope.manager.itemStart( url );
+
+  		return image;
+
+  	},
+
+  	setCrossOrigin: function ( value ) {
+
+  		this.crossOrigin = value;
+
+  	}
+
+  }
+
+
+  var THREE$ImageUtils;
+
+
+  /**
+   * @author alteredq / http://alteredqualia.com/
+   * @author mrdoob / http://mrdoob.com/
+   * @author Daosheng Mu / https://github.com/DaoshengMu/
+   */
+
+  THREE$ImageUtils = {
+
+  	crossOrigin: undefined,
+
+  	loadTexture: function ( url, mapping, onLoad, onError ) {
+
+  		var loader = new THREE$ImageLoader();
+  		loader.crossOrigin = this.crossOrigin;
+
+  		var texture = new THREE$Texture( undefined, mapping );
+
+  		loader.load( url, function ( image ) {
+
+  			texture.image = image;
+  			texture.needsUpdate = true;
+
+  			if ( onLoad ) onLoad( texture );
+
+  		}, undefined, function ( event ) {
+
+  			if ( onError ) onError( event );
+
+  		} );
+
+  		texture.sourceFile = url;
+
+  		return texture;
+
+  	},
+
+  	loadTextureCube: function ( array, mapping, onLoad, onError ) {
+
+  		var images = [];
+
+  		var loader = new THREE$ImageLoader();
+  		loader.crossOrigin = this.crossOrigin;
+
+  		var texture = new THREE$CubeTexture( images, mapping );
+
+  		// no flipping needed for cube textures
+
+  		texture.flipY = false;
+
+  		var loaded = 0;
+
+  		var loadTexture = function ( i ) {
+
+  			loader.load( array[ i ], function ( image ) {
+
+  				texture.images[ i ] = image;
+
+  				loaded += 1;
+
+  				if ( loaded === 6 ) {
+
+  					texture.needsUpdate = true;
+
+  					if ( onLoad ) onLoad( texture );
+
+  				}
+
+  			}, undefined, onError );
+
+  		}
+
+  		for ( var i = 0, il = array.length; i < il; ++ i ) {
+
+  			loadTexture( i );
+
+  		}
+
+  		return texture;
+
+  	},
+
+  	loadCompressedTexture: function () {
+
+  		THREE$error( 'THREE.ImageUtils.loadCompressedTexture has been removed. Use THREE.DDSLoader instead.' )
+
+  	},
+
+  	loadCompressedTextureCube: function () {
+
+  		THREE$error( 'THREE.ImageUtils.loadCompressedTextureCube has been removed. Use THREE.DDSLoader instead.' )
+
+  	},
+
+  	getNormalMap: function ( image, depth ) {
+
+  		// Adapted from http://www.paulbrunt.co.uk/lab/heightnormal/
+
+  		var cross = function ( a, b ) {
+
+  			return [ a[ 1 ] * b[ 2 ] - a[ 2 ] * b[ 1 ], a[ 2 ] * b[ 0 ] - a[ 0 ] * b[ 2 ], a[ 0 ] * b[ 1 ] - a[ 1 ] * b[ 0 ] ];
+
+  		}
+
+  		var subtract = function ( a, b ) {
+
+  			return [ a[ 0 ] - b[ 0 ], a[ 1 ] - b[ 1 ], a[ 2 ] - b[ 2 ] ];
+
+  		}
+
+  		var normalize = function ( a ) {
+
+  			var l = Math.sqrt( a[ 0 ] * a[ 0 ] + a[ 1 ] * a[ 1 ] + a[ 2 ] * a[ 2 ] );
+  			return [ a[ 0 ] / l, a[ 1 ] / l, a[ 2 ] / l ];
+
+  		}
+
+  		depth = depth | 1;
+
+  		var width = image.width;
+  		var height = image.height;
+
+  		var canvas = document.createElement( 'canvas' );
+  		canvas.width = width;
+  		canvas.height = height;
+
+  		var context = canvas.getContext( '2d' );
+  		context.drawImage( image, 0, 0 );
+
+  		var data = context.getImageData( 0, 0, width, height ).data;
+  		var imageData = context.createImageData( width, height );
+  		var output = imageData.data;
+
+  		for ( var x = 0; x < width; x ++ ) {
+
+  			for ( var y = 0; y < height; y ++ ) {
+
+  				var ly = y - 1 < 0 ? 0 : y - 1;
+  				var uy = y + 1 > height - 1 ? height - 1 : y + 1;
+  				var lx = x - 1 < 0 ? 0 : x - 1;
+  				var ux = x + 1 > width - 1 ? width - 1 : x + 1;
+
+  				var points = [];
+  				var origin = [ 0, 0, data[ ( y * width + x ) * 4 ] / 255 * depth ];
+  				points.push( [ - 1, 0, data[ ( y * width + lx ) * 4 ] / 255 * depth ] );
+  				points.push( [ - 1, - 1, data[ ( ly * width + lx ) * 4 ] / 255 * depth ] );
+  				points.push( [ 0, - 1, data[ ( ly * width + x ) * 4 ] / 255 * depth ] );
+  				points.push( [ 1, - 1, data[ ( ly * width + ux ) * 4 ] / 255 * depth ] );
+  				points.push( [ 1, 0, data[ ( y * width + ux ) * 4 ] / 255 * depth ] );
+  				points.push( [ 1, 1, data[ ( uy * width + ux ) * 4 ] / 255 * depth ] );
+  				points.push( [ 0, 1, data[ ( uy * width + x ) * 4 ] / 255 * depth ] );
+  				points.push( [ - 1, 1, data[ ( uy * width + lx ) * 4 ] / 255 * depth ] );
+
+  				var normals = [];
+  				var num_points = points.length;
+
+  				for ( var i = 0; i < num_points; i ++ ) {
+
+  					var v1 = points[ i ];
+  					var v2 = points[ ( i + 1 ) % num_points ];
+  					v1 = subtract( v1, origin );
+  					v2 = subtract( v2, origin );
+  					normals.push( normalize( cross( v1, v2 ) ) );
+
+  				}
+
+  				var normal = [ 0, 0, 0 ];
+
+  				for ( var i = 0; i < normals.length; i ++ ) {
+
+  					normal[ 0 ] += normals[ i ][ 0 ];
+  					normal[ 1 ] += normals[ i ][ 1 ];
+  					normal[ 2 ] += normals[ i ][ 2 ];
+
+  				}
+
+  				normal[ 0 ] /= normals.length;
+  				normal[ 1 ] /= normals.length;
+  				normal[ 2 ] /= normals.length;
+
+  				var idx = ( y * width + x ) * 4;
+
+  				output[ idx ] = ( ( normal[ 0 ] + 1.0 ) / 2.0 * 255 ) | 0;
+  				output[ idx + 1 ] = ( ( normal[ 1 ] + 1.0 ) / 2.0 * 255 ) | 0;
+  				output[ idx + 2 ] = ( normal[ 2 ] * 255 ) | 0;
+  				output[ idx + 3 ] = 255;
+
+  			}
+
+  		}
+
+  		context.putImageData( imageData, 0, 0 );
+
+  		return canvas;
+
+  	},
+
+  	generateDataTexture: function ( width, height, color ) {
+
+  		var size = width * height;
+  		var data = new Uint8Array( 3 * size );
+
+  		var r = Math.floor( color.r * 255 );
+  		var g = Math.floor( color.g * 255 );
+  		var b = Math.floor( color.b * 255 );
+
+  		for ( var i = 0; i < size; i ++ ) {
+
+  			data[ i * 3 ] 	   = r;
+  			data[ i * 3 + 1 ] = g;
+  			data[ i * 3 + 2 ] = b;
+
+  		}
+
+  		var texture = new THREE$DataTexture( data, width, height, THREE$RGBFormat );
+  		texture.needsUpdate = true;
+
+  		return texture;
+
+  	}
+
+  };
+
+
+
+  /**
    * @author mrdoob / http://mrdoob.com/
    * based on http://papervision3d.googlecode.com/svn/trunk/as3/trunk/src/org/papervision3d/objects/primitives/Cube.as
    */
@@ -12314,29 +12765,118 @@
 
 
   /**
-   * @author alteredq / http://alteredqualia.com/
+   * @author mrdoob / http://mrdoob.com/
    */
 
-  function THREE$DataTexture ( data, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
+  function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
 
-  	THREE$Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
+  	THREE$Geometry.call( this );
 
-  	this.image = { data: data, width: width, height: height };
+  	this.type = 'SphereGeometry';
+
+  	this.parameters = {
+  		radius: radius,
+  		widthSegments: widthSegments,
+  		heightSegments: heightSegments,
+  		phiStart: phiStart,
+  		phiLength: phiLength,
+  		thetaStart: thetaStart,
+  		thetaLength: thetaLength 
+  	};
+
+  	radius = radius || 50;
+
+  	widthSegments = Math.max( 3, Math.floor( widthSegments ) || 8 );
+  	heightSegments = Math.max( 2, Math.floor( heightSegments ) || 6 );
+
+  	phiStart = phiStart !== undefined ? phiStart : 0;
+  	phiLength = phiLength !== undefined ? phiLength : Math.PI * 2;
+
+  	thetaStart = thetaStart !== undefined ? thetaStart : 0;
+  	thetaLength = thetaLength !== undefined ? thetaLength : Math.PI;
+
+  	var x, y, vertices = [], uvs = [];
+
+  	for ( y = 0; y <= heightSegments; y ++ ) {
+
+  		var verticesRow = [];
+  		var uvsRow = [];
+
+  		for ( x = 0; x <= widthSegments; x ++ ) {
+
+  			var u = x / widthSegments;
+  			var v = y / heightSegments;
+
+  			var vertex = new THREE$Vector3();
+  			vertex.x = - radius * Math.cos( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength );
+  			vertex.y = radius * Math.cos( thetaStart + v * thetaLength );
+  			vertex.z = radius * Math.sin( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength );
+
+  			this.vertices.push( vertex );
+
+  			verticesRow.push( this.vertices.length - 1 );
+  			uvsRow.push( new THREE$Vector2( u, 1 - v ) );
+
+  		}
+
+  		vertices.push( verticesRow );
+  		uvs.push( uvsRow );
+
+  	}
+
+  	for ( y = 0; y < heightSegments; y ++ ) {
+
+  		for ( x = 0; x < widthSegments; x ++ ) {
+
+  			var v1 = vertices[ y ][ x + 1 ];
+  			var v2 = vertices[ y ][ x ];
+  			var v3 = vertices[ y + 1 ][ x ];
+  			var v4 = vertices[ y + 1 ][ x + 1 ];
+
+  			var n1 = this.vertices[ v1 ].clone().normalize();
+  			var n2 = this.vertices[ v2 ].clone().normalize();
+  			var n3 = this.vertices[ v3 ].clone().normalize();
+  			var n4 = this.vertices[ v4 ].clone().normalize();
+
+  			var uv1 = uvs[ y ][ x + 1 ].clone();
+  			var uv2 = uvs[ y ][ x ].clone();
+  			var uv3 = uvs[ y + 1 ][ x ].clone();
+  			var uv4 = uvs[ y + 1 ][ x + 1 ].clone();
+
+  			if ( Math.abs( this.vertices[ v1 ].y ) === radius ) {
+
+  				uv1.x = ( uv1.x + uv2.x ) / 2;
+  				this.faces.push( new THREE$Face3( v1, v3, v4, [ n1, n3, n4 ] ) );
+  				this.faceVertexUvs[ 0 ].push( [ uv1, uv3, uv4 ] );
+
+  			} else if ( Math.abs( this.vertices[ v3 ].y ) === radius ) {
+
+  				uv3.x = ( uv3.x + uv4.x ) / 2;
+  				this.faces.push( new THREE$Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
+  				this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3 ] );
+
+  			} else {
+
+  				this.faces.push( new THREE$Face3( v1, v2, v4, [ n1, n2, n4 ] ) );
+  				this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv4 ] );
+
+  				this.faces.push( new THREE$Face3( v2, v3, v4, [ n2.clone(), n3, n4.clone() ] ) );
+  				this.faceVertexUvs[ 0 ].push( [ uv2.clone(), uv3, uv4.clone() ] );
+
+  			}
+
+  		}
+
+  	}
+
+  	this.computeFaceNormals();
+
+  	this.boundingSphere = new THREE$Sphere( new THREE$Vector3(), radius );
 
   }
 
-  THREE$DataTexture.prototype = Object.create( THREE$Texture.prototype );
-  THREE$DataTexture.prototype.constructor = THREE$DataTexture;
-
-  THREE$DataTexture.prototype.clone = function () {
-
-  	var texture = new THREE$DataTexture();
-
-  	THREE$Texture.prototype.clone.call( this, texture );
-
-  	return texture;
-
-  };
+  THREE$SphereGeometry.prototype = Object.create( THREE$Geometry.prototype );
+  THREE$SphereGeometry.prototype.constructor = THREE$SphereGeometry;
 
 
 
@@ -12853,37 +13393,6 @@
   	var texture = new THREE$CompressedTexture();
 
   	THREE$Texture.prototype.clone.call( this, texture );
-
-  	return texture;
-
-  };
-
-
-
-  /**
-   * @author mrdoob / http://mrdoob.com/
-   */
-
-  function THREE$CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
-
-  	mapping = mapping !== undefined ? mapping : THREE$CubeReflectionMapping;
-  	
-  	THREE$Texture.call( this, images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
-
-  	this.images = images;
-
-  }
-
-  THREE$CubeTexture.prototype = Object.create( THREE$Texture.prototype );
-  THREE$CubeTexture.prototype.constructor = THREE$CubeTexture;
-
-  THREE$CubeTexture.clone = function ( texture ) {
-
-  	if ( texture === undefined ) texture = new THREE$CubeTexture();
-
-  	THREE$Texture.prototype.clone.call( this, texture );
-
-  	texture.images = this.images;
 
   	return texture;
 
@@ -23087,29 +23596,141 @@
 
   }
 
-  var scene = new THREE$Scene();
-  var camera = new THREE$PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+  var renderer;
+  var scene;
+  var camera;
+  var stats;
 
-  var renderer = new THREE$WebGLRenderer();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-  document.body.appendChild( renderer.domElement );
+  var sphere;
+  var uniforms;
+  var attributes;
 
-  var geometry = new THREE$BoxGeometry( 1, 1, 1 );
-  var material = new THREE$MeshBasicMaterial( { color: 0x00ff00 } );
-  var cube = new THREE$Mesh( geometry, material );
-  scene.add( cube );
+  var vc1;
 
-  camera.position.z = 5;
+  var WIDTH = window.innerWidth;
+  var HEIGHT = window.innerHeight;
 
-  var render = function () {
-  	requestAnimationFrame( render );
+  init();
+  animate();
 
-  	cube.rotation.x += 0.1;
-  	cube.rotation.y += 0.1;
+  function init() {
 
-  	renderer.render(scene, camera);
-  };
+  	camera = new THREE$PerspectiveCamera( 45, WIDTH / HEIGHT, 1, 10000 );
+  	camera.position.z = 300;
 
-  render();
+  	scene = new THREE$Scene();
+
+  	attributes = {
+
+  		size: {	type: 'f', value: [] },
+  		ca:   {	type: 'c', value: [] }
+
+  	};
+
+  	uniforms = {
+
+  		amplitude: { type: "f", value: 1.0 },
+  		color:     { type: "c", value: new THREE$Color( 0xffffff ) },
+  		texture:   { type: "t", value: THREE$ImageUtils.loadTexture( "textures/sprites/disc.png" ) },
+
+  	};
+
+  	uniforms.texture.value.wrapS = uniforms.texture.value.wrapT = THREE$RepeatWrapping;
+
+  	var shaderMaterial = new THREE$ShaderMaterial( {
+
+  		uniforms:       uniforms,
+  		attributes:     attributes,
+  		vertexShader:   document.getElementById( 'vertexshader' ).textContent,
+  		fragmentShader: document.getElementById( 'fragmentshader' ).textContent,
+  		transparent:    true
+
+  	});
+
+
+  	var radius = 100, segments = 68, rings = 38;
+  	var geometry = new THREE$SphereGeometry( radius, segments, rings );
+
+  	vc1 = geometry.vertices.length;
+
+  	var geometry2 = new THREE$BoxGeometry( 0.8 * radius, 0.8 * radius, 0.8 * radius, 10, 10, 10 );
+  	geometry.merge( geometry2 );
+
+  	sphere = new THREE$PointCloud( geometry, shaderMaterial );
+
+  	var vertices = sphere.geometry.vertices;
+  	var values_size = attributes.size.value;
+  	var values_color = attributes.ca.value;
+
+  	for ( var v = 0; v < vertices.length; v ++ ) {
+
+  		values_size[ v ] = 10;
+  		values_color[ v ] = new THREE$Color( 0xffffff );
+
+  		if ( v < vc1 ) {
+
+  			values_color[ v ].setHSL( 0.01 + 0.1 * ( v / vc1 ), 0.99, ( vertices[ v ].y + radius ) / ( 4 * radius ) );
+
+  		} else {
+
+  			values_size[ v ] = 40;
+  			values_color[ v ].setHSL( 0.6, 0.75, 0.25 + vertices[ v ].y / ( 2 * radius ) );
+
+  		}
+
+  	}
+
+  	scene.add( sphere );
+
+  	renderer = new THREE$WebGLRenderer();
+  	renderer.setPixelRatio( window.devicePixelRatio );
+  	renderer.setSize( WIDTH, HEIGHT );
+
+  	var container = document.getElementById( 'container' );
+  	container.appendChild( renderer.domElement );
+
+  	//
+
+  	window.addEventListener( 'resize', onWindowResize, false );
+
+  }
+
+  function onWindowResize() {
+
+  	camera.aspect = window.innerWidth / window.innerHeight;
+  	camera.updateProjectionMatrix();
+
+  	renderer.setSize( window.innerWidth, window.innerHeight );
+
+  }
+
+  function animate() {
+
+  	requestAnimationFrame( animate );
+
+  	render();
+
+  }
+
+  function render() {
+
+  	var time = Date.now() * 0.005;
+
+  	sphere.rotation.y = 0.02 * time;
+  	sphere.rotation.z = 0.02 * time;
+
+  	for( var i = 0; i < attributes.size.value.length; i ++ ) {
+
+  		if ( i < vc1 )
+  			attributes.size.value[ i ] = 16 + 12 * Math.sin( 0.1 * i + time );
+
+
+  	}
+
+  	attributes.size.needsUpdate = true;
+
+  	renderer.render( scene, camera );
+
+  }
 
 })();
