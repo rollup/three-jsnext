@@ -16,6 +16,12 @@ function isIdentifier ( node, parent ) {
 	return true;
 }
 
+function isClass ( className ) {
+	// TODO there may be others... a more robust approach would be
+	// to see which instanceof checks are actually used
+	return !/^(log|error|warn)$/.test( className );
+}
+
 function getKeypath ( node ) {
 	if ( node.type !== 'MemberExpression' || node.computed ) return null;
 
@@ -144,8 +150,11 @@ export default class Module {
 
 							// We also add this.isGeometry = true, to avoid
 							// instanceof checks
-							const fnBody = node.right.body;
-							magicString.insert( fnBody.start + 1, `\n\tthis.is${alias.slice(6)} = true;` );
+							const className = alias.slice( 6 );
+							if ( isClass( className ) ) {
+								const fnBody = node.right.body;
+								magicString.insert( fnBody.start + 1, `\n\tthis.is${className} = true;` );
+							}
 
 							node.left._skip = true;
 							return;
