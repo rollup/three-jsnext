@@ -7,6 +7,8 @@
   "repository": "https://github.com/rollup/three-jsnext",
   "scripts": {
     "generate": "node scripts/generate",
+    "compare": "npm run generate && esperanto -i src -o cjs2 -t cjs -s && browserify -e cjs2/index.js -s THREE > dist/three.browserify.js",
+    "compare_old": "npm run generate && babel src -l es6.modules --out-dir cjs && browserify -e cjs/index.js -s THREE > dist/three.browserify.js",
     "prepublish": "npm test",
     "build": "npm run generate && rollup -i src/index.js -o dist/three.js -f umd -n THREE && uglifyjs -c -m -o dist/three.min.js -- dist/three.js",
     "test": "echo 'tests coming soon...'",
@@ -22,6 +24,8 @@
   "devDependencies": {
     "acorn": "^2.0.4",
     "babel": "^5.6.14",
+    "browserify": "^11.0.1",
+    "esperanto": "^0.7.5",
     "magic-string": "^0.6.3",
     "rollup": "^0.14.1",
     "sander": "^0.3.4",
