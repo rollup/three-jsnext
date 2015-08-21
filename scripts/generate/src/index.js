@@ -5,8 +5,8 @@ import Module from './Module';
 import createAlias from './utils/createAlias';
 import isExport from './utils/isExport';
 
-const srcDir = resolve( __dirname, '../../three.js/src' );
-const destDir = resolve( __dirname, '../../src' );
+const srcDir = resolve( __dirname, '../../../three.js/src' );
+const destDir = resolve( __dirname, '../../../src' );
 
 export default function () {
 	rimrafSync( destDir );
