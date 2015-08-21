@@ -43,6 +43,12 @@ THREE$Frustum.prototype = {
 
 	},
 
+	clone: function () {
+
+		return new this.constructor().copy( this );
+
+	},
+
 	copy: function ( frustum ) {
 
 		var planes = this.planes;
@@ -148,9 +154,11 @@ THREE$Frustum.prototype = {
 					return false;
 
 				}
+
 			}
 
 			return true;
+
 		};
 
 	}(),
@@ -171,12 +179,6 @@ THREE$Frustum.prototype = {
 		}
 
 		return true;
-
-	},
-
-	clone: function () {
-
-		return new THREE$Frustum().copy( this );
 
 	}
 

@@ -4,7 +4,7 @@ import { THREE$NotEqualDepth, THREE$GreaterDepth, THREE$GreaterEqualDepth, THREE
 * @author mrdoob / http://mrdoob.com/
 */
 
-function THREE$WebGLState ( gl, paramThreeToGL ) {
+function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 	this.isWebGLState = true;
 
 	var _this = this;
@@ -12,7 +12,9 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 	var newAttributes = new Uint8Array( 16 );
 	var enabledAttributes = new Uint8Array( 16 );
 
-	var switches = {};
+	var capabilities = {};
+
+	var compressedTextureFormats = null;
 
 	var currentBlending = null;
 	var currentBlendEquation = null;
@@ -23,7 +25,6 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 	var currentBlendDstAlpha = null;
 
 	var currentDepthFunc = null;
-	var currentDepthTest = null;
 	var currentDepthWrite = null;
 
 	var currentColorWrite = null;
@@ -32,7 +33,6 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 
 	var currentLineWidth = null;
 
-	var currentPolygonOffset = null;
 	var currentPolygonOffsetFactor = null;
 	var currentPolygonOffsetUnits = null;
 
@@ -47,7 +47,7 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 		gl.clearDepth( 1 );
 		gl.clearStencil( 0 );
 
-		gl.enable( gl.DEPTH_TEST );
+		this.enable( gl.DEPTH_TEST );
 		gl.depthFunc( gl.LEQUAL );
 
 		gl.frontFace( gl.CCW );
@@ -100,10 +100,10 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 
 	this.enable = function ( id ) {
 
-		if ( switches[ id ] !== true ) {
+		if ( capabilities[ id ] !== true ) {
 
 			gl.enable( id );
-			switches[ id ] = true;
+			capabilities[ id ] = true;
 
 		}
 
@@ -111,12 +111,67 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 
 	this.disable = function ( id ) {
 
-		if ( switches[ id ] !== false ) {
+		if ( capabilities[ id ] !== false ) {
 
 			gl.disable( id );
-			switches[ id ] = false;
+			capabilities[ id ] = false;
 
 		}
+
+	};
+
+	this.getCompressedTextureFormats = function () {
+
+		if ( compressedTextureFormats === null ) {
+
+			compressedTextureFormats = [];
+
+			if ( extensions.get( 'WEBGL_compressed_texture_pvrtc' ) ||
+			     extensions.get( 'WEBGL_compressed_texture_s3tc' ) ) {
+
+				var formats = gl.getParameter( gl.COMPRESSED_TEXTURE_FORMATS );
+
+				for ( var i = 0; i < formats.length; i ++ ) {
+
+					compressedTextureFormats.push( formats[ i ] );
+
+				}
+
+			}
+
+		}
+
+		return compressedTextureFormats;
+
+	};
+
+	this.getMaxPrecision = function ( precision ) {
+
+		if ( precision === 'highp' ) {
+
+			if ( gl.getShaderPrecisionFormat( gl.VERTEX_SHADER, gl.HIGH_FLOAT ).precision > 0 &&
+			     gl.getShaderPrecisionFormat( gl.FRAGMENT_SHADER, gl.HIGH_FLOAT ).precision > 0 ) {
+
+				return 'highp';
+
+			}
+
+			precision = 'mediump';
+
+		}
+
+		if ( precision === 'mediump' ) {
+
+			if ( gl.getShaderPrecisionFormat( gl.VERTEX_SHADER, gl.MEDIUM_FLOAT ).precision > 0 &&
+			     gl.getShaderPrecisionFormat( gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT ).precision > 0 ) {
+
+				return 'mediump';
+
+			}
+
+		}
+
+		return 'lowp';
 
 	};
 
@@ -273,19 +328,13 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 
 	this.setDepthTest = function ( depthTest ) {
 
-		if ( currentDepthTest !== depthTest ) {
+		if ( depthTest ) {
 
-			if ( depthTest ) {
+			this.enable( gl.DEPTH_TEST );
 
-				gl.enable( gl.DEPTH_TEST );
+		} else {
 
-			} else {
-
-				gl.disable( gl.DEPTH_TEST );
-
-			}
-
-			currentDepthTest = depthTest;
+			this.disable( gl.DEPTH_TEST );
 
 		}
 
@@ -345,30 +394,38 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 
 	};
 
-	this.setPolygonOffset = function ( polygonoffset, factor, units ) {
+	this.setPolygonOffset = function ( polygonOffset, factor, units ) {
 
-		if ( currentPolygonOffset !== polygonoffset ) {
+		if ( polygonOffset ) {
 
-			if ( polygonoffset ) {
+			this.enable( gl.POLYGON_OFFSET_FILL );
 
-				gl.enable( gl.POLYGON_OFFSET_FILL );
+		} else {
 
-			} else {
-
-				gl.disable( gl.POLYGON_OFFSET_FILL );
-
-			}
-
-			currentPolygonOffset = polygonoffset;
+			this.disable( gl.POLYGON_OFFSET_FILL );
 
 		}
 
-		if ( polygonoffset && ( currentPolygonOffsetFactor !== factor || currentPolygonOffsetUnits !== units ) ) {
+		if ( polygonOffset && ( currentPolygonOffsetFactor !== factor || currentPolygonOffsetUnits !== units ) ) {
 
 			gl.polygonOffset( factor, units );
 
 			currentPolygonOffsetFactor = factor;
 			currentPolygonOffsetUnits = units;
+
+		}
+
+	};
+
+	this.setScissorTest = function ( scissorTest ) {
+
+		if ( scissorTest ) {
+
+			this.enable( gl.SCISSOR_TEST );
+
+		} else {
+
+			this.disable( gl.SCISSOR_TEST );
 
 		}
 
@@ -397,12 +454,12 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 
 		}
 
-		var boundTexture = currentBoundTextures[currentTextureSlot];
+		var boundTexture = currentBoundTextures[ currentTextureSlot ];
 
 		if ( boundTexture === undefined ) {
 
 			boundTexture = { type: undefined, texture: undefined };
-			currentBoundTextures[currentTextureSlot] = boundTexture;
+			currentBoundTextures[ currentTextureSlot ] = boundTexture;
 
 		}
 
@@ -460,10 +517,12 @@ function THREE$WebGLState ( gl, paramThreeToGL ) {
 
 		}
 
-		switches = {};
+		capabilities = {};
+
+		compressedTextureFormats = null;
 
 		currentBlending = null;
-		currentDepthTest = null;
+
 		currentDepthWrite = null;
 		currentColorWrite = null;
 

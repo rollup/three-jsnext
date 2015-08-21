@@ -4,7 +4,7 @@ import { THREE$DynamicBufferAttribute } from './DynamicBufferAttribute';
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 
-function THREE$InstancedBufferAttribute (array, itemSize, meshPerAttribute, dynamic) {
+function THREE$InstancedBufferAttribute ( array, itemSize, meshPerAttribute, dynamic ) {
 	this.isInstancedBufferAttribute = true;
 
 	THREE$DynamicBufferAttribute.call( this, array, itemSize );

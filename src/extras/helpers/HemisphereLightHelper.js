@@ -3,7 +3,6 @@ import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Mesh } from '../../objects/Mesh';
 import { THREE$FaceColors } from '../../Three';
 import { THREE$MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
-import { THREE$Matrix4 } from '../../math/Matrix4';
 import { THREE$SphereGeometry } from '../geometries/SphereGeometry';
 import { THREE$Color } from '../../math/Color';
 
@@ -26,7 +25,7 @@ function THREE$HemisphereLightHelper ( light, sphereSize ) {
 	this.colors = [ new THREE$Color(), new THREE$Color() ];
 
 	var geometry = new THREE$SphereGeometry( sphereSize, 4, 2 );
-	geometry.applyMatrix( new THREE$Matrix4().makeRotationX( - Math.PI / 2 ) );
+	geometry.rotateX( - Math.PI / 2 );
 
 	for ( var i = 0, il = 8; i < il; i ++ ) {
 
@@ -47,8 +46,10 @@ THREE$HemisphereLightHelper.prototype = Object.create( THREE$Object3D.prototype 
 THREE$HemisphereLightHelper.prototype.constructor = THREE$HemisphereLightHelper;
 
 THREE$HemisphereLightHelper.prototype.dispose = function () {
+
 	this.lightSphere.geometry.dispose();
 	this.lightSphere.material.dispose();
+
 };
 
 THREE$HemisphereLightHelper.prototype.update = function () {

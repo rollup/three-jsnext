@@ -21,6 +21,7 @@ function THREE$CurvePath () {
 	this.bends = [];
 
 	this.autoClose = false; // Automatically closes the path
+
 };
 
 THREE$CurvePath.prototype = Object.create( THREE$Curve.prototype );
@@ -39,14 +40,17 @@ THREE$CurvePath.prototype.checkConnection = function() {
 };
 
 THREE$CurvePath.prototype.closePath = function() {
+
 	// TODO Test
 	// and verify for vector3 (needs to implement equals)
 	// Add a line curve if start and end of lines are not connected
-	var startPoint = this.curves[0].getPoint(0);
-	var endPoint = this.curves[this.curves.length - 1].getPoint(1);
+	var startPoint = this.curves[ 0 ].getPoint( 0 );
+	var endPoint = this.curves[ this.curves.length - 1 ].getPoint( 1 );
 
-	if (! startPoint.equals(endPoint)) {
-		this.curves.push( new THREE$LineCurve(endPoint, startPoint) );
+	if ( ! startPoint.equals( endPoint ) ) {
+
+		this.curves.push( new THREE$LineCurve( endPoint, startPoint ) );
+
 	}
 
 };
@@ -155,7 +159,7 @@ THREE$CurvePath.prototype.getBoundingBox = function () {
 
 	var p, i, il, sum;
 
-	var v3 = (points[0] && points[0].isVector3);
+	var v3 = (points[ 0 ] && points[ 0 ].isVector3);
 
 	sum = v3 ? new THREE$Vector3() : new THREE$Vector2();
 
@@ -228,7 +232,7 @@ THREE$CurvePath.prototype.createGeometry = function( points ) {
 
 	for ( var i = 0; i < points.length; i ++ ) {
 
-		geometry.vertices.push( new THREE$Vector3( points[ i ].x, points[ i ].y, points[ i ].z || 0) );
+		geometry.vertices.push( new THREE$Vector3( points[ i ].x, points[ i ].y, points[ i ].z || 0 ) );
 
 	}
 

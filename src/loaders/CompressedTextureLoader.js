@@ -1,6 +1,7 @@
 import { THREE$LinearFilter } from '../Three';
 import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$CompressedTexture } from '../textures/CompressedTexture';
+import { THREE$DefaultLoadingManager } from './LoadingManager';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -8,8 +9,10 @@ import { THREE$CompressedTexture } from '../textures/CompressedTexture';
  * Abstract Base class to block based textures loader (dds, pvr, ...)
  */
 
-function THREE$CompressedTextureLoader () {
+function THREE$CompressedTextureLoader ( manager ) {
 	this.isCompressedTextureLoader = true;
+
+	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 
 	// override in sub classes
 	this._parser = null;
@@ -21,7 +24,7 @@ THREE$CompressedTextureLoader.prototype = {
 
 	constructor: THREE$CompressedTextureLoader,
 
-	load: function ( url, onLoad, onError ) {
+	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
@@ -30,7 +33,8 @@ THREE$CompressedTextureLoader.prototype = {
 		var texture = new THREE$CompressedTexture();
 		texture.image = images;
 
-		var loader = new THREE$XHRLoader();
+		var loader = new THREE$XHRLoader( this.manager );
+		loader.setCrossOrigin( this.crossOrigin );
 		loader.setResponseType( 'arraybuffer' );
 
 		if ( Array.isArray( url ) ) {
@@ -54,7 +58,7 @@ THREE$CompressedTextureLoader.prototype = {
 
 					if ( loaded === 6 ) {
 
-						if (texDatas.mipmapCount === 1)
+						if ( texDatas.mipmapCount === 1 )
  							texture.minFilter = THREE$LinearFilter;
 
 						texture.format = texDatas.format;
@@ -64,7 +68,7 @@ THREE$CompressedTextureLoader.prototype = {
 
 					}
 
-				} );
+				}, onProgress, onError );
 
 			};
 
@@ -120,11 +124,17 @@ THREE$CompressedTextureLoader.prototype = {
 
 				if ( onLoad ) onLoad( texture );
 
-			} );
+			}, onProgress, onError );
 
 		}
 
 		return texture;
+
+	},
+
+	setCrossOrigin: function ( value ) {
+
+		this.crossOrigin = value;
 
 	}
 

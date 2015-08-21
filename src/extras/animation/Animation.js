@@ -69,6 +69,7 @@ THREE$Animation.prototype = {
 						scaleWeight: 0.0
 					}
 				};
+
 			}
 
 			var name = this.data.name;
@@ -217,7 +218,7 @@ THREE$Animation.prototype = {
 			for ( var h = 0, hl = this.hierarchy.length; h < hl; h ++ ) {
 
 				var object = this.hierarchy[ h ];
-				var animationCache = object.animationCache.animations[this.data.name];
+				var animationCache = object.animationCache.animations[ this.data.name ];
 				var blending = object.animationCache.blending;
 
 				// loop through pos/rot/scl
@@ -316,7 +317,7 @@ THREE$Animation.prototype = {
 						// Avoid paying the cost of an additional slerp if we don't have to
 						if ( blending.quaternionWeight === 0 ) {
 
-							object.quaternion.copy(newQuat);
+							object.quaternion.copy( newQuat );
 							blending.quaternionWeight = this.weight;
 
 						} else {

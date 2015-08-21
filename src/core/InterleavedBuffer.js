@@ -12,10 +12,10 @@ function THREE$InterleavedBuffer ( array, stride, dynamic ) {
 	this.array = array;
 	this.stride = stride;
 
-	this.needsUpdate = false;
+	this.version = 0;
 
 	this.dynamic = dynamic || false;
-	this.updateRange = { offset: 0, count: -1 };
+	this.updateRange = { offset: 0, count: - 1 };
 
 };
 
@@ -35,12 +35,18 @@ THREE$InterleavedBuffer.prototype = {
 
 	},
 
+	set needsUpdate( value ) {
+
+		if ( value === true ) this.version ++;
+
+	},
+
 	copyAt: function ( index1, attribute, index2 ) {
 
 		index1 *= this.stride;
 		index2 *= attribute.stride;
 
-		for ( var i = 0, l = this.stride; i < l; i++ ) {
+		for ( var i = 0, l = this.stride; i < l; i ++ ) {
 
 			this.array[ index1 + i ] = attribute.array[ index2 + i ];
 
@@ -62,7 +68,7 @@ THREE$InterleavedBuffer.prototype = {
 
 	clone: function () {
 
-		return new THREE$InterleavedBuffer( new this.array.constructor( this.array ), this.stride, this.dynamic );
+		return new this.constructor( new this.array.constructor( this.array ), this.stride, this.dynamic );
 
 	}
 

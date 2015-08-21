@@ -18,46 +18,35 @@ function THREE$InstancedBufferGeometry () {
 THREE$InstancedBufferGeometry.prototype = Object.create( THREE$BufferGeometry.prototype );
 THREE$InstancedBufferGeometry.prototype.constructor = THREE$InstancedBufferGeometry;
 
-THREE$InstancedBufferGeometry.prototype.addDrawCall = function ( start, count, indexOffset, instances ) {
+THREE$InstancedBufferGeometry.prototype.addDrawCall = function ( start, count, instances ) {
 
 	this.drawcalls.push( {
 
 		start: start,
 		count: count,
-		index: indexOffset !== undefined ? indexOffset : 0,
 		instances: instances
 
 	} );
 
-},
+};
 
-THREE$InstancedBufferGeometry.prototype.clone = function () {
+THREE$InstancedBufferGeometry.prototype.copy = function ( source ) {
 
-	var geometry = new THREE$InstancedBufferGeometry();
+	for ( var attr in source.attributes ) {
 
-	for ( var attr in this.attributes ) {
-
-		var sourceAttr = this.attributes[attr];
-		geometry.addAttribute( attr, sourceAttr.clone() );
+		var sourceAttr = source.attributes[ attr ];
+		this.addAttribute( attr, sourceAttr.clone() );
 
 	}
 
-	for ( var i = 0, il = this.offsets.length; i < il; i++ ) {
+	for ( var i = 0, il = source.drawcalls.length; i < il; i ++ ) {
 
-		var offset = this.offsets[i];
-
-		geometry.offsets.push( {
-
-			start: offset.start,
-			index: offset.index,
-			count: offset.count,
-			instances: offset.instances
-
-		} );
+		var offset = source.drawcalls[ i ];
+		this.addDrawCall( offset.start, offset.count, offset.instances );
 
 	}
 
-	return geometry;
+	return this;
 
 };
 

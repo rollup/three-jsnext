@@ -32,7 +32,7 @@ function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments
 	p = p || 2;
 	q = q || 3;
 	heightScale = heightScale || 1;
-	
+
 	var grid = new Array( radialSegments );
 	var tang = new THREE$Vector3();
 	var n = new THREE$Vector3();
@@ -93,6 +93,7 @@ function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments
 			this.faceVertexUvs[ 0 ].push( [ uvb.clone(), uvc, uvd.clone() ] );
 
 		}
+
 	}
 
 	this.computeFaceNormals();
@@ -117,6 +118,22 @@ function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments
 
 THREE$TorusKnotGeometry.prototype = Object.create( THREE$Geometry.prototype );
 THREE$TorusKnotGeometry.prototype.constructor = THREE$TorusKnotGeometry;
+
+THREE$TorusKnotGeometry.prototype.clone = function () {
+
+	var geometry = new THREE$TorusKnotGeometry(
+		this.parameters.radius,
+		this.parameters.tube,
+		this.parameters.radialSegments,
+		this.parameters.tubularSegments,
+		this.parameters.p,
+		this.parameters.q,
+		this.parameters.heightScale
+	);
+
+	return geometry;
+
+};
 
 
 export { THREE$TorusKnotGeometry };

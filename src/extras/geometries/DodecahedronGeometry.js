@@ -1,4 +1,3 @@
-import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
@@ -8,33 +7,28 @@ import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
 function THREE$DodecahedronGeometry ( radius, detail ) {
 	this.isDodecahedronGeometry = true;
 
-	this.parameters = {
-		radius: radius,
-		detail: detail
-	};
-
 	var t = ( 1 + Math.sqrt( 5 ) ) / 2;
 	var r = 1 / t;
 
 	var vertices = [
 
 		// (±1, ±1, ±1)
-		-1, -1, -1,    -1, -1,  1,
-		-1,  1, -1,    -1,  1,  1,
-		 1, -1, -1,     1, -1,  1,
-		 1,  1, -1,     1,  1,  1,
+		- 1, - 1, - 1,    - 1, - 1,  1,
+		- 1,  1, - 1,    - 1,  1,  1,
+		 1, - 1, - 1,     1, - 1,  1,
+		 1,  1, - 1,     1,  1,  1,
 
 		// (0, ±1/φ, ±φ)
-		 0, -r, -t,     0, -r,  t,
-		 0,  r, -t,     0,  r,  t,
+		 0, - r, - t,     0, - r,  t,
+		 0,  r, - t,     0,  r,  t,
 
 		// (±1/φ, ±φ, 0)
-		-r, -t,  0,    -r,  t,  0,
-		 r, -t,  0,     r,  t,  0,
+		- r, - t,  0,    - r,  t,  0,
+		 r, - t,  0,     r,  t,  0,
 
 		// (±φ, 0, ±1/φ)
-		-t,  0, -r,     t,  0, -r,
-		-t,  0,  r,     t,  0,  r
+		- t,  0, - r,     t,  0, - r,
+		- t,  0,  r,     t,  0,  r
 	];
 
 	var indices = [
@@ -54,10 +48,30 @@ function THREE$DodecahedronGeometry ( radius, detail ) {
 
 	THREE$PolyhedronGeometry.call( this, vertices, indices, radius, detail );
 
+	this.type = 'DodecahedronGeometry';
+
+	this.parameters = {
+		radius: radius,
+		detail: detail
+	};
+
 };
 
-THREE$DodecahedronGeometry.prototype = Object.create( THREE$Geometry.prototype );
+THREE$DodecahedronGeometry.prototype = Object.create( THREE$PolyhedronGeometry.prototype );
 THREE$DodecahedronGeometry.prototype.constructor = THREE$DodecahedronGeometry;
+
+THREE$DodecahedronGeometry.prototype.clone = function () {
+
+	var geometry = new THREE$DodecahedronGeometry(
+		this.parameters.radius,
+		this.parameters.detail
+	);
+
+	geometry.copy( this );
+
+	return geometry;
+
+};
 
 
 export { THREE$DodecahedronGeometry };

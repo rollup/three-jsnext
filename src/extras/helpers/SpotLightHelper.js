@@ -2,7 +2,6 @@ import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Object3D } from '../../core/Object3D';
 import { THREE$Mesh } from '../../objects/Mesh';
 import { THREE$MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
-import { THREE$Matrix4 } from '../../math/Matrix4';
 import { THREE$CylinderGeometry } from '../geometries/CylinderGeometry';
 
 /**
@@ -24,8 +23,8 @@ function THREE$SpotLightHelper ( light ) {
 
 	var geometry = new THREE$CylinderGeometry( 0, 1, 1, 8, 1, true );
 
-	geometry.applyMatrix( new THREE$Matrix4().makeTranslation( 0, - 0.5, 0 ) );
-	geometry.applyMatrix( new THREE$Matrix4().makeRotationX( - Math.PI / 2 ) );
+	geometry.translate( 0, - 0.5, 0 );
+	geometry.rotateX( - Math.PI / 2 );
 
 	var material = new THREE$MeshBasicMaterial( { wireframe: true, fog: false } );
 
@@ -40,8 +39,10 @@ THREE$SpotLightHelper.prototype = Object.create( THREE$Object3D.prototype );
 THREE$SpotLightHelper.prototype.constructor = THREE$SpotLightHelper;
 
 THREE$SpotLightHelper.prototype.dispose = function () {
+
 	this.cone.geometry.dispose();
 	this.cone.material.dispose();
+
 };
 
 THREE$SpotLightHelper.prototype.update = function () {

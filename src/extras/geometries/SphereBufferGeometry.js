@@ -1,6 +1,7 @@
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Sphere } from '../../math/Sphere';
+import { THREE$IndexBufferAttribute } from '../../core/IndexBufferAttribute';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
 
 /**
@@ -94,7 +95,7 @@ function THREE$SphereBufferGeometry ( radius, widthSegments, heightSegments, phi
 
 	}
 
-	this.addAttribute( 'index', new THREE$BufferAttribute( new Uint16Array( indices ), 1 ) );
+	this.addAttribute( 'index', new THREE$IndexBufferAttribute( new Uint16Array( indices ), 1 ) );
 	this.addAttribute( 'position', positions );
 	this.addAttribute( 'normal', normals );
 	this.addAttribute( 'uv', uvs );
@@ -105,6 +106,24 @@ function THREE$SphereBufferGeometry ( radius, widthSegments, heightSegments, phi
 
 THREE$SphereBufferGeometry.prototype = Object.create( THREE$BufferGeometry.prototype );
 THREE$SphereBufferGeometry.prototype.constructor = THREE$SphereBufferGeometry;
+
+THREE$SphereBufferGeometry.prototype.clone = function () {
+
+	var geometry = new THREE$SphereBufferGeometry(
+		this.parameters.radius,
+		this.parameters.widthSegments,
+		this.parameters.heightSegments,
+		this.parameters.phiStart,
+		this.parameters.phiLength,
+		this.parameters.thetaStart,
+		this.parameters.thetaLength
+	);
+
+	geometry.copy( this );
+
+	return geometry;
+
+};
 
 
 export { THREE$SphereBufferGeometry };

@@ -1,6 +1,6 @@
+import { THREE$Matrix3 } from '../../math/Matrix3';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$LineSegments } from '../../objects/LineSegments';
-import { THREE$Matrix3 } from '../../math/Matrix3';
 import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { THREE$Float32Attribute } from '../../core/BufferAttribute';
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
@@ -53,9 +53,6 @@ function THREE$FaceNormalsHelper ( object, size, hex, linewidth ) {
 	//
 
 	this.matrixAutoUpdate = false;
-
-	this.normalMatrix = new THREE$Matrix3();
-
 	this.update();
 
 };
@@ -67,12 +64,13 @@ THREE$FaceNormalsHelper.prototype.update = ( function () {
 
 	var v1 = new THREE$Vector3();
 	var v2 = new THREE$Vector3();
+	var normalMatrix = new THREE$Matrix3();
 
-	return function() {
+	return function update() {
 
 		this.object.updateMatrixWorld( true );
 
-		this.normalMatrix.getNormalMatrix( this.object.matrixWorld );
+		normalMatrix.getNormalMatrix( this.object.matrixWorld );
 
 		var matrixWorld = this.object.matrixWorld;
 
@@ -100,7 +98,7 @@ THREE$FaceNormalsHelper.prototype.update = ( function () {
 				.divideScalar( 3 )
 				.applyMatrix4( matrixWorld );
 
-			v2.copy( normal ).applyMatrix3( this.normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
+			v2.copy( normal ).applyMatrix3( normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
 
 			position.setXYZ( idx, v1.x, v1.y, v1.z );
 
@@ -118,7 +116,7 @@ THREE$FaceNormalsHelper.prototype.update = ( function () {
 
 	}
 
-}());
+}() );
 
 
 export { THREE$FaceNormalsHelper };

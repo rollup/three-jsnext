@@ -91,6 +91,12 @@ THREE$Vector4.prototype = {
 
 	},
 
+	clone: function () {
+
+		return new this.constructor( this.x, this.y, this.z, this.w );
+
+	},
+
 	copy: function ( v ) {
 
 		this.x = v.x;
@@ -137,6 +143,17 @@ THREE$Vector4.prototype = {
 		this.y = a.y + b.y;
 		this.z = a.z + b.z;
 		this.w = a.w + b.w;
+
+		return this;
+
+	},
+
+	addScaledVector: function ( v, s ) {
+
+		this.x += v.x * s;
+		this.y += v.y * s;
+		this.z += v.z * s;
+		this.w += v.w * s;
 
 		return this;
 
@@ -311,7 +328,9 @@ THREE$Vector4.prototype = {
 			var xz = ( m13 + m31 ) / 4;
 			var yz = ( m23 + m32 ) / 4;
 
-			if ( ( xx > yy ) && ( xx > zz ) ) { // m11 is the largest diagonal term
+			if ( ( xx > yy ) && ( xx > zz ) ) {
+
+				// m11 is the largest diagonal term
 
 				if ( xx < epsilon ) {
 
@@ -327,7 +346,9 @@ THREE$Vector4.prototype = {
 
 				}
 
-			} else if ( yy > zz ) { // m22 is the largest diagonal term
+			} else if ( yy > zz ) {
+
+				// m22 is the largest diagonal term
 
 				if ( yy < epsilon ) {
 
@@ -343,7 +364,9 @@ THREE$Vector4.prototype = {
 
 				}
 
-			} else { // m33 is the largest diagonal term so base result on this
+			} else {
+
+				// m33 is the largest diagonal term so base result on this
 
 				if ( zz < epsilon ) {
 
@@ -495,11 +518,11 @@ THREE$Vector4.prototype = {
 
 	},
 
-	clampScalar: ( function () {
+	clampScalar: function () {
 
 		var min, max;
 
-		return function ( minVal, maxVal ) {
+		return function clampScalar( minVal, maxVal ) {
 
 			if ( min === undefined ) {
 
@@ -515,9 +538,9 @@ THREE$Vector4.prototype = {
 
 		};
 
-	} )(),
+	}(),
 
-  floor: function () {
+	floor: function () {
 
 		this.x = Math.floor( this.x );
 		this.y = Math.floor( this.y );
@@ -526,9 +549,9 @@ THREE$Vector4.prototype = {
 
 		return this;
 
-  },
+	},
 
-  ceil: function () {
+	ceil: function () {
 
 		this.x = Math.ceil( this.x );
 		this.y = Math.ceil( this.y );
@@ -537,9 +560,9 @@ THREE$Vector4.prototype = {
 
 		return this;
 
-  },
+	},
 
-  round: function () {
+	round: function () {
 
 		this.x = Math.round( this.x );
 		this.y = Math.round( this.y );
@@ -548,9 +571,9 @@ THREE$Vector4.prototype = {
 
 		return this;
 
-  },
+	},
 
-  roundToZero: function () {
+	roundToZero: function () {
 
 		this.x = ( this.x < 0 ) ? Math.ceil( this.x ) : Math.floor( this.x );
 		this.y = ( this.y < 0 ) ? Math.ceil( this.y ) : Math.floor( this.y );
@@ -559,7 +582,7 @@ THREE$Vector4.prototype = {
 
 		return this;
 
-  },
+	},
 
 	negate: function () {
 
@@ -680,12 +703,6 @@ THREE$Vector4.prototype = {
 		this.w = attribute.array[ index + 3 ];
 
 		return this;
-
-	},
-
-	clone: function () {
-
-		return new THREE$Vector4( this.x, this.y, this.z, this.w );
 
 	}
 

@@ -31,7 +31,7 @@ function THREE$CircleGeometry ( radius, segments, thetaStart, thetaLength ) {
 	var i, uvs = [],
 	center = new THREE$Vector3(), centerUV = new THREE$Vector2( 0.5, 0.5 );
 
-	this.vertices.push(center);
+	this.vertices.push( center );
 	uvs.push( centerUV );
 
 	for ( i = 0; i <= segments; i ++ ) {
@@ -64,6 +64,19 @@ function THREE$CircleGeometry ( radius, segments, thetaStart, thetaLength ) {
 
 THREE$CircleGeometry.prototype = Object.create( THREE$Geometry.prototype );
 THREE$CircleGeometry.prototype.constructor = THREE$CircleGeometry;
+
+THREE$CircleGeometry.prototype.clone = function () {
+
+	var geometry = new THREE$CircleGeometry(
+		this.parameters.radius,
+		this.parameters.segments,
+		this.parameters.thetaStart,
+		this.parameters.thetaLength
+	);
+
+	return geometry;
+
+};
 
 
 export { THREE$CircleGeometry };

@@ -1,13 +1,9 @@
+import { THREE$IndexBufferAttribute } from '../../core/IndexBufferAttribute';
 import { THREE$InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute';
 import { THREE$InterleavedBuffer } from '../../core/InterleavedBuffer';
 import { THREE$InstancedBufferAttribute } from '../../core/InstancedBufferAttribute';
 import { THREE$DynamicBufferAttribute } from '../../core/DynamicBufferAttribute';
-import { THREE$ImmediateRenderObject } from '../../extras/objects/ImmediateRenderObject';
-import { THREE$PointCloud } from '../../objects/PointCloud';
-import { THREE$Line } from '../../objects/Line';
-import { THREE$Mesh } from '../../objects/Mesh';
-import { THREE$Matrix3 } from '../../math/Matrix3';
-import { THREE$Matrix4 } from '../../math/Matrix4';
+import { THREE$Geometry } from '../../core/Geometry';
 import { THREE$WebGLGeometries } from './WebGLGeometries';
 
 /**
@@ -17,247 +13,133 @@ import { THREE$WebGLGeometries } from './WebGLGeometries';
 function THREE$WebGLObjects ( gl, properties, info ) {
 	this.isWebGLObjects = true;
 
-	var objects = {};
-	var objectsImmediate = [];
-
-	var morphInfluences = new Float32Array( 8 );
-
-	var geometries = new THREE$WebGLGeometries( gl, info );
+	var geometries = new THREE$WebGLGeometries( gl, properties, info );
 
 	//
 
-	function onObjectRemoved( event ) {
+	function update( object ) {
 
-		var object = event.target;
-
-		object.traverse( function ( child ) {
-
-			child.removeEventListener( 'remove', onObjectRemoved );
-			removeObject( child );
-
-		} );
-
-	}
-
-	function removeObject( object ) {
-
-		if ( (object && object.isMesh) ||
-			 (object && object.isPointCloud) ||
-			 (object && object.isLine) ) {
-
-			delete objects[ object.id ];
-
-		} else if ( (object && object.isImmediateRenderObject) || object.immediateRenderCallback ) {
-
-			removeInstances( objectsImmediate, object );
-
-		}
-
-		delete object._modelViewMatrix;
-		delete object._normalMatrix;
-
-		properties.delete( object );
-
-	}
-
-	function removeInstances( objlist, object ) {
-
-		for ( var o = objlist.length - 1; o >= 0; o -- ) {
-
-			if ( objlist[ o ].object === object ) {
-
-				objlist.splice( o, 1 );
-
-			}
-
-		}
-
-	}
-
-	//
-
-	this.objects = objects;
-	this.objectsImmediate = objectsImmediate;
-
-	this.geometries = geometries;
-
-	this.init = function ( object ) {
-
-		var objectProperties = properties.get( object );
-
-		if ( objectProperties.__webglInit === undefined ) {
-
-			objectProperties.__webglInit = true;
-			object._modelViewMatrix = new THREE$Matrix4();
-			object._normalMatrix = new THREE$Matrix3();
-
-			object.addEventListener( 'removed', onObjectRemoved );
-
-		}
-
-		if ( objectProperties.__webglActive === undefined ) {
-
-			objectProperties.__webglActive = true;
-
-			if ( (object && object.isMesh) || (object && object.isLine) || (object && object.isPointCloud) ) {
-
-				objects[ object.id ] = {
-					id: object.id,
-					object: object,
-					z: 0
-				};
-
-			} else if ( (object && object.isImmediateRenderObject) || object.immediateRenderCallback ) {
-
-				objectsImmediate.push( {
-					id: null,
-					object: object,
-					opaque: null,
-					transparent: null,
-					z: 0
-				} );
-
-			}
-
-		}
-
-	};
-
-	function numericalSort ( a, b ) {
-
-		return b[ 0 ] - a[ 0 ];
-
-	}
-
-	function updateObject( object ) {
+		// TODO: Avoid updating twice (when using shadowMap). Maybe add frame counter.
 
 		var geometry = geometries.get( object );
 
-		if ( object.geometry.dynamic === true ) {
+		if ( (object.geometry && object.geometry.isGeometry) ) {
 
 			geometry.updateFromObject( object );
 
 		}
 
-		// morph targets
-
-		if ( object.morphTargetInfluences !== undefined ) {
-
-			var activeInfluences = [];
-			var morphTargetInfluences = object.morphTargetInfluences;
-
-			for ( var i = 0, l = morphTargetInfluences.length; i < l; i ++ ) {
-
-				var influence = morphTargetInfluences[ i ];
-				activeInfluences.push( [ influence, i ] );
-
-			}
-
-			activeInfluences.sort( numericalSort );
-
-			if ( activeInfluences.length > 8 ) {
-
-				activeInfluences.length = 8;
-
-			}
-
-			for ( var i = 0, l = activeInfluences.length; i < l; i ++ ) {
-
-				morphInfluences[ i ] = activeInfluences[ i ][ 0 ];
-
-				var attribute = geometry.morphAttributes[ activeInfluences[ i ][ 1 ] ];
-				geometry.addAttribute( 'morphTarget' + i, attribute );
-
-			}
-
-			var material = object.material;
-
-			if ( material.program !== undefined ) {
-
-				var uniforms = material.program.getUniforms();
-
-				if ( uniforms.morphTargetInfluences !== null ) {
-
-					gl.uniform1fv( uniforms.morphTargetInfluences, morphInfluences );
-
-				}
-
-			} else {
-
-				console.warn( 'TOFIX: material.program is undefined' );
-
-			}
-
-		}
-
-		//
-
 		var attributes = geometry.attributes;
 
 		for ( var name in attributes ) {
 
-			var attribute = attributes[ name ];
+			updateAttribute( attributes[ name ] );
 
-			var bufferType = ( name === 'index' ) ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
+		}
 
-			var data = ( (attribute && attribute.isInterleavedBufferAttribute) ) ? attribute.data : attribute;
+		// morph targets
 
-			var attributeProperties = properties.get( data );
+		var morphAttributes = geometry.morphAttributes;
 
-			if ( attributeProperties.__webglBuffer === undefined ) {
+		for ( var name in morphAttributes ) {
 
-				attributeProperties.__webglBuffer = gl.createBuffer();
-				gl.bindBuffer( bufferType, attributeProperties.__webglBuffer );
+			var array = morphAttributes[ name ];
 
-				var usage = gl.STATIC_DRAW;
+			for ( var i = 0, l = array.length; i < l; i ++ ) {
 
-				if ( (data && data.isDynamicBufferAttribute)
-						 || ( (data && data.isInstancedBufferAttribute) && data.dynamic === true )
-						 || ( (data && data.isInterleavedBuffer) && data.dynamic === true ) ) {
-
-					usage = gl.DYNAMIC_DRAW;
-
-				}
-
-				gl.bufferData( bufferType, data.array, usage );
-
-				data.needsUpdate = false;
-
-			} else if ( data.needsUpdate === true ) {
-
-				gl.bindBuffer( bufferType, attributeProperties.__webglBuffer );
-
-				if ( data.updateRange === undefined || data.updateRange.count === -1 ) { // Not using update ranges
-
-					gl.bufferSubData( bufferType, 0, data.array );
-
-				} else if ( data.updateRange.count === 0 ) {
-
-					console.error( 'THREE.WebGLRenderer.updateObject: using updateRange for THREE.DynamicBufferAttribute and marked as needsUpdate but count is 0, ensure you are using set methods or updating manually.' );
-
-				} else {
-
-					gl.bufferSubData( bufferType, data.updateRange.offset * data.array.BYTES_PER_ELEMENT,
-									 data.array.subarray( data.updateRange.offset, data.updateRange.offset + data.updateRange.count ) );
-
-					data.updateRange.count = 0; // reset range
-
-				}
-
-				data.needsUpdate = false;
+				updateAttribute( array[ i ] );
 
 			}
 
 		}
 
-	};
+		return geometry;
 
-	// returns the webgl buffer for a specified attribute
-	this.getAttributeBuffer = function ( attribute ) {
+	}
+
+	function updateAttribute( attribute ) {
+
+		var bufferType;
+
+		if ( (attribute && attribute.isIndexBufferAttribute) ) {
+
+			bufferType = gl.ELEMENT_ARRAY_BUFFER;
+
+		} else {
+
+			bufferType = gl.ARRAY_BUFFER;
+
+		}
+
+		var data = ( (attribute && attribute.isInterleavedBufferAttribute) ) ? attribute.data : attribute;
+
+		var attributeProperties = properties.get( data );
+
+		if ( attributeProperties.__webglBuffer === undefined ) {
+
+			createBuffer( attributeProperties, data, bufferType );
+
+		} else if ( attributeProperties.version !== data.version ) {
+
+			updateBuffer( attributeProperties, data, bufferType );
+
+		}
+
+	}
+
+	function createBuffer( attributeProperties, data, bufferType ) {
+
+		attributeProperties.__webglBuffer = gl.createBuffer();
+		gl.bindBuffer( bufferType, attributeProperties.__webglBuffer );
+
+		var usage = gl.STATIC_DRAW;
+
+		if ( (data && data.isDynamicBufferAttribute)
+			 || ( (data && data.isInstancedBufferAttribute) && data.dynamic === true )
+			 || ( (data && data.isInterleavedBuffer) && data.dynamic === true ) ) {
+
+			usage = gl.DYNAMIC_DRAW;
+
+		}
+
+		gl.bufferData( bufferType, data.array, usage );
+
+		attributeProperties.version = data.version;
+
+	}
+
+	function updateBuffer( attributeProperties, data, bufferType ) {
+
+		gl.bindBuffer( bufferType, attributeProperties.__webglBuffer );
+
+		if ( data.updateRange === undefined || data.updateRange.count === - 1 ) {
+
+			// Not using update ranges
+
+			gl.bufferSubData( bufferType, 0, data.array );
+
+		} else if ( data.updateRange.count === 0 ) {
+
+			console.error( 'THREE.WebGLObjects.updateBuffer: using updateRange for THREE.DynamicBufferAttribute and marked as needsUpdate but count is 0, ensure you are using set methods or updating manually.' );
+
+		} else {
+
+			gl.bufferSubData( bufferType, data.updateRange.offset * data.array.BYTES_PER_ELEMENT,
+							  data.array.subarray( data.updateRange.offset, data.updateRange.offset + data.updateRange.count ) );
+
+			data.updateRange.count = 0; // reset range
+
+		}
+
+		attributeProperties.version = data.version;
+
+	}
+
+	function getAttributeBuffer( attribute ) {
 
 		if ( (attribute && attribute.isInterleavedBufferAttribute) ) {
 
-			return properties.get( attribute.data ).__webglBuffer
+			return properties.get( attribute.data ).__webglBuffer;
 
 		}
 
@@ -265,28 +147,87 @@ function THREE$WebGLObjects ( gl, properties, info ) {
 
 	}
 
-	this.update = function ( renderList ) {
+	function getWireframeAttribute( geometry ) {
 
-		for ( var i = 0, ul = renderList.length; i < ul; i++ ) {
+		var property = properties.get( geometry );
 
-			var object = renderList[i].object;
+		if ( property.wireframe !== undefined ) {
 
-			if ( object.material.visible !== false ) {
+			return property.wireframe;
 
-				updateObject( object );
+		}
+
+		var indices = [];
+
+		var attributes = geometry.attributes;
+
+		var index = attributes.index;
+		var position = attributes.position;
+
+		// console.time( 'wireframe' );
+
+		if ( index !== undefined ) {
+
+			var edges = {};
+			var array = index.array;
+
+			for ( var i = 0, l = array.length; i < l; i += 3 ) {
+
+				var a = array[ i + 0 ];
+				var b = array[ i + 1 ];
+				var c = array[ i + 2 ];
+
+				if ( checkEdge( edges, a, b ) ) indices.push( a, b );
+				if ( checkEdge( edges, b, c ) ) indices.push( b, c );
+				if ( checkEdge( edges, c, a ) ) indices.push( c, a );
+
+			}
+
+		} else {
+
+			var array = position.array;
+
+			for ( var i = 0, l = ( array.length / 3 ) - 1; i < l; i += 3 ) {
+
+				var a = i + 0;
+				var b = i + 1;
+				var c = i + 2;
+
+				indices.push( a, b, b, c, c, a );
 
 			}
 
 		}
 
-	};
+		// console.timeEnd( 'wireframe' );
 
-	this.clear = function () {
+		var TypeArray = position.count > 65535 ? Uint32Array : Uint16Array;
+		var attribute = new THREE$IndexBufferAttribute( new TypeArray( indices ), 1 );
 
-		objects = {};
-		objectsImmediate = [];
+		updateAttribute( attribute );
 
-	};
+		property.wireframe = attribute;
+
+		return attribute;
+
+	}
+
+	function checkEdge( edges, a, b ) {
+
+		var hash = a < b ? a + '_' + b : b + '_' + a;
+
+		if ( edges.hasOwnProperty( hash ) ) return false;
+
+		edges[ hash ] = 1;
+
+		return true;
+
+	}
+
+	this.getAttributeBuffer = getAttributeBuffer;
+	this.getWireframeAttribute = getWireframeAttribute;
+
+	this.update = update;
 
 };
 

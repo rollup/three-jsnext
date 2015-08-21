@@ -1,5 +1,6 @@
-import { THREE$Mesh } from './Mesh';
+import { THREE$Object3D } from '../core/Object3D';
 import { THREE$Math } from '../math/Math';
+import { THREE$Mesh } from './Mesh';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -26,7 +27,7 @@ function THREE$MorphAnimMesh ( geometry, material ) {
 	this.direction = 1;
 	this.directionBackwards = false;
 
-	this.setFrameRange( 0, this.geometry.morphTargets.length - 1 );
+	this.setFrameRange( 0, geometry.morphTargets.length - 1 );
 
 };
 
@@ -156,12 +157,13 @@ THREE$MorphAnimMesh.prototype.updateAnimation = function ( delta ) {
 
 	var keyframe = this.startKeyframe + THREE$Math.clamp( Math.floor( this.time / frameTime ), 0, this.length - 1 );
 
+	var influences = this.morphTargetInfluences;
+
 	if ( keyframe !== this.currentKeyframe ) {
 
-		this.morphTargetInfluences[ this.lastKeyframe ] = 0;
-		this.morphTargetInfluences[ this.currentKeyframe ] = 1;
-
-		this.morphTargetInfluences[ keyframe ] = 0;
+		influences[ this.lastKeyframe ] = 0;
+		influences[ this.currentKeyframe ] = 1;
+		influences[ keyframe ] = 0;
 
 		this.lastKeyframe = this.currentKeyframe;
 		this.currentKeyframe = keyframe;
@@ -176,8 +178,8 @@ THREE$MorphAnimMesh.prototype.updateAnimation = function ( delta ) {
 
 	}
 
-	this.morphTargetInfluences[ this.currentKeyframe ] = mix;
-	this.morphTargetInfluences[ this.lastKeyframe ] = 1 - mix;
+	influences[ this.currentKeyframe ] = mix;
+	influences[ this.lastKeyframe ] = 1 - mix;
 
 };
 
@@ -191,28 +193,26 @@ THREE$MorphAnimMesh.prototype.interpolateTargets = function ( a, b, t ) {
 
 	}
 
-	if ( a > -1 ) influences[ a ] = 1 - t;
-	if ( b > -1 ) influences[ b ] = t;
+	if ( a > - 1 ) influences[ a ] = 1 - t;
+	if ( b > - 1 ) influences[ b ] = t;
 
 };
 
-THREE$MorphAnimMesh.prototype.clone = function ( object ) {
+THREE$MorphAnimMesh.prototype.copy = function ( source ) {
 
-	if ( object === undefined ) object = new THREE$MorphAnimMesh( this.geometry, this.material );
+	THREE$Object3D.prototype.copy.call( this, source );
 
-	object.duration = this.duration;
-	object.mirroredLoop = this.mirroredLoop;
-	object.time = this.time;
+	this.duration = source.duration;
+	this.mirroredLoop = source.mirroredLoop;
+	this.time = source.time;
 
-	object.lastKeyframe = this.lastKeyframe;
-	object.currentKeyframe = this.currentKeyframe;
+	this.lastKeyframe = source.lastKeyframe;
+	this.currentKeyframe = source.currentKeyframe;
 
-	object.direction = this.direction;
-	object.directionBackwards = this.directionBackwards;
+	this.direction = source.direction;
+	this.directionBackwards = source.directionBackwards;
 
-	THREE$Mesh.prototype.clone.call( this, object );
-
-	return object;
+	return this;
 
 };
 

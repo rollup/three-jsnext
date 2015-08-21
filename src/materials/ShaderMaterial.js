@@ -94,37 +94,35 @@ function THREE$ShaderMaterial ( parameters ) {
 THREE$ShaderMaterial.prototype = Object.create( THREE$Material.prototype );
 THREE$ShaderMaterial.prototype.constructor = THREE$ShaderMaterial;
 
-THREE$ShaderMaterial.prototype.clone = function ( material ) {
+THREE$ShaderMaterial.prototype.copy = function ( source ) {
 
-	if ( material === undefined ) material = new THREE$ShaderMaterial();
+	THREE$Material.prototype.copy.call( this, source );
 
-	THREE$Material.prototype.clone.call( this, material );
+	this.fragmentShader = source.fragmentShader;
+	this.vertexShader = source.vertexShader;
 
-	material.fragmentShader = this.fragmentShader;
-	material.vertexShader = this.vertexShader;
+	this.uniforms = THREE$UniformsUtils.clone( source.uniforms );
 
-	material.uniforms = THREE$UniformsUtils.clone( this.uniforms );
+	this.attributes = source.attributes;
+	this.defines = source.defines;
 
-	material.attributes = this.attributes;
-	material.defines = this.defines;
+	this.shading = source.shading;
 
-	material.shading = this.shading;
+	this.wireframe = source.wireframe;
+	this.wireframeLinewidth = source.wireframeLinewidth;
 
-	material.wireframe = this.wireframe;
-	material.wireframeLinewidth = this.wireframeLinewidth;
+	this.fog = source.fog;
 
-	material.fog = this.fog;
+	this.lights = source.lights;
 
-	material.lights = this.lights;
+	this.vertexColors = source.vertexColors;
 
-	material.vertexColors = this.vertexColors;
+	this.skinning = source.skinning;
 
-	material.skinning = this.skinning;
+	this.morphTargets = source.morphTargets;
+	this.morphNormals = source.morphNormals;
 
-	material.morphTargets = this.morphTargets;
-	material.morphNormals = this.morphNormals;
-
-	return material;
+	return this;
 
 };
 

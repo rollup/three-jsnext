@@ -84,5 +84,19 @@ function THREE$TorusGeometry ( radius, tube, radialSegments, tubularSegments, ar
 THREE$TorusGeometry.prototype = Object.create( THREE$Geometry.prototype );
 THREE$TorusGeometry.prototype.constructor = THREE$TorusGeometry;
 
+THREE$TorusGeometry.prototype.clone = function () {
+
+	var geometry = new THREE$TorusGeometry(
+		this.parameters.radius,
+		this.parameters.tube,
+		this.parameters.radialSegments,
+		this.parameters.tubularSegments,
+		this.parameters.arc
+	);
+
+	return geometry;
+
+};
+
 
 export { THREE$TorusGeometry };

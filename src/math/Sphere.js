@@ -24,6 +24,7 @@ THREE$Sphere.prototype = {
 		this.radius = radius;
 
 		return this;
+
 	},
 
 	setFromPoints: function () {
@@ -59,6 +60,12 @@ THREE$Sphere.prototype = {
 		};
 
 	}(),
+
+	clone: function () {
+
+		return new this.constructor().copy( this );
+
+	},
 
 	copy: function ( sphere ) {
 
@@ -144,12 +151,6 @@ THREE$Sphere.prototype = {
 	equals: function ( sphere ) {
 
 		return sphere.center.equals( this.center ) && ( sphere.radius === this.radius );
-
-	},
-
-	clone: function () {
-
-		return new THREE$Sphere().copy( this );
 
 	}
 

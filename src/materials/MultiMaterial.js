@@ -1,23 +1,27 @@
 import { THREE$Math } from '../math/Math';
 
+var THREE$MeshFaceMaterial;
+
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$MeshFaceMaterial ( materials ) {
-	this.isMeshFaceMaterial = true;
+function THREE$MultiMaterial ( materials ) {
+	this.isMultiMaterial = true;
 
 	this.uuid = THREE$Math.generateUUID();
 
-	this.type = 'MeshFaceMaterial';
+	this.type = 'MultiMaterial';
 
 	this.materials = materials instanceof Array ? materials : [];
 
+	this.visible = true;
+
 };
 
-THREE$MeshFaceMaterial.prototype = {
+THREE$MultiMaterial.prototype = {
 
-	constructor: THREE$MeshFaceMaterial,
+	constructor: THREE$MultiMaterial,
 
 	toJSON: function () {
 
@@ -38,13 +42,15 @@ THREE$MeshFaceMaterial.prototype = {
 
 		}
 
+		output.visible = this.visible;
+
 		return output;
 
 	},
 
 	clone: function () {
 
-		var material = new THREE$MeshFaceMaterial();
+		var material = new this.constructor();
 
 		for ( var i = 0; i < this.materials.length; i ++ ) {
 
@@ -52,11 +58,17 @@ THREE$MeshFaceMaterial.prototype = {
 
 		}
 
+		material.visible = this.visible;
+
 		return material;
 
 	}
 
 };
 
+// backwards compatibility
 
-export { THREE$MeshFaceMaterial };
+THREE$MeshFaceMaterial = THREE$MultiMaterial;
+
+
+export { THREE$MeshFaceMaterial, THREE$MultiMaterial };

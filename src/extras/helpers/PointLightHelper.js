@@ -53,6 +53,7 @@ THREE$PointLightHelper.prototype.dispose = function () {
 
 	this.geometry.dispose();
 	this.material.dispose();
+
 };
 
 THREE$PointLightHelper.prototype.update = function () {

@@ -12,7 +12,11 @@ function THREE$WireframeGeometry ( geometry ) {
 	THREE$BufferGeometry.call( this );
 
 	var edge = [ 0, 0 ], hash = {};
-	var sortFunction = function ( a, b ) { return a - b };
+	var sortFunction = function ( a, b ) {
+
+		return a - b;
+
+	};
 
 	var keys = [ 'a', 'b', 'c' ];
 
@@ -56,7 +60,7 @@ function THREE$WireframeGeometry ( geometry ) {
 
 			for ( var j = 0; j < 2; j ++ ) {
 
-				var vertex = vertices[ edges [ 2 * i + j] ];
+				var vertex = vertices[ edges [ 2 * i + j ] ];
 
 				var index = 6 * i + 3 * j;
 				coords[ index + 0 ] = vertex.x;
@@ -71,7 +75,9 @@ function THREE$WireframeGeometry ( geometry ) {
 
 	} else if ( (geometry && geometry.isBufferGeometry) ) {
 
-		if ( geometry.attributes.index !== undefined ) { // Indexed BufferGeometry
+		if ( geometry.attributes.index !== undefined ) {
+
+			// Indexed BufferGeometry
 
 			var vertices = geometry.attributes.position;
 			var indices = geometry.attributes.index.array;
@@ -80,7 +86,7 @@ function THREE$WireframeGeometry ( geometry ) {
 
 			if ( drawcalls.length === 0 ) {
 
-				drawcalls = [ { count : indices.length, index : 0, start : 0 } ];
+				geometry.addDrawCall( 0, indices.length );
 
 			}
 
@@ -89,16 +95,17 @@ function THREE$WireframeGeometry ( geometry ) {
 
 			for ( var o = 0, ol = drawcalls.length; o < ol; ++ o ) {
 
-				var start = drawcalls[ o ].start;
-				var count = drawcalls[ o ].count;
-				var index = drawcalls[ o ].index;
+				var drawcall = drawcalls[ o ];
+
+				var start = drawcall.start;
+				var count = drawcall.count;
 
 				for ( var i = start, il = start + count; i < il; i += 3 ) {
 
 					for ( var j = 0; j < 3; j ++ ) {
 
-						edge[ 0 ] = index + indices[ i + j ];
-						edge[ 1 ] = index + indices[ i + ( j + 1 ) % 3 ];
+						edge[ 0 ] = indices[ i + j ];
+						edge[ 1 ] = indices[ i + ( j + 1 ) % 3 ];
 						edge.sort( sortFunction );
 
 						var key = edge.toString();
@@ -125,7 +132,7 @@ function THREE$WireframeGeometry ( geometry ) {
 				for ( var j = 0; j < 2; j ++ ) {
 
 					var index = 6 * i + 3 * j;
-					var index2 = edges[2 * i + j];
+					var index2 = edges[ 2 * i + j ];
 
 					coords[ index + 0 ] = vertices.getX( index2 );
 					coords[ index + 1 ] = vertices.getY( index2 );
@@ -137,7 +144,9 @@ function THREE$WireframeGeometry ( geometry ) {
 
 			this.addAttribute( 'position', new THREE$BufferAttribute( coords, 3 ) );
 
-		} else { // non-indexed BufferGeometry
+		} else {
+
+			// non-indexed BufferGeometry
 
 			var vertices = geometry.attributes.position.array;
 			var numEdges = vertices.length / 3;

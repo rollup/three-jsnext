@@ -39,7 +39,7 @@ THREE$FontUtils = {
 
 			return this.faces[ this.face.toLowerCase() ][ this.weight ][ this.style ];
 
-		} catch (e) {
+		} catch ( e ) {
 
 			throw "The font " + this.face + " with " + this.weight + " weight and " + this.style + " style is missing."
 
@@ -182,6 +182,7 @@ THREE$FontUtils = {
 							var t = i2 / divisions;
 							THREE$Shape.Utils.b2( t, cpx0, cpx1, cpx );
 							THREE$Shape.Utils.b2( t, cpy0, cpy1, cpy );
+
 						}
 
 					}
@@ -223,11 +224,13 @@ THREE$FontUtils = {
 				}
 
 			}
+
 		}
 
 
 
-		return { offset: glyph.ha * scale, path:path };
+		return { offset: glyph.ha * scale, path: path };
+
 	}
 
 };

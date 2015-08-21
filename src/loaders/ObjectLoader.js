@@ -8,6 +8,7 @@ import { THREE$HemisphereLight } from '../lights/HemisphereLight';
 import { THREE$SpotLight } from '../lights/SpotLight';
 import { THREE$PointLight } from '../lights/PointLight';
 import { THREE$DirectionalLight } from '../lights/DirectionalLight';
+import { THREE$AreaLight } from '../lights/AreaLight';
 import { THREE$AmbientLight } from '../lights/AmbientLight';
 import { THREE$OrthographicCamera } from '../cameras/OrthographicCamera';
 import { THREE$PerspectiveCamera } from '../cameras/PerspectiveCamera';
@@ -22,10 +23,16 @@ import { THREE$MaterialLoader } from './MaterialLoader';
 import { THREE$TextGeometry } from '../extras/geometries/TextGeometry';
 import { THREE$TorusKnotGeometry } from '../extras/geometries/TorusKnotGeometry';
 import { THREE$TorusGeometry } from '../extras/geometries/TorusGeometry';
+import { THREE$RingGeometry } from '../extras/geometries/RingGeometry';
+import { THREE$TetrahedronGeometry } from '../extras/geometries/TetrahedronGeometry';
+import { THREE$OctahedronGeometry } from '../extras/geometries/OctahedronGeometry';
 import { THREE$IcosahedronGeometry } from '../extras/geometries/IcosahedronGeometry';
+import { THREE$DodecahedronGeometry } from '../extras/geometries/DodecahedronGeometry';
+import { THREE$SphereBufferGeometry } from '../extras/geometries/SphereBufferGeometry';
 import { THREE$SphereGeometry } from '../extras/geometries/SphereGeometry';
 import { THREE$CylinderGeometry } from '../extras/geometries/CylinderGeometry';
 import { THREE$CircleGeometry } from '../extras/geometries/CircleGeometry';
+import { THREE$CircleBufferGeometry } from '../extras/geometries/CircleBufferGeometry';
 import { THREE$BoxGeometry } from '../extras/geometries/BoxGeometry';
 import { THREE$BufferGeometryLoader } from './BufferGeometryLoader';
 import { THREE$JSONLoader } from './JSONLoader';
@@ -145,11 +152,24 @@ THREE$ObjectLoader.prototype = {
 
 						break;
 
+					case 'CircleBufferGeometry':
+
+						geometry = new THREE$CircleBufferGeometry(
+							data.radius,
+							data.segments,
+							data.thetaStart,
+							data.thetaLength
+						);
+
+						break;
+
 					case 'CircleGeometry':
 
 						geometry = new THREE$CircleGeometry(
 							data.radius,
-							data.segments
+							data.segments,
+							data.thetaStart,
+							data.thetaLength
 						);
 
 						break;
@@ -162,7 +182,9 @@ THREE$ObjectLoader.prototype = {
 							data.height,
 							data.radialSegments,
 							data.heightSegments,
-							data.openEnded
+							data.openEnded,
+							data.thetaStart,
+							data.thetaLength
 						);
 
 						break;
@@ -181,11 +203,65 @@ THREE$ObjectLoader.prototype = {
 
 						break;
 
+					case 'SphereBufferGeometry':
+
+						geometry = new THREE$SphereBufferGeometry(
+							data.radius,
+							data.widthSegments,
+							data.heightSegments,
+							data.phiStart,
+							data.phiLength,
+							data.thetaStart,
+							data.thetaLength
+						);
+
+						break;
+
+					case 'DodecahedronGeometry':
+
+						geometry = new THREE$DodecahedronGeometry(
+							data.radius,
+							data.detail
+						);
+
+						break;
+
 					case 'IcosahedronGeometry':
 
 						geometry = new THREE$IcosahedronGeometry(
 							data.radius,
 							data.detail
+						);
+
+						break;
+
+					case 'OctahedronGeometry':
+
+						geometry = new THREE$OctahedronGeometry(
+							data.radius,
+							data.detail
+						);
+
+						break;
+
+					case 'TetrahedronGeometry':
+
+						geometry = new THREE$TetrahedronGeometry(
+							data.radius,
+							data.detail
+						);
+
+						break;
+
+					case 'RingGeometry':
+
+						geometry = new THREE$RingGeometry(
+							data.innerRadius,
+							data.outerRadius,
+							data.thetaSegments,
+							data.phiSegments,
+							data.thetaStart,
+							data.thetaLength
 						);
 
 						break;
@@ -481,6 +557,13 @@ THREE$ObjectLoader.prototype = {
 				case 'AmbientLight':
 
 					object = new THREE$AmbientLight( data.color );
+
+					break;
+
+
+				case 'AreaLight':
+
+					object = new THREE$AreaLight( data.color, data.intensity );
 
 					break;
 

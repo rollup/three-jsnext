@@ -2,6 +2,7 @@ import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 import { THREE$Vector3 } from '../../math/Vector3';
 import { THREE$Sphere } from '../../math/Sphere';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
+import { THREE$IndexBufferAttribute } from '../../core/IndexBufferAttribute';
 
 /**
  * @author benaadams / https://twitter.com/ben_a_adams
@@ -34,21 +35,21 @@ function THREE$CircleBufferGeometry ( radius, segments, thetaStart, thetaLength 
 	var uvs = new Float32Array( vertices * 2 );
 
 	// center data is already zero, but need to set a few extras
-	normals[3] = 1.0;
-	uvs[0] = 0.5;
-	uvs[1] = 0.5;
+	normals[ 3 ] = 1.0;
+	uvs[ 0 ] = 0.5;
+	uvs[ 1 ] = 0.5;
 
-	for ( var s = 0, i = 3, ii = 2 ; s <= segments; s++, i += 3, ii += 2 ) {
+	for ( var s = 0, i = 3, ii = 2 ; s <= segments; s ++, i += 3, ii += 2 ) {
 
 		var segment = thetaStart + s / segments * thetaLength;
 
-		positions[i] = radius * Math.cos( segment );
-		positions[i + 1] = radius * Math.sin( segment );
+		positions[ i ] = radius * Math.cos( segment );
+		positions[ i + 1 ] = radius * Math.sin( segment );
 
-		normals[i + 2] = 1; // normal z
+		normals[ i + 2 ] = 1; // normal z
 
-		uvs[ii] = ( positions[i] / radius + 1 ) / 2;
-		uvs[ii + 1] = ( positions[i + 1] / radius + 1 ) / 2;
+		uvs[ ii ] = ( positions[ i ] / radius + 1 ) / 2;
+		uvs[ ii + 1 ] = ( positions[ i + 1 ] / radius + 1 ) / 2;
 
 	}
 
@@ -62,7 +63,7 @@ function THREE$CircleBufferGeometry ( radius, segments, thetaStart, thetaLength 
 
 	}
 
-	this.addAttribute( 'index', new THREE$BufferAttribute( new Uint16Array( indices ), 1 ) );
+	this.addAttribute( 'index', new THREE$IndexBufferAttribute( new Uint16Array( indices ), 1 ) );
 	this.addAttribute( 'position', new THREE$BufferAttribute( positions, 3 ) );
 	this.addAttribute( 'normal', new THREE$BufferAttribute( normals, 3 ) );
 	this.addAttribute( 'uv', new THREE$BufferAttribute( uvs, 2 ) );
@@ -73,6 +74,21 @@ function THREE$CircleBufferGeometry ( radius, segments, thetaStart, thetaLength 
 
 THREE$CircleBufferGeometry.prototype = Object.create( THREE$BufferGeometry.prototype );
 THREE$CircleBufferGeometry.prototype.constructor = THREE$CircleBufferGeometry;
+
+THREE$CircleBufferGeometry.prototype.clone = function () {
+
+	var geometry = new THREE$CircleBufferGeometry(
+		this.parameters.radius,
+		this.parameters.segments,
+		this.parameters.thetaStart,
+		this.parameters.thetaLength
+	);
+
+	geometry.copy( this );
+
+	return geometry;
+
+};
 
 
 export { THREE$CircleBufferGeometry };

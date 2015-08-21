@@ -1,5 +1,6 @@
 import { THREE$BufferGeometry } from '../../core/BufferGeometry';
 import { THREE$BufferAttribute } from '../../core/BufferAttribute';
+import { THREE$IndexBufferAttribute } from '../../core/IndexBufferAttribute';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -47,12 +48,12 @@ function THREE$PlaneBufferGeometry ( width, height, widthSegments, heightSegment
 
 			var x = ix * segment_width - width_half;
 
-			vertices[ offset     ] = x;
+			vertices[ offset ] = x;
 			vertices[ offset + 1 ] = - y;
 
 			normals[ offset + 2 ] = 1;
 
-			uvs[ offset2     ] = ix / gridX;
+			uvs[ offset2 ] = ix / gridX;
 			uvs[ offset2 + 1 ] = 1 - ( iy / gridY );
 
 			offset += 3;
@@ -75,7 +76,7 @@ function THREE$PlaneBufferGeometry ( width, height, widthSegments, heightSegment
 			var c = ( ix + 1 ) + gridX1 * ( iy + 1 );
 			var d = ( ix + 1 ) + gridX1 * iy;
 
-			indices[ offset     ] = a;
+			indices[ offset ] = a;
 			indices[ offset + 1 ] = b;
 			indices[ offset + 2 ] = d;
 
@@ -89,7 +90,7 @@ function THREE$PlaneBufferGeometry ( width, height, widthSegments, heightSegment
 
 	}
 
-	this.addAttribute( 'index', new THREE$BufferAttribute( indices, 1 ) );
+	this.addAttribute( 'index', new THREE$IndexBufferAttribute( indices, 1 ) );
 	this.addAttribute( 'position', new THREE$BufferAttribute( vertices, 3 ) );
 	this.addAttribute( 'normal', new THREE$BufferAttribute( normals, 3 ) );
 	this.addAttribute( 'uv', new THREE$BufferAttribute( uvs, 2 ) );
@@ -98,6 +99,21 @@ function THREE$PlaneBufferGeometry ( width, height, widthSegments, heightSegment
 
 THREE$PlaneBufferGeometry.prototype = Object.create( THREE$BufferGeometry.prototype );
 THREE$PlaneBufferGeometry.prototype.constructor = THREE$PlaneBufferGeometry;
+
+THREE$PlaneBufferGeometry.prototype.clone = function () {
+
+	var geometry = new THREE$PlaneBufferGeometry(
+		this.parameters.width,
+		this.parameters.height,
+		this.parameters.widthSegments,
+		this.parameters.heightSegments
+	);
+
+	geometry.copy( this );
+
+	return geometry;
+
+};
 
 
 export { THREE$PlaneBufferGeometry };

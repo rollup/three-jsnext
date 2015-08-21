@@ -149,7 +149,7 @@ THREE$VertexTangentsHelper.prototype.update = ( function ( object ) {
 
 	}
 
-}());
+}() );
 
 
 export { THREE$VertexTangentsHelper };

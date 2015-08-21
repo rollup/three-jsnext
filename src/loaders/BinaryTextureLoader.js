@@ -1,6 +1,7 @@
 import { THREE$LinearFilter, THREE$LinearMipMapLinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
 import { THREE$XHRLoader } from './XHRLoader';
 import { THREE$DataTexture } from '../textures/DataTexture';
+import { THREE$DefaultLoadingManager } from './LoadingManager';
 
 var THREE$DataTextureLoader;
 
@@ -10,8 +11,10 @@ var THREE$DataTextureLoader;
  * Abstract Base class to load generic binary textures formats (rgbe, hdr, ...)
  */
 
-THREE$DataTextureLoader = function THREE$BinaryTextureLoader () {
+THREE$DataTextureLoader = function THREE$BinaryTextureLoader ( manager ) {
 	this.isBinaryTextureLoader = true;
+
+	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 
 	// override in sub classes
 	this._parser = null;
@@ -26,16 +29,17 @@ THREE$BinaryTextureLoader.prototype = {
 
 		var scope = this;
 
-		var texture = new THREE$DataTexture( );
+		var texture = new THREE$DataTexture();
 
-		var loader = new THREE$XHRLoader();
+		var loader = new THREE$XHRLoader( this.manager );
+		loader.setCrossOrigin( this.crossOrigin );
 		loader.setResponseType( 'arraybuffer' );
 
 		loader.load( url, function ( buffer ) {
 
 			var texData = scope._parser( buffer );
 
-			if ( !texData ) return;
+			if ( ! texData ) return;
 
 			if ( undefined !== texData.image ) {
 
@@ -88,6 +92,12 @@ THREE$BinaryTextureLoader.prototype = {
 
 
 		return texture;
+
+	},
+
+	setCrossOrigin: function ( value ) {
+
+		this.crossOrigin = value;
 
 	}
 
