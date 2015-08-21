@@ -58,7 +58,9 @@ export default function () {
 
 			const exports = names.map( keypath => {
 				const alias = createAlias( keypath );
-				return `${alias} as ${alias.slice(6)}`;
+				const exported = keypath.slice( 6 );
+
+				return alias === exported ? alias : `${alias} as ${exported}`;
 			});
 
 			const declaration = exports.length > 3 ?
