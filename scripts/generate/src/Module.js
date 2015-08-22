@@ -150,10 +150,9 @@ export default class Module {
 
 							// We also add this.isGeometry = true, to avoid
 							// instanceof checks
-							const className = alias.slice( 6 );
-							if ( isClass( className ) ) {
+							if ( isClass( alias ) ) {
 								const fnBody = node.right.body;
-								magicString.insert( fnBody.start + 1, `\n\tthis.is${className} = true;` );
+								magicString.insert( fnBody.start + 1, `\n\tthis.is${alias} = true;` );
 							}
 
 							node.left._skip = true;
