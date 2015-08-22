@@ -1,28 +1,28 @@
-import { THREE$LineSegments } from '../../objects/LineSegments';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Color } from '../../math/Color';
-import { THREE$VertexColors } from '../../Three';
-import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { THREE$Geometry } from '../../core/Geometry';
+import { LineSegments } from '../../objects/LineSegments';
+import { Vector3 } from '../../math/Vector3';
+import { Color } from '../../math/Color';
+import { VertexColors } from '../../Three';
+import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
+import { Geometry } from '../../core/Geometry';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$GridHelper ( size, step ) {
+function GridHelper ( size, step ) {
 	this.isGridHelper = true;
 
-	var geometry = new THREE$Geometry();
-	var material = new THREE$LineBasicMaterial( { vertexColors: THREE$VertexColors } );
+	var geometry = new Geometry();
+	var material = new LineBasicMaterial( { vertexColors: VertexColors } );
 
-	this.color1 = new THREE$Color( 0x444444 );
-	this.color2 = new THREE$Color( 0x888888 );
+	this.color1 = new Color( 0x444444 );
+	this.color2 = new Color( 0x888888 );
 
 	for ( var i = - size; i <= size; i += step ) {
 
 		geometry.vertices.push(
-			new THREE$Vector3( - size, 0, i ), new THREE$Vector3( size, 0, i ),
-			new THREE$Vector3( i, 0, - size ), new THREE$Vector3( i, 0, size )
+			new Vector3( - size, 0, i ), new Vector3( size, 0, i ),
+			new Vector3( i, 0, - size ), new Vector3( i, 0, size )
 		);
 
 		var color = i === 0 ? this.color1 : this.color2;
@@ -31,14 +31,14 @@ function THREE$GridHelper ( size, step ) {
 
 	}
 
-	THREE$LineSegments.call( this, geometry, material );
+	LineSegments.call( this, geometry, material );
 
 };
 
-THREE$GridHelper.prototype = Object.create( THREE$LineSegments.prototype );
-THREE$GridHelper.prototype.constructor = THREE$GridHelper;
+GridHelper.prototype = Object.create( LineSegments.prototype );
+GridHelper.prototype.constructor = GridHelper;
 
-THREE$GridHelper.prototype.setColors = function( colorCenterLine, colorGrid ) {
+GridHelper.prototype.setColors = function( colorCenterLine, colorGrid ) {
 
 	this.color1.set( colorCenterLine );
 	this.color2.set( colorGrid );
@@ -48,4 +48,4 @@ THREE$GridHelper.prototype.setColors = function( colorCenterLine, colorGrid ) {
 };
 
 
-export { THREE$GridHelper };
+export { GridHelper };

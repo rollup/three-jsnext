@@ -1,56 +1,67 @@
-import { THREE$EventDispatcher } from './EventDispatcher';
-import { THREE$BufferGeometry } from './BufferGeometry';
+import { EventDispatcher } from './EventDispatcher';
+import { BufferGeometry } from './BufferGeometry';
 
 /**
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 
-function THREE$InstancedBufferGeometry () {
+function InstancedBufferGeometry () {
 	this.isInstancedBufferGeometry = true;
 
-	THREE$BufferGeometry.call( this );
+	BufferGeometry.call( this );
 
 	this.type = 'InstancedBufferGeometry';
 	this.maxInstancedCount = undefined;
 
 };
 
-THREE$InstancedBufferGeometry.prototype = Object.create( THREE$BufferGeometry.prototype );
-THREE$InstancedBufferGeometry.prototype.constructor = THREE$InstancedBufferGeometry;
+InstancedBufferGeometry.prototype = Object.create( BufferGeometry.prototype );
+InstancedBufferGeometry.prototype.constructor = InstancedBufferGeometry;
 
-THREE$InstancedBufferGeometry.prototype.addDrawCall = function ( start, count, instances ) {
+InstancedBufferGeometry.prototype.addDrawCall = function ( start, count, indexOffset, instances ) {
 
 	this.drawcalls.push( {
 
 		start: start,
 		count: count,
+		index: indexOffset !== undefined ? indexOffset : 0,
 		instances: instances
 
 	} );
 
-};
+},
 
-THREE$InstancedBufferGeometry.prototype.copy = function ( source ) {
+InstancedBufferGeometry.prototype.clone = function () {
 
-	for ( var attr in source.attributes ) {
+	var geometry = new InstancedBufferGeometry();
 
-		var sourceAttr = source.attributes[ attr ];
-		this.addAttribute( attr, sourceAttr.clone() );
+	for ( var attr in this.attributes ) {
 
-	}
-
-	for ( var i = 0, il = source.drawcalls.length; i < il; i ++ ) {
-
-		var offset = source.drawcalls[ i ];
-		this.addDrawCall( offset.start, offset.count, offset.instances );
+		var sourceAttr = this.attributes[attr];
+		geometry.addAttribute( attr, sourceAttr.clone() );
 
 	}
 
-	return this;
+	for ( var i = 0, il = this.offsets.length; i < il; i++ ) {
+
+		var offset = this.offsets[i];
+
+		geometry.offsets.push( {
+
+			start: offset.start,
+			index: offset.index,
+			count: offset.count,
+			instances: offset.instances
+
+		} );
+
+	}
+
+	return geometry;
 
 };
 
-THREE$EventDispatcher.prototype.apply( THREE$InstancedBufferGeometry.prototype );
+EventDispatcher.prototype.apply( InstancedBufferGeometry.prototype );
 
 
-export { THREE$InstancedBufferGeometry };
+export { InstancedBufferGeometry };

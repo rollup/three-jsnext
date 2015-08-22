@@ -1,13 +1,13 @@
-import { THREE$SkinnedMesh } from '../../objects/SkinnedMesh';
-import { THREE$Quaternion } from '../../math/Quaternion';
+import { SkinnedMesh } from '../../objects/SkinnedMesh';
+import { Quaternion } from '../../math/Quaternion';
 
-var THREE$AnimationHandler;
+var AnimationHandler;
 
 /**
  * @author mikael emtinger / http://gomo.se/
  */
 
-THREE$AnimationHandler = {
+AnimationHandler = {
 
 	LINEAR: 0,
 	CATMULLROM: 1,
@@ -15,21 +15,9 @@ THREE$AnimationHandler = {
 
 	//
 
-	add: function () {
-
-		console.warn( 'THREE.AnimationHandler.add() has been deprecated.' );
-
-	},
-	get: function () {
-
-		console.warn( 'THREE.AnimationHandler.get() has been deprecated.' );
-
-	},
-	remove: function () {
-
-		console.warn( 'THREE.AnimationHandler.remove() has been deprecated.' );
-
-	},
+	add: function () { console.warn( 'THREE.AnimationHandler.add() has been deprecated.' ); },
+	get: function () { console.warn( 'THREE.AnimationHandler.get() has been deprecated.' ); },
+	remove: function () { console.warn( 'THREE.AnimationHandler.remove() has been deprecated.' ); },
 
 	//
 
@@ -59,7 +47,7 @@ THREE$AnimationHandler = {
 				  ! ( (data.hierarchy[ h ].keys[ k ].rot && data.hierarchy[ h ].keys[ k ].rot.isQuaternion) ) ) {
 
 					var quat = data.hierarchy[ h ].keys[ k ].rot;
-					data.hierarchy[ h ].keys[ k ].rot = new THREE$Quaternion().fromArray( quat );
+					data.hierarchy[ h ].keys[ k ].rot = new Quaternion().fromArray( quat );
 
 				}
 
@@ -225,4 +213,4 @@ THREE$AnimationHandler = {
 };
 
 
-export { THREE$AnimationHandler };
+export { AnimationHandler };

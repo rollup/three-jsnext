@@ -1,15 +1,14 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Math } from '../math/Math';
-import { THREE$Mesh } from './Mesh';
+import { Mesh } from './Mesh';
+import { _Math } from '../math/Math';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$MorphAnimMesh ( geometry, material ) {
+function MorphAnimMesh ( geometry, material ) {
 	this.isMorphAnimMesh = true;
 
-	THREE$Mesh.call( this, geometry, material );
+	Mesh.call( this, geometry, material );
 
 	this.type = 'MorphAnimMesh';
 
@@ -27,14 +26,14 @@ function THREE$MorphAnimMesh ( geometry, material ) {
 	this.direction = 1;
 	this.directionBackwards = false;
 
-	this.setFrameRange( 0, geometry.morphTargets.length - 1 );
+	this.setFrameRange( 0, this.geometry.morphTargets.length - 1 );
 
 };
 
-THREE$MorphAnimMesh.prototype = Object.create( THREE$Mesh.prototype );
-THREE$MorphAnimMesh.prototype.constructor = THREE$MorphAnimMesh;
+MorphAnimMesh.prototype = Object.create( Mesh.prototype );
+MorphAnimMesh.prototype.constructor = MorphAnimMesh;
 
-THREE$MorphAnimMesh.prototype.setFrameRange = function ( start, end ) {
+MorphAnimMesh.prototype.setFrameRange = function ( start, end ) {
 
 	this.startKeyframe = start;
 	this.endKeyframe = end;
@@ -43,21 +42,21 @@ THREE$MorphAnimMesh.prototype.setFrameRange = function ( start, end ) {
 
 };
 
-THREE$MorphAnimMesh.prototype.setDirectionForward = function () {
+MorphAnimMesh.prototype.setDirectionForward = function () {
 
 	this.direction = 1;
 	this.directionBackwards = false;
 
 };
 
-THREE$MorphAnimMesh.prototype.setDirectionBackward = function () {
+MorphAnimMesh.prototype.setDirectionBackward = function () {
 
 	this.direction = - 1;
 	this.directionBackwards = true;
 
 };
 
-THREE$MorphAnimMesh.prototype.parseAnimations = function () {
+MorphAnimMesh.prototype.parseAnimations = function () {
 
 	var geometry = this.geometry;
 
@@ -93,7 +92,7 @@ THREE$MorphAnimMesh.prototype.parseAnimations = function () {
 
 };
 
-THREE$MorphAnimMesh.prototype.setAnimationLabel = function ( label, start, end ) {
+MorphAnimMesh.prototype.setAnimationLabel = function ( label, start, end ) {
 
 	if ( ! this.geometry.animations ) this.geometry.animations = {};
 
@@ -101,7 +100,7 @@ THREE$MorphAnimMesh.prototype.setAnimationLabel = function ( label, start, end )
 
 };
 
-THREE$MorphAnimMesh.prototype.playAnimation = function ( label, fps ) {
+MorphAnimMesh.prototype.playAnimation = function ( label, fps ) {
 
 	var animation = this.geometry.animations[ label ];
 
@@ -119,7 +118,7 @@ THREE$MorphAnimMesh.prototype.playAnimation = function ( label, fps ) {
 
 };
 
-THREE$MorphAnimMesh.prototype.updateAnimation = function ( delta ) {
+MorphAnimMesh.prototype.updateAnimation = function ( delta ) {
 
 	var frameTime = this.duration / this.length;
 
@@ -155,15 +154,14 @@ THREE$MorphAnimMesh.prototype.updateAnimation = function ( delta ) {
 
 	}
 
-	var keyframe = this.startKeyframe + THREE$Math.clamp( Math.floor( this.time / frameTime ), 0, this.length - 1 );
-
-	var influences = this.morphTargetInfluences;
+	var keyframe = this.startKeyframe + _Math.clamp( Math.floor( this.time / frameTime ), 0, this.length - 1 );
 
 	if ( keyframe !== this.currentKeyframe ) {
 
-		influences[ this.lastKeyframe ] = 0;
-		influences[ this.currentKeyframe ] = 1;
-		influences[ keyframe ] = 0;
+		this.morphTargetInfluences[ this.lastKeyframe ] = 0;
+		this.morphTargetInfluences[ this.currentKeyframe ] = 1;
+
+		this.morphTargetInfluences[ keyframe ] = 0;
 
 		this.lastKeyframe = this.currentKeyframe;
 		this.currentKeyframe = keyframe;
@@ -178,12 +176,12 @@ THREE$MorphAnimMesh.prototype.updateAnimation = function ( delta ) {
 
 	}
 
-	influences[ this.currentKeyframe ] = mix;
-	influences[ this.lastKeyframe ] = 1 - mix;
+	this.morphTargetInfluences[ this.currentKeyframe ] = mix;
+	this.morphTargetInfluences[ this.lastKeyframe ] = 1 - mix;
 
 };
 
-THREE$MorphAnimMesh.prototype.interpolateTargets = function ( a, b, t ) {
+MorphAnimMesh.prototype.interpolateTargets = function ( a, b, t ) {
 
 	var influences = this.morphTargetInfluences;
 
@@ -193,28 +191,30 @@ THREE$MorphAnimMesh.prototype.interpolateTargets = function ( a, b, t ) {
 
 	}
 
-	if ( a > - 1 ) influences[ a ] = 1 - t;
-	if ( b > - 1 ) influences[ b ] = t;
+	if ( a > -1 ) influences[ a ] = 1 - t;
+	if ( b > -1 ) influences[ b ] = t;
 
 };
 
-THREE$MorphAnimMesh.prototype.copy = function ( source ) {
+MorphAnimMesh.prototype.clone = function ( object ) {
 
-	THREE$Object3D.prototype.copy.call( this, source );
+	if ( object === undefined ) object = new MorphAnimMesh( this.geometry, this.material );
 
-	this.duration = source.duration;
-	this.mirroredLoop = source.mirroredLoop;
-	this.time = source.time;
+	object.duration = this.duration;
+	object.mirroredLoop = this.mirroredLoop;
+	object.time = this.time;
 
-	this.lastKeyframe = source.lastKeyframe;
-	this.currentKeyframe = source.currentKeyframe;
+	object.lastKeyframe = this.lastKeyframe;
+	object.currentKeyframe = this.currentKeyframe;
 
-	this.direction = source.direction;
-	this.directionBackwards = source.directionBackwards;
+	object.direction = this.direction;
+	object.directionBackwards = this.directionBackwards;
 
-	return this;
+	Mesh.prototype.clone.call( this, object );
+
+	return object;
 
 };
 
 
-export { THREE$MorphAnimMesh };
+export { MorphAnimMesh };

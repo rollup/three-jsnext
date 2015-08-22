@@ -1,6 +1,6 @@
-import { THREE$Material } from './Material';
-import { THREE$NoColors } from '../Three';
-import { THREE$Color } from '../math/Color';
+import { Material } from './Material';
+import { NoColors } from '../Three';
+import { Color } from '../math/Color';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -24,20 +24,20 @@ import { THREE$Color } from '../math/Color';
  * }
  */
 
-function THREE$LineBasicMaterial ( parameters ) {
+function LineBasicMaterial ( parameters ) {
 	this.isLineBasicMaterial = true;
 
-	THREE$Material.call( this );
+	Material.call( this );
 
 	this.type = 'LineBasicMaterial';
 
-	this.color = new THREE$Color( 0xffffff );
+	this.color = new Color( 0xffffff );
 
 	this.linewidth = 1;
 	this.linecap = 'round';
 	this.linejoin = 'round';
 
-	this.vertexColors = THREE$NoColors;
+	this.vertexColors = NoColors;
 
 	this.fog = true;
 
@@ -45,26 +45,28 @@ function THREE$LineBasicMaterial ( parameters ) {
 
 };
 
-THREE$LineBasicMaterial.prototype = Object.create( THREE$Material.prototype );
-THREE$LineBasicMaterial.prototype.constructor = THREE$LineBasicMaterial;
+LineBasicMaterial.prototype = Object.create( Material.prototype );
+LineBasicMaterial.prototype.constructor = LineBasicMaterial;
 
-THREE$LineBasicMaterial.prototype.copy = function ( source ) {
+LineBasicMaterial.prototype.clone = function () {
 
-	THREE$Material.prototype.copy.call( this, source );
+	var material = new LineBasicMaterial();
 
-	this.color.copy( source.color );
+	Material.prototype.clone.call( this, material );
 
-	this.linewidth = source.linewidth;
-	this.linecap = source.linecap;
-	this.linejoin = source.linejoin;
+	material.color.copy( this.color );
 
-	this.vertexColors = source.vertexColors;
+	material.linewidth = this.linewidth;
+	material.linecap = this.linecap;
+	material.linejoin = this.linejoin;
 
-	this.fog = source.fog;
+	material.vertexColors = this.vertexColors;
 
-	return this;
+	material.fog = this.fog;
+
+	return material;
 
 };
 
 
-export { THREE$LineBasicMaterial };
+export { LineBasicMaterial };

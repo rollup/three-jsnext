@@ -1,33 +1,36 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Color } from '../math/Color';
+import { Object3D } from '../core/Object3D';
+import { Color } from '../math/Color';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$Light ( color ) {
+function Light ( color ) {
 	this.isLight = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.type = 'Light';
-
-	this.color = new THREE$Color( color );
+	
+	this.color = new Color( color );
 
 };
 
-THREE$Light.prototype = Object.create( THREE$Object3D.prototype );
-THREE$Light.prototype.constructor = THREE$Light;
+Light.prototype = Object.create( Object3D.prototype );
+Light.prototype.constructor = Light;
 
-THREE$Light.prototype.copy = function ( source ) {
-	
-	THREE$Object3D.prototype.copy.call( this, source );
-	
-	this.color.copy( source.color );
-	
-	return this;
+Light.prototype.clone = function ( light ) {
+
+	if ( light === undefined ) light = new Light();
+
+	Object3D.prototype.clone.call( this, light );
+
+	light.color.copy( this.color );
+
+	return light;
 
 };
 
-export { THREE$Light };
+
+export { Light };

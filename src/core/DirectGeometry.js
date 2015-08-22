@@ -1,34 +1,35 @@
-import { THREE$EventDispatcher } from './EventDispatcher';
-import { THREE$Vector4 } from '../math/Vector4';
-import { THREE$Vector2 } from '../math/Vector2';
-import { THREE$Geometry, THREE$GeometryIdCount } from './Geometry';
-import { THREE$Math } from '../math/Math';
+import { EventDispatcher } from './EventDispatcher';
+import { Vector4 } from '../math/Vector4';
+import { Vector2 } from '../math/Vector2';
+import { Geometry, GeometryIdCount } from './Geometry';
+import { _Math } from '../math/Math';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$DirectGeometry () {
+function DirectGeometry () {
 	this.isDirectGeometry = true;
 
-	Object.defineProperty( this, 'id', { value: THREE$GeometryIdCount() } );
+	Object.defineProperty( this, 'id', { value: GeometryIdCount() } );
 
-	this.uuid = THREE$Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.name = '';
 	this.type = 'DirectGeometry';
 
 	this.indices = [];
 	this.vertices = [];
+	this.colors = [];
 	this.normals = [];
 	this.colors = [];
 	this.uvs = [];
 	this.uvs2 = [];
 	this.tangents = [];
 
-	this.groups = [];
-
-	this.morphTargets = {};
+	this.morphTargets = [];
+	this.morphColors = [];
+	this.morphNormals = [];
 
 	this.skinWeights = [];
 	this.skinIndices = [];
@@ -48,12 +49,12 @@ function THREE$DirectGeometry () {
 
 };
 
-THREE$DirectGeometry.prototype = {
+DirectGeometry.prototype = {
 
-	constructor: THREE$DirectGeometry,
+	constructor: DirectGeometry,
 
-	computeBoundingBox: THREE$Geometry.prototype.computeBoundingBox,
-	computeBoundingSphere: THREE$Geometry.prototype.computeBoundingSphere,
+	computeBoundingBox: Geometry.prototype.computeBoundingBox,
+	computeBoundingSphere: Geometry.prototype.computeBoundingSphere,
 
 	computeFaceNormals: function () {
 
@@ -76,6 +77,7 @@ THREE$DirectGeometry.prototype = {
 
 	},
 
+
 	fromGeometry: function ( geometry ) {
 
 		var faces = geometry.faces;
@@ -87,42 +89,32 @@ THREE$DirectGeometry.prototype = {
 
 		var hasTangents = geometry.hasTangents;
 
-		var group;
-		var materialIndex;
-
 		// morphs
 
 		var morphTargets = geometry.morphTargets;
 		var morphTargetsLength = morphTargets.length;
 
-		if ( morphTargetsLength > 0 ) {
+		for ( var i = 0; i < morphTargetsLength; i ++ ) {
 
-			var morphTargetsPosition = [];
-
-			for ( var i = 0; i < morphTargetsLength; i ++ ) {
-
-				morphTargetsPosition[ i ] = [];
-
-			}
-
-			this.morphTargets.position = morphTargetsPosition;
+			this.morphTargets[ i ] = [];
 
 		}
 
 		var morphNormals = geometry.morphNormals;
 		var morphNormalsLength = morphNormals.length;
 
-		if ( morphNormalsLength > 0 ) {
+		for ( var i = 0; i < morphNormalsLength; i ++ ) {
 
-			var morphTargetsNormal = [];
+			this.morphNormals[ i ] = [];
 
-			for ( var i = 0; i < morphNormalsLength; i ++ ) {
+		}
 
-				morphTargetsNormal[ i ] = [];
+		var morphColors = geometry.morphColors;
+		var morphColorsLength = morphColors.length;
 
-			}
+		for ( var i = 0; i < morphColorsLength; i ++ ) {
 
-			this.morphTargets.normal = morphTargetsNormal;
+			this.morphColors[ i ] = [];
 
 		}
 
@@ -136,7 +128,7 @@ THREE$DirectGeometry.prototype = {
 
 		//
 
-		for ( var i = 0, i3 = 0; i < faces.length; i ++, i3 += 3 ) {
+		for ( var i = 0; i < faces.length; i ++ ) {
 
 			var face = faces[ i ];
 
@@ -182,7 +174,7 @@ THREE$DirectGeometry.prototype = {
 
 					console.warn( 'THREE.DirectGeometry.fromGeometry(): Undefined vertexUv ', i );
 
-					this.uvs.push( new THREE$Vector2(), new THREE$Vector2(), new THREE$Vector2() );
+					this.uvs.push( new Vector2(), new Vector2(), new Vector2() );
 
 				}
 
@@ -200,33 +192,11 @@ THREE$DirectGeometry.prototype = {
 
 					console.warn( 'THREE.DirectGeometry.fromGeometry(): Undefined vertexUv2 ', i );
 
-					this.uvs2.push( new THREE$Vector2(), new THREE$Vector2(), new THREE$Vector2() );
+					this.uvs2.push( new Vector2(), new Vector2(), new Vector2() );
 
 				}
 
 			}
-
-			// materials
-
-			if ( face.materialIndex !== materialIndex ) {
-
-				materialIndex = face.materialIndex;
-
-				if ( group !== undefined ) {
-
-					group.count = i3 - group.start;
-					this.groups.push( group );
-
-				}
-
-				group = {
-					start: i3,
-					materialIndex: materialIndex
-				};
-
-			}
-
-			// tangents
 
 			if ( hasTangents === true ) {
 
@@ -240,7 +210,7 @@ THREE$DirectGeometry.prototype = {
 
 					console.warn( 'THREE.DirectGeometry.fromGeometry(): Undefined tangents ', i );
 
-					this.tangents.push( new THREE$Vector4(), new THREE$Vector4(), new THREE$Vector4() );
+					this.tangents.push( new Vector4(), new Vector4(), new Vector4() );
 
 				}
 
@@ -252,17 +222,26 @@ THREE$DirectGeometry.prototype = {
 
 				var morphTarget = morphTargets[ j ].vertices;
 
-				morphTargetsPosition[ j ].push( morphTarget[ face.a ], morphTarget[ face.b ], morphTarget[ face.c ] );
+				this.morphTargets[ j ].push( morphTarget[ face.a ], morphTarget[ face.b ], morphTarget[ face.c ] );
 
 			}
-
+			/*
 			for ( var j = 0; j < morphNormalsLength; j ++ ) {
 
 				var morphNormal = morphNormals[ j ].vertexNormals[ i ];
 
-				morphTargetsNormal[ j ].push( morphNormal.a, morphNormal.b, morphNormal.c );
+				this.morphNormals[ j ].push( morphNormal.a, morphNormal.b, morphNormal.c );
 
 			}
+
+			for ( var j = 0; j < morphColorsLength; j ++ ) {
+
+				var morphColor = morphColors[ j ].colors;
+
+				this.morphColors[ j ].push( morphColor[ face.a ], morphColor[ face.b ], morphColor[ face.c ] );
+
+			}
+			*/
 
 			// skins
 
@@ -277,15 +256,6 @@ THREE$DirectGeometry.prototype = {
 				this.skinWeights.push( skinWeights[ face.a ], skinWeights[ face.b ], skinWeights[ face.c ] );
 
 			}
-
-		}
-
-		//
-
-		if ( group !== undefined ) {
-
-			group.count = i3 - group.start;
-			this.groups.push( group );
 
 		}
 
@@ -307,7 +277,7 @@ THREE$DirectGeometry.prototype = {
 
 };
 
-THREE$EventDispatcher.prototype.apply( THREE$DirectGeometry.prototype );
+EventDispatcher.prototype.apply( DirectGeometry.prototype );
 
 
-export { THREE$DirectGeometry };
+export { DirectGeometry };

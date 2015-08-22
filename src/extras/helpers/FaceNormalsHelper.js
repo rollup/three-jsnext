@@ -1,17 +1,17 @@
-import { THREE$Matrix3 } from '../../math/Matrix3';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$LineSegments } from '../../objects/LineSegments';
-import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { THREE$Float32Attribute } from '../../core/BufferAttribute';
-import { THREE$BufferGeometry } from '../../core/BufferGeometry';
-import { THREE$Geometry } from '../../core/Geometry';
+import { Vector3 } from '../../math/Vector3';
+import { LineSegments } from '../../objects/LineSegments';
+import { Matrix3 } from '../../math/Matrix3';
+import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
+import { Float32Attribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
+import { Geometry } from '../../core/Geometry';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
 */
 
-function THREE$FaceNormalsHelper ( object, size, hex, linewidth ) {
+function FaceNormalsHelper ( object, size, hex, linewidth ) {
 	this.isFaceNormalsHelper = true;
 
 	// FaceNormalsHelper only supports THREE.Geometry
@@ -42,35 +42,37 @@ function THREE$FaceNormalsHelper ( object, size, hex, linewidth ) {
 
 	//
 
-	var geometry = new THREE$BufferGeometry();
+	var geometry = new BufferGeometry();
 
-	var positions = new THREE$Float32Attribute( nNormals * 2 * 3, 3 );
+	var positions = new Float32Attribute( nNormals * 2 * 3, 3 );
 
 	geometry.addAttribute( 'position', positions );
 
-	THREE$LineSegments.call( this, geometry, new THREE$LineBasicMaterial( { color: color, linewidth: width } ) );
+	LineSegments.call( this, geometry, new LineBasicMaterial( { color: color, linewidth: width } ) );
 
 	//
 
 	this.matrixAutoUpdate = false;
+
+	this.normalMatrix = new Matrix3();
+
 	this.update();
 
 };
 
-THREE$FaceNormalsHelper.prototype = Object.create( THREE$LineSegments.prototype );
-THREE$FaceNormalsHelper.prototype.constructor = THREE$FaceNormalsHelper;
+FaceNormalsHelper.prototype = Object.create( LineSegments.prototype );
+FaceNormalsHelper.prototype.constructor = FaceNormalsHelper;
 
-THREE$FaceNormalsHelper.prototype.update = ( function () {
+FaceNormalsHelper.prototype.update = ( function () {
 
-	var v1 = new THREE$Vector3();
-	var v2 = new THREE$Vector3();
-	var normalMatrix = new THREE$Matrix3();
+	var v1 = new Vector3();
+	var v2 = new Vector3();
 
-	return function update() {
+	return function() {
 
 		this.object.updateMatrixWorld( true );
 
-		normalMatrix.getNormalMatrix( this.object.matrixWorld );
+		this.normalMatrix.getNormalMatrix( this.object.matrixWorld );
 
 		var matrixWorld = this.object.matrixWorld;
 
@@ -98,7 +100,7 @@ THREE$FaceNormalsHelper.prototype.update = ( function () {
 				.divideScalar( 3 )
 				.applyMatrix4( matrixWorld );
 
-			v2.copy( normal ).applyMatrix3( normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
+			v2.copy( normal ).applyMatrix3( this.normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
 
 			position.setXYZ( idx, v1.x, v1.y, v1.z );
 
@@ -116,7 +118,7 @@ THREE$FaceNormalsHelper.prototype.update = ( function () {
 
 	}
 
-}() );
+}());
 
 
-export { THREE$FaceNormalsHelper };
+export { FaceNormalsHelper };

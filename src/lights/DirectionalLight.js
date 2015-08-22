@@ -1,27 +1,28 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Light } from './Light';
+import { Object3D } from '../core/Object3D';
+import { Light } from './Light';
+import { Vector3 } from '../math/Vector3';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$DirectionalLight ( color, intensity ) {
+function DirectionalLight ( color, intensity ) {
 	this.isDirectionalLight = true;
 
-	THREE$Light.call( this, color );
+	Light.call( this, color );
 
 	this.type = 'DirectionalLight';
 
 	this.position.set( 0, 1, 0 );
-	this.updateMatrix();
-
-	this.target = new THREE$Object3D();
+	this.target = new Object3D();
 
 	this.intensity = ( intensity !== undefined ) ? intensity : 1;
 
 	this.castShadow = false;
 	this.onlyShadow = false;
+
+	//
 
 	this.shadowCameraNear = 50;
 	this.shadowCameraFar = 5000;
@@ -39,6 +40,24 @@ function THREE$DirectionalLight ( color, intensity ) {
 	this.shadowMapWidth = 512;
 	this.shadowMapHeight = 512;
 
+	//
+
+	this.shadowCascade = false;
+
+	this.shadowCascadeOffset = new Vector3( 0, 0, - 1000 );
+	this.shadowCascadeCount = 2;
+
+	this.shadowCascadeBias = [ 0, 0, 0 ];
+	this.shadowCascadeWidth = [ 512, 512, 512 ];
+	this.shadowCascadeHeight = [ 512, 512, 512 ];
+
+	this.shadowCascadeNearZ = [ - 1.000, 0.990, 0.998 ];
+	this.shadowCascadeFarZ = [ 0.990, 0.998, 1.000 ];
+
+	this.shadowCascadeArray = [];
+
+	//
+
 	this.shadowMap = null;
 	this.shadowMapSize = null;
 	this.shadowCamera = null;
@@ -46,42 +65,61 @@ function THREE$DirectionalLight ( color, intensity ) {
 
 };
 
-THREE$DirectionalLight.prototype = Object.create( THREE$Light.prototype );
-THREE$DirectionalLight.prototype.constructor = THREE$DirectionalLight;
+DirectionalLight.prototype = Object.create( Light.prototype );
+DirectionalLight.prototype.constructor = DirectionalLight;
 
-THREE$DirectionalLight.prototype.copy = function ( source ) {
+DirectionalLight.prototype.clone = function () {
 
-	THREE$Light.prototype.copy.call( this, source );
+	var light = new DirectionalLight();
 
-	this.intensity = source.intensity;
-	this.target = source.target.clone();
+	Light.prototype.clone.call( this, light );
 
-	this.castShadow = source.castShadow;
-	this.onlyShadow = source.onlyShadow;
+	light.target = this.target.clone();
 
-	this.shadowCameraNear = source.shadowCameraNear;
-	this.shadowCameraFar = source.shadowCameraFar;
+	light.intensity = this.intensity;
 
-	this.shadowCameraLeft = source.shadowCameraLeft;
-	this.shadowCameraRight = source.shadowCameraRight;
-	this.shadowCameraTop = source.shadowCameraTop;
-	this.shadowCameraBottom = source.shadowCameraBottom;
+	light.castShadow = this.castShadow;
+	light.onlyShadow = this.onlyShadow;
 
-	this.shadowCameraVisible = source.shadowCameraVisible;
+	//
 
-	this.shadowBias = source.shadowBias;
-	this.shadowDarkness = source.shadowDarkness;
+	light.shadowCameraNear = this.shadowCameraNear;
+	light.shadowCameraFar = this.shadowCameraFar;
 
-	this.shadowMapWidth = source.shadowMapWidth;
-	this.shadowMapHeight = source.shadowMapHeight;
+	light.shadowCameraLeft = this.shadowCameraLeft;
+	light.shadowCameraRight = this.shadowCameraRight;
+	light.shadowCameraTop = this.shadowCameraTop;
+	light.shadowCameraBottom = this.shadowCameraBottom;
 
-	return this;
+	light.shadowCameraVisible = this.shadowCameraVisible;
+
+	light.shadowBias = this.shadowBias;
+	light.shadowDarkness = this.shadowDarkness;
+
+	light.shadowMapWidth = this.shadowMapWidth;
+	light.shadowMapHeight = this.shadowMapHeight;
+
+	//
+
+	light.shadowCascade = this.shadowCascade;
+
+	light.shadowCascadeOffset.copy( this.shadowCascadeOffset );
+	light.shadowCascadeCount = this.shadowCascadeCount;
+
+	light.shadowCascadeBias = this.shadowCascadeBias.slice( 0 );
+	light.shadowCascadeWidth = this.shadowCascadeWidth.slice( 0 );
+	light.shadowCascadeHeight = this.shadowCascadeHeight.slice( 0 );
+
+	light.shadowCascadeNearZ = this.shadowCascadeNearZ.slice( 0 );
+	light.shadowCascadeFarZ = this.shadowCascadeFarZ.slice( 0 );
+
+	return light;
 
 };
 
-THREE$DirectionalLight.prototype.toJSON = function ( meta ) {
+DirectionalLight.prototype.toJSON = function ( meta ) {
 
-	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+	var data = Object3D.prototype.toJSON.call( this, meta );
 
 	data.object.color = this.color.getHex();
 	data.object.intensity = this.intensity;
@@ -91,4 +129,4 @@ THREE$DirectionalLight.prototype.toJSON = function ( meta ) {
 };
 
 
-export { THREE$DirectionalLight };
+export { DirectionalLight };

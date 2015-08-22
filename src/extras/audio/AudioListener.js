@@ -1,15 +1,15 @@
-import { THREE$Object3D } from '../../core/Object3D';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Quaternion } from '../../math/Quaternion';
+import { Object3D } from '../../core/Object3D';
+import { Vector3 } from '../../math/Vector3';
+import { Quaternion } from '../../math/Quaternion';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$AudioListener () {
+function AudioListener () {
 	this.isAudioListener = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.type = 'AudioListener';
 
@@ -17,27 +17,27 @@ function THREE$AudioListener () {
 
 };
 
-THREE$AudioListener.prototype = Object.create( THREE$Object3D.prototype );
-THREE$AudioListener.prototype.constructor = THREE$AudioListener;
+AudioListener.prototype = Object.create( Object3D.prototype );
+AudioListener.prototype.constructor = AudioListener;
 
-THREE$AudioListener.prototype.updateMatrixWorld = ( function () {
+AudioListener.prototype.updateMatrixWorld = ( function () {
 
-	var position = new THREE$Vector3();
-	var quaternion = new THREE$Quaternion();
-	var scale = new THREE$Vector3();
+	var position = new Vector3();
+	var quaternion = new Quaternion();
+	var scale = new Vector3();
 
-	var orientation = new THREE$Vector3();
+	var orientation = new Vector3();
 
-	return function updateMatrixWorld( force ) {
+	return function ( force ) {
 
-		THREE$Object3D.prototype.updateMatrixWorld.call( this, force );
+		Object3D.prototype.updateMatrixWorld.call( this, force );
 
 		var listener = this.context.listener;
 		var up = this.up;
 
 		this.matrixWorld.decompose( position, quaternion, scale );
 
-		orientation.set( 0, 0, - 1 ).applyQuaternion( quaternion );
+		orientation.set( 0, 0, -1 ).applyQuaternion( quaternion );
 
 		listener.setPosition( position.x, position.y, position.z );
 		listener.setOrientation( orientation.x, orientation.y, orientation.z, up.x, up.y, up.z );
@@ -47,4 +47,4 @@ THREE$AudioListener.prototype.updateMatrixWorld = ( function () {
 } )();
 
 
-export { THREE$AudioListener };
+export { AudioListener };

@@ -1,11 +1,11 @@
-import { THREE$Vector2 } from '../../math/Vector2';
-import { THREE$Curve } from '../core/Curve';
+import { Vector2 } from '../../math/Vector2';
+import { Curve } from '../core/Curve';
 
 /**************************************************************
  *	Ellipse curve
  **************************************************************/
 
-function THREE$EllipseCurve ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation ) {
+function EllipseCurve ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise ) {
 	this.isEllipseCurve = true;
 
 	this.aX = aX;
@@ -18,15 +18,13 @@ function THREE$EllipseCurve ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, 
 	this.aEndAngle = aEndAngle;
 
 	this.aClockwise = aClockwise;
-	
-	this.aRotation = aRotation || 0;
 
 };
 
-THREE$EllipseCurve.prototype = Object.create( THREE$Curve.prototype );
-THREE$EllipseCurve.prototype.constructor = THREE$EllipseCurve;
+EllipseCurve.prototype = Object.create( Curve.prototype );
+EllipseCurve.prototype.constructor = EllipseCurve;
 
-THREE$EllipseCurve.prototype.getPoint = function ( t ) {
+EllipseCurve.prototype.getPoint = function ( t ) {
 
 	var deltaAngle = this.aEndAngle - this.aStartAngle;
 
@@ -45,25 +43,14 @@ THREE$EllipseCurve.prototype.getPoint = function ( t ) {
 
 	}
 	
-	var x = this.aX + this.xRadius * Math.cos( angle );
-	var y = this.aY + this.yRadius * Math.sin( angle );
+	var vector = new Vector2();
 
-	if ( this.aRotation !== 0 ) {
+	vector.x = this.aX + this.xRadius * Math.cos( angle );
+	vector.y = this.aY + this.yRadius * Math.sin( angle );
 
-		var cos = Math.cos( this.aRotation );
-		var sin = Math.sin( this.aRotation );
-
-		var tx = x, ty = y;
-
-		// Rotate the point about the center of the ellipse.
-		x = ( tx - this.aX ) * cos - ( ty - this.aY ) * sin + this.aX;
-		y = ( tx - this.aX ) * sin + ( ty - this.aY ) * cos + this.aY;
-
-	}
-
-	return new THREE$Vector2( x, y );
+	return vector;
 
 };
 
 
-export { THREE$EllipseCurve };
+export { EllipseCurve };

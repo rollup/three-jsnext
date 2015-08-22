@@ -1,6 +1,6 @@
-var THREE$WebGLShader;
+var WebGLShader;
 
-THREE$WebGLShader = ( function () {
+WebGLShader = ( function () {
 
 	var addLineNumbers = function ( string ) {
 
@@ -16,7 +16,7 @@ THREE$WebGLShader = ( function () {
 
 	};
 
-	return function WebGLShader( gl, type, string ) {
+	return function ( gl, type, string ) {
 
 		var shader = gl.createShader( type );
 
@@ -45,4 +45,4 @@ THREE$WebGLShader = ( function () {
 } )();
 
 
-export { THREE$WebGLShader };
+export { WebGLShader };

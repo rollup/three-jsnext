@@ -1,10 +1,10 @@
-import { THREE$Camera } from '../../cameras/Camera';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$LineSegments } from '../../objects/LineSegments';
-import { THREE$Color } from '../../math/Color';
-import { THREE$FaceColors } from '../../Three';
-import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { THREE$Geometry } from '../../core/Geometry';
+import { Camera } from '../../cameras/Camera';
+import { Vector3 } from '../../math/Vector3';
+import { LineSegments } from '../../objects/LineSegments';
+import { Color } from '../../math/Color';
+import { FaceColors } from '../../Three';
+import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
+import { Geometry } from '../../core/Geometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -15,11 +15,11 @@ import { THREE$Geometry } from '../../core/Geometry';
  *		http://evanw.github.com/lightgl.js/tests/shadowmap.html
  */
 
-function THREE$CameraHelper ( camera ) {
+function CameraHelper ( camera ) {
 	this.isCameraHelper = true;
 
-	var geometry = new THREE$Geometry();
-	var material = new THREE$LineBasicMaterial( { color: 0xffffff, vertexColors: THREE$FaceColors } );
+	var geometry = new Geometry();
+	var material = new LineBasicMaterial( { color: 0xffffff, vertexColors: FaceColors } );
 
 	var pointMap = {};
 
@@ -87,8 +87,8 @@ function THREE$CameraHelper ( camera ) {
 
 	function addPoint( id, hex ) {
 
-		geometry.vertices.push( new THREE$Vector3() );
-		geometry.colors.push( new THREE$Color( hex ) );
+		geometry.vertices.push( new Vector3() );
+		geometry.colors.push( new Color( hex ) );
 
 		if ( pointMap[ id ] === undefined ) {
 
@@ -100,7 +100,7 @@ function THREE$CameraHelper ( camera ) {
 
 	}
 
-	THREE$LineSegments.call( this, geometry, material );
+	LineSegments.call( this, geometry, material );
 
 	this.camera = camera;
 	this.matrix = camera.matrixWorld;
@@ -112,15 +112,15 @@ function THREE$CameraHelper ( camera ) {
 
 };
 
-THREE$CameraHelper.prototype = Object.create( THREE$LineSegments.prototype );
-THREE$CameraHelper.prototype.constructor = THREE$CameraHelper;
+CameraHelper.prototype = Object.create( LineSegments.prototype );
+CameraHelper.prototype.constructor = CameraHelper;
 
-THREE$CameraHelper.prototype.update = function () {
+CameraHelper.prototype.update = function () {
 
 	var geometry, pointMap;
 
-	var vector = new THREE$Vector3();
-	var camera = new THREE$Camera();
+	var vector = new Vector3();
+	var camera = new Camera();
 
 	var setPoint = function ( point, x, y, z ) {
 
@@ -196,4 +196,4 @@ THREE$CameraHelper.prototype.update = function () {
 }();
 
 
-export { THREE$CameraHelper };
+export { CameraHelper };

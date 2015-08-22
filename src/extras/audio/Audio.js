@@ -1,20 +1,20 @@
-import { THREE$Object3D } from '../../core/Object3D';
-import { THREE$Vector3 } from '../../math/Vector3';
+import { Object3D } from '../../core/Object3D';
+import { Vector3 } from '../../math/Vector3';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$Audio ( listener ) {
+function Audio ( listener ) {
 	this.isAudio = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.type = 'Audio';
 
 	this.context = listener.context;
 	this.source = this.context.createBufferSource();
-	this.source.onended = this.onEnded.bind( this );
+	this.source.onended = this.onEnded.bind(this);
 
 	this.gain = this.context.createGain();
 	this.gain.connect( this.context.destination );
@@ -25,15 +25,14 @@ function THREE$Audio ( listener ) {
 	this.autoplay = false;
 
 	this.startTime = 0;
-	this.playbackRate = 1;
 	this.isPlaying = false;
 
 };
 
-THREE$Audio.prototype = Object.create( THREE$Object3D.prototype );
-THREE$Audio.prototype.constructor = THREE$Audio;
+Audio.prototype = Object.create( Object3D.prototype );
+Audio.prototype.constructor = Audio;
 
-THREE$Audio.prototype.load = function ( file ) {
+Audio.prototype.load = function ( file ) {
 
 	var scope = this;
 
@@ -46,7 +45,7 @@ THREE$Audio.prototype.load = function ( file ) {
 
 			scope.source.buffer = buffer;
 
-			if ( scope.autoplay ) scope.play();
+			if( scope.autoplay ) scope.play();
 
 		} );
 
@@ -57,7 +56,7 @@ THREE$Audio.prototype.load = function ( file ) {
 
 };
 
-THREE$Audio.prototype.play = function () {
+Audio.prototype.play = function () {
 
 	if ( this.isPlaying === true ) {
 
@@ -71,162 +70,66 @@ THREE$Audio.prototype.play = function () {
 	source.buffer = this.source.buffer;
 	source.loop = this.source.loop;
 	source.onended = this.source.onended;
+	source.connect( this.panner );
 	source.start( 0, this.startTime );
-	source.playbackRate.value = this.playbackRate;
 
 	this.isPlaying = true;
 
 	this.source = source;
 
-	this.connect();
-
 };
 
-THREE$Audio.prototype.pause = function () {
+Audio.prototype.pause = function () {
 
 	this.source.stop();
 	this.startTime = this.context.currentTime;
 
 };
 
-THREE$Audio.prototype.stop = function () {
+Audio.prototype.stop = function () {
 
 	this.source.stop();
 	this.startTime = 0;
 
 };
 
-THREE$Audio.prototype.connect = function () {
-
-	if ( this.filter !== undefined ) {
-
-		this.source.connect( this.filter );
-		this.filter.connect( this.panner );
-
-	} else {
-
-		this.source.connect( this.panner );
-
-	}
-
-};
-
-THREE$Audio.prototype.disconnect = function () {
-
-	if ( this.filter !== undefined ) {
-
-		this.source.disconnect( this.filter );
-		this.filter.disconnect( this.panner );
-
-	} else {
-
-		this.source.disconnect( this.panner );
-
-	}
-
-};
-
-THREE$Audio.prototype.setFilter = function ( value ) {
-
-	if ( this.isPlaying === true ) {
-
-		this.disconnect();
-		this.filter = value;
-		this.connect();
-
-	} else {
-
-		this.filter = value;
-
-	}
-
-};
-
-THREE$Audio.prototype.getFilter = function () {
-
-	return this.filter;
-
-};
-
-THREE$Audio.prototype.setPlaybackRate = function ( value ) {
-
-	this.playbackRate = value;
-
-	if ( this.isPlaying === true ) {
-
-		this.source.playbackRate.value = this.playbackRate;
-
-	}
-
-};
-
-THREE$Audio.prototype.getPlaybackRate = function () {
-
-	return this.playbackRate;
-
-};
-
-THREE$Audio.prototype.onEnded = function() {
+Audio.prototype.onEnded = function() {
 
 	this.isPlaying = false;
 
 };
 
-THREE$Audio.prototype.setLoop = function ( value ) {
+Audio.prototype.setLoop = function ( value ) {
 
 	this.source.loop = value;
 
 };
 
-THREE$Audio.prototype.getLoop = function () {
-
-	return this.source.loop;
-
-};
-
-THREE$Audio.prototype.setRefDistance = function ( value ) {
+Audio.prototype.setRefDistance = function ( value ) {
 
 	this.panner.refDistance = value;
 
 };
 
-THREE$Audio.prototype.getRefDistance = function () {
-
-	return this.panner.refDistance;
-
-};
-
-THREE$Audio.prototype.setRolloffFactor = function ( value ) {
+Audio.prototype.setRolloffFactor = function ( value ) {
 
 	this.panner.rolloffFactor = value;
 
 };
 
-THREE$Audio.prototype.getRolloffFactor = function () {
-
-	return this.panner.rolloffFactor;
-
-};
-
-THREE$Audio.prototype.setVolume = function ( value ) {
+Audio.prototype.setVolume = function ( value ) {
 
 	this.gain.gain.value = value;
 
 };
 
-THREE$Audio.prototype.getVolume = function () {
+Audio.prototype.updateMatrixWorld = ( function () {
 
-	return this.gain.gain.value;
+	var position = new Vector3();
 
-};
+	return function ( force ) {
 
-THREE$Audio.prototype.updateMatrixWorld = ( function () {
-
-	var position = new THREE$Vector3();
-
-	return function updateMatrixWorld( force ) {
-
-		THREE$Object3D.prototype.updateMatrixWorld.call( this, force );
+		Object3D.prototype.updateMatrixWorld.call( this, force );
 
 		position.setFromMatrixPosition( this.matrixWorld );
 
@@ -237,4 +140,4 @@ THREE$Audio.prototype.updateMatrixWorld = ( function () {
 } )();
 
 
-export { THREE$Audio };
+export { Audio };

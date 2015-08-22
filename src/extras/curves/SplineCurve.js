@@ -1,21 +1,21 @@
-import { THREE$Curve } from '../core/Curve';
-import { THREE$Vector2 } from '../../math/Vector2';
+import { Curve } from '../core/Curve';
+import { Vector2 } from '../../math/Vector2';
 
 /**************************************************************
  *	Spline curve
  **************************************************************/
 
-function THREE$SplineCurve ( points /* array of Vector2 */ ) {
+function SplineCurve ( points /* array of Vector2 */ ) {
 	this.isSplineCurve = true;
 
 	this.points = ( points == undefined ) ? [] : points;
 
 };
 
-THREE$SplineCurve.prototype = Object.create( THREE$Curve.prototype );
-THREE$SplineCurve.prototype.constructor = THREE$SplineCurve;
+SplineCurve.prototype = Object.create( Curve.prototype );
+SplineCurve.prototype.constructor = SplineCurve;
 
-THREE$SplineCurve.prototype.getPoint = function ( t ) {
+SplineCurve.prototype.getPoint = function ( t ) {
 
 	var points = this.points;
 	var point = ( points.length - 1 ) * t;
@@ -28,14 +28,14 @@ THREE$SplineCurve.prototype.getPoint = function ( t ) {
 	var point2 = points[ intPoint > points.length - 2 ? points.length - 1 : intPoint + 1 ];
 	var point3 = points[ intPoint > points.length - 3 ? points.length - 1 : intPoint + 2 ];
 
-	var vector = new THREE$Vector2();
+	var vector = new Vector2();
 
-	vector.x = THREE$Curve.Utils.interpolate( point0.x, point1.x, point2.x, point3.x, weight );
-	vector.y = THREE$Curve.Utils.interpolate( point0.y, point1.y, point2.y, point3.y, weight );
+	vector.x = Curve.Utils.interpolate( point0.x, point1.x, point2.x, point3.x, weight );
+	vector.y = Curve.Utils.interpolate( point0.y, point1.y, point2.y, point3.y, weight );
 
 	return vector;
 
 };
 
 
-export { THREE$SplineCurve };
+export { SplineCurve };

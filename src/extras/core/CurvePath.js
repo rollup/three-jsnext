@@ -1,8 +1,8 @@
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Vector2 } from '../../math/Vector2';
-import { THREE$LineCurve } from '../curves/LineCurve';
-import { THREE$Curve } from './Curve';
+import { Vector3 } from '../../math/Vector3';
+import { Geometry } from '../../core/Geometry';
+import { Vector2 } from '../../math/Vector2';
+import { LineCurve } from '../curves/LineCurve';
+import { Curve } from './Curve';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
@@ -14,43 +14,39 @@ import { THREE$Curve } from './Curve';
  *  curves, but retains the api of a curve
  **************************************************************/
 
-function THREE$CurvePath () {
+function CurvePath () {
 	this.isCurvePath = true;
 
 	this.curves = [];
 	this.bends = [];
 
 	this.autoClose = false; // Automatically closes the path
-
 };
 
-THREE$CurvePath.prototype = Object.create( THREE$Curve.prototype );
-THREE$CurvePath.prototype.constructor = THREE$CurvePath;
+CurvePath.prototype = Object.create( Curve.prototype );
+CurvePath.prototype.constructor = CurvePath;
 
-THREE$CurvePath.prototype.add = function ( curve ) {
+CurvePath.prototype.add = function ( curve ) {
 
 	this.curves.push( curve );
 
 };
 
-THREE$CurvePath.prototype.checkConnection = function() {
+CurvePath.prototype.checkConnection = function() {
 	// TODO
 	// If the ending of curve is not connected to the starting
 	// or the next curve, then, this is not a real path
 };
 
-THREE$CurvePath.prototype.closePath = function() {
-
+CurvePath.prototype.closePath = function() {
 	// TODO Test
 	// and verify for vector3 (needs to implement equals)
 	// Add a line curve if start and end of lines are not connected
-	var startPoint = this.curves[ 0 ].getPoint( 0 );
-	var endPoint = this.curves[ this.curves.length - 1 ].getPoint( 1 );
+	var startPoint = this.curves[0].getPoint(0);
+	var endPoint = this.curves[this.curves.length - 1].getPoint(1);
 
-	if ( ! startPoint.equals( endPoint ) ) {
-
-		this.curves.push( new THREE$LineCurve( endPoint, startPoint ) );
-
+	if (! startPoint.equals(endPoint)) {
+		this.curves.push( new LineCurve(endPoint, startPoint) );
 	}
 
 };
@@ -64,7 +60,7 @@ THREE$CurvePath.prototype.closePath = function() {
 // 3. Get t for the curve
 // 4. Return curve.getPointAt(t')
 
-THREE$CurvePath.prototype.getPoint = function( t ) {
+CurvePath.prototype.getPoint = function( t ) {
 
 	var d = t * this.getLength();
 	var curveLengths = this.getCurveLengths();
@@ -104,7 +100,7 @@ THREE.CurvePath.prototype.getTangent = function( t ) {
 // THREE.Curve, getLength() depends on getPoint() but in THREE.CurvePath
 // getPoint() depends on getLength
 
-THREE$CurvePath.prototype.getLength = function() {
+CurvePath.prototype.getLength = function() {
 
 	var lens = this.getCurveLengths();
 	return lens[ lens.length - 1 ];
@@ -114,7 +110,7 @@ THREE$CurvePath.prototype.getLength = function() {
 // Compute lengths and cache them
 // We cannot overwrite getLengths() because UtoT mapping uses it.
 
-THREE$CurvePath.prototype.getCurveLengths = function() {
+CurvePath.prototype.getCurveLengths = function() {
 
 	// We use cache values if curves and cache array are same length
 
@@ -147,7 +143,7 @@ THREE$CurvePath.prototype.getCurveLengths = function() {
 
 // Returns min and max coordinates
 
-THREE$CurvePath.prototype.getBoundingBox = function () {
+CurvePath.prototype.getBoundingBox = function () {
 
 	var points = this.getPoints();
 
@@ -159,9 +155,9 @@ THREE$CurvePath.prototype.getBoundingBox = function () {
 
 	var p, i, il, sum;
 
-	var v3 = (points[ 0 ] && points[ 0 ].isVector3);
+	var v3 = (points[0] && points[0].isVector3);
 
-	sum = v3 ? new THREE$Vector3() : new THREE$Vector2();
+	sum = v3 ? new Vector3() : new Vector2();
 
 	for ( i = 0, il = points.length; i < il; i ++ ) {
 
@@ -210,7 +206,7 @@ THREE$CurvePath.prototype.getBoundingBox = function () {
 
 /// Generate geometry from path points (for Line or Points objects)
 
-THREE$CurvePath.prototype.createPointsGeometry = function( divisions ) {
+CurvePath.prototype.createPointsGeometry = function( divisions ) {
 
 	var pts = this.getPoints( divisions, true );
 	return this.createGeometry( pts );
@@ -219,20 +215,20 @@ THREE$CurvePath.prototype.createPointsGeometry = function( divisions ) {
 
 // Generate geometry from equidistant sampling along the path
 
-THREE$CurvePath.prototype.createSpacedPointsGeometry = function( divisions ) {
+CurvePath.prototype.createSpacedPointsGeometry = function( divisions ) {
 
 	var pts = this.getSpacedPoints( divisions, true );
 	return this.createGeometry( pts );
 
 };
 
-THREE$CurvePath.prototype.createGeometry = function( points ) {
+CurvePath.prototype.createGeometry = function( points ) {
 
-	var geometry = new THREE$Geometry();
+	var geometry = new Geometry();
 
 	for ( var i = 0; i < points.length; i ++ ) {
 
-		geometry.vertices.push( new THREE$Vector3( points[ i ].x, points[ i ].y, points[ i ].z || 0 ) );
+		geometry.vertices.push( new Vector3( points[ i ].x, points[ i ].y, points[ i ].z || 0) );
 
 	}
 
@@ -247,13 +243,13 @@ THREE$CurvePath.prototype.createGeometry = function( points ) {
 
 // Wrap path / Bend modifiers?
 
-THREE$CurvePath.prototype.addWrapPath = function ( bendpath ) {
+CurvePath.prototype.addWrapPath = function ( bendpath ) {
 
 	this.bends.push( bendpath );
 
 };
 
-THREE$CurvePath.prototype.getTransformedPoints = function( segments, bends ) {
+CurvePath.prototype.getTransformedPoints = function( segments, bends ) {
 
 	var oldPts = this.getPoints( segments ); // getPoints getSpacedPoints
 	var i, il;
@@ -274,7 +270,7 @@ THREE$CurvePath.prototype.getTransformedPoints = function( segments, bends ) {
 
 };
 
-THREE$CurvePath.prototype.getTransformedSpacedPoints = function( segments, bends ) {
+CurvePath.prototype.getTransformedSpacedPoints = function( segments, bends ) {
 
 	var oldPts = this.getSpacedPoints( segments );
 
@@ -299,7 +295,7 @@ THREE$CurvePath.prototype.getTransformedSpacedPoints = function( segments, bends
 // This returns getPoints() bend/wrapped around the contour of a path.
 // Read http://www.planetclegg.com/projects/WarpingTextToSplines.html
 
-THREE$CurvePath.prototype.getWrapPoints = function ( oldPts, path ) {
+CurvePath.prototype.getWrapPoints = function ( oldPts, path ) {
 
 	var bounds = this.getBoundingBox();
 
@@ -335,4 +331,4 @@ THREE$CurvePath.prototype.getWrapPoints = function ( oldPts, path ) {
 };
 
 
-export { THREE$CurvePath };
+export { CurvePath };

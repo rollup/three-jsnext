@@ -1,10 +1,11 @@
-import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
+import { Geometry } from '../../core/Geometry';
+import { PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
  * @author timothypratley / https://github.com/timothypratley
  */
 
-function THREE$TetrahedronGeometry ( radius, detail ) {
+function TetrahedronGeometry ( radius, detail ) {
 	this.isTetrahedronGeometry = true;
 
 	var vertices = [
@@ -15,7 +16,7 @@ function THREE$TetrahedronGeometry ( radius, detail ) {
 		 2,  1,  0,    0,  3,  2,    1,  3,  0,    2,  3,  1
 	];
 
-	THREE$PolyhedronGeometry.call( this, vertices, indices, radius, detail );
+	PolyhedronGeometry.call( this, vertices, indices, radius, detail );
 
 	this.type = 'TetrahedronGeometry';
 
@@ -26,21 +27,8 @@ function THREE$TetrahedronGeometry ( radius, detail ) {
 
 };
 
-THREE$TetrahedronGeometry.prototype = Object.create( THREE$PolyhedronGeometry.prototype );
-THREE$TetrahedronGeometry.prototype.constructor = THREE$TetrahedronGeometry;
-
-THREE$TetrahedronGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$TetrahedronGeometry(
-		this.parameters.radius,
-		this.parameters.detail
-	);
-
-	geometry.copy( this );
-
-	return geometry;
-
-};
+TetrahedronGeometry.prototype = Object.create( Geometry.prototype );
+TetrahedronGeometry.prototype.constructor = TetrahedronGeometry;
 
 
-export { THREE$TetrahedronGeometry };
+export { TetrahedronGeometry };

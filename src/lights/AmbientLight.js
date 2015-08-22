@@ -1,25 +1,35 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Light } from './Light';
+import { Object3D } from '../core/Object3D';
+import { Light } from './Light';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$AmbientLight ( color ) {
+function AmbientLight ( color ) {
 	this.isAmbientLight = true;
 
-	THREE$Light.call( this, color );
+	Light.call( this, color );
 
 	this.type = 'AmbientLight';
 
 };
 
-THREE$AmbientLight.prototype = Object.create( THREE$Light.prototype );
-THREE$AmbientLight.prototype.constructor = THREE$AmbientLight;
+AmbientLight.prototype = Object.create( Light.prototype );
+AmbientLight.prototype.constructor = AmbientLight;
 
-THREE$AmbientLight.prototype.toJSON = function ( meta ) {
+AmbientLight.prototype.clone = function () {
 
-	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+	var light = new AmbientLight();
+
+	Light.prototype.clone.call( this, light );
+
+	return light;
+
+};
+
+AmbientLight.prototype.toJSON = function ( meta ) {
+
+	var data = Object3D.prototype.toJSON.call( this, meta );
 
 	data.object.color = this.color.getHex();
 
@@ -28,4 +38,4 @@ THREE$AmbientLight.prototype.toJSON = function ( meta ) {
 };
 
 
-export { THREE$AmbientLight };
+export { AmbientLight };

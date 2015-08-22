@@ -1,26 +1,26 @@
-import { THREE$Cache } from './Cache';
-import { THREE$DefaultLoadingManager } from './LoadingManager';
+import { Cache } from './Cache';
+import { DefaultLoadingManager } from './LoadingManager';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$ImageLoader ( manager ) {
+function ImageLoader ( manager ) {
 	this.isImageLoader = true;
 
-	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
+	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 
 };
 
-THREE$ImageLoader.prototype = {
+ImageLoader.prototype = {
 
-	constructor: THREE$ImageLoader,
+	constructor: ImageLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var cached = THREE$Cache.get( url );
+		var cached = Cache.get( url );
 
 		if ( cached !== undefined ) {
 
@@ -42,7 +42,7 @@ THREE$ImageLoader.prototype = {
 
 		image.addEventListener( 'load', function ( event ) {
 
-			THREE$Cache.add( url, this );
+			Cache.add( url, this );
 
 			if ( onLoad ) onLoad( this );
 
@@ -89,4 +89,4 @@ THREE$ImageLoader.prototype = {
 };
 
 
-export { THREE$ImageLoader };
+export { ImageLoader };

@@ -1,6 +1,6 @@
-import { THREE$OrthographicCamera } from '../cameras/OrthographicCamera';
-import { THREE$PerspectiveCamera } from '../cameras/PerspectiveCamera';
-import { THREE$Ray } from '../math/Ray';
+import { OrthographicCamera } from '../cameras/OrthographicCamera';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
+import { Ray } from '../math/Ray';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -10,10 +10,10 @@ import { THREE$Ray } from '../math/Ray';
 
 ( function ( THREE ) {
 
-	function THREE$Raycaster ( origin, direction, near, far ) {
+	function Raycaster ( origin, direction, near, far ) {
 	this.isRaycaster = true;
 
-		this.ray = new THREE$Ray( origin, direction );
+		this.ray = new Ray( origin, direction );
 		// direction is assumed to be normalized (for accurate distance calculations)
 
 		this.near = near || 0;
@@ -57,9 +57,9 @@ import { THREE$Ray } from '../math/Ray';
 
 	//
 
-	THREE$Raycaster.prototype = {
+	Raycaster.prototype = {
 
-		constructor: THREE$Raycaster,
+		constructor: Raycaster,
 
 		linePrecision: 1,
 
@@ -131,4 +131,4 @@ import { THREE$Ray } from '../math/Ray';
 }( THREE ) );
 
 
-export { THREE$Raycaster };
+export { Raycaster };

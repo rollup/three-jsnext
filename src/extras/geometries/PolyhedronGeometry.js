@@ -1,8 +1,8 @@
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Vector2 } from '../../math/Vector2';
-import { THREE$Face3 } from '../../core/Face3';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Sphere } from '../../math/Sphere';
+import { Geometry } from '../../core/Geometry';
+import { Vector2 } from '../../math/Vector2';
+import { Face3 } from '../../core/Face3';
+import { Vector3 } from '../../math/Vector3';
+import { Sphere } from '../../math/Sphere';
 
 /**
  * @author clockworkgeek / https://github.com/clockworkgeek
@@ -10,10 +10,10 @@ import { THREE$Sphere } from '../../math/Sphere';
  * @author WestLangley / http://github.com/WestLangley
 */
 
-function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
+function PolyhedronGeometry ( vertices, indices, radius, detail ) {
 	this.isPolyhedronGeometry = true;
 
-	THREE$Geometry.call( this );
+	Geometry.call( this );
 
 	this.type = 'PolyhedronGeometry';
 
@@ -31,7 +31,7 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 	for ( var i = 0, l = vertices.length; i < l; i += 3 ) {
 
-		prepare( new THREE$Vector3( vertices[ i ], vertices[ i + 1 ], vertices[ i + 2 ] ) );
+		prepare( new Vector3( vertices[ i ], vertices[ i + 1 ], vertices[ i + 2 ] ) );
 
 	}
 
@@ -41,15 +41,15 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 	for ( var i = 0, j = 0, l = indices.length; i < l; i += 3, j ++ ) {
 
-		var v1 = p[ indices[ i ] ];
+		var v1 = p[ indices[ i     ] ];
 		var v2 = p[ indices[ i + 1 ] ];
 		var v3 = p[ indices[ i + 2 ] ];
 
-		faces[ j ] = new THREE$Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ], undefined, j );
+		faces[ j ] = new Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ] );
 
 	}
 
-	var centroid = new THREE$Vector3();
+	var centroid = new Vector3();
 
 	for ( var i = 0, l = faces.length; i < l; i ++ ) {
 
@@ -71,9 +71,7 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 		var max = Math.max( x0, Math.max( x1, x2 ) );
 		var min = Math.min( x0, Math.min( x1, x2 ) );
 
-		if ( max > 0.9 && min < 0.1 ) {
-
-			// 0.9 is somewhat arbitrary
+		if ( max > 0.9 && min < 0.1 ) { // 0.9 is somewhat arbitrary
 
 			if ( x0 < 0.2 ) uvs[ 0 ].x += 1;
 			if ( x1 < 0.2 ) uvs[ 1 ].x += 1;
@@ -99,7 +97,7 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 	this.computeFaceNormals();
 
-	this.boundingSphere = new THREE$Sphere( new THREE$Vector3(), radius );
+	this.boundingSphere = new Sphere( new Vector3(), radius );
 
 
 	// Project vector onto sphere's surface
@@ -113,7 +111,7 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 		var u = azimuth( vector ) / 2 / Math.PI + 0.5;
 		var v = inclination( vector ) / Math.PI + 0.5;
-		vertex.uv = new THREE$Vector2( u, 1 - v );
+		vertex.uv = new Vector2( u, 1 - v );
 
 		return vertex;
 
@@ -122,9 +120,9 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 	// Approximate a curved face with recursively sub-divided triangles.
 
-	function make( v1, v2, v3, materialIndex ) {
+	function make( v1, v2, v3 ) {
 
-		var face = new THREE$Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ], undefined, materialIndex );
+		var face = new Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ] );
 		that.faces.push( face );
 
 		centroid.copy( v1 ).add( v2 ).add( v3 ).divideScalar( 3 );
@@ -144,13 +142,11 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 	function subdivide( face, detail ) {
 
-		var cols = Math.pow( 2, detail );
+		var cols = Math.pow(2, detail);
 		var a = prepare( that.vertices[ face.a ] );
 		var b = prepare( that.vertices[ face.b ] );
 		var c = prepare( that.vertices[ face.c ] );
 		var v = [];
-
-		var materialIndex = face.materialIndex;
 
 		// Construct all of the vertices for this subdivision.
 
@@ -162,7 +158,7 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 			var bj = prepare( b.clone().lerp( c, i / cols ) );
 			var rows = cols - i;
 
-			for ( var j = 0; j <= rows; j ++ ) {
+			for ( var j = 0; j <= rows; j ++) {
 
 				if ( j === 0 && i === cols ) {
 
@@ -182,26 +178,24 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 		for ( var i = 0; i < cols ; i ++ ) {
 
-			for ( var j = 0; j < 2 * ( cols - i ) - 1; j ++ ) {
+			for ( var j = 0; j < 2 * (cols - i) - 1; j ++ ) {
 
 				var k = Math.floor( j / 2 );
 
 				if ( j % 2 === 0 ) {
 
 					make(
-						v[ i ][ k + 1 ],
+						v[ i ][ k + 1],
 						v[ i + 1 ][ k ],
-						v[ i ][ k ],
-						materialIndex
+						v[ i ][ k ]
 					);
 
 				} else {
 
 					make(
 						v[ i ][ k + 1 ],
-						v[ i + 1 ][ k + 1 ],
-						v[ i + 1 ][ k ],
-						materialIndex
+						v[ i + 1][ k + 1],
+						v[ i + 1 ][ k ]
 					);
 
 				}
@@ -235,8 +229,8 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 	function correctUV( uv, vector, azimuth ) {
 
-		if ( ( azimuth < 0 ) && ( uv.x === 1 ) ) uv = new THREE$Vector2( uv.x - 1, uv.y );
-		if ( ( vector.x === 0 ) && ( vector.z === 0 ) ) uv = new THREE$Vector2( azimuth / 2 / Math.PI + 0.5, uv.y );
+		if ( ( azimuth < 0 ) && ( uv.x === 1 ) ) uv = new Vector2( uv.x - 1, uv.y );
+		if ( ( vector.x === 0 ) && ( vector.z === 0 ) ) uv = new Vector2( azimuth / 2 / Math.PI + 0.5, uv.y );
 		return uv.clone();
 
 	}
@@ -244,28 +238,8 @@ function THREE$PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 };
 
-THREE$PolyhedronGeometry.prototype = Object.create( THREE$Geometry.prototype );
-THREE$PolyhedronGeometry.prototype.constructor = THREE$PolyhedronGeometry;
-
-THREE$PolyhedronGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$PolyhedronGeometry(
-		this.parameters.vertices,
-		this.parameters.indices,
-		this.parameters.radius,
-		this.parameters.detail
-	);
-
-	return geometry.copy( this );
-
-};
-
-THREE$PolyhedronGeometry.prototype.copy = function ( source ) {
-
-	THREE$Geometry.prototype.copy.call( this, source );
-	return this;
-
-};
+PolyhedronGeometry.prototype = Object.create( Geometry.prototype );
+PolyhedronGeometry.prototype.constructor = PolyhedronGeometry;
 
 
-export { THREE$PolyhedronGeometry };
+export { PolyhedronGeometry };

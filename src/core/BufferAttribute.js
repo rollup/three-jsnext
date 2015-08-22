@@ -1,28 +1,28 @@
-import { THREE$Vector4 } from '../math/Vector4';
-import { THREE$Vector3 } from '../math/Vector3';
-import { THREE$Vector2 } from '../math/Vector2';
-import { THREE$Color } from '../math/Color';
-import { THREE$Math } from '../math/Math';
+import { Vector4 } from '../math/Vector4';
+import { Vector3 } from '../math/Vector3';
+import { Vector2 } from '../math/Vector2';
+import { Color } from '../math/Color';
+import { _Math } from '../math/Math';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$BufferAttribute ( array, itemSize ) {
+function BufferAttribute ( array, itemSize ) {
 	this.isBufferAttribute = true;
 
-	this.uuid = THREE$Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.array = array;
 	this.itemSize = itemSize;
 
-	this.version = 0;
+	this.needsUpdate = false;
 
 };
 
-THREE$BufferAttribute.prototype = {
+BufferAttribute.prototype = {
 
-	constructor: THREE$BufferAttribute,
+	constructor: BufferAttribute,
 
 	get length () {
 
@@ -34,12 +34,6 @@ THREE$BufferAttribute.prototype = {
 	get count() {
 
 		return this.array.length / this.itemSize;
-
-	},
-
-	set needsUpdate( value ) {
-
-		if ( value === true ) this.version ++;
 
 	},
 
@@ -77,7 +71,7 @@ THREE$BufferAttribute.prototype = {
 			if ( color === undefined ) {
 
 				console.warn( 'THREE.BufferAttribute.copyColorsArray(): color is undefined', i );
-				color = new THREE$Color();
+				color = new Color();
 
 			}
 
@@ -120,7 +114,7 @@ THREE$BufferAttribute.prototype = {
 			if ( vector === undefined ) {
 
 				console.warn( 'THREE.BufferAttribute.copyVector2sArray(): vector is undefined', i );
-				vector = new THREE$Vector2();
+				vector = new Vector2();
 
 			}
 
@@ -144,7 +138,7 @@ THREE$BufferAttribute.prototype = {
 			if ( vector === undefined ) {
 
 				console.warn( 'THREE.BufferAttribute.copyVector3sArray(): vector is undefined', i );
-				vector = new THREE$Vector3();
+				vector = new Vector3();
 
 			}
 
@@ -169,7 +163,7 @@ THREE$BufferAttribute.prototype = {
 			if ( vector === undefined ) {
 
 				console.warn( 'THREE.BufferAttribute.copyVector4sArray(): vector is undefined', i );
-				vector = new THREE$Vector4();
+				vector = new Vector4();
 
 			}
 
@@ -288,7 +282,7 @@ THREE$BufferAttribute.prototype = {
 
 	clone: function () {
 
-		return new this.constructor( new this.array.constructor( this.array ), this.itemSize );
+		return new BufferAttribute( new this.array.constructor( this.array ), this.itemSize );
 
 	}
 
@@ -296,79 +290,79 @@ THREE$BufferAttribute.prototype = {
 
 //
 
-function THREE$Int8Attribute ( array, itemSize ) {
+function Int8Attribute ( array, itemSize ) {
 	this.isInt8Attribute = true;
 
-	return new THREE$BufferAttribute( new Int8Array( array ), itemSize );
+	return new BufferAttribute( new Int8Array( array ), itemSize );
 
 };
 
-function THREE$Uint8Attribute ( array, itemSize ) {
+function Uint8Attribute ( array, itemSize ) {
 	this.isUint8Attribute = true;
 
-	return new THREE$BufferAttribute( new Uint8Array( array ), itemSize );
+	return new BufferAttribute( new Uint8Array( array ), itemSize );
 
 };
 
-function THREE$Uint8ClampedAttribute ( array, itemSize ) {
+function Uint8ClampedAttribute ( array, itemSize ) {
 	this.isUint8ClampedAttribute = true;
 
-	return new THREE$BufferAttribute( new Uint8ClampedArray( array ), itemSize );
+	return new BufferAttribute( new Uint8ClampedArray( array ), itemSize );
 
 };
 
-function THREE$Int16Attribute ( array, itemSize ) {
+function Int16Attribute ( array, itemSize ) {
 	this.isInt16Attribute = true;
 
-	return new THREE$BufferAttribute( new Int16Array( array ), itemSize );
+	return new BufferAttribute( new Int16Array( array ), itemSize );
 
 };
 
-function THREE$Uint16Attribute ( array, itemSize ) {
+function Uint16Attribute ( array, itemSize ) {
 	this.isUint16Attribute = true;
 
-	return new THREE$BufferAttribute( new Uint16Array( array ), itemSize );
+	return new BufferAttribute( new Uint16Array( array ), itemSize );
 
 };
 
-function THREE$Int32Attribute ( array, itemSize ) {
+function Int32Attribute ( array, itemSize ) {
 	this.isInt32Attribute = true;
 
-	return new THREE$BufferAttribute( new Int32Array( array ), itemSize );
+	return new BufferAttribute( new Int32Array( array ), itemSize );
 
 };
 
-function THREE$Uint32Attribute ( array, itemSize ) {
+function Uint32Attribute ( array, itemSize ) {
 	this.isUint32Attribute = true;
 
-	return new THREE$BufferAttribute( new Uint32Array( array ), itemSize );
+	return new BufferAttribute( new Uint32Array( array ), itemSize );
 
 };
 
-function THREE$Float32Attribute ( array, itemSize ) {
+function Float32Attribute ( array, itemSize ) {
 	this.isFloat32Attribute = true;
 
-	return new THREE$BufferAttribute( new Float32Array( array ), itemSize );
+	return new BufferAttribute( new Float32Array( array ), itemSize );
 
 };
 
-function THREE$Float64Attribute ( array, itemSize ) {
+function Float64Attribute ( array, itemSize ) {
 	this.isFloat64Attribute = true;
 
-	return new THREE$BufferAttribute( new Float64Array( array ), itemSize );
+	return new BufferAttribute( new Float64Array( array ), itemSize );
 
 };
 
 
 export {
-  THREE$Float64Attribute,
-  THREE$Float32Attribute,
-  THREE$Uint32Attribute,
-  THREE$Int32Attribute,
-  THREE$Uint16Attribute,
-  THREE$Int16Attribute,
-  THREE$Uint8ClampedAttribute,
-  THREE$Uint8Attribute,
-  THREE$Int8Attribute,
-  THREE$BufferAttribute
+  Float64Attribute,
+  Float32Attribute,
+  Uint32Attribute,
+  Int32Attribute,
+  Uint16Attribute,
+  Int16Attribute,
+  Uint8ClampedAttribute,
+  Uint8Attribute,
+  Int8Attribute,
+  BufferAttribute
 };

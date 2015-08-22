@@ -1,16 +1,16 @@
-import { THREE$BufferGeometry } from '../../core/BufferGeometry';
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$LineSegments } from '../../objects/LineSegments';
-import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { THREE$Float32Attribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
+import { Geometry } from '../../core/Geometry';
+import { Vector3 } from '../../math/Vector3';
+import { LineSegments } from '../../objects/LineSegments';
+import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
+import { Float32Attribute } from '../../core/BufferAttribute';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
 */
 
-function THREE$VertexTangentsHelper ( object, size, hex, linewidth ) {
+function VertexTangentsHelper ( object, size, hex, linewidth ) {
 	this.isVertexTangentsHelper = true;
 
 	this.object = object;
@@ -39,13 +39,13 @@ function THREE$VertexTangentsHelper ( object, size, hex, linewidth ) {
 
 	//
 
-	var geometry = new THREE$BufferGeometry();
+	var geometry = new BufferGeometry();
 
-	var positions = new THREE$Float32Attribute( nTangents * 2 * 3, 3 );
+	var positions = new Float32Attribute( nTangents * 2 * 3, 3 );
 
 	geometry.addAttribute( 'position', positions );
 
-	THREE$LineSegments.call( this, geometry, new THREE$LineBasicMaterial( { color: color, linewidth: width } ) );
+	LineSegments.call( this, geometry, new LineBasicMaterial( { color: color, linewidth: width } ) );
 
 	//
 
@@ -55,13 +55,13 @@ function THREE$VertexTangentsHelper ( object, size, hex, linewidth ) {
 
 };
 
-THREE$VertexTangentsHelper.prototype = Object.create( THREE$LineSegments.prototype );
-THREE$VertexTangentsHelper.prototype.constructor = THREE$VertexTangentsHelper;
+VertexTangentsHelper.prototype = Object.create( LineSegments.prototype );
+VertexTangentsHelper.prototype.constructor = VertexTangentsHelper;
 
-THREE$VertexTangentsHelper.prototype.update = ( function ( object ) {
+VertexTangentsHelper.prototype.update = ( function ( object ) {
 
-	var v1 = new THREE$Vector3();
-	var v2 = new THREE$Vector3();
+	var v1 = new Vector3();
+	var v2 = new Vector3();
 
 	return function() {
 
@@ -149,7 +149,7 @@ THREE$VertexTangentsHelper.prototype.update = ( function ( object ) {
 
 	}
 
-}() );
+}());
 
 
-export { THREE$VertexTangentsHelper };
+export { VertexTangentsHelper };

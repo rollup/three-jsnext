@@ -1,33 +1,35 @@
-import { THREE$Texture } from './Texture';
-import { THREE$CubeReflectionMapping } from '../Three';
+import { Texture } from './Texture';
+import { CubeReflectionMapping } from '../Three';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+function CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 	this.isCubeTexture = true;
 
-	mapping = mapping !== undefined ? mapping : THREE$CubeReflectionMapping;
-
-	THREE$Texture.call( this, images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
+	mapping = mapping !== undefined ? mapping : CubeReflectionMapping;
+	
+	Texture.call( this, images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 
 	this.images = images;
-	this.flipY = false;
 
 };
 
-THREE$CubeTexture.prototype = Object.create( THREE$Texture.prototype );
-THREE$CubeTexture.prototype.constructor = THREE$CubeTexture;
+CubeTexture.prototype = Object.create( Texture.prototype );
+CubeTexture.prototype.constructor = CubeTexture;
 
-THREE$CubeTexture.prototype.copy = function ( source ) {
+CubeTexture.clone = function ( texture ) {
 
-	THREE$Texture.prototype.copy.call( this, source );
-	
-	this.images = source.images;
-	
-	return this;
+	if ( texture === undefined ) texture = new CubeTexture();
+
+	Texture.prototype.clone.call( this, texture );
+
+	texture.images = this.images;
+
+	return texture;
 
 };
 
-export { THREE$CubeTexture };
+
+export { CubeTexture };

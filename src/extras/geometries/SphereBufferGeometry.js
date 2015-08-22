@@ -1,18 +1,17 @@
-import { THREE$BufferGeometry } from '../../core/BufferGeometry';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Sphere } from '../../math/Sphere';
-import { THREE$IndexBufferAttribute } from '../../core/IndexBufferAttribute';
-import { THREE$BufferAttribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
+import { Vector3 } from '../../math/Vector3';
+import { Sphere } from '../../math/Sphere';
+import { BufferAttribute } from '../../core/BufferAttribute';
 
 /**
  * @author benaadams / https://twitter.com/ben_a_adams
  * based on THREE.SphereGeometry
  */
 
-function THREE$SphereBufferGeometry ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
+function SphereBufferGeometry ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
 	this.isSphereBufferGeometry = true;
 
-	THREE$BufferGeometry.call( this );
+	BufferGeometry.call( this );
 
 	this.type = 'SphereBufferGeometry';
 
@@ -41,11 +40,11 @@ function THREE$SphereBufferGeometry ( radius, widthSegments, heightSegments, phi
 
 	var vertexCount = ( ( widthSegments + 1 ) * ( heightSegments + 1 ) );
 
-	var positions = new THREE$BufferAttribute( new Float32Array( vertexCount * 3 ), 3 );
-	var normals = new THREE$BufferAttribute( new Float32Array( vertexCount * 3 ), 3 );
-	var uvs = new THREE$BufferAttribute( new Float32Array( vertexCount * 2 ), 2 );
+	var positions = new BufferAttribute( new Float32Array( vertexCount * 3 ), 3 );
+	var normals = new BufferAttribute( new Float32Array( vertexCount * 3 ), 3 );
+	var uvs = new BufferAttribute( new Float32Array( vertexCount * 2 ), 2 );
 
-	var index = 0, vertices = [], normal = new THREE$Vector3();
+	var index = 0, vertices = [], normal = new Vector3();
 
 	for ( var y = 0; y <= heightSegments; y ++ ) {
 
@@ -95,35 +94,17 @@ function THREE$SphereBufferGeometry ( radius, widthSegments, heightSegments, phi
 
 	}
 
-	this.addAttribute( 'index', new THREE$IndexBufferAttribute( new Uint16Array( indices ), 1 ) );
+	this.addAttribute( 'index', new BufferAttribute( new Uint16Array( indices ), 1 ) );
 	this.addAttribute( 'position', positions );
 	this.addAttribute( 'normal', normals );
 	this.addAttribute( 'uv', uvs );
 
-	this.boundingSphere = new THREE$Sphere( new THREE$Vector3(), radius );
+	this.boundingSphere = new Sphere( new Vector3(), radius );
 
 };
 
-THREE$SphereBufferGeometry.prototype = Object.create( THREE$BufferGeometry.prototype );
-THREE$SphereBufferGeometry.prototype.constructor = THREE$SphereBufferGeometry;
-
-THREE$SphereBufferGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$SphereBufferGeometry(
-		this.parameters.radius,
-		this.parameters.widthSegments,
-		this.parameters.heightSegments,
-		this.parameters.phiStart,
-		this.parameters.phiLength,
-		this.parameters.thetaStart,
-		this.parameters.thetaLength
-	);
-
-	geometry.copy( this );
-
-	return geometry;
-
-};
+SphereBufferGeometry.prototype = Object.create( BufferGeometry.prototype );
+SphereBufferGeometry.prototype.constructor = SphereBufferGeometry;
 
 
-export { THREE$SphereBufferGeometry };
+export { SphereBufferGeometry };

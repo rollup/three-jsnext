@@ -1,4 +1,4 @@
-import { THREE$AnimationHandler } from './AnimationHandler';
+import { AnimationHandler } from './AnimationHandler';
 
 /**
  * @author mikael emtinger / http://gomo.se/
@@ -8,12 +8,12 @@ import { THREE$AnimationHandler } from './AnimationHandler';
  * @author erik kitson
  */
 
-function THREE$KeyFrameAnimation ( data ) {
+function KeyFrameAnimation ( data ) {
 	this.isKeyFrameAnimation = true;
 
 	this.root = data.node;
-	this.data = THREE$AnimationHandler.init( data );
-	this.hierarchy = THREE$AnimationHandler.parse( this.root );
+	this.data = AnimationHandler.init( data );
+	this.hierarchy = AnimationHandler.parse( this.root );
 	this.currentTime = 0;
 	this.timeScale = 0.001;
 	this.isPlaying = false;
@@ -24,9 +24,9 @@ function THREE$KeyFrameAnimation ( data ) {
 
 	for ( var h = 0, hl = this.hierarchy.length; h < hl; h ++ ) {
 
-		var keys = this.data.hierarchy[ h ].keys,
-			sids = this.data.hierarchy[ h ].sids,
-			obj = this.hierarchy[ h ];
+		var keys = this.data.hierarchy[h].keys,
+			sids = this.data.hierarchy[h].sids,
+			obj = this.hierarchy[h];
 
 		if ( keys.length && sids ) {
 
@@ -44,7 +44,7 @@ function THREE$KeyFrameAnimation ( data ) {
 			}
 
 			obj.matrixAutoUpdate = false;
-			this.data.hierarchy[ h ].node.updateMatrix();
+			this.data.hierarchy[h].node.updateMatrix();
 			obj.matrixWorldNeedsUpdate = true;
 
 		}
@@ -53,9 +53,9 @@ function THREE$KeyFrameAnimation ( data ) {
 
 };
 
-THREE$KeyFrameAnimation.prototype = {
+KeyFrameAnimation.prototype = {
 
-	constructor: THREE$KeyFrameAnimation,
+	constructor: KeyFrameAnimation,
 
 	play: function ( startTime ) {
 
@@ -85,15 +85,15 @@ THREE$KeyFrameAnimation.prototype = {
 
 				}
 
-				var keys = this.data.hierarchy[ h ].keys;
+				var keys = this.data.hierarchy[h].keys;
 
-				if ( keys.length ) {
+				if (keys.length) {
 
 					node.animationCache.prevKey = keys[ 0 ];
 					node.animationCache.nextKey = keys[ 1 ];
 
-					this.startTime = Math.min( keys[ 0 ].time, this.startTime );
-					this.endTime = Math.max( keys[ keys.length - 1 ].time, this.endTime );
+					this.startTime = Math.min( keys[0].time, this.startTime );
+					this.endTime = Math.max( keys[keys.length - 1].time, this.endTime );
 
 				}
 
@@ -105,7 +105,7 @@ THREE$KeyFrameAnimation.prototype = {
 
 		this.isPaused = false;
 
-		THREE$AnimationHandler.play( this );
+		AnimationHandler.play( this );
 
 	},
 
@@ -114,7 +114,7 @@ THREE$KeyFrameAnimation.prototype = {
 		this.isPlaying = false;
 		this.isPaused  = false;
 
-		THREE$AnimationHandler.stop( this );
+		AnimationHandler.stop( this );
 
 		// reset JIT matrix and remove cache
 
@@ -244,4 +244,4 @@ THREE$KeyFrameAnimation.prototype = {
 };
 
 
-export { THREE$KeyFrameAnimation };
+export { KeyFrameAnimation };

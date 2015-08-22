@@ -1,16 +1,15 @@
-import { THREE$EventDispatcher } from './EventDispatcher';
-import { THREE$Mesh } from '../objects/Mesh';
-import { THREE$Face3 } from './Face3';
-import { THREE$Matrix3 } from '../math/Matrix3';
-import { THREE$Sphere } from '../math/Sphere';
-import { THREE$Box3 } from '../math/Box3';
-import { THREE$Vector4 } from '../math/Vector4';
-import { THREE$Vector3 } from '../math/Vector3';
-import { THREE$Matrix4 } from '../math/Matrix4';
-import { THREE$Vector2 } from '../math/Vector2';
-import { THREE$Color } from '../math/Color';
-import { THREE$Object3D } from './Object3D';
-import { THREE$Math } from '../math/Math';
+import { EventDispatcher } from './EventDispatcher';
+import { Mesh } from '../objects/Mesh';
+import { Face3 } from './Face3';
+import { Matrix3 } from '../math/Matrix3';
+import { Sphere } from '../math/Sphere';
+import { Box3 } from '../math/Box3';
+import { Vector4 } from '../math/Vector4';
+import { Vector3 } from '../math/Vector3';
+import { Matrix4 } from '../math/Matrix4';
+import { Vector2 } from '../math/Vector2';
+import { Color } from '../math/Color';
+import { _Math } from '../math/Math';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -21,12 +20,12 @@ import { THREE$Math } from '../math/Math';
  * @author bhouston / http://exocortex.com
  */
 
-function THREE$Geometry () {
+function Geometry () {
 	this.isGeometry = true;
 
-	Object.defineProperty( this, 'id', { value: THREE$GeometryIdCount() } );
+	Object.defineProperty( this, 'id', { value: GeometryIdCount() } );
 
-	this.uuid = THREE$Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.name = '';
 	this.type = 'Geometry';
@@ -62,13 +61,13 @@ function THREE$Geometry () {
 
 };
 
-THREE$Geometry.prototype = {
+Geometry.prototype = {
 
-	constructor: THREE$Geometry,
+	constructor: Geometry,
 
 	applyMatrix: function ( matrix ) {
 
-		var normalMatrix = new THREE$Matrix3().getNormalMatrix( matrix );
+		var normalMatrix = new Matrix3().getNormalMatrix( matrix );
 
 		for ( var i = 0, il = this.vertices.length; i < il; i ++ ) {
 
@@ -107,124 +106,6 @@ THREE$Geometry.prototype = {
 
 	},
 
-	rotateX: function () {
-
-		// rotate geometry around world x-axis
-
-		var m1;
-
-		return function rotateX( angle ) {
-
-			if ( m1 === undefined ) m1 = new THREE$Matrix4();
-
-			m1.makeRotationX( angle );
-
-			this.applyMatrix( m1 );
-
-			return this;
-
-		};
-
-	}(),
-
-	rotateY: function () {
-
-		// rotate geometry around world y-axis
-
-		var m1;
-
-		return function rotateY( angle ) {
-
-			if ( m1 === undefined ) m1 = new THREE$Matrix4();
-
-			m1.makeRotationY( angle );
-
-			this.applyMatrix( m1 );
-
-			return this;
-
-		};
-
-	}(),
-
-	rotateZ: function () {
-
-		// rotate geometry around world z-axis
-
-		var m1;
-
-		return function rotateZ( angle ) {
-
-			if ( m1 === undefined ) m1 = new THREE$Matrix4();
-
-			m1.makeRotationZ( angle );
-
-			this.applyMatrix( m1 );
-
-			return this;
-
-		};
-
-	}(),
-
-	translate: function () {
-
-		// translate geometry
-
-		var m1;
-
-		return function translate( x, y, z ) {
-
-			if ( m1 === undefined ) m1 = new THREE$Matrix4();
-
-			m1.makeTranslation( x, y, z );
-
-			this.applyMatrix( m1 );
-
-			return this;
-
-		};
-
-	}(),
-
-	scale: function () {
-
-		// scale geometry
-
-		var m1;
-
-		return function scale( x, y, z ) {
-
-			if ( m1 === undefined ) m1 = new THREE$Matrix4();
-
-			m1.makeScale( x, y, z );
-
-			this.applyMatrix( m1 );
-
-			return this;
-
-		};
-
-	}(),
-
-	lookAt: function () {
-
-		var obj;
-
-		return function lookAt( vector ) {
-
-			if ( obj === undefined ) obj = new THREE$Object3D();
-
-			obj.lookAt( vector );
-
-			obj.updateMatrix();
-
-			this.applyMatrix( obj.matrix );
-
-		};
-
-	}(),
-
 	fromBufferGeometry: function ( geometry ) {
 
 		var scope = this;
@@ -249,35 +130,35 @@ THREE$Geometry.prototype = {
 
 		for ( var i = 0, j = 0, k = 0; i < vertices.length; i += 3, j += 2, k += 4 ) {
 
-			scope.vertices.push( new THREE$Vector3( vertices[ i ], vertices[ i + 1 ], vertices[ i + 2 ] ) );
+			scope.vertices.push( new Vector3( vertices[ i ], vertices[ i + 1 ], vertices[ i + 2 ] ) );
 
 			if ( normals !== undefined ) {
 
-				tempNormals.push( new THREE$Vector3( normals[ i ], normals[ i + 1 ], normals[ i + 2 ] ) );
+				tempNormals.push( new Vector3( normals[ i ], normals[ i + 1 ], normals[ i + 2 ] ) );
 
 			}
 
 			if ( colors !== undefined ) {
 
-				scope.colors.push( new THREE$Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) );
+				scope.colors.push( new Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) );
 
 			}
 
 			if ( uvs !== undefined ) {
 
-				tempUVs.push( new THREE$Vector2( uvs[ j ], uvs[ j + 1 ] ) );
+				tempUVs.push( new Vector2( uvs[ j ], uvs[ j + 1 ] ) );
 
 			}
 
 			if ( uvs2 !== undefined ) {
 
-				tempUVs2.push( new THREE$Vector2( uvs2[ j ], uvs2[ j + 1 ] ) );
+				tempUVs2.push( new Vector2( uvs2[ j ], uvs2[ j + 1 ] ) );
 
 			}
 
 			if ( tangents !== undefined ) {
 
-				tempTangents.push( new THREE$Vector4( tangents[ k ], tangents[ k + 1 ], tangents[ k + 2 ], tangents[ k + 3 ] ) );
+				tempTangents.push( new Vector4( tangents[ k ], tangents[ k + 1 ], tangents[ k + 2 ], tangents[ k + 3 ] ) );
 
 			}
 
@@ -288,7 +169,7 @@ THREE$Geometry.prototype = {
 			var vertexNormals = normals !== undefined ? [ tempNormals[ a ].clone(), tempNormals[ b ].clone(), tempNormals[ c ].clone() ] : [];
 			var vertexColors = colors !== undefined ? [ scope.colors[ a ].clone(), scope.colors[ b ].clone(), scope.colors[ c ].clone() ] : [];
 
-			var face = new THREE$Face3( a, b, c, vertexNormals, vertexColors );
+			var face = new Face3( a, b, c, vertexNormals, vertexColors );
 
 			scope.faces.push( face );
 
@@ -314,20 +195,21 @@ THREE$Geometry.prototype = {
 
 		if ( indices !== undefined ) {
 
-			var groups = geometry.groups;
+			var drawcalls = geometry.drawcalls;
 
-			if ( groups.length > 0 ) {
+			if ( drawcalls.length > 0 ) {
 
-				for ( var i = 0; i < groups.length; i ++ ) {
+				for ( var i = 0; i < drawcalls.length; i ++ ) {
 
-					var group = groups[ i ];
+					var drawcall = drawcalls[ i ];
 
-					var start = group.start;
-					var count = group.count;
+					var start = drawcall.start;
+					var count = drawcall.count;
+					var index = drawcall.index;
 
 					for ( var j = start, jl = start + count; j < jl; j += 3 ) {
 
-						addFace( indices[ j ], indices[ j + 1 ], indices[ j + 2 ] );
+						addFace( index + indices[ j ], index + indices[ j + 1 ], index + indices[ j + 2 ] );
 
 					}
 
@@ -377,7 +259,7 @@ THREE$Geometry.prototype = {
 
 		var offset = this.boundingBox.center().negate();
 
-		this.translate( offset.x, offset.y, offset.z );
+		this.applyMatrix( new Matrix4().setPosition( offset ) );
 
 		return offset;
 
@@ -392,23 +274,22 @@ THREE$Geometry.prototype = {
 
 		var s = radius === 0 ? 1 : 1.0 / radius;
 
-		var matrix = new THREE$Matrix4();
+		var matrix = new Matrix4();
 		matrix.set(
-			s, 0, 0, - s * center.x,
-			0, s, 0, - s * center.y,
-			0, 0, s, - s * center.z,
+			s, 0, 0, -s * center.x,
+			0, s, 0, -s * center.y,
+			0, 0, s, -s * center.z,
 			0, 0, 0, 1
 		);
 
 		this.applyMatrix( matrix );
 
 		return this;
-
 	},
 
 	computeFaceNormals: function () {
 
-		var cb = new THREE$Vector3(), ab = new THREE$Vector3();
+		var cb = new Vector3(), ab = new Vector3();
 
 		for ( var f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -438,7 +319,7 @@ THREE$Geometry.prototype = {
 
 		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
 
-			vertices[ v ] = new THREE$Vector3();
+			vertices[ v ] = new Vector3();
 
 		}
 
@@ -448,7 +329,7 @@ THREE$Geometry.prototype = {
 			// http://www.iquilezles.org/www/articles/normals/normals.htm
 
 			var vA, vB, vC;
-			var cb = new THREE$Vector3(), ab = new THREE$Vector3();
+			var cb = new Vector3(), ab = new Vector3();
 
 			for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
@@ -554,7 +435,7 @@ THREE$Geometry.prototype = {
 
 		// use temp geometry to compute face and vertex normals for each morph
 
-		var tmpGeo = new THREE$Geometry();
+		var tmpGeo = new Geometry();
 		tmpGeo.faces = this.faces;
 
 		for ( i = 0, il = this.morphTargets.length; i < il; i ++ ) {
@@ -574,8 +455,8 @@ THREE$Geometry.prototype = {
 
 				for ( f = 0, fl = this.faces.length; f < fl; f ++ ) {
 
-					faceNormal = new THREE$Vector3();
-					vertexNormals = { a: new THREE$Vector3(), b: new THREE$Vector3(), c: new THREE$Vector3() };
+					faceNormal = new Vector3();
+					vertexNormals = { a: new Vector3(), b: new Vector3(), c: new Vector3() };
 
 					dstNormalsFace.push( faceNormal );
 					dstNormalsVertex.push( vertexNormals );
@@ -639,14 +520,14 @@ THREE$Geometry.prototype = {
 			x1, x2, y1, y2, z1, z2,
 			s1, s2, t1, t2, r, t, test,
 			tan1 = [], tan2 = [],
-			sdir = new THREE$Vector3(), tdir = new THREE$Vector3(),
-			tmp = new THREE$Vector3(), tmp2 = new THREE$Vector3(),
-			n = new THREE$Vector3(), w;
+			sdir = new Vector3(), tdir = new Vector3(),
+			tmp = new Vector3(), tmp2 = new Vector3(),
+			n = new Vector3(), w;
 
 		for ( v = 0, vl = this.vertices.length; v < vl; v ++ ) {
 
-			tan1[ v ] = new THREE$Vector3();
-			tan2[ v ] = new THREE$Vector3();
+			tan1[ v ] = new Vector3();
+			tan2[ v ] = new Vector3();
 
 		}
 
@@ -724,7 +605,7 @@ THREE$Geometry.prototype = {
 				test = tmp2.dot( tan2[ vertexIndex ] );
 				w = ( test < 0.0 ) ? - 1.0 : 1.0;
 
-				face.vertexTangents[ i ] = new THREE$Vector4( tmp.x, tmp.y, tmp.z, w );
+				face.vertexTangents[ i ] = new Vector4( tmp.x, tmp.y, tmp.z, w );
 
 			}
 
@@ -757,7 +638,7 @@ THREE$Geometry.prototype = {
 
 		if ( this.boundingBox === null ) {
 
-			this.boundingBox = new THREE$Box3();
+			this.boundingBox = new Box3();
 
 		}
 
@@ -769,7 +650,7 @@ THREE$Geometry.prototype = {
 
 		if ( this.boundingSphere === null ) {
 
-			this.boundingSphere = new THREE$Sphere();
+			this.boundingSphere = new Sphere();
 
 		}
 
@@ -777,7 +658,7 @@ THREE$Geometry.prototype = {
 
 	},
 
-	merge: function ( geometry, matrix, materialIndexOffset ) {
+	merge: function ( geometry, matrix ) {
 
 		if ( (geometry && geometry.isGeometry) === false ) {
 
@@ -795,11 +676,9 @@ THREE$Geometry.prototype = {
 		uvs1 = this.faceVertexUvs[ 0 ],
 		uvs2 = geometry.faceVertexUvs[ 0 ];
 
-		if ( materialIndexOffset === undefined ) materialIndexOffset = 0;
-
 		if ( matrix !== undefined ) {
 
-			normalMatrix = new THREE$Matrix3().getNormalMatrix( matrix );
+			normalMatrix = new Matrix3().getNormalMatrix( matrix );
 
 		}
 
@@ -825,7 +704,7 @@ THREE$Geometry.prototype = {
 			faceVertexNormals = face.vertexNormals,
 			faceVertexColors = face.vertexColors;
 
-			faceCopy = new THREE$Face3( face.a + vertexOffset, face.b + vertexOffset, face.c + vertexOffset );
+			faceCopy = new Face3( face.a + vertexOffset, face.b + vertexOffset, face.c + vertexOffset );
 			faceCopy.normal.copy( face.normal );
 
 			if ( normalMatrix !== undefined ) {
@@ -856,8 +735,6 @@ THREE$Geometry.prototype = {
 				faceCopy.vertexColors.push( color.clone() );
 
 			}
-
-			faceCopy.materialIndex = face.materialIndex + materialIndexOffset;
 
 			faces1.push( faceCopy );
 
@@ -959,7 +836,6 @@ THREE$Geometry.prototype = {
 			// if any duplicate vertices are found in a Face3
 			// we have to remove the face as nothing can be saved
 			for ( var n = 0; n < 3; n ++ ) {
-
 				if ( indices[ n ] === indices[ ( n + 1 ) % 3 ] ) {
 
 					dupIndex = n;
@@ -967,13 +843,11 @@ THREE$Geometry.prototype = {
 					break;
 
 				}
-
 			}
 
 		}
 
 		for ( i = faceIndicesToRemove.length - 1; i >= 0; i -- ) {
-
 			var idx = faceIndicesToRemove[ i ];
 
 			this.faces.splice( idx, 1 );
@@ -1119,7 +993,7 @@ THREE$Geometry.prototype = {
 
 		function setBit( value, position, enabled ) {
 
-			return enabled ? value | ( 1 << position ) : value & ( ~ ( 1 << position ) );
+			return enabled ? value | ( 1 << position ) : value & ( ~ ( 1 << position) );
 
 		}
 
@@ -1188,39 +1062,31 @@ THREE$Geometry.prototype = {
 
 	clone: function () {
 
-		return new this.constructor().copy( this );
+		var geometry = new Geometry();
 
-	},
-
-	copy: function ( source ) {
-
-		this.vertices = [];
-		this.faces = [];
-		this.faceVertexUvs = [ [] ];
-
-		var vertices = source.vertices;
+		var vertices = this.vertices;
 
 		for ( var i = 0, il = vertices.length; i < il; i ++ ) {
 
-			this.vertices.push( vertices[ i ].clone() );
+			geometry.vertices.push( vertices[ i ].clone() );
 
 		}
 
-		var faces = source.faces;
+		var faces = this.faces;
 
 		for ( var i = 0, il = faces.length; i < il; i ++ ) {
 
-			this.faces.push( faces[ i ].clone() );
+			geometry.faces.push( faces[ i ].clone() );
 
 		}
 
-		for ( var i = 0, il = source.faceVertexUvs.length; i < il; i ++ ) {
+		for ( var i = 0, il = this.faceVertexUvs.length; i < il; i ++ ) {
 
-			var faceVertexUvs = source.faceVertexUvs[ i ];
+			var faceVertexUvs = this.faceVertexUvs[ i ];
 
-			if ( this.faceVertexUvs[ i ] === undefined ) {
+			if ( geometry.faceVertexUvs[ i ] === undefined ) {
 
-				this.faceVertexUvs[ i ] = [];
+				geometry.faceVertexUvs[ i ] = [];
 
 			}
 
@@ -1236,13 +1102,13 @@ THREE$Geometry.prototype = {
 
 				}
 
-				this.faceVertexUvs[ i ].push( uvsCopy );
+				geometry.faceVertexUvs[ i ].push( uvsCopy );
 
 			}
 
 		}
 
-		return this;
+		return geometry;
 
 	},
 
@@ -1262,10 +1128,10 @@ THREE$Geometry.prototype = {
 
 };
 
-THREE$EventDispatcher.prototype.apply( THREE$Geometry.prototype );
+EventDispatcher.prototype.apply( Geometry.prototype );
 
 var count = 0;
-function THREE$GeometryIdCount () { return count++; };
+function GeometryIdCount () { return count++; };
 
 
-export { THREE$GeometryIdCount, THREE$Geometry };
+export { GeometryIdCount, Geometry };

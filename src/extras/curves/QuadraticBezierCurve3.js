@@ -1,14 +1,14 @@
-import { THREE$Shape } from '../core/Shape';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Curve } from '../core/Curve';
+import { Shape } from '../core/Shape';
+import { Vector3 } from '../../math/Vector3';
+import { Curve } from '../core/Curve';
 
-var THREE$QuadraticBezierCurve3;
+var QuadraticBezierCurve3;
 
 /**************************************************************
  *	Quadratic Bezier 3D curve
  **************************************************************/
 
-THREE$QuadraticBezierCurve3 = THREE$Curve.create(
+QuadraticBezierCurve3 = Curve.create(
 
 	function ( v0, v1, v2 ) {
 
@@ -20,11 +20,11 @@ THREE$QuadraticBezierCurve3 = THREE$Curve.create(
 
 	function ( t ) {
 
-		var vector = new THREE$Vector3();
+		var vector = new Vector3();
 
-		vector.x = THREE$Shape.Utils.b2( t, this.v0.x, this.v1.x, this.v2.x );
-		vector.y = THREE$Shape.Utils.b2( t, this.v0.y, this.v1.y, this.v2.y );
-		vector.z = THREE$Shape.Utils.b2( t, this.v0.z, this.v1.z, this.v2.z );
+		vector.x = Shape.Utils.b2( t, this.v0.x, this.v1.x, this.v2.x );
+		vector.y = Shape.Utils.b2( t, this.v0.y, this.v1.y, this.v2.y );
+		vector.z = Shape.Utils.b2( t, this.v0.z, this.v1.z, this.v2.z );
 
 		return vector;
 
@@ -33,4 +33,4 @@ THREE$QuadraticBezierCurve3 = THREE$Curve.create(
 );
 
 
-export { THREE$QuadraticBezierCurve3 };
+export { QuadraticBezierCurve3 };

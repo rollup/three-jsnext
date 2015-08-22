@@ -1,20 +1,29 @@
-import { THREE$Line } from './Line';
+import { Line } from './Line';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$LineSegments ( geometry, material ) {
+function LineSegments ( geometry, material ) {
 	this.isLineSegments = true;
 
-	THREE$Line.call( this, geometry, material );
+	Line.call( this, geometry, material );
 
 	this.type = 'LineSegments';
 
 };
 
-THREE$LineSegments.prototype = Object.create( THREE$Line.prototype );
-THREE$LineSegments.prototype.constructor = THREE$LineSegments;
+LineSegments.prototype = Object.create( Line.prototype );
+LineSegments.prototype.constructor = LineSegments;
 
+LineSegments.prototype.clone = function ( object ) {
 
-export { THREE$LineSegments };
+	if ( object === undefined ) object = new LineSegments( this.geometry, this.material );
+
+	Line.prototype.clone.call( this, object );
+
+	return object;
+
+};
+
+export { LineSegments };

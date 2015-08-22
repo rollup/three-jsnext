@@ -1,58 +1,51 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Group } from '../objects/Group';
-import { THREE$Sprite } from '../objects/Sprite';
-import { THREE$PointCloud } from '../objects/PointCloud';
-import { THREE$Line } from '../objects/Line';
-import { THREE$Mesh } from '../objects/Mesh';
-import { THREE$HemisphereLight } from '../lights/HemisphereLight';
-import { THREE$SpotLight } from '../lights/SpotLight';
-import { THREE$PointLight } from '../lights/PointLight';
-import { THREE$DirectionalLight } from '../lights/DirectionalLight';
-import { THREE$AreaLight } from '../lights/AreaLight';
-import { THREE$AmbientLight } from '../lights/AmbientLight';
-import { THREE$OrthographicCamera } from '../cameras/OrthographicCamera';
-import { THREE$PerspectiveCamera } from '../cameras/PerspectiveCamera';
-import { THREE$Scene } from '../scenes/Scene';
-import { THREE$Matrix4 } from '../math/Matrix4';
-import { THREE$Vector2 } from '../math/Vector2';
-import { THREE$Texture } from '../textures/Texture';
-import { THREE$ImageLoader } from './ImageLoader';
-import { THREE$LoadingManager, THREE$DefaultLoadingManager } from './LoadingManager';
-import { THREE$MultiplyOperation } from '../Three';
-import { THREE$MaterialLoader } from './MaterialLoader';
-import { THREE$TextGeometry } from '../extras/geometries/TextGeometry';
-import { THREE$TorusKnotGeometry } from '../extras/geometries/TorusKnotGeometry';
-import { THREE$TorusGeometry } from '../extras/geometries/TorusGeometry';
-import { THREE$RingGeometry } from '../extras/geometries/RingGeometry';
-import { THREE$TetrahedronGeometry } from '../extras/geometries/TetrahedronGeometry';
-import { THREE$OctahedronGeometry } from '../extras/geometries/OctahedronGeometry';
-import { THREE$IcosahedronGeometry } from '../extras/geometries/IcosahedronGeometry';
-import { THREE$DodecahedronGeometry } from '../extras/geometries/DodecahedronGeometry';
-import { THREE$SphereBufferGeometry } from '../extras/geometries/SphereBufferGeometry';
-import { THREE$SphereGeometry } from '../extras/geometries/SphereGeometry';
-import { THREE$CylinderGeometry } from '../extras/geometries/CylinderGeometry';
-import { THREE$CircleGeometry } from '../extras/geometries/CircleGeometry';
-import { THREE$CircleBufferGeometry } from '../extras/geometries/CircleBufferGeometry';
-import { THREE$BoxGeometry } from '../extras/geometries/BoxGeometry';
-import { THREE$BufferGeometryLoader } from './BufferGeometryLoader';
-import { THREE$JSONLoader } from './JSONLoader';
-import { THREE$XHRLoader } from './XHRLoader';
+import { Object3D } from '../core/Object3D';
+import { Group } from '../objects/Group';
+import { Sprite } from '../objects/Sprite';
+import { PointCloud } from '../objects/PointCloud';
+import { Line } from '../objects/Line';
+import { Mesh } from '../objects/Mesh';
+import { HemisphereLight } from '../lights/HemisphereLight';
+import { SpotLight } from '../lights/SpotLight';
+import { PointLight } from '../lights/PointLight';
+import { DirectionalLight } from '../lights/DirectionalLight';
+import { AmbientLight } from '../lights/AmbientLight';
+import { OrthographicCamera } from '../cameras/OrthographicCamera';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
+import { Scene } from '../scenes/Scene';
+import { Matrix4 } from '../math/Matrix4';
+import { Vector2 } from '../math/Vector2';
+import { Texture } from '../textures/Texture';
+import { ImageLoader } from './ImageLoader';
+import { LoadingManager, DefaultLoadingManager } from './LoadingManager';
+import { MultiplyOperation } from '../Three';
+import { MaterialLoader } from './MaterialLoader';
+import { TextGeometry } from '../extras/geometries/TextGeometry';
+import { TorusKnotGeometry } from '../extras/geometries/TorusKnotGeometry';
+import { TorusGeometry } from '../extras/geometries/TorusGeometry';
+import { IcosahedronGeometry } from '../extras/geometries/IcosahedronGeometry';
+import { SphereGeometry } from '../extras/geometries/SphereGeometry';
+import { CylinderGeometry } from '../extras/geometries/CylinderGeometry';
+import { CircleGeometry } from '../extras/geometries/CircleGeometry';
+import { BoxGeometry } from '../extras/geometries/BoxGeometry';
+import { BufferGeometryLoader } from './BufferGeometryLoader';
+import { JSONLoader } from './JSONLoader';
+import { XHRLoader } from './XHRLoader';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$ObjectLoader ( manager ) {
+function ObjectLoader ( manager ) {
 	this.isObjectLoader = true;
 
-	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
+	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 	this.texturePath = '';
 
 };
 
-THREE$ObjectLoader.prototype = {
+ObjectLoader.prototype = {
 
-	constructor: THREE$ObjectLoader,
+	constructor: ObjectLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -64,7 +57,7 @@ THREE$ObjectLoader.prototype = {
 
 		var scope = this;
 
-		var loader = new THREE$XHRLoader( scope.manager );
+		var loader = new XHRLoader( scope.manager );
 		loader.setCrossOrigin( this.crossOrigin );
 		loader.load( url, function ( text ) {
 
@@ -116,8 +109,8 @@ THREE$ObjectLoader.prototype = {
 
 		if ( json !== undefined ) {
 
-			var geometryLoader = new THREE$JSONLoader();
-			var bufferGeometryLoader = new THREE$BufferGeometryLoader();
+			var geometryLoader = new JSONLoader();
+			var bufferGeometryLoader = new BufferGeometryLoader();
 
 			for ( var i = 0, l = json.length; i < l; i ++ ) {
 
@@ -141,7 +134,7 @@ THREE$ObjectLoader.prototype = {
 					case 'BoxGeometry':
 					case 'CubeGeometry': // backwards compatible
 
-						geometry = new THREE$BoxGeometry(
+						geometry = new BoxGeometry(
 							data.width,
 							data.height,
 							data.depth,
@@ -152,46 +145,31 @@ THREE$ObjectLoader.prototype = {
 
 						break;
 
-					case 'CircleBufferGeometry':
-
-						geometry = new THREE$CircleBufferGeometry(
-							data.radius,
-							data.segments,
-							data.thetaStart,
-							data.thetaLength
-						);
-
-						break;
-
 					case 'CircleGeometry':
 
-						geometry = new THREE$CircleGeometry(
+						geometry = new CircleGeometry(
 							data.radius,
-							data.segments,
-							data.thetaStart,
-							data.thetaLength
+							data.segments
 						);
 
 						break;
 
 					case 'CylinderGeometry':
 
-						geometry = new THREE$CylinderGeometry(
+						geometry = new CylinderGeometry(
 							data.radiusTop,
 							data.radiusBottom,
 							data.height,
 							data.radialSegments,
 							data.heightSegments,
-							data.openEnded,
-							data.thetaStart,
-							data.thetaLength
+							data.openEnded
 						);
 
 						break;
 
 					case 'SphereGeometry':
 
-						geometry = new THREE$SphereGeometry(
+						geometry = new SphereGeometry(
 							data.radius,
 							data.widthSegments,
 							data.heightSegments,
@@ -199,76 +177,22 @@ THREE$ObjectLoader.prototype = {
 							data.phiLength,
 							data.thetaStart,
 							data.thetaLength
-						);
-
-						break;
-
-					case 'SphereBufferGeometry':
-
-						geometry = new THREE$SphereBufferGeometry(
-							data.radius,
-							data.widthSegments,
-							data.heightSegments,
-							data.phiStart,
-							data.phiLength,
-							data.thetaStart,
-							data.thetaLength
-						);
-
-						break;
-
-					case 'DodecahedronGeometry':
-
-						geometry = new THREE$DodecahedronGeometry(
-							data.radius,
-							data.detail
 						);
 
 						break;
 
 					case 'IcosahedronGeometry':
 
-						geometry = new THREE$IcosahedronGeometry(
+						geometry = new IcosahedronGeometry(
 							data.radius,
 							data.detail
-						);
-
-						break;
-
-					case 'OctahedronGeometry':
-
-						geometry = new THREE$OctahedronGeometry(
-							data.radius,
-							data.detail
-						);
-
-						break;
-
-					case 'TetrahedronGeometry':
-
-						geometry = new THREE$TetrahedronGeometry(
-							data.radius,
-							data.detail
-						);
-
-						break;
-
-					case 'RingGeometry':
-
-						geometry = new THREE$RingGeometry(
-							data.innerRadius,
-							data.outerRadius,
-							data.thetaSegments,
-							data.phiSegments,
-							data.thetaStart,
-							data.thetaLength
 						);
 
 						break;
 
 					case 'TorusGeometry':
 
-						geometry = new THREE$TorusGeometry(
+						geometry = new TorusGeometry(
 							data.radius,
 							data.tube,
 							data.radialSegments,
@@ -280,7 +204,7 @@ THREE$ObjectLoader.prototype = {
 
 					case 'TorusKnotGeometry':
 
-						geometry = new THREE$TorusKnotGeometry(
+						geometry = new TorusKnotGeometry(
 							data.radius,
 							data.tube,
 							data.radialSegments,
@@ -306,7 +230,7 @@ THREE$ObjectLoader.prototype = {
 
 					case 'TextGeometry':
 
-						geometry = new THREE$TextGeometry(
+						geometry = new TextGeometry(
 							data.text,
 							data.data
 						);
@@ -347,7 +271,7 @@ THREE$ObjectLoader.prototype = {
 
 			};
 
-			var loader = new THREE$MaterialLoader();
+			var loader = new MaterialLoader();
 
 			for ( var i = 0, l = json.length; i < l; i ++ ) {
 
@@ -374,14 +298,14 @@ THREE$ObjectLoader.prototype = {
 				if ( data.bumpScale !== undefined ) material.bumpScale = data.bumpScale;
 
 				if ( data.normalMap !== undefined ) material.normalMap = getTexture( data.normalMap );
-				if ( data.normalScale )	material.normalScale = new THREE$Vector2( data.normalScale, data.normalScale );
+				if ( data.normalScale )	material.normalScale = new Vector2( data.normalScale, data.normalScale );
 
 				if ( data.specularMap !== undefined ) material.specularMap = getTexture( data.specularMap );
 
 				if ( data.envMap !== undefined ) {
 
 					material.envMap = getTexture( data.envMap );
-					material.combine = THREE$MultiplyOperation;
+					material.combine = MultiplyOperation;
 
 				}
 
@@ -410,9 +334,9 @@ THREE$ObjectLoader.prototype = {
 
 		if ( json !== undefined && json.length > 0 ) {
 
-			var manager = new THREE$LoadingManager( onLoad );
+			var manager = new LoadingManager( onLoad );
 
-			var loader = new THREE$ImageLoader( manager );
+			var loader = new ImageLoader( manager );
 			loader.setCrossOrigin( this.crossOrigin );
 
 			var loadImage = function ( url ) {
@@ -474,14 +398,14 @@ THREE$ObjectLoader.prototype = {
 
 				}
 
-				var texture = new THREE$Texture( images[ data.image ] );
+				var texture = new Texture( images[ data.image ] );
 				texture.needsUpdate = true;
 
 				texture.uuid = data.uuid;
 
 				if ( data.name !== undefined ) texture.name = data.name;
 				if ( data.mapping !== undefined ) texture.mapping = parseConstant( data.mapping );
-				if ( data.repeat !== undefined ) texture.repeat = new THREE$Vector2( data.repeat[ 0 ], data.repeat[ 1 ] );
+				if ( data.repeat !== undefined ) texture.repeat = new Vector2( data.repeat[ 0 ], data.repeat[ 1 ] );
 				if ( data.minFilter !== undefined ) texture.minFilter = parseConstant( data.minFilter );
 				if ( data.magFilter !== undefined ) texture.magFilter = parseConstant( data.magFilter );
 				if ( data.anisotropy !== undefined ) texture.anisotropy = data.anisotropy;
@@ -504,7 +428,7 @@ THREE$ObjectLoader.prototype = {
 
 	parseObject: function () {
 
-		var matrix = new THREE$Matrix4();
+		var matrix = new Matrix4();
 
 		return function ( data, geometries, materials ) {
 
@@ -538,92 +462,85 @@ THREE$ObjectLoader.prototype = {
 
 				case 'Scene':
 
-					object = new THREE$Scene();
+					object = new Scene();
 
 					break;
 
 				case 'PerspectiveCamera':
 
-					object = new THREE$PerspectiveCamera( data.fov, data.aspect, data.near, data.far );
+					object = new PerspectiveCamera( data.fov, data.aspect, data.near, data.far );
 
 					break;
 
 				case 'OrthographicCamera':
 
-					object = new THREE$OrthographicCamera( data.left, data.right, data.top, data.bottom, data.near, data.far );
+					object = new OrthographicCamera( data.left, data.right, data.top, data.bottom, data.near, data.far );
 
 					break;
 
 				case 'AmbientLight':
 
-					object = new THREE$AmbientLight( data.color );
-
-					break;
-
-
-				case 'AreaLight':
-
-					object = new THREE$AreaLight( data.color, data.intensity );
+					object = new AmbientLight( data.color );
 
 					break;
 
 				case 'DirectionalLight':
 
-					object = new THREE$DirectionalLight( data.color, data.intensity );
+					object = new DirectionalLight( data.color, data.intensity );
 
 					break;
 
 				case 'PointLight':
 
-					object = new THREE$PointLight( data.color, data.intensity, data.distance, data.decay );
+					object = new PointLight( data.color, data.intensity, data.distance, data.decay );
 
 					break;
 
 				case 'SpotLight':
 
-					object = new THREE$SpotLight( data.color, data.intensity, data.distance, data.angle, data.exponent, data.decay );
+					object = new SpotLight( data.color, data.intensity, data.distance, data.angle, data.exponent, data.decay );
 
 					break;
 
 				case 'HemisphereLight':
 
-					object = new THREE$HemisphereLight( data.color, data.groundColor, data.intensity );
+					object = new HemisphereLight( data.color, data.groundColor, data.intensity );
 
 					break;
 
 				case 'Mesh':
 
-					object = new THREE$Mesh( getGeometry( data.geometry ), getMaterial( data.material ) );
+					object = new Mesh( getGeometry( data.geometry ), getMaterial( data.material ) );
 
 					break;
 
 				case 'Line':
 
-					object = new THREE$Line( getGeometry( data.geometry ), getMaterial( data.material ), data.mode );
+					object = new Line( getGeometry( data.geometry ), getMaterial( data.material ), data.mode );
 
 					break;
 
 				case 'PointCloud':
 
-					object = new THREE$PointCloud( getGeometry( data.geometry ), getMaterial( data.material ) );
+					object = new PointCloud( getGeometry( data.geometry ), getMaterial( data.material ) );
 
 					break;
 
 				case 'Sprite':
 
-					object = new THREE$Sprite( getMaterial( data.material ) );
+					object = new Sprite( getMaterial( data.material ) );
 
 					break;
 
 				case 'Group':
 
-					object = new THREE$Group();
+					object = new Group();
 
 					break;
 
 				default:
 
-					object = new THREE$Object3D();
+					object = new Object3D();
 
 			}
 
@@ -668,4 +585,4 @@ THREE$ObjectLoader.prototype = {
 };
 
 
-export { THREE$ObjectLoader };
+export { ObjectLoader };

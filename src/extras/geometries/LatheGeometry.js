@@ -1,7 +1,7 @@
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Vector2 } from '../../math/Vector2';
-import { THREE$Face3 } from '../../core/Face3';
-import { THREE$Vector3 } from '../../math/Vector3';
+import { Geometry } from '../../core/Geometry';
+import { Vector2 } from '../../math/Vector2';
+import { Face3 } from '../../core/Face3';
+import { Vector3 } from '../../math/Vector3';
 
 /**
  * @author astrodud / http://astrodud.isgreat.org/
@@ -16,10 +16,10 @@ import { THREE$Vector3 } from '../../math/Vector3';
 // phiLength - the radian (0 to 2*PI) range of the lathed section
 //    2*pi is a closed lathe, less than 2PI is a portion.
 
-function THREE$LatheGeometry ( points, segments, phiStart, phiLength ) {
+function LatheGeometry ( points, segments, phiStart, phiLength ) {
 	this.isLatheGeometry = true;
 
-	THREE$Geometry.call( this );
+	Geometry.call( this );
 
 	this.type = 'LatheGeometry';
 
@@ -48,7 +48,7 @@ function THREE$LatheGeometry ( points, segments, phiStart, phiLength ) {
 
 			var pt = points[ j ];
 
-			var vertex = new THREE$Vector3();
+			var vertex = new Vector3();
 
 			vertex.x = c * pt.x - s * pt.y;
 			vertex.y = s * pt.x + c * pt.y;
@@ -77,23 +77,23 @@ function THREE$LatheGeometry ( points, segments, phiStart, phiLength ) {
 			var u1 = u0 + inverseSegments;
 			var v1 = v0 + inversePointLength;
 
-			this.faces.push( new THREE$Face3( a, b, d ) );
+			this.faces.push( new Face3( a, b, d ) );
 
 			this.faceVertexUvs[ 0 ].push( [
 
-				new THREE$Vector2( u0, v0 ),
-				new THREE$Vector2( u1, v0 ),
-				new THREE$Vector2( u0, v1 )
+				new Vector2( u0, v0 ),
+				new Vector2( u1, v0 ),
+				new Vector2( u0, v1 )
 
 			] );
 
-			this.faces.push( new THREE$Face3( b, c, d ) );
+			this.faces.push( new Face3( b, c, d ) );
 
 			this.faceVertexUvs[ 0 ].push( [
 
-				new THREE$Vector2( u1, v0 ),
-				new THREE$Vector2( u1, v1 ),
-				new THREE$Vector2( u0, v1 )
+				new Vector2( u1, v0 ),
+				new Vector2( u1, v1 ),
+				new Vector2( u0, v1 )
 
 			] );
 
@@ -108,8 +108,8 @@ function THREE$LatheGeometry ( points, segments, phiStart, phiLength ) {
 
 };
 
-THREE$LatheGeometry.prototype = Object.create( THREE$Geometry.prototype );
-THREE$LatheGeometry.prototype.constructor = THREE$LatheGeometry;
+LatheGeometry.prototype = Object.create( Geometry.prototype );
+LatheGeometry.prototype.constructor = LatheGeometry;
 
 
-export { THREE$LatheGeometry };
+export { LatheGeometry };

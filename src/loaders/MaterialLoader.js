@@ -1,26 +1,26 @@
-import { THREE$XHRLoader } from './XHRLoader';
-import { THREE$DefaultLoadingManager } from './LoadingManager';
+import { XHRLoader } from './XHRLoader';
+import { DefaultLoadingManager } from './LoadingManager';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$MaterialLoader ( manager ) {
+function MaterialLoader ( manager ) {
 	this.isMaterialLoader = true;
 
-	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
+	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 
 };
 
-THREE$MaterialLoader.prototype = {
+MaterialLoader.prototype = {
 
-	constructor: THREE$MaterialLoader,
+	constructor: MaterialLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE$XHRLoader( scope.manager );
+		var loader = new XHRLoader( scope.manager );
 		loader.setCrossOrigin( this.crossOrigin );
 		loader.load( url, function ( text ) {
 
@@ -54,9 +54,8 @@ THREE$MaterialLoader.prototype = {
 		if ( json.side !== undefined ) material.side = json.side;
 		if ( json.opacity !== undefined ) material.opacity = json.opacity;
 		if ( json.transparent !== undefined ) material.transparent = json.transparent;
-		if ( json.alphaTest !== undefined ) material.alphaTest = json.alphaTest;
 		if ( json.wireframe !== undefined ) material.wireframe = json.wireframe;
-		if ( json.wireframeLinewidth !== undefined ) material.wireframeLinewidth = json.wireframeLinewidth;
+		if ( json.alphaTest !== undefined ) material.alphaTest = json.alphaTest;
 
 		// for PointCloudMaterial
 		if ( json.size !== undefined ) material.size = json.size;
@@ -79,4 +78,4 @@ THREE$MaterialLoader.prototype = {
 };
 
 
-export { THREE$MaterialLoader };
+export { MaterialLoader };

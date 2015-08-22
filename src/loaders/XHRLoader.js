@@ -1,26 +1,26 @@
-import { THREE$Cache } from './Cache';
-import { THREE$DefaultLoadingManager } from './LoadingManager';
+import { Cache } from './Cache';
+import { DefaultLoadingManager } from './LoadingManager';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$XHRLoader ( manager ) {
+function XHRLoader ( manager ) {
 	this.isXHRLoader = true;
 
-	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
+	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 
 };
 
-THREE$XHRLoader.prototype = {
+XHRLoader.prototype = {
 
-	constructor: THREE$XHRLoader,
+	constructor: XHRLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var cached = THREE$Cache.get( url );
+		var cached = Cache.get( url );
 
 		if ( cached !== undefined ) {
 
@@ -43,7 +43,7 @@ THREE$XHRLoader.prototype = {
 
 		request.addEventListener( 'load', function ( event ) {
 
-			THREE$Cache.add( url, this.response );
+			Cache.add( url, this.response );
 
 			if ( onLoad ) onLoad( this.response );
 
@@ -73,7 +73,6 @@ THREE$XHRLoader.prototype = {
 
 		if ( this.crossOrigin !== undefined ) request.crossOrigin = this.crossOrigin;
 		if ( this.responseType !== undefined ) request.responseType = this.responseType;
-		if ( this.withCredentials !== undefined ) request.withCredentials = this.withCredentials;
 
 		request.send( null );
 
@@ -93,15 +92,9 @@ THREE$XHRLoader.prototype = {
 
 		this.crossOrigin = value;
 
-	},
-
-	setWithCredentials: function ( value ) {
-
-		this.withCredentials = value;
-
 	}
 
 };
 
 
-export { THREE$XHRLoader };
+export { XHRLoader };

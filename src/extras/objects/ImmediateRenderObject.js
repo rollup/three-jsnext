@@ -1,20 +1,20 @@
-import { THREE$Object3D } from '../../core/Object3D';
+import { Object3D } from '../../core/Object3D';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$ImmediateRenderObject () {
+function ImmediateRenderObject () {
 	this.isImmediateRenderObject = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.render = function ( renderCallback ) {};
 
 };
 
-THREE$ImmediateRenderObject.prototype = Object.create( THREE$Object3D.prototype );
-THREE$ImmediateRenderObject.prototype.constructor = THREE$ImmediateRenderObject;
+ImmediateRenderObject.prototype = Object.create( Object3D.prototype );
+ImmediateRenderObject.prototype.constructor = ImmediateRenderObject;
 
 
-export { THREE$ImmediateRenderObject };
+export { ImmediateRenderObject };

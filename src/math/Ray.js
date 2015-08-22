@@ -1,20 +1,20 @@
-import { THREE$Vector3 } from './Vector3';
+import { Vector3 } from './Vector3';
 
 /**
  * @author bhouston / http://exocortex.com
  */
 
-function THREE$Ray ( origin, direction ) {
+function Ray ( origin, direction ) {
 	this.isRay = true;
 
-	this.origin = ( origin !== undefined ) ? origin : new THREE$Vector3();
-	this.direction = ( direction !== undefined ) ? direction : new THREE$Vector3();
+	this.origin = ( origin !== undefined ) ? origin : new Vector3();
+	this.direction = ( direction !== undefined ) ? direction : new Vector3();
 
 };
 
-THREE$Ray.prototype = {
+Ray.prototype = {
 
-	constructor: THREE$Ray,
+	constructor: Ray,
 
 	set: function ( origin, direction ) {
 
@@ -22,12 +22,6 @@ THREE$Ray.prototype = {
 		this.direction.copy( direction );
 
 		return this;
-
-	},
-
-	clone: function () {
-
-		return new this.constructor().copy( this );
 
 	},
 
@@ -42,7 +36,7 @@ THREE$Ray.prototype = {
 
 	at: function ( t, optionalTarget ) {
 
-		var result = optionalTarget || new THREE$Vector3();
+		var result = optionalTarget || new Vector3();
 
 		return result.copy( this.direction ).multiplyScalar( t ).add( this.origin );
 
@@ -50,7 +44,7 @@ THREE$Ray.prototype = {
 
 	recast: function () {
 
-		var v1 = new THREE$Vector3();
+		var v1 = new Vector3();
 
 		return function ( t ) {
 
@@ -64,7 +58,7 @@ THREE$Ray.prototype = {
 
 	closestPointToPoint: function ( point, optionalTarget ) {
 
-		var result = optionalTarget || new THREE$Vector3();
+		var result = optionalTarget || new Vector3();
 		result.subVectors( point, this.origin );
 		var directionDistance = result.dot( this.direction );
 
@@ -86,7 +80,7 @@ THREE$Ray.prototype = {
 
 	distanceSqToPoint: function () {
 
-		var v1 = new THREE$Vector3();
+		var v1 = new Vector3();
 
 		return function ( point ) {
 
@@ -110,9 +104,9 @@ THREE$Ray.prototype = {
 
 	distanceSqToSegment: function () {
 
-		var segCenter = new THREE$Vector3();
-		var segDir = new THREE$Vector3();
-		var diff = new THREE$Vector3();
+		var segCenter = new Vector3();
+		var segDir = new Vector3();
+		var diff = new Vector3();
 
 		return function ( v0, v1, optionalPointOnRay, optionalPointOnSegment ) {
 
@@ -246,7 +240,7 @@ THREE$Ray.prototype = {
 
 		// from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-sphere-intersection/
 
-		var v1 = new THREE$Vector3();
+		var v1 = new Vector3();
 
 		return function ( sphere, optionalTarget ) {
 
@@ -342,7 +336,6 @@ THREE$Ray.prototype = {
 		if ( t === null ) {
 
 			return null;
-
 		}
 
 		return this.at( t, optionalTarget );
@@ -351,7 +344,7 @@ THREE$Ray.prototype = {
 
 	isIntersectionBox: function () {
 
-		var v = new THREE$Vector3();
+		var v = new Vector3();
 
 		return function ( box ) {
 
@@ -365,7 +358,7 @@ THREE$Ray.prototype = {
 
 		// http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
 
-		var tmin, tmax, tymin, tymax, tzmin, tzmax;
+		var tmin,tmax,tymin,tymax,tzmin,tzmax;
 
 		var invdirx = 1 / this.direction.x,
 			invdiry = 1 / this.direction.y,
@@ -382,7 +375,6 @@ THREE$Ray.prototype = {
 
 			tmin = ( box.max.x - origin.x ) * invdirx;
 			tmax = ( box.min.x - origin.x ) * invdirx;
-
 		}
 
 		if ( invdiry >= 0 ) {
@@ -394,7 +386,6 @@ THREE$Ray.prototype = {
 
 			tymin = ( box.max.y - origin.y ) * invdiry;
 			tymax = ( box.min.y - origin.y ) * invdiry;
-
 		}
 
 		if ( ( tmin > tymax ) || ( tymin > tmax ) ) return null;
@@ -415,7 +406,6 @@ THREE$Ray.prototype = {
 
 			tzmin = ( box.max.z - origin.z ) * invdirz;
 			tzmax = ( box.min.z - origin.z ) * invdirz;
-
 		}
 
 		if ( ( tmin > tzmax ) || ( tzmin > tmax ) ) return null;
@@ -435,10 +425,10 @@ THREE$Ray.prototype = {
 	intersectTriangle: function () {
 
 		// Compute the offset origin, edges, and normal.
-		var diff = new THREE$Vector3();
-		var edge1 = new THREE$Vector3();
-		var edge2 = new THREE$Vector3();
-		var normal = new THREE$Vector3();
+		var diff = new Vector3();
+		var edge1 = new Vector3();
+		var edge2 = new Vector3();
+		var normal = new Vector3();
 
 		return function ( a, b, c, backfaceCulling, optionalTarget ) {
 
@@ -523,16 +513,21 @@ THREE$Ray.prototype = {
 		this.direction.normalize();
 
 		return this;
-
 	},
 
 	equals: function ( ray ) {
 
 		return ray.origin.equals( this.origin ) && ray.direction.equals( this.direction );
 
+	},
+
+	clone: function () {
+
+		return new Ray().copy( this );
+
 	}
 
 };
 
 
-export { THREE$Ray };
+export { Ray };

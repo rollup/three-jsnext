@@ -1,5 +1,5 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Vector3 } from '../math/Vector3';
+import { Object3D } from '../core/Object3D';
+import { Vector3 } from '../math/Vector3';
 
 /**
  * @author mikael emtinger / http://gomo.se/
@@ -7,10 +7,10 @@ import { THREE$Vector3 } from '../math/Vector3';
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$LOD () {
+function LOD () {
 	this.isLOD = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	Object.defineProperties( this, {
 		levels: {
@@ -19,10 +19,8 @@ function THREE$LOD () {
 		},
 		objects: {
 			get: function () {
-
 				console.warn( 'THREE.LOD: .objects has been renamed to .levels.' );
 				return this.levels;
-
 			}
 		}
 	} );
@@ -30,10 +28,10 @@ function THREE$LOD () {
 };
 
 
-THREE$LOD.prototype = Object.create( THREE$Object3D.prototype );
-THREE$LOD.prototype.constructor = THREE$LOD;
+LOD.prototype = Object.create( Object3D.prototype );
+LOD.prototype.constructor = LOD;
 
-THREE$LOD.prototype.addLevel = function ( object, distance ) {
+LOD.prototype.addLevel = function ( object, distance ) {
 
 	if ( distance === undefined ) distance = 0;
 
@@ -57,7 +55,7 @@ THREE$LOD.prototype.addLevel = function ( object, distance ) {
 
 };
 
-THREE$LOD.prototype.getObjectForDistance = function ( distance ) {
+LOD.prototype.getObjectForDistance = function ( distance ) {
 
 	var levels = this.levels;
 
@@ -75,11 +73,11 @@ THREE$LOD.prototype.getObjectForDistance = function ( distance ) {
 
 };
 
-THREE$LOD.prototype.raycast = ( function () {
+LOD.prototype.raycast = ( function () {
 
-	var matrixPosition = new THREE$Vector3();
+	var matrixPosition = new Vector3();
 
-	return function raycast( raycaster, intersects ) {
+	return function ( raycaster, intersects ) {
 
 		matrixPosition.setFromMatrixPosition( this.matrixWorld );
 
@@ -91,12 +89,12 @@ THREE$LOD.prototype.raycast = ( function () {
 
 }() );
 
-THREE$LOD.prototype.update = function () {
+LOD.prototype.update = function () {
 
-	var v1 = new THREE$Vector3();
-	var v2 = new THREE$Vector3();
+	var v1 = new Vector3();
+	var v2 = new Vector3();
 
-	return function update( camera ) {
+	return function ( camera ) {
 
 		var levels = this.levels;
 
@@ -114,7 +112,7 @@ THREE$LOD.prototype.update = function () {
 				if ( distance >= levels[ i ].distance ) {
 
 					levels[ i - 1 ].object.visible = false;
-					levels[ i ].object.visible = true;
+					levels[ i     ].object.visible = true;
 
 				} else {
 
@@ -136,23 +134,25 @@ THREE$LOD.prototype.update = function () {
 
 }();
 
-THREE$LOD.prototype.copy = function ( source ) {
+LOD.prototype.clone = function ( object ) {
 
-	THREE$Object3D.prototype.copy.call( this, source, false );
+	if ( object === undefined ) object = new LOD();
 
-	var levels = source.levels;
+	Object3D.prototype.clone.call( this, object, false );
+
+	var levels = this.levels;
 
 	for ( var i = 0, l = levels.length; i < l; i ++ ) {
 
 		var level = levels[ i ];
 
-		this.addLevel( level.object.clone(), level.distance );
+		object.addLevel( level.object.clone(), level.distance );
 
 	}
 
-	return this;
+	return object;
 
 };
 
 
-export { THREE$LOD };
+export { LOD };

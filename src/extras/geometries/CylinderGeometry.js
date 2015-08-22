@@ -1,16 +1,16 @@
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Face3 } from '../../core/Face3';
-import { THREE$Vector2 } from '../../math/Vector2';
-import { THREE$Vector3 } from '../../math/Vector3';
+import { Geometry } from '../../core/Geometry';
+import { Face3 } from '../../core/Face3';
+import { Vector2 } from '../../math/Vector2';
+import { Vector3 } from '../../math/Vector3';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength ) {
+function CylinderGeometry ( radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength ) {
 	this.isCylinderGeometry = true;
 
-	THREE$Geometry.call( this );
+	Geometry.call( this );
 
 	this.type = 'CylinderGeometry';
 
@@ -52,7 +52,7 @@ function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegment
 
 			var u = x / radialSegments;
 
-			var vertex = new THREE$Vector3();
+			var vertex = new Vector3();
 			vertex.x = radius * Math.sin( u * thetaLength + thetaStart );
 			vertex.y = - v * height + heightHalf;
 			vertex.z = radius * Math.cos( u * thetaLength + thetaStart );
@@ -60,7 +60,7 @@ function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegment
 			this.vertices.push( vertex );
 
 			verticesRow.push( this.vertices.length - 1 );
-			uvsRow.push( new THREE$Vector2( u, 1 - v ) );
+			uvsRow.push( new Vector2( u, 1 - v ) );
 
 		}
 
@@ -106,10 +106,10 @@ function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegment
 			var uv3 = uvs[ y + 1 ][ x + 1 ].clone();
 			var uv4 = uvs[ y ][ x + 1 ].clone();
 
-			this.faces.push( new THREE$Face3( v1, v2, v4, [ n1, n2, n4 ] ) );
+			this.faces.push( new Face3( v1, v2, v4, [ n1, n2, n4 ] ) );
 			this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv4 ] );
 
-			this.faces.push( new THREE$Face3( v2, v3, v4, [ n2.clone(), n3, n4.clone() ] ) );
+			this.faces.push( new Face3( v2, v3, v4, [ n2.clone(), n3, n4.clone() ] ) );
 			this.faceVertexUvs[ 0 ].push( [ uv2.clone(), uv3, uv4.clone() ] );
 
 		}
@@ -120,7 +120,7 @@ function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegment
 
 	if ( openEnded === false && radiusTop > 0 ) {
 
-		this.vertices.push( new THREE$Vector3( 0, heightHalf, 0 ) );
+		this.vertices.push( new Vector3( 0, heightHalf, 0 ) );
 
 		for ( x = 0; x < radialSegments; x ++ ) {
 
@@ -128,15 +128,15 @@ function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegment
 			var v2 = vertices[ 0 ][ x + 1 ];
 			var v3 = this.vertices.length - 1;
 
-			var n1 = new THREE$Vector3( 0, 1, 0 );
-			var n2 = new THREE$Vector3( 0, 1, 0 );
-			var n3 = new THREE$Vector3( 0, 1, 0 );
+			var n1 = new Vector3( 0, 1, 0 );
+			var n2 = new Vector3( 0, 1, 0 );
+			var n3 = new Vector3( 0, 1, 0 );
 
 			var uv1 = uvs[ 0 ][ x ].clone();
 			var uv2 = uvs[ 0 ][ x + 1 ].clone();
-			var uv3 = new THREE$Vector2( uv2.x, 0 );
+			var uv3 = new Vector2( uv2.x, 0 );
 
-			this.faces.push( new THREE$Face3( v1, v2, v3, [ n1, n2, n3 ], undefined, 1 ) );
+			this.faces.push( new Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
 			this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3 ] );
 
 		}
@@ -147,7 +147,7 @@ function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegment
 
 	if ( openEnded === false && radiusBottom > 0 ) {
 
-		this.vertices.push( new THREE$Vector3( 0, - heightHalf, 0 ) );
+		this.vertices.push( new Vector3( 0, - heightHalf, 0 ) );
 
 		for ( x = 0; x < radialSegments; x ++ ) {
 
@@ -155,15 +155,15 @@ function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegment
 			var v2 = vertices[ heightSegments ][ x ];
 			var v3 = this.vertices.length - 1;
 
-			var n1 = new THREE$Vector3( 0, - 1, 0 );
-			var n2 = new THREE$Vector3( 0, - 1, 0 );
-			var n3 = new THREE$Vector3( 0, - 1, 0 );
+			var n1 = new Vector3( 0, - 1, 0 );
+			var n2 = new Vector3( 0, - 1, 0 );
+			var n3 = new Vector3( 0, - 1, 0 );
 
 			var uv1 = uvs[ heightSegments ][ x + 1 ].clone();
 			var uv2 = uvs[ heightSegments ][ x ].clone();
-			var uv3 = new THREE$Vector2( uv2.x, 1 );
+			var uv3 = new Vector2( uv2.x, 1 );
 
-			this.faces.push( new THREE$Face3( v1, v2, v3, [ n1, n2, n3 ], undefined, 2 ) );
+			this.faces.push( new Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
 			this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3 ] );
 
 		}
@@ -174,25 +174,8 @@ function THREE$CylinderGeometry ( radiusTop, radiusBottom, height, radialSegment
 
 };
 
-THREE$CylinderGeometry.prototype = Object.create( THREE$Geometry.prototype );
-THREE$CylinderGeometry.prototype.constructor = THREE$CylinderGeometry;
-
-THREE$CylinderGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$CylinderGeometry(
-		this.parameters.radiusTop,
-		this.parameters.radiusBottom,
-		this.parameters.height,
-		this.parameters.radialSegments,
-		this.parameters.heightSegments,
-		this.parameters.openEnded,
-		this.parameters.thetaStart,
-		this.parameters.thetaLength
-	);
-
-	return geometry;
-
-};
+CylinderGeometry.prototype = Object.create( Geometry.prototype );
+CylinderGeometry.prototype.constructor = CylinderGeometry;
 
 
-export { THREE$CylinderGeometry };
+export { CylinderGeometry };

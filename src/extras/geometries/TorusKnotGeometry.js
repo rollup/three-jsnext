@@ -1,17 +1,17 @@
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Face3 } from '../../core/Face3';
-import { THREE$Vector2 } from '../../math/Vector2';
+import { Geometry } from '../../core/Geometry';
+import { Vector3 } from '../../math/Vector3';
+import { Face3 } from '../../core/Face3';
+import { Vector2 } from '../../math/Vector2';
 
 /**
  * @author oosmoxiecode
  * based on http://code.google.com/p/away3d/source/browse/trunk/fp10/Away3D/src/away3d/primitives/TorusKnot.as?spec=svn2473&r=2473
  */
 
-function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments, p, q, heightScale ) {
+function TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments, p, q, heightScale ) {
 	this.isTorusKnotGeometry = true;
 
-	THREE$Geometry.call( this );
+	Geometry.call( this );
 
 	this.type = 'TorusKnotGeometry';
 
@@ -32,11 +32,11 @@ function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments
 	p = p || 2;
 	q = q || 3;
 	heightScale = heightScale || 1;
-
+	
 	var grid = new Array( radialSegments );
-	var tang = new THREE$Vector3();
-	var n = new THREE$Vector3();
-	var bitan = new THREE$Vector3();
+	var tang = new Vector3();
+	var n = new Vector3();
+	var bitan = new Vector3();
 
 	for ( var i = 0; i < radialSegments; ++ i ) {
 
@@ -58,7 +58,7 @@ function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments
 			var cx = - tube * Math.cos( v ); // TODO: Hack: Negating it so it faces outside.
 			var cy = tube * Math.sin( v );
 
-			var pos = new THREE$Vector3();
+			var pos = new Vector3();
 			pos.x = p1.x + cx * n.x + cy * bitan.x;
 			pos.y = p1.y + cx * n.y + cy * bitan.y;
 			pos.z = p1.z + cx * n.z + cy * bitan.z;
@@ -81,19 +81,18 @@ function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments
 			var c = grid[ ip ][ jp ];
 			var d = grid[ i ][ jp ];
 
-			var uva = new THREE$Vector2( i / radialSegments, j / tubularSegments );
-			var uvb = new THREE$Vector2( ( i + 1 ) / radialSegments, j / tubularSegments );
-			var uvc = new THREE$Vector2( ( i + 1 ) / radialSegments, ( j + 1 ) / tubularSegments );
-			var uvd = new THREE$Vector2( i / radialSegments, ( j + 1 ) / tubularSegments );
+			var uva = new Vector2( i / radialSegments, j / tubularSegments );
+			var uvb = new Vector2( ( i + 1 ) / radialSegments, j / tubularSegments );
+			var uvc = new Vector2( ( i + 1 ) / radialSegments, ( j + 1 ) / tubularSegments );
+			var uvd = new Vector2( i / radialSegments, ( j + 1 ) / tubularSegments );
 
-			this.faces.push( new THREE$Face3( a, b, d ) );
+			this.faces.push( new Face3( a, b, d ) );
 			this.faceVertexUvs[ 0 ].push( [ uva, uvb, uvd ] );
 
-			this.faces.push( new THREE$Face3( b, c, d ) );
+			this.faces.push( new Face3( b, c, d ) );
 			this.faceVertexUvs[ 0 ].push( [ uvb.clone(), uvc, uvd.clone() ] );
 
 		}
-
 	}
 
 	this.computeFaceNormals();
@@ -110,30 +109,14 @@ function THREE$TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments
 		var ty = radius * ( 2 + cs ) * su * 0.5;
 		var tz = heightScale * radius * Math.sin( quOverP ) * 0.5;
 
-		return new THREE$Vector3( tx, ty, tz );
+		return new Vector3( tx, ty, tz );
 
 	}
 
 };
 
-THREE$TorusKnotGeometry.prototype = Object.create( THREE$Geometry.prototype );
-THREE$TorusKnotGeometry.prototype.constructor = THREE$TorusKnotGeometry;
-
-THREE$TorusKnotGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$TorusKnotGeometry(
-		this.parameters.radius,
-		this.parameters.tube,
-		this.parameters.radialSegments,
-		this.parameters.tubularSegments,
-		this.parameters.p,
-		this.parameters.q,
-		this.parameters.heightScale
-	);
-
-	return geometry;
-
-};
+TorusKnotGeometry.prototype = Object.create( Geometry.prototype );
+TorusKnotGeometry.prototype.constructor = TorusKnotGeometry;
 
 
-export { THREE$TorusKnotGeometry };
+export { TorusKnotGeometry };

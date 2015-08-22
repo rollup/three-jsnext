@@ -1,11 +1,11 @@
-var THREE$Math;
+var _Math;
 
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$Math = {
+_Math = {
 
 	generateUUID: function () {
 
@@ -35,7 +35,6 @@ THREE$Math = {
 					uuid[ i ] = chars[ ( i === 19 ) ? ( r & 0x3 ) | 0x8 : r ];
 
 				}
-
 			}
 
 			return uuid.join( '' );
@@ -114,7 +113,7 @@ THREE$Math = {
 
 	randInt: function ( low, high ) {
 
-		return low + Math.floor( Math.random() * ( high - low + 1 ) );
+		return Math.floor( this.randFloat( low, high ) );
 
 	},
 
@@ -181,4 +180,4 @@ THREE$Math = {
 };
 
 
-export { THREE$Math };
+export { _Math };

@@ -1,4 +1,4 @@
-import { THREE$Material } from './Material';
+import { Material } from './Material';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -16,10 +16,10 @@ import { THREE$Material } from './Material';
  * }
  */
 
-function THREE$MeshNormalMaterial ( parameters ) {
+function MeshNormalMaterial ( parameters ) {
 	this.isMeshNormalMaterial = true;
 
-	THREE$Material.call( this, parameters );
+	Material.call( this, parameters );
 
 	this.type = 'MeshNormalMaterial';
 
@@ -32,19 +32,21 @@ function THREE$MeshNormalMaterial ( parameters ) {
 
 };
 
-THREE$MeshNormalMaterial.prototype = Object.create( THREE$Material.prototype );
-THREE$MeshNormalMaterial.prototype.constructor = THREE$MeshNormalMaterial;
+MeshNormalMaterial.prototype = Object.create( Material.prototype );
+MeshNormalMaterial.prototype.constructor = MeshNormalMaterial;
 
-THREE$MeshNormalMaterial.prototype.copy = function ( source ) {
+MeshNormalMaterial.prototype.clone = function () {
 
-	THREE$Material.prototype.copy.call( this, source );
+	var material = new MeshNormalMaterial();
 
-	this.wireframe = source.wireframe;
-	this.wireframeLinewidth = source.wireframeLinewidth;
+	Material.prototype.clone.call( this, material );
 
-	return this;
+	material.wireframe = this.wireframe;
+	material.wireframeLinewidth = this.wireframeLinewidth;
+
+	return material;
 
 };
 
 
-export { THREE$MeshNormalMaterial };
+export { MeshNormalMaterial };

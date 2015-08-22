@@ -1,16 +1,21 @@
-import { THREE$Vector2 } from '../math/Vector2';
-import { THREE$VertexColors, THREE$FaceColors, THREE$DoubleSide, THREE$BackSide, THREE$MirroredRepeatWrapping, THREE$RepeatWrapping } from '../Three';
-import { THREE$Math } from '../math/Math';
-import { THREE$Texture } from '../textures/Texture';
-import { THREE$ImageLoader } from './ImageLoader';
-import { THREE$ShaderMaterial } from '../materials/ShaderMaterial';
+import { Vector2 } from '../math/Vector2';
+import { VertexColors, FaceColors, DoubleSide, BackSide, MirroredRepeatWrapping, RepeatWrapping } from '../Three';
+import { _Math } from '../math/Math';
+import { Texture } from '../textures/Texture';
+import { ShaderMaterial } from '../materials/ShaderMaterial';
+import { ImageLoader } from './ImageLoader';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$Loader () {
+function Loader ( showStatus ) {
 	this.isLoader = true;
+
+	this.showStatus = showStatus;
+	this.statusDomElement = showStatus ? Loader.prototype.addStatusElement() : null;
+
+	this.imageLoader = new ImageLoader();
 
 	this.onLoadStart = function () {};
 	this.onLoadProgress = function () {};
@@ -18,11 +23,51 @@ function THREE$Loader () {
 
 };
 
-THREE$Loader.prototype = {
+Loader.prototype = {
 
-	constructor: THREE$Loader,
+	constructor: Loader,
 
 	crossOrigin: undefined,
+
+	addStatusElement: function () {
+
+		var e = document.createElement( 'div' );
+
+		e.style.position = 'absolute';
+		e.style.right = '0px';
+		e.style.top = '0px';
+		e.style.fontSize = '0.8em';
+		e.style.textAlign = 'left';
+		e.style.background = 'rgba(0,0,0,0.25)';
+		e.style.color = '#fff';
+		e.style.width = '120px';
+		e.style.padding = '0.5em 0.5em 0.5em 0.5em';
+		e.style.zIndex = 1000;
+
+		e.innerHTML = 'Loading ...';
+
+		return e;
+
+	},
+
+	updateProgress: function ( progress ) {
+
+		var message = 'Loaded ';
+
+		if ( progress.total ) {
+
+			message += ( 100 * progress.loaded / progress.total ).toFixed( 0 ) + '%';
+
+
+		} else {
+
+			message += ( progress.loaded / 1024 ).toFixed( 2 ) + ' KB';
+
+		}
+
+		this.statusDomElement.innerHTML = message;
+
+	},
 
 	extractUrlBase: function ( url ) {
 
@@ -36,13 +81,13 @@ THREE$Loader.prototype = {
 
 	},
 
-	initMaterials: function ( materials, texturePath, crossOrigin ) {
+	initMaterials: function ( materials, texturePath ) {
 
 		var array = [];
 
 		for ( var i = 0; i < materials.length; ++ i ) {
 
-			array[ i ] = this.createMaterial( materials[ i ], texturePath, crossOrigin );
+			array[ i ] = this.createMaterial( materials[ i ], texturePath );
 
 		}
 
@@ -64,317 +109,307 @@ THREE$Loader.prototype = {
 
 	},
 
-	createMaterial: ( function () {
+	createMaterial: function ( m, texturePath ) {
 
-		var imageLoader;
+		var scope = this;
 
-		return function createMaterial( m, texturePath, crossOrigin ) {
+		function nearest_pow2( n ) {
 
-			var scope = this;
+			var l = Math.log( n ) / Math.LN2;
+			return Math.pow( 2, Math.round(  l ) );
 
-			if ( crossOrigin === undefined && scope.crossOrigin !== undefined ) crossOrigin = scope.crossOrigin;
+		}
 
-			if ( imageLoader === undefined ) imageLoader = new THREE$ImageLoader();
+		function create_texture( where, name, sourceFile, repeat, offset, wrap, anisotropy ) {
 
-			function nearest_pow2( n ) {
+			var fullPath = texturePath + sourceFile;
 
-				var l = Math.log( n ) / Math.LN2;
-				return Math.pow( 2, Math.round(  l ) );
+			var texture;
 
-			}
+			var loader = Loader.Handlers.get( fullPath );
 
-			function create_texture( where, name, sourceFile, repeat, offset, wrap, anisotropy ) {
+			if ( loader !== null ) {
 
-				var fullPath = texturePath + sourceFile;
+				texture = loader.load( fullPath );
 
-				var texture;
+			} else {
 
-				var loader = THREE$Loader.Handlers.get( fullPath );
+				texture = new Texture();
 
-				if ( loader !== null ) {
+				loader = scope.imageLoader;
+				loader.crossOrigin = scope.crossOrigin;
+				loader.load( fullPath, function ( image ) {
 
-					texture = loader.load( fullPath );
+					if ( _Math.isPowerOfTwo( image.width ) === false ||
+						 _Math.isPowerOfTwo( image.height ) === false ) {
 
-				} else {
+						var width = nearest_pow2( image.width );
+						var height = nearest_pow2( image.height );
 
-					texture = new THREE$Texture();
+						var canvas = document.createElement( 'canvas' );
+						canvas.width = width;
+						canvas.height = height;
 
-					loader = imageLoader;
-					loader.setCrossOrigin( crossOrigin );
-					loader.load( fullPath, function ( image ) {
+						var context = canvas.getContext( '2d' );
+						context.drawImage( image, 0, 0, width, height );
 
-						if ( THREE$Math.isPowerOfTwo( image.width ) === false ||
-							THREE$Math.isPowerOfTwo( image.height ) === false ) {
+						texture.image = canvas;
 
-							var width = nearest_pow2( image.width );
-							var height = nearest_pow2( image.height );
+					} else {
 
-							var canvas = document.createElement( 'canvas' );
-							canvas.width = width;
-							canvas.height = height;
+						texture.image = image;
 
-							var context = canvas.getContext( '2d' );
-							context.drawImage( image, 0, 0, width, height );
+					}
 
-							texture.image = canvas;
+					texture.needsUpdate = true;
 
-						} else {
-
-							texture.image = image;
-
-						}
-
-						texture.needsUpdate = true;
-
-					} );
-
-				}
-
-				texture.sourceFile = sourceFile;
-
-				if ( repeat ) {
-
-					texture.repeat.set( repeat[ 0 ], repeat[ 1 ] );
-
-					if ( repeat[ 0 ] !== 1 ) texture.wrapS = THREE$RepeatWrapping;
-					if ( repeat[ 1 ] !== 1 ) texture.wrapT = THREE$RepeatWrapping;
-
-				}
-
-				if ( offset ) {
-
-					texture.offset.set( offset[ 0 ], offset[ 1 ] );
-
-				}
-
-				if ( wrap ) {
-
-					var wrapMap = {
-						'repeat': THREE$RepeatWrapping,
-						'mirror': THREE$MirroredRepeatWrapping
-					};
-
-					if ( wrapMap[ wrap[ 0 ] ] !== undefined ) texture.wrapS = wrapMap[ wrap[ 0 ] ];
-					if ( wrapMap[ wrap[ 1 ] ] !== undefined ) texture.wrapT = wrapMap[ wrap[ 1 ] ];
-
-				}
-
-				if ( anisotropy ) {
-
-					texture.anisotropy = anisotropy;
-
-				}
-
-				where[ name ] = texture;
+				} );
 
 			}
 
-			function rgb2hex( rgb ) {
+			texture.sourceFile = sourceFile;
 
-				return ( rgb[ 0 ] * 255 << 16 ) + ( rgb[ 1 ] * 255 << 8 ) + rgb[ 2 ] * 255;
+			if ( repeat ) {
 
-			}
+				texture.repeat.set( repeat[ 0 ], repeat[ 1 ] );
 
-			// defaults
-
-			var mtype = 'MeshLambertMaterial';
-			var mpars = { color: 0xeeeeee, opacity: 1.0, map: null, lightMap: null, normalMap: null, bumpMap: null, wireframe: false };
-
-			// parameters from model file
-
-			if ( m.shading ) {
-
-				var shading = m.shading.toLowerCase();
-
-				if ( shading === 'phong' ) mtype = 'MeshPhongMaterial';
-				else if ( shading === 'basic' ) mtype = 'MeshBasicMaterial';
+				if ( repeat[ 0 ] !== 1 ) texture.wrapS = RepeatWrapping;
+				if ( repeat[ 1 ] !== 1 ) texture.wrapT = RepeatWrapping;
 
 			}
 
-			if ( m.blending !== undefined && THREE[ m.blending ] !== undefined ) {
+			if ( offset ) {
 
-				mpars.blending = THREE[ m.blending ];
-
-			}
-
-			if ( m.transparent !== undefined ) {
-
-				mpars.transparent = m.transparent;
+				texture.offset.set( offset[ 0 ], offset[ 1 ] );
 
 			}
 
-			if ( m.opacity !== undefined && m.opacity < 1.0 ) {
+			if ( wrap ) {
 
-				mpars.transparent = true;
+				var wrapMap = {
+					'repeat': RepeatWrapping,
+					'mirror': MirroredRepeatWrapping
+				};
 
-			}
-
-			if ( m.depthTest !== undefined ) {
-
-				mpars.depthTest = m.depthTest;
-
-			}
-
-			if ( m.depthWrite !== undefined ) {
-
-				mpars.depthWrite = m.depthWrite;
+				if ( wrapMap[ wrap[ 0 ] ] !== undefined ) texture.wrapS = wrapMap[ wrap[ 0 ] ];
+				if ( wrapMap[ wrap[ 1 ] ] !== undefined ) texture.wrapT = wrapMap[ wrap[ 1 ] ];
 
 			}
 
-			if ( m.visible !== undefined ) {
+			if ( anisotropy ) {
 
-				mpars.visible = m.visible;
-
-			}
-
-			if ( m.flipSided !== undefined ) {
-
-				mpars.side = THREE$BackSide;
+				texture.anisotropy = anisotropy;
 
 			}
 
-			if ( m.doubleSided !== undefined ) {
+			where[ name ] = texture;
 
-				mpars.side = THREE$DoubleSide;
+		}
 
-			}
+		function rgb2hex( rgb ) {
 
-			if ( m.wireframe !== undefined ) {
+			return ( rgb[ 0 ] * 255 << 16 ) + ( rgb[ 1 ] * 255 << 8 ) + rgb[ 2 ] * 255;
 
-				mpars.wireframe = m.wireframe;
+		}
 
-			}
+		// defaults
 
-			if ( m.vertexColors !== undefined ) {
+		var mtype = 'MeshLambertMaterial';
+		var mpars = { color: 0xeeeeee, opacity: 1.0, map: null, lightMap: null, normalMap: null, bumpMap: null, wireframe: false };
 
-				if ( m.vertexColors === 'face' ) {
+		// parameters from model file
 
-					mpars.vertexColors = THREE$FaceColors;
+		if ( m.shading ) {
 
-				} else if ( m.vertexColors ) {
+			var shading = m.shading.toLowerCase();
 
-					mpars.vertexColors = THREE$VertexColors;
+			if ( shading === 'phong' ) mtype = 'MeshPhongMaterial';
+			else if ( shading === 'basic' ) mtype = 'MeshBasicMaterial';
 
-				}
+		}
 
-			}
+		if ( m.blending !== undefined && THREE[ m.blending ] !== undefined ) {
 
-			// colors
+			mpars.blending = THREE[ m.blending ];
 
-			if ( m.colorDiffuse ) {
+		}
 
-				mpars.color = rgb2hex( m.colorDiffuse );
+		if ( m.transparent !== undefined ) {
 
-			} else if ( m.DbgColor ) {
+			mpars.transparent = m.transparent;
 
-				mpars.color = m.DbgColor;
+		}
 
-			}
+		if ( m.opacity !== undefined && m.opacity < 1.0 ) {
 
-			if ( m.colorSpecular ) {
+			mpars.transparent = true;
 
-				mpars.specular = rgb2hex( m.colorSpecular );
+		}
 
-			}
+		if ( m.depthTest !== undefined ) {
 
-			if ( m.colorEmissive ) {
+			mpars.depthTest = m.depthTest;
 
-				mpars.emissive = rgb2hex( m.colorEmissive );
+		}
 
-			}
+		if ( m.depthWrite !== undefined ) {
 
-			// modifiers
+			mpars.depthWrite = m.depthWrite;
 
-			if ( m.transparency !== undefined ) {
+		}
 
-				console.warn( 'THREE.Loader: transparency has been renamed to opacity' );
-				m.opacity = m.transparency;
+		if ( m.visible !== undefined ) {
 
-			}
+			mpars.visible = m.visible;
 
-			if ( m.opacity !== undefined ) {
+		}
 
-				mpars.opacity = m.opacity;
+		if ( m.flipSided !== undefined ) {
 
-			}
+			mpars.side = BackSide;
 
-			if ( m.specularCoef ) {
+		}
 
-				mpars.shininess = m.specularCoef;
+		if ( m.doubleSided !== undefined ) {
 
-			}
+			mpars.side = DoubleSide;
 
-			// textures
+		}
 
-			if ( m.mapDiffuse && texturePath ) {
+		if ( m.wireframe !== undefined ) {
 
-				create_texture( mpars, 'map', m.mapDiffuse, m.mapDiffuseRepeat, m.mapDiffuseOffset, m.mapDiffuseWrap, m.mapDiffuseAnisotropy );
+			mpars.wireframe = m.wireframe;
 
-			}
+		}
 
-			if ( m.mapLight && texturePath ) {
+		if ( m.vertexColors !== undefined ) {
 
-				create_texture( mpars, 'lightMap', m.mapLight, m.mapLightRepeat, m.mapLightOffset, m.mapLightWrap, m.mapLightAnisotropy );
+			if ( m.vertexColors === 'face' ) {
 
-			}
+				mpars.vertexColors = FaceColors;
 
-			if ( m.mapAO && texturePath ) {
+			} else if ( m.vertexColors ) {
 
-				create_texture( mpars, 'aoMap', m.mapAO, m.mapAORepeat, m.mapAOOffset, m.mapAOWrap, m.mapAOAnisotropy );
-
-			}
-
-			if ( m.mapBump && texturePath ) {
-
-				create_texture( mpars, 'bumpMap', m.mapBump, m.mapBumpRepeat, m.mapBumpOffset, m.mapBumpWrap, m.mapBumpAnisotropy );
+				mpars.vertexColors = VertexColors;
 
 			}
 
-			if ( m.mapNormal && texturePath ) {
+		}
 
-				create_texture( mpars, 'normalMap', m.mapNormal, m.mapNormalRepeat, m.mapNormalOffset, m.mapNormalWrap, m.mapNormalAnisotropy );
+		// colors
 
-			}
+		if ( m.colorDiffuse ) {
 
-			if ( m.mapSpecular && texturePath ) {
+			mpars.color = rgb2hex( m.colorDiffuse );
 
-				create_texture( mpars, 'specularMap', m.mapSpecular, m.mapSpecularRepeat, m.mapSpecularOffset, m.mapSpecularWrap, m.mapSpecularAnisotropy );
+		} else if ( m.DbgColor ) {
 
-			}
+			mpars.color = m.DbgColor;
 
-			if ( m.mapAlpha && texturePath ) {
+		}
 
-				create_texture( mpars, 'alphaMap', m.mapAlpha, m.mapAlphaRepeat, m.mapAlphaOffset, m.mapAlphaWrap, m.mapAlphaAnisotropy );
+		if ( m.colorSpecular ) {
 
-			}
+			mpars.specular = rgb2hex( m.colorSpecular );
 
-			//
+		}
 
-			if ( m.mapBumpScale ) {
+		if ( m.colorEmissive ) {
 
-				mpars.bumpScale = m.mapBumpScale;
+			mpars.emissive = rgb2hex( m.colorEmissive );
 
-			}
+		}
 
-			if ( m.mapNormalFactor ) {
+		// modifiers
 
-				mpars.normalScale = new THREE$Vector2( m.mapNormalFactor, m.mapNormalFactor );
+		if ( m.transparency !== undefined ) {
 
-			}
+			console.warn( 'THREE.Loader: transparency has been renamed to opacity' );
+			m.opacity = m.transparency;
 
-			var material = new THREE[ mtype ]( mpars );
+		}
 
-			if ( m.DbgName !== undefined ) material.name = m.DbgName;
+		if ( m.opacity !== undefined ) {
 
-			return material;
+			mpars.opacity = m.opacity;
 
-		};
+		}
 
-	} )()
+		if ( m.specularCoef ) {
+
+			mpars.shininess = m.specularCoef;
+
+		}
+
+		// textures
+
+		if ( m.mapDiffuse && texturePath ) {
+
+			create_texture( mpars, 'map', m.mapDiffuse, m.mapDiffuseRepeat, m.mapDiffuseOffset, m.mapDiffuseWrap, m.mapDiffuseAnisotropy );
+
+		}
+
+		if ( m.mapLight && texturePath ) {
+
+			create_texture( mpars, 'lightMap', m.mapLight, m.mapLightRepeat, m.mapLightOffset, m.mapLightWrap, m.mapLightAnisotropy );
+
+		}
+
+		if ( m.mapAO && texturePath ) {
+
+			create_texture( mpars, 'aoMap', m.mapAO, m.mapAORepeat, m.mapAOOffset, m.mapAOWrap, m.mapAOAnisotropy );
+
+		}
+
+		if ( m.mapBump && texturePath ) {
+
+			create_texture( mpars, 'bumpMap', m.mapBump, m.mapBumpRepeat, m.mapBumpOffset, m.mapBumpWrap, m.mapBumpAnisotropy );
+
+		}
+
+		if ( m.mapNormal && texturePath ) {
+
+			create_texture( mpars, 'normalMap', m.mapNormal, m.mapNormalRepeat, m.mapNormalOffset, m.mapNormalWrap, m.mapNormalAnisotropy );
+
+		}
+
+		if ( m.mapSpecular && texturePath ) {
+
+			create_texture( mpars, 'specularMap', m.mapSpecular, m.mapSpecularRepeat, m.mapSpecularOffset, m.mapSpecularWrap, m.mapSpecularAnisotropy );
+
+		}
+
+		if ( m.mapAlpha && texturePath ) {
+
+			create_texture( mpars, 'alphaMap', m.mapAlpha, m.mapAlphaRepeat, m.mapAlphaOffset, m.mapAlphaWrap, m.mapAlphaAnisotropy );
+
+		}
+
+		//
+
+		if ( m.mapBumpScale ) {
+
+			mpars.bumpScale = m.mapBumpScale;
+
+		}
+
+		if ( m.mapNormalFactor ) {
+
+			mpars.normalScale = new Vector2( m.mapNormalFactor, m.mapNormalFactor );
+
+		}
+
+		var material = new THREE[ mtype ]( mpars );
+
+		if ( m.DbgName !== undefined ) material.name = m.DbgName;
+
+		return material;
+
+	}
 
 };
 
-THREE$Loader.Handlers = {
+Loader.Handlers = {
 
 	handlers: [],
 
@@ -406,4 +441,4 @@ THREE$Loader.Handlers = {
 };
 
 
-export { THREE$Loader };
+export { Loader };

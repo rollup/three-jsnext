@@ -1,13 +1,13 @@
-import { THREE$Texture } from './Texture';
+import { Texture } from './Texture';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$CompressedTexture ( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
+function CompressedTexture ( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
 	this.isCompressedTexture = true;
 
-	THREE$Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
+	Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 
 	this.image = { width: width, height: height };
 	this.mipmaps = mipmaps;
@@ -24,8 +24,18 @@ function THREE$CompressedTexture ( mipmaps, width, height, format, type, mapping
 
 };
 
-THREE$CompressedTexture.prototype = Object.create( THREE$Texture.prototype );
-THREE$CompressedTexture.prototype.constructor = THREE$CompressedTexture;
+CompressedTexture.prototype = Object.create( Texture.prototype );
+CompressedTexture.prototype.constructor = CompressedTexture;
+
+CompressedTexture.prototype.clone = function () {
+
+	var texture = new CompressedTexture();
+
+	Texture.prototype.clone.call( this, texture );
+
+	return texture;
+
+};
 
 
-export { THREE$CompressedTexture };
+export { CompressedTexture };

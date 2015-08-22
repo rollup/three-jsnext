@@ -1,13 +1,13 @@
-import { THREE$Texture } from './Texture';
+import { Texture } from './Texture';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+function VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 	this.isVideoTexture = true;
 
-	THREE$Texture.call( this, video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
+	Texture.call( this, video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 
 	this.generateMipmaps = false;
 
@@ -29,8 +29,8 @@ function THREE$VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter
 
 };
 
-THREE$VideoTexture.prototype = Object.create( THREE$Texture.prototype );
-THREE$VideoTexture.prototype.constructor = THREE$VideoTexture;
+VideoTexture.prototype = Object.create( Texture.prototype );
+VideoTexture.prototype.constructor = VideoTexture;
 
 
-export { THREE$VideoTexture };
+export { VideoTexture };

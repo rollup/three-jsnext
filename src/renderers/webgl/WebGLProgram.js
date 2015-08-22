@@ -1,10 +1,10 @@
-import { THREE$WebGLShader } from './WebGLShader';
-import { THREE$RawShaderMaterial } from '../../materials/RawShaderMaterial';
-import { THREE$AddOperation, THREE$MixOperation, THREE$MultiplyOperation, THREE$EquirectangularRefractionMapping, THREE$CubeRefractionMapping, THREE$SphericalReflectionMapping, THREE$EquirectangularReflectionMapping, THREE$CubeReflectionMapping, THREE$PCFSoftShadowMap, THREE$PCFShadowMap } from '../../Three';
+import { WebGLShader } from './WebGLShader';
+import { RawShaderMaterial } from '../../materials/RawShaderMaterial';
+import { AddOperation, MixOperation, MultiplyOperation, EquirectangularRefractionMapping, CubeRefractionMapping, SphericalReflectionMapping, EquirectangularReflectionMapping, CubeReflectionMapping, PCFSoftShadowMap, PCFShadowMap } from '../../Three';
 
-var THREE$WebGLProgram;
+var WebGLProgram;
 
-THREE$WebGLProgram = ( function () {
+WebGLProgram = ( function () {
 
 	var programIdCount = 0;
 
@@ -34,14 +34,14 @@ THREE$WebGLProgram = ( function () {
 
 		for ( var i = 0; i < n; i ++ ) {
 
-			var info = gl.getActiveUniform( program, i );
+			var info = gl.getActiveUniform( program , i );
 			var name = info.name;
 			var location = gl.getUniformLocation( program, name );
 
-			// console.log("THREE.WebGLProgram: ACTIVE UNIFORM:", name);
+			//console.log("THREE.WebGLProgram: ACTIVE UNIFORM:", name);
 
 			var suffixPos = name.lastIndexOf( '[0]' );
-			if ( suffixPos !== - 1 && suffixPos === name.length - 3 ) {
+			if ( suffixPos !== -1 && suffixPos === name.length - 3 ) {
 
 				uniforms[ name.substr( 0, suffixPos ) ] = location;
 
@@ -63,10 +63,10 @@ THREE$WebGLProgram = ( function () {
 
 		for ( var i = 0; i < n; i ++ ) {
 
-			var info = gl.getActiveAttrib( program, i );
+			var info = gl.getActiveAttrib( program , i );
 			var name = info.name;
 
-			// console.log("THREE.WebGLProgram: ACTIVE VERTEX ATTRIBUTE:", name, i );
+			//console.log("THREE.WebGLProgram: ACTIVE VERTEX ATTRIBUTE:", name);
 
 			attributes[ name ] = gl.getAttribLocation( program, name );
 
@@ -82,22 +82,36 @@ THREE$WebGLProgram = ( function () {
 
 	}
 
-	return function WebGLProgram( renderer, code, material, parameters ) {
+	return function ( renderer, code, material, parameters ) {
 
 		var gl = renderer.context;
 
 		var defines = material.defines;
+		var uniforms = material.__webglShader.uniforms;
+		var attributes = material.attributes;
 
 		var vertexShader = material.__webglShader.vertexShader;
 		var fragmentShader = material.__webglShader.fragmentShader;
 
+		var index0AttributeName = material.index0AttributeName;
+
+		/*
+		if ( index0AttributeName === undefined && parameters.morphTargets === true ) {
+
+			// programs with morphTargets displace position out of attribute 0
+
+			index0AttributeName = 'position';
+
+		}
+		*/
+
 		var shadowMapTypeDefine = 'SHADOWMAP_TYPE_BASIC';
 
-		if ( parameters.shadowMapType === THREE$PCFShadowMap ) {
+		if ( parameters.shadowMapType === PCFShadowMap ) {
 
 			shadowMapTypeDefine = 'SHADOWMAP_TYPE_PCF';
 
-		} else if ( parameters.shadowMapType === THREE$PCFSoftShadowMap ) {
+		} else if ( parameters.shadowMapType === PCFSoftShadowMap ) {
 
 			shadowMapTypeDefine = 'SHADOWMAP_TYPE_PCF_SOFT';
 
@@ -111,17 +125,17 @@ THREE$WebGLProgram = ( function () {
 
 			switch ( material.envMap.mapping ) {
 
-				case THREE$CubeReflectionMapping:
-				case THREE$CubeRefractionMapping:
+				case CubeReflectionMapping:
+				case CubeRefractionMapping:
 					envMapTypeDefine = 'ENVMAP_TYPE_CUBE';
 					break;
 
-				case THREE$EquirectangularReflectionMapping:
-				case THREE$EquirectangularRefractionMapping:
+				case EquirectangularReflectionMapping:
+				case EquirectangularRefractionMapping:
 					envMapTypeDefine = 'ENVMAP_TYPE_EQUIREC';
 					break;
 
-				case THREE$SphericalReflectionMapping:
+				case SphericalReflectionMapping:
 					envMapTypeDefine = 'ENVMAP_TYPE_SPHERE';
 					break;
 
@@ -129,8 +143,8 @@ THREE$WebGLProgram = ( function () {
 
 			switch ( material.envMap.mapping ) {
 
-				case THREE$CubeRefractionMapping:
-				case THREE$EquirectangularRefractionMapping:
+				case CubeRefractionMapping:
+				case EquirectangularRefractionMapping:
 					envMapModeDefine = 'ENVMAP_MODE_REFRACTION';
 					break;
 
@@ -138,15 +152,15 @@ THREE$WebGLProgram = ( function () {
 
 			switch ( material.combine ) {
 
-				case THREE$MultiplyOperation:
+				case MultiplyOperation:
 					envMapBlendingDefine = 'ENVMAP_BLENDING_MULTIPLY';
 					break;
 
-				case THREE$MixOperation:
+				case MixOperation:
 					envMapBlendingDefine = 'ENVMAP_BLENDING_MIX';
 					break;
 
-				case THREE$AddOperation:
+				case AddOperation:
 					envMapBlendingDefine = 'ENVMAP_BLENDING_ADD';
 					break;
 
@@ -211,24 +225,25 @@ THREE$WebGLProgram = ( function () {
 				parameters.alphaMap ? '#define USE_ALPHAMAP' : '',
 				parameters.vertexColors ? '#define USE_COLOR' : '',
 
-				parameters.flatShading ? '#define FLAT_SHADED' : '',
+				parameters.flatShading ? '#define FLAT_SHADED': '',
 
 				parameters.skinning ? '#define USE_SKINNING' : '',
 				parameters.useVertexTexture ? '#define BONE_TEXTURE' : '',
 
 				parameters.morphTargets ? '#define USE_MORPHTARGETS' : '',
-				parameters.morphNormals && parameters.flatShading === false ? '#define USE_MORPHNORMALS' : '',
+				parameters.morphNormals ? '#define USE_MORPHNORMALS' : '',
 				parameters.doubleSided ? '#define DOUBLE_SIDED' : '',
 				parameters.flipSided ? '#define FLIP_SIDED' : '',
 
 				parameters.shadowMapEnabled ? '#define USE_SHADOWMAP' : '',
 				parameters.shadowMapEnabled ? '#define ' + shadowMapTypeDefine : '',
 				parameters.shadowMapDebug ? '#define SHADOWMAP_DEBUG' : '',
+				parameters.shadowMapCascade ? '#define SHADOWMAP_CASCADE' : '',
 
 				parameters.sizeAttenuation ? '#define USE_SIZEATTENUATION' : '',
 
 				parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
-				parameters.logarithmicDepthBuffer && renderer.extensions.get( 'EXT_frag_depth' ) ? '#define USE_LOGDEPTHBUF_EXT' : '',
+				parameters.logarithmicDepthBuffer && renderer.extensions.get('EXT_frag_depth') ? '#define USE_LOGDEPTHBUF_EXT' : '',
 
 
 				'uniform mat4 modelMatrix;',
@@ -286,8 +301,7 @@ THREE$WebGLProgram = ( function () {
 
 			prefixFragment = [
 
-				parameters.bumpMap || parameters.normalMap || parameters.flatShading || material.derivatives ? '#extension GL_OES_standard_derivatives : enable' : '',
-				parameters.logarithmicDepthBuffer && renderer.extensions.get( 'EXT_frag_depth' ) ? '#extension GL_EXT_frag_depth : enable' : '',
+				( parameters.bumpMap || parameters.normalMap || parameters.flatShading || material.derivatives ) ? '#extension GL_OES_standard_derivatives : enable' : '',
 
 				'precision ' + parameters.precision + ' float;',
 				'precision ' + parameters.precision + ' int;',
@@ -326,7 +340,7 @@ THREE$WebGLProgram = ( function () {
 				parameters.alphaMap ? '#define USE_ALPHAMAP' : '',
 				parameters.vertexColors ? '#define USE_COLOR' : '',
 
-				parameters.flatShading ? '#define FLAT_SHADED' : '',
+				parameters.flatShading ? '#define FLAT_SHADED': '',
 
 				parameters.metal ? '#define METAL' : '',
 				parameters.doubleSided ? '#define DOUBLE_SIDED' : '',
@@ -335,9 +349,10 @@ THREE$WebGLProgram = ( function () {
 				parameters.shadowMapEnabled ? '#define USE_SHADOWMAP' : '',
 				parameters.shadowMapEnabled ? '#define ' + shadowMapTypeDefine : '',
 				parameters.shadowMapDebug ? '#define SHADOWMAP_DEBUG' : '',
+				parameters.shadowMapCascade ? '#define SHADOWMAP_CASCADE' : '',
 
 				parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
-				parameters.logarithmicDepthBuffer && renderer.extensions.get( 'EXT_frag_depth' ) ? '#define USE_LOGDEPTHBUF_EXT' : '',
+				parameters.logarithmicDepthBuffer && renderer.extensions.get('EXT_frag_depth') ? '#define USE_LOGDEPTHBUF_EXT' : '',
 
 				'uniform mat4 viewMatrix;',
 				'uniform vec3 cameraPosition;',
@@ -351,22 +366,19 @@ THREE$WebGLProgram = ( function () {
 		var vertexGlsl = prefixVertex + vertexShader;
 		var fragmentGlsl = prefixFragment + fragmentShader;
 
-		var glVertexShader = THREE$WebGLShader( gl, gl.VERTEX_SHADER, vertexGlsl );
-		var glFragmentShader = THREE$WebGLShader( gl, gl.FRAGMENT_SHADER, fragmentGlsl );
+		var glVertexShader = WebGLShader( gl, gl.VERTEX_SHADER, vertexGlsl );
+		var glFragmentShader = WebGLShader( gl, gl.FRAGMENT_SHADER, fragmentGlsl );
 
 		gl.attachShader( program, glVertexShader );
 		gl.attachShader( program, glFragmentShader );
 
-		// Force a particular attribute to index 0.
+		if ( index0AttributeName !== undefined ) {
 
-		if ( material.index0AttributeName !== undefined ) {
+			// Force a particular attribute to index 0.
+			// because potentially expensive emulation is done by browser if attribute 0 is disabled.
+			// And, color, for example is often automatically bound to index 0 so disabling it
 
-			gl.bindAttribLocation( program, 0, material.index0AttributeName );
-
-		} else if ( parameters.morphTargets === true ) {
-
-			// programs with morphTargets displace position out of attribute 0
-			gl.bindAttribLocation( program, 0, 'position' );
+			gl.bindAttribLocation( program, 0, index0AttributeName );
 
 		}
 
@@ -481,7 +493,7 @@ THREE$WebGLProgram = ( function () {
 				}
 			}
 
-		} );
+		});
 
 
 		//
@@ -500,4 +512,4 @@ THREE$WebGLProgram = ( function () {
 } )();
 
 
-export { THREE$WebGLProgram };
+export { WebGLProgram };

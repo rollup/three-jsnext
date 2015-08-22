@@ -1,4 +1,4 @@
-import { THREE$Vector3 } from './Vector3';
+import { Vector3 } from './Vector3';
 
 /**
  * Spline from Tween.js, slightly optimized (and trashed)
@@ -8,7 +8,7 @@ import { THREE$Vector3 } from './Vector3';
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$Spline ( points ) {
+function Spline ( points ) {
 	this.isSpline = true;
 
 	this.points = points;
@@ -78,8 +78,8 @@ function THREE$Spline ( points ) {
 
 		var i, index, nSamples, position,
 			point = 0, intPoint = 0, oldIntPoint = 0,
-			oldPosition = new THREE$Vector3(),
-			tmpVec = new THREE$Vector3(),
+			oldPosition = new Vector3(),
+			tmpVec = new Vector3(),
 			chunkLengths = [],
 			totalLength = 0;
 
@@ -131,7 +131,7 @@ function THREE$Spline ( points ) {
 			realDistance,
 			sampling, position,
 			newpoints = [],
-			tmpVec = new THREE$Vector3(),
+			tmpVec = new Vector3(),
 			sl = this.getLength();
 
 		newpoints.push( tmpVec.copy( this.points[ 0 ] ).clone() );
@@ -179,4 +179,4 @@ function THREE$Spline ( points ) {
 };
 
 
-export { THREE$Spline };
+export { Spline };

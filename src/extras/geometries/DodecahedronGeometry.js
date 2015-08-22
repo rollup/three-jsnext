@@ -1,11 +1,17 @@
-import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
+import { Geometry } from '../../core/Geometry';
+import { PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
  * @author Abe Pazos / https://hamoid.com
  */
 
-function THREE$DodecahedronGeometry ( radius, detail ) {
+function DodecahedronGeometry ( radius, detail ) {
 	this.isDodecahedronGeometry = true;
+
+	this.parameters = {
+		radius: radius,
+		detail: detail
+	};
 
 	var t = ( 1 + Math.sqrt( 5 ) ) / 2;
 	var r = 1 / t;
@@ -13,22 +19,22 @@ function THREE$DodecahedronGeometry ( radius, detail ) {
 	var vertices = [
 
 		// (±1, ±1, ±1)
-		- 1, - 1, - 1,    - 1, - 1,  1,
-		- 1,  1, - 1,    - 1,  1,  1,
-		 1, - 1, - 1,     1, - 1,  1,
-		 1,  1, - 1,     1,  1,  1,
+		-1, -1, -1,    -1, -1,  1,
+		-1,  1, -1,    -1,  1,  1,
+		 1, -1, -1,     1, -1,  1,
+		 1,  1, -1,     1,  1,  1,
 
 		// (0, ±1/φ, ±φ)
-		 0, - r, - t,     0, - r,  t,
-		 0,  r, - t,     0,  r,  t,
+		 0, -r, -t,     0, -r,  t,
+		 0,  r, -t,     0,  r,  t,
 
 		// (±1/φ, ±φ, 0)
-		- r, - t,  0,    - r,  t,  0,
-		 r, - t,  0,     r,  t,  0,
+		-r, -t,  0,    -r,  t,  0,
+		 r, -t,  0,     r,  t,  0,
 
 		// (±φ, 0, ±1/φ)
-		- t,  0, - r,     t,  0, - r,
-		- t,  0,  r,     t,  0,  r
+		-t,  0, -r,     t,  0, -r,
+		-t,  0,  r,     t,  0,  r
 	];
 
 	var indices = [
@@ -46,32 +52,12 @@ function THREE$DodecahedronGeometry ( radius, detail ) {
 		 1, 12, 14,      1, 14,  5,      1,  5,  9
 	];
 
-	THREE$PolyhedronGeometry.call( this, vertices, indices, radius, detail );
-
-	this.type = 'DodecahedronGeometry';
-
-	this.parameters = {
-		radius: radius,
-		detail: detail
-	};
+	PolyhedronGeometry.call( this, vertices, indices, radius, detail );
 
 };
 
-THREE$DodecahedronGeometry.prototype = Object.create( THREE$PolyhedronGeometry.prototype );
-THREE$DodecahedronGeometry.prototype.constructor = THREE$DodecahedronGeometry;
-
-THREE$DodecahedronGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$DodecahedronGeometry(
-		this.parameters.radius,
-		this.parameters.detail
-	);
-
-	geometry.copy( this );
-
-	return geometry;
-
-};
+DodecahedronGeometry.prototype = Object.create( Geometry.prototype );
+DodecahedronGeometry.prototype.constructor = DodecahedronGeometry;
 
 
-export { THREE$DodecahedronGeometry };
+export { DodecahedronGeometry };

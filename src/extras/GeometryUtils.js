@@ -1,12 +1,12 @@
-import { THREE$Mesh } from '../objects/Mesh';
+import { Mesh } from '../objects/Mesh';
 
-var THREE$GeometryUtils;
+var GeometryUtils;
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE$GeometryUtils = {
+GeometryUtils = {
 
 	merge: function ( geometry1, geometry2, materialIndexOffset ) {
 
@@ -37,4 +37,4 @@ THREE$GeometryUtils = {
 };
 
 
-export { THREE$GeometryUtils };
+export { GeometryUtils };

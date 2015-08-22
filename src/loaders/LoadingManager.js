@@ -1,15 +1,15 @@
-var THREE$DefaultLoadingManager;
+var DefaultLoadingManager;
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$LoadingManager ( onLoad, onProgress, onError ) {
+function LoadingManager ( onLoad, onProgress, onError ) {
 	this.isLoadingManager = true;
 
 	var scope = this;
 
-	var isLoading = false, itemsLoaded = 0, itemsTotal = 0;
+	var loaded = 0, total = 0;
 
 	this.onLoad = onLoad;
 	this.onProgress = onProgress;
@@ -17,41 +17,23 @@ function THREE$LoadingManager ( onLoad, onProgress, onError ) {
 
 	this.itemStart = function ( url ) {
 
-		itemsTotal ++;
-
-		if ( isLoading === false ) {
-
-			if ( scope.onStart !== undefined ) {
-
-				scope.onStart( url, itemsLoaded, itemsTotal );
-
-			}
-
-		}
-
-		isLoading = true;
+		total ++;
 
 	};
 
 	this.itemEnd = function ( url ) {
 
-		itemsLoaded ++;
+		loaded ++;
 
 		if ( scope.onProgress !== undefined ) {
 
-			scope.onProgress( url, itemsLoaded, itemsTotal );
+			scope.onProgress( url, loaded, total );
 
 		}
 
-		if ( itemsLoaded === itemsTotal ) {
+		if ( loaded === total && scope.onLoad !== undefined ) {
 
-			isLoading = false;
-
-			if ( scope.onLoad !== undefined ) {
-
-				scope.onLoad();
-
-			}
+			scope.onLoad();
 
 		}
 
@@ -59,7 +41,7 @@ function THREE$LoadingManager ( onLoad, onProgress, onError ) {
 
 };
 
-THREE$DefaultLoadingManager = new THREE$LoadingManager();
+DefaultLoadingManager = new LoadingManager();
 
 
-export { THREE$DefaultLoadingManager, THREE$LoadingManager };
+export { DefaultLoadingManager, LoadingManager };

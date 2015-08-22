@@ -1,9 +1,8 @@
-import { THREE$LinearFilter, THREE$LinearMipMapLinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
-import { THREE$XHRLoader } from './XHRLoader';
-import { THREE$DataTexture } from '../textures/DataTexture';
-import { THREE$DefaultLoadingManager } from './LoadingManager';
+import { LinearFilter, LinearMipMapLinearFilter, ClampToEdgeWrapping } from '../Three';
+import { XHRLoader } from './XHRLoader';
+import { DataTexture } from '../textures/DataTexture';
 
-var THREE$DataTextureLoader;
+var DataTextureLoader;
 
 /**
  * @author Nikos M. / https://github.com/foo123/
@@ -11,35 +10,32 @@ var THREE$DataTextureLoader;
  * Abstract Base class to load generic binary textures formats (rgbe, hdr, ...)
  */
 
-THREE$DataTextureLoader = function THREE$BinaryTextureLoader ( manager ) {
+DataTextureLoader = function BinaryTextureLoader () {
 	this.isBinaryTextureLoader = true;
-
-	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 
 	// override in sub classes
 	this._parser = null;
 
 };
 
-THREE$BinaryTextureLoader.prototype = {
+BinaryTextureLoader.prototype = {
 
-	constructor: THREE$BinaryTextureLoader,
+	constructor: BinaryTextureLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var texture = new THREE$DataTexture();
+		var texture = new DataTexture( );
 
-		var loader = new THREE$XHRLoader( this.manager );
-		loader.setCrossOrigin( this.crossOrigin );
+		var loader = new XHRLoader();
 		loader.setResponseType( 'arraybuffer' );
 
 		loader.load( url, function ( buffer ) {
 
 			var texData = scope._parser( buffer );
 
-			if ( ! texData ) return;
+			if ( !texData ) return;
 
 			if ( undefined !== texData.image ) {
 
@@ -53,11 +49,11 @@ THREE$BinaryTextureLoader.prototype = {
 
 			}
 
-			texture.wrapS = undefined !== texData.wrapS ? texData.wrapS : THREE$ClampToEdgeWrapping;
-			texture.wrapT = undefined !== texData.wrapT ? texData.wrapT : THREE$ClampToEdgeWrapping;
+			texture.wrapS = undefined !== texData.wrapS ? texData.wrapS : ClampToEdgeWrapping;
+			texture.wrapT = undefined !== texData.wrapT ? texData.wrapT : ClampToEdgeWrapping;
 
-			texture.magFilter = undefined !== texData.magFilter ? texData.magFilter : THREE$LinearFilter;
-			texture.minFilter = undefined !== texData.minFilter ? texData.minFilter : THREE$LinearMipMapLinearFilter;
+			texture.magFilter = undefined !== texData.magFilter ? texData.magFilter : LinearFilter;
+			texture.minFilter = undefined !== texData.minFilter ? texData.minFilter : LinearMipMapLinearFilter;
 
 			texture.anisotropy = undefined !== texData.anisotropy ? texData.anisotropy : 1;
 
@@ -80,7 +76,7 @@ THREE$BinaryTextureLoader.prototype = {
 
 			if ( 1 === texData.mipmapCount ) {
 
-				texture.minFilter = THREE$LinearFilter;
+				texture.minFilter = LinearFilter;
 
 			}
 
@@ -93,15 +89,9 @@ THREE$BinaryTextureLoader.prototype = {
 
 		return texture;
 
-	},
-
-	setCrossOrigin: function ( value ) {
-
-		this.crossOrigin = value;
-
 	}
 
 };
 
 
-export { THREE$DataTextureLoader, THREE$BinaryTextureLoader };
+export { DataTextureLoader, BinaryTextureLoader };

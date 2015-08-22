@@ -1,5 +1,5 @@
-import { THREE$Material } from './Material';
-import { THREE$Color } from '../math/Color';
+import { Material } from './Material';
+import { Color } from '../math/Color';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -20,14 +20,14 @@ import { THREE$Color } from '../math/Color';
  * }
  */
 
-function THREE$SpriteMaterial ( parameters ) {
+function SpriteMaterial ( parameters ) {
 	this.isSpriteMaterial = true;
 
-	THREE$Material.call( this );
+	Material.call( this );
 
 	this.type = 'SpriteMaterial';
 
-	this.color = new THREE$Color( 0xffffff );
+	this.color = new Color( 0xffffff );
 	this.map = null;
 
 	this.rotation = 0;
@@ -40,23 +40,25 @@ function THREE$SpriteMaterial ( parameters ) {
 
 };
 
-THREE$SpriteMaterial.prototype = Object.create( THREE$Material.prototype );
-THREE$SpriteMaterial.prototype.constructor = THREE$SpriteMaterial;
+SpriteMaterial.prototype = Object.create( Material.prototype );
+SpriteMaterial.prototype.constructor = SpriteMaterial;
 
-THREE$SpriteMaterial.prototype.copy = function ( source ) {
+SpriteMaterial.prototype.clone = function () {
 
-	THREE$Material.prototype.copy.call( this, source );
+	var material = new SpriteMaterial();
 
-	this.color.copy( source.color );
-	this.map = source.map;
+	Material.prototype.clone.call( this, material );
 
-	this.rotation = source.rotation;
+	material.color.copy( this.color );
+	material.map = this.map;
 
-	this.fog = source.fog;
+	material.rotation = this.rotation;
 
-	return this;
+	material.fog = this.fog;
+
+	return material;
 
 };
 
 
-export { THREE$SpriteMaterial };
+export { SpriteMaterial };

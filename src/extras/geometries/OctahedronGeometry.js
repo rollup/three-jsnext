@@ -1,21 +1,27 @@
-import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
+import { Geometry } from '../../core/Geometry';
+import { PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
  * @author timothypratley / https://github.com/timothypratley
  */
 
-function THREE$OctahedronGeometry ( radius, detail ) {
+function OctahedronGeometry ( radius, detail ) {
 	this.isOctahedronGeometry = true;
 
+	this.parameters = {
+		radius: radius,
+		detail: detail
+	};
+
 	var vertices = [
-		1, 0, 0,   - 1, 0, 0,    0, 1, 0,    0, - 1, 0,    0, 0, 1,    0, 0, - 1
+		1, 0, 0,   - 1, 0, 0,    0, 1, 0,    0,- 1, 0,    0, 0, 1,    0, 0,- 1
 	];
 
 	var indices = [
 		0, 2, 4,    0, 4, 3,    0, 3, 5,    0, 5, 2,    1, 2, 5,    1, 5, 3,    1, 3, 4,    1, 4, 2
 	];
 
-	THREE$PolyhedronGeometry.call( this, vertices, indices, radius, detail );
+	PolyhedronGeometry.call( this, vertices, indices, radius, detail );
 
 	this.type = 'OctahedronGeometry';
 
@@ -23,24 +29,10 @@ function THREE$OctahedronGeometry ( radius, detail ) {
 		radius: radius,
 		detail: detail
 	};
-
 };
 
-THREE$OctahedronGeometry.prototype = Object.create( THREE$PolyhedronGeometry.prototype );
-THREE$OctahedronGeometry.prototype.constructor = THREE$OctahedronGeometry;
-
-THREE$OctahedronGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$OctahedronGeometry(
-		this.parameters.radius,
-		this.parameters.detail
-	);
-
-	geometry.copy( this );
-
-	return geometry;
-
-};
+OctahedronGeometry.prototype = Object.create( Geometry.prototype );
+OctahedronGeometry.prototype.constructor = OctahedronGeometry;
 
 
-export { THREE$OctahedronGeometry };
+export { OctahedronGeometry };

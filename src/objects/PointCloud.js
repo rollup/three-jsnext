@@ -1,36 +1,36 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$BufferGeometry } from '../core/BufferGeometry';
-import { THREE$Vector3 } from '../math/Vector3';
-import { THREE$Ray } from '../math/Ray';
-import { THREE$Matrix4 } from '../math/Matrix4';
-import { THREE$PointCloudMaterial } from '../materials/PointCloudMaterial';
-import { THREE$Geometry } from '../core/Geometry';
+import { Object3D } from '../core/Object3D';
+import { BufferGeometry } from '../core/BufferGeometry';
+import { Vector3 } from '../math/Vector3';
+import { Ray } from '../math/Ray';
+import { Matrix4 } from '../math/Matrix4';
+import { PointCloudMaterial } from '../materials/PointCloudMaterial';
+import { Geometry } from '../core/Geometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$PointCloud ( geometry, material ) {
+function PointCloud ( geometry, material ) {
 	this.isPointCloud = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.type = 'PointCloud';
 
-	this.geometry = geometry !== undefined ? geometry : new THREE$Geometry();
-	this.material = material !== undefined ? material : new THREE$PointCloudMaterial( { color: Math.random() * 0xffffff } );
+	this.geometry = geometry !== undefined ? geometry : new Geometry();
+	this.material = material !== undefined ? material : new PointCloudMaterial( { color: Math.random() * 0xffffff } );
 
 };
 
-THREE$PointCloud.prototype = Object.create( THREE$Object3D.prototype );
-THREE$PointCloud.prototype.constructor = THREE$PointCloud;
+PointCloud.prototype = Object.create( Object3D.prototype );
+PointCloud.prototype.constructor = PointCloud;
 
-THREE$PointCloud.prototype.raycast = ( function () {
+PointCloud.prototype.raycast = ( function () {
 
-	var inverseMatrix = new THREE$Matrix4();
-	var ray = new THREE$Ray();
+	var inverseMatrix = new Matrix4();
+	var ray = new Ray();
 
-	return function raycast( raycaster, intersects ) {
+	return function ( raycaster, intersects ) {
 
 		var object = this;
 		var geometry = object.geometry;
@@ -51,7 +51,7 @@ THREE$PointCloud.prototype.raycast = ( function () {
 
 		var localThreshold = threshold / ( ( this.scale.x + this.scale.y + this.scale.z ) / 3 );
 		var localThresholdSq = localThreshold * localThreshold;
-		var position = new THREE$Vector3();
+		var position = new Vector3();
 
 		var testPoint = function ( point, index ) {
 
@@ -89,11 +89,15 @@ THREE$PointCloud.prototype.raycast = ( function () {
 			if ( attributes.index !== undefined ) {
 
 				var indices = attributes.index.array;
-				var offsets = geometry.drawcalls;
+				var offsets = geometry.offsets;
 
 				if ( offsets.length === 0 ) {
 
-					geometry.addDrawCall( 0, indices.length );
+					offsets.push( {
+						start: 0,
+						count: indices.length,
+						index: 0
+					} );
 
 				}
 
@@ -103,10 +107,11 @@ THREE$PointCloud.prototype.raycast = ( function () {
 
 					var start = offset.start;
 					var count = offset.count;
+					var index = offset.index;
 
 					for ( var i = start, il = start + count; i < il; i ++ ) {
 
-						var a = indices[ i ];
+						var a = index + indices[ i ];
 
 						position.fromArray( positions, a * 3 );
 
@@ -144,28 +149,28 @@ THREE$PointCloud.prototype.raycast = ( function () {
 
 }() );
 
-THREE$PointCloud.prototype.clone = function () {
+PointCloud.prototype.clone = function ( object ) {
 
-	return new this.constructor( this.geometry, this.material ).copy( this );
+	if ( object === undefined ) object = new PointCloud( this.geometry, this.material );
+
+	Object3D.prototype.clone.call( this, object );
+
+	return object;
 
 };
 
-THREE$PointCloud.prototype.toJSON = function ( meta ) {
+PointCloud.prototype.toJSON = function ( meta ) {
 
-	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+	var data = Object3D.prototype.toJSON.call( this, meta );
 
 	// only serialize if not in meta geometries cache
 	if ( meta.geometries[ this.geometry.uuid ] === undefined ) {
-
 		meta.geometries[ this.geometry.uuid ] = this.geometry.toJSON();
-
 	}
 
 	// only serialize if not in meta materials cache
 	if ( meta.materials[ this.material.uuid ] === undefined ) {
-
 		meta.materials[ this.material.uuid ] = this.material.toJSON();
-
 	}
 
 	data.object.geometry = this.geometry.uuid;
@@ -177,13 +182,13 @@ THREE$PointCloud.prototype.toJSON = function ( meta ) {
 
 // Backwards compatibility
 
-function THREE$ParticleSystem ( geometry, material ) {
+function ParticleSystem ( geometry, material ) {
 	this.isParticleSystem = true;
 
 	console.warn( 'THREE.ParticleSystem has been renamed to THREE.PointCloud.' );
-	return new THREE$PointCloud( geometry, material );
+	return new PointCloud( geometry, material );
 
 };
 
 
-export { THREE$ParticleSystem, THREE$PointCloud };
+export { ParticleSystem, PointCloud };

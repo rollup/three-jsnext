@@ -1,18 +1,18 @@
-import { THREE$Texture } from '../../textures/Texture';
-import { THREE$Matrix4 } from '../../math/Matrix4';
-import { THREE$Matrix3 } from '../../math/Matrix3';
-import { THREE$Vector4 } from '../../math/Vector4';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Vector2 } from '../../math/Vector2';
-import { THREE$Color } from '../../math/Color';
+import { Texture } from '../../textures/Texture';
+import { Matrix4 } from '../../math/Matrix4';
+import { Matrix3 } from '../../math/Matrix3';
+import { Vector4 } from '../../math/Vector4';
+import { Vector3 } from '../../math/Vector3';
+import { Vector2 } from '../../math/Vector2';
+import { Color } from '../../math/Color';
 
-var THREE$UniformsUtils;
+var UniformsUtils;
 
 /**
  * Uniform Utilities
  */
 
-THREE$UniformsUtils = {
+UniformsUtils = {
 
 	merge: function ( uniforms ) {
 
@@ -77,4 +77,4 @@ THREE$UniformsUtils = {
 };
 
 
-export { THREE$UniformsUtils };
+export { UniformsUtils };

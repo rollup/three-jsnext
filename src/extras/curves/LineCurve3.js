@@ -1,13 +1,13 @@
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Curve } from '../core/Curve';
+import { Vector3 } from '../../math/Vector3';
+import { Curve } from '../core/Curve';
 
-var THREE$LineCurve3;
+var LineCurve3;
 
 /**************************************************************
  *	Line3D
  **************************************************************/
 
-THREE$LineCurve3 = THREE$Curve.create(
+LineCurve3 = Curve.create(
 
 	function ( v1, v2 ) {
 
@@ -18,7 +18,7 @@ THREE$LineCurve3 = THREE$Curve.create(
 
 	function ( t ) {
 
-		var vector = new THREE$Vector3();
+		var vector = new Vector3();
 
 		vector.subVectors( this.v2, this.v1 ); // diff
 		vector.multiplyScalar( t );
@@ -31,4 +31,4 @@ THREE$LineCurve3 = THREE$Curve.create(
 );
 
 
-export { THREE$LineCurve3 };
+export { LineCurve3 };

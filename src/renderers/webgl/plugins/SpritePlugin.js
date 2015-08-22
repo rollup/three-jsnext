@@ -1,15 +1,15 @@
-import { THREE$FogExp2 } from '../../../scenes/FogExp2';
-import { THREE$Fog } from '../../../scenes/Fog';
-import { THREE$Texture } from '../../../textures/Texture';
-import { THREE$Vector3 } from '../../../math/Vector3';
-import { THREE$Quaternion } from '../../../math/Quaternion';
+import { FogExp2 } from '../../../scenes/FogExp2';
+import { Fog } from '../../../scenes/Fog';
+import { Texture } from '../../../textures/Texture';
+import { Vector3 } from '../../../math/Vector3';
+import { Quaternion } from '../../../math/Quaternion';
 
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$SpritePlugin ( renderer, sprites ) {
+function SpritePlugin ( renderer, sprites ) {
 	this.isSpritePlugin = true;
 
 	var gl = renderer.context;
@@ -22,9 +22,9 @@ function THREE$SpritePlugin ( renderer, sprites ) {
 
 	// decompose matrixWorld
 
-	var spritePosition = new THREE$Vector3();
-	var spriteRotation = new THREE$Quaternion();
-	var spriteScale = new THREE$Vector3();
+	var spritePosition = new Vector3();
+	var spriteRotation = new Quaternion();
+	var spriteScale = new Vector3();
 
 	var init = function () {
 
@@ -87,7 +87,7 @@ function THREE$SpritePlugin ( renderer, sprites ) {
 		context.fillStyle = 'white';
 		context.fillRect( 0, 0, 8, 8 );
 
-		texture = new THREE$Texture( canvas );
+		texture = new Texture( canvas );
 		texture.needsUpdate = true;
 
 	};
@@ -167,8 +167,8 @@ function THREE$SpritePlugin ( renderer, sprites ) {
 
 			var sprite = sprites[ i ];
 
-			sprite.modelViewMatrix.multiplyMatrices( camera.matrixWorldInverse, sprite.matrixWorld );
-			sprite.z = - sprite.modelViewMatrix.elements[ 14 ];
+			sprite._modelViewMatrix.multiplyMatrices( camera.matrixWorldInverse, sprite.matrixWorld );
+			sprite.z = - sprite._modelViewMatrix.elements[ 14 ];
 
 		}
 
@@ -184,7 +184,7 @@ function THREE$SpritePlugin ( renderer, sprites ) {
 			var material = sprite.material;
 
 			gl.uniform1f( uniforms.alphaTest, material.alphaTest );
-			gl.uniformMatrix4fv( uniforms.modelViewMatrix, false, sprite.modelViewMatrix.elements );
+			gl.uniformMatrix4fv( uniforms.modelViewMatrix, false, sprite._modelViewMatrix.elements );
 
 			sprite.matrixWorld.decompose( spritePosition, spriteRotation, spriteScale );
 
@@ -374,4 +374,4 @@ function THREE$SpritePlugin ( renderer, sprites ) {
 };
 
 
-export { THREE$SpritePlugin };
+export { SpritePlugin };

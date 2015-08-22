@@ -1,11 +1,11 @@
-import { THREE$Bone } from '../../objects/Bone';
-import { THREE$Matrix4 } from '../../math/Matrix4';
-import { THREE$LineSegments } from '../../objects/LineSegments';
-import { THREE$VertexColors } from '../../Three';
-import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { THREE$Color } from '../../math/Color';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Geometry } from '../../core/Geometry';
+import { Bone } from '../../objects/Bone';
+import { Matrix4 } from '../../math/Matrix4';
+import { LineSegments } from '../../objects/LineSegments';
+import { VertexColors } from '../../Three';
+import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
+import { Color } from '../../math/Color';
+import { Vector3 } from '../../math/Vector3';
+import { Geometry } from '../../core/Geometry';
 
 /**
  * @author Sean Griffin / http://twitter.com/sgrif
@@ -14,12 +14,12 @@ import { THREE$Geometry } from '../../core/Geometry';
  * @author ikerr / http://verold.com
  */
 
-function THREE$SkeletonHelper ( object ) {
+function SkeletonHelper ( object ) {
 	this.isSkeletonHelper = true;
 
 	this.bones = this.getBoneList( object );
 
-	var geometry = new THREE$Geometry();
+	var geometry = new Geometry();
 
 	for ( var i = 0; i < this.bones.length; i ++ ) {
 
@@ -27,10 +27,10 @@ function THREE$SkeletonHelper ( object ) {
 
 		if ( (bone.parent && bone.parent.isBone) ) {
 
-			geometry.vertices.push( new THREE$Vector3() );
-			geometry.vertices.push( new THREE$Vector3() );
-			geometry.colors.push( new THREE$Color( 0, 0, 1 ) );
-			geometry.colors.push( new THREE$Color( 0, 1, 0 ) );
+			geometry.vertices.push( new Vector3() );
+			geometry.vertices.push( new Vector3() );
+			geometry.colors.push( new Color( 0, 0, 1 ) );
+			geometry.colors.push( new Color( 0, 1, 0 ) );
 
 		}
 
@@ -38,9 +38,9 @@ function THREE$SkeletonHelper ( object ) {
 
 	geometry.dynamic = true;
 
-	var material = new THREE$LineBasicMaterial( { vertexColors: THREE$VertexColors, depthTest: false, depthWrite: false, transparent: true } );
+	var material = new LineBasicMaterial( { vertexColors: VertexColors, depthTest: false, depthWrite: false, transparent: true } );
 
-	THREE$LineSegments.call( this, geometry, material );
+	LineSegments.call( this, geometry, material );
 
 	this.root = object;
 
@@ -52,10 +52,10 @@ function THREE$SkeletonHelper ( object ) {
 };
 
 
-THREE$SkeletonHelper.prototype = Object.create( THREE$LineSegments.prototype );
-THREE$SkeletonHelper.prototype.constructor = THREE$SkeletonHelper;
+SkeletonHelper.prototype = Object.create( LineSegments.prototype );
+SkeletonHelper.prototype.constructor = SkeletonHelper;
 
-THREE$SkeletonHelper.prototype.getBoneList = function( object ) {
+SkeletonHelper.prototype.getBoneList = function( object ) {
 
 	var boneList = [];
 
@@ -75,13 +75,13 @@ THREE$SkeletonHelper.prototype.getBoneList = function( object ) {
 
 };
 
-THREE$SkeletonHelper.prototype.update = function () {
+SkeletonHelper.prototype.update = function () {
 
 	var geometry = this.geometry;
 
-	var matrixWorldInv = new THREE$Matrix4().getInverse( this.root.matrixWorld );
+	var matrixWorldInv = new Matrix4().getInverse( this.root.matrixWorld );
 
-	var boneMatrix = new THREE$Matrix4();
+	var boneMatrix = new Matrix4();
 
 	var j = 0;
 
@@ -110,4 +110,4 @@ THREE$SkeletonHelper.prototype.update = function () {
 };
 
 
-export { THREE$SkeletonHelper };
+export { SkeletonHelper };

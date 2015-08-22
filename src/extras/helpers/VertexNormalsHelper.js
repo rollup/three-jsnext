@@ -1,17 +1,17 @@
-import { THREE$BufferGeometry } from '../../core/BufferGeometry';
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Matrix3 } from '../../math/Matrix3';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$LineSegments } from '../../objects/LineSegments';
-import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { THREE$Float32Attribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
+import { Geometry } from '../../core/Geometry';
+import { Vector3 } from '../../math/Vector3';
+import { LineSegments } from '../../objects/LineSegments';
+import { Matrix3 } from '../../math/Matrix3';
+import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
+import { Float32Attribute } from '../../core/BufferAttribute';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
 */
 
-function THREE$VertexNormalsHelper ( object, size, hex, linewidth ) {
+function VertexNormalsHelper ( object, size, hex, linewidth ) {
 	this.isVertexNormalsHelper = true;
 
 	this.object = object;
@@ -40,38 +40,39 @@ function THREE$VertexNormalsHelper ( object, size, hex, linewidth ) {
 
 	//
 
-	var geometry = new THREE$BufferGeometry();
+	var geometry = new BufferGeometry();
 
-	var positions = new THREE$Float32Attribute( nNormals * 2 * 3, 3 );
+	var positions = new Float32Attribute( nNormals * 2 * 3, 3 );
 
 	geometry.addAttribute( 'position', positions );
 
-	THREE$LineSegments.call( this, geometry, new THREE$LineBasicMaterial( { color: color, linewidth: width } ) );
+	LineSegments.call( this, geometry, new LineBasicMaterial( { color: color, linewidth: width } ) );
 
 	//
 
 	this.matrixAutoUpdate = false;
 
+	this.normalMatrix = new Matrix3();
+
 	this.update();
 
 };
 
-THREE$VertexNormalsHelper.prototype = Object.create( THREE$LineSegments.prototype );
-THREE$VertexNormalsHelper.prototype.constructor = THREE$VertexNormalsHelper;
+VertexNormalsHelper.prototype = Object.create( LineSegments.prototype );
+VertexNormalsHelper.prototype.constructor = VertexNormalsHelper;
 
-THREE$VertexNormalsHelper.prototype.update = ( function () {
+VertexNormalsHelper.prototype.update = ( function () {
 
-	var v1 = new THREE$Vector3();
-	var v2 = new THREE$Vector3();
-	var normalMatrix = new THREE$Matrix3();
+	var v1 = new Vector3();
+	var v2 = new Vector3();
 
-	return function update() {
+	return function() {
 
 		var keys = [ 'a', 'b', 'c' ];
 
 		this.object.updateMatrixWorld( true );
 
-		normalMatrix.getNormalMatrix( this.object.matrixWorld );
+		this.normalMatrix.getNormalMatrix( this.object.matrixWorld );
 
 		var matrixWorld = this.object.matrixWorld;
 
@@ -101,7 +102,7 @@ THREE$VertexNormalsHelper.prototype.update = ( function () {
 
 					v1.copy( vertex ).applyMatrix4( matrixWorld );
 
-					v2.copy( normal ).applyMatrix3( normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
+					v2.copy( normal ).applyMatrix3( this.normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
 
 					position.setXYZ( idx, v1.x, v1.y, v1.z );
 
@@ -131,7 +132,7 @@ THREE$VertexNormalsHelper.prototype.update = ( function () {
 
 				v2.set( objNorm.getX( j ), objNorm.getY( j ), objNorm.getZ( j ) );
 
-				v2.applyMatrix3( normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
+				v2.applyMatrix3( this.normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
 
 				position.setXYZ( idx, v1.x, v1.y, v1.z );
 
@@ -151,7 +152,7 @@ THREE$VertexNormalsHelper.prototype.update = ( function () {
 
 	}
 
-}() );
+}());
 
 
-export { THREE$VertexNormalsHelper };
+export { VertexNormalsHelper };

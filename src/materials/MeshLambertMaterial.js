@@ -1,6 +1,6 @@
-import { THREE$Material } from './Material';
-import { THREE$NoColors, THREE$SmoothShading, THREE$MultiplyOperation } from '../Three';
-import { THREE$Color } from '../math/Color';
+import { Material } from './Material';
+import { NoColors, SmoothShading, MultiplyOperation } from '../Three';
+import { Color } from '../math/Color';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -40,15 +40,15 @@ import { THREE$Color } from '../math/Color';
  * }
  */
 
-function THREE$MeshLambertMaterial ( parameters ) {
+function MeshLambertMaterial ( parameters ) {
 	this.isMeshLambertMaterial = true;
 
-	THREE$Material.call( this );
+	Material.call( this );
 
 	this.type = 'MeshLambertMaterial';
 
-	this.color = new THREE$Color( 0xffffff ); // diffuse
-	this.emissive = new THREE$Color( 0x000000 );
+	this.color = new Color( 0xffffff ); // diffuse
+	this.emissive = new Color( 0x000000 );
 
 	this.map = null;
 
@@ -57,20 +57,20 @@ function THREE$MeshLambertMaterial ( parameters ) {
 	this.alphaMap = null;
 
 	this.envMap = null;
-	this.combine = THREE$MultiplyOperation;
+	this.combine = MultiplyOperation;
 	this.reflectivity = 1;
 	this.refractionRatio = 0.98;
 
 	this.fog = true;
 
-	this.shading = THREE$SmoothShading;
+	this.shading = SmoothShading;
 
 	this.wireframe = false;
 	this.wireframeLinewidth = 1;
 	this.wireframeLinecap = 'round';
 	this.wireframeLinejoin = 'round';
 
-	this.vertexColors = THREE$NoColors;
+	this.vertexColors = NoColors;
 
 	this.skinning = false;
 	this.morphTargets = false;
@@ -80,45 +80,47 @@ function THREE$MeshLambertMaterial ( parameters ) {
 
 };
 
-THREE$MeshLambertMaterial.prototype = Object.create( THREE$Material.prototype );
-THREE$MeshLambertMaterial.prototype.constructor = THREE$MeshLambertMaterial;
+MeshLambertMaterial.prototype = Object.create( Material.prototype );
+MeshLambertMaterial.prototype.constructor = MeshLambertMaterial;
 
-THREE$MeshLambertMaterial.prototype.copy = function ( source ) {
+MeshLambertMaterial.prototype.clone = function () {
 
-	THREE$Material.prototype.copy.call( this, source );
+	var material = new MeshLambertMaterial();
 
-	this.color.copy( source.color );
-	this.emissive.copy( source.emissive );
+	Material.prototype.clone.call( this, material );
 
-	this.map = source.map;
+	material.color.copy( this.color );
+	material.emissive.copy( this.emissive );
 
-	this.specularMap = source.specularMap;
+	material.map = this.map;
 
-	this.alphaMap = source.alphaMap;
+	material.specularMap = this.specularMap;
 
-	this.envMap = source.envMap;
-	this.combine = source.combine;
-	this.reflectivity = source.reflectivity;
-	this.refractionRatio = source.refractionRatio;
+	material.alphaMap = this.alphaMap;
 
-	this.fog = source.fog;
+	material.envMap = this.envMap;
+	material.combine = this.combine;
+	material.reflectivity = this.reflectivity;
+	material.refractionRatio = this.refractionRatio;
 
-	this.shading = source.shading;
+	material.fog = this.fog;
 
-	this.wireframe = source.wireframe;
-	this.wireframeLinewidth = source.wireframeLinewidth;
-	this.wireframeLinecap = source.wireframeLinecap;
-	this.wireframeLinejoin = source.wireframeLinejoin;
+	material.shading = this.shading;
 
-	this.vertexColors = source.vertexColors;
+	material.wireframe = this.wireframe;
+	material.wireframeLinewidth = this.wireframeLinewidth;
+	material.wireframeLinecap = this.wireframeLinecap;
+	material.wireframeLinejoin = this.wireframeLinejoin;
 
-	this.skinning = source.skinning;
-	this.morphTargets = source.morphTargets;
-	this.morphNormals = source.morphNormals;
+	material.vertexColors = this.vertexColors;
 
-	return this;
+	material.skinning = this.skinning;
+	material.morphTargets = this.morphTargets;
+	material.morphNormals = this.morphNormals;
+
+	return material;
 
 };
 
 
-export { THREE$MeshLambertMaterial };
+export { MeshLambertMaterial };

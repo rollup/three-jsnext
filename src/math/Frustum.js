@@ -1,6 +1,6 @@
-import { THREE$Vector3 } from './Vector3';
-import { THREE$Sphere } from './Sphere';
-import { THREE$Plane } from './Plane';
+import { Vector3 } from './Vector3';
+import { Sphere } from './Sphere';
+import { Plane } from './Plane';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -8,25 +8,25 @@ import { THREE$Plane } from './Plane';
  * @author bhouston / http://exocortex.com
  */
 
-function THREE$Frustum ( p0, p1, p2, p3, p4, p5 ) {
+function Frustum ( p0, p1, p2, p3, p4, p5 ) {
 	this.isFrustum = true;
 
 	this.planes = [
 
-		( p0 !== undefined ) ? p0 : new THREE$Plane(),
-		( p1 !== undefined ) ? p1 : new THREE$Plane(),
-		( p2 !== undefined ) ? p2 : new THREE$Plane(),
-		( p3 !== undefined ) ? p3 : new THREE$Plane(),
-		( p4 !== undefined ) ? p4 : new THREE$Plane(),
-		( p5 !== undefined ) ? p5 : new THREE$Plane()
+		( p0 !== undefined ) ? p0 : new Plane(),
+		( p1 !== undefined ) ? p1 : new Plane(),
+		( p2 !== undefined ) ? p2 : new Plane(),
+		( p3 !== undefined ) ? p3 : new Plane(),
+		( p4 !== undefined ) ? p4 : new Plane(),
+		( p5 !== undefined ) ? p5 : new Plane()
 
 	];
 
 };
 
-THREE$Frustum.prototype = {
+Frustum.prototype = {
 
-	constructor: THREE$Frustum,
+	constructor: Frustum,
 
 	set: function ( p0, p1, p2, p3, p4, p5 ) {
 
@@ -40,12 +40,6 @@ THREE$Frustum.prototype = {
 		planes[ 5 ].copy( p5 );
 
 		return this;
-
-	},
-
-	clone: function () {
-
-		return new this.constructor().copy( this );
 
 	},
 
@@ -85,7 +79,7 @@ THREE$Frustum.prototype = {
 
 	intersectsObject: function () {
 
-		var sphere = new THREE$Sphere();
+		var sphere = new Sphere();
 
 		return function ( object ) {
 
@@ -126,8 +120,8 @@ THREE$Frustum.prototype = {
 
 	intersectsBox: function () {
 
-		var p1 = new THREE$Vector3(),
-			p2 = new THREE$Vector3();
+		var p1 = new Vector3(),
+			p2 = new Vector3();
 
 		return function ( box ) {
 
@@ -154,11 +148,9 @@ THREE$Frustum.prototype = {
 					return false;
 
 				}
-
 			}
 
 			return true;
-
 		};
 
 	}(),
@@ -180,9 +172,15 @@ THREE$Frustum.prototype = {
 
 		return true;
 
+	},
+
+	clone: function () {
+
+		return new Frustum().copy( this );
+
 	}
 
 };
 
 
-export { THREE$Frustum };
+export { Frustum };

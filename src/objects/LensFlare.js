@@ -1,21 +1,21 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$NormalBlending } from '../Three';
-import { THREE$Color } from '../math/Color';
-import { THREE$Vector3 } from '../math/Vector3';
+import { Object3D } from '../core/Object3D';
+import { NormalBlending } from '../Three';
+import { Color } from '../math/Color';
+import { Vector3 } from '../math/Vector3';
 
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$LensFlare ( texture, size, distance, blending, color ) {
+function LensFlare ( texture, size, distance, blending, color ) {
 	this.isLensFlare = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.lensFlares = [];
 
-	this.positionScreen = new THREE$Vector3();
+	this.positionScreen = new Vector3();
 	this.customUpdateCallback = undefined;
 
 	if ( texture !== undefined ) {
@@ -26,21 +26,21 @@ function THREE$LensFlare ( texture, size, distance, blending, color ) {
 
 };
 
-THREE$LensFlare.prototype = Object.create( THREE$Object3D.prototype );
-THREE$LensFlare.prototype.constructor = THREE$LensFlare;
+LensFlare.prototype = Object.create( Object3D.prototype );
+LensFlare.prototype.constructor = LensFlare;
 
 
 /*
  * Add: adds another flare
  */
 
-THREE$LensFlare.prototype.add = function ( texture, size, distance, blending, color, opacity ) {
+LensFlare.prototype.add = function ( texture, size, distance, blending, color, opacity ) {
 
 	if ( size === undefined ) size = - 1;
 	if ( distance === undefined ) distance = 0;
 	if ( opacity === undefined ) opacity = 1;
-	if ( color === undefined ) color = new THREE$Color( 0xffffff );
-	if ( blending === undefined ) blending = THREE$NormalBlending;
+	if ( color === undefined ) color = new Color( 0xffffff );
+	if ( blending === undefined ) blending = NormalBlending;
 
 	distance = Math.min( distance, Math.max( 0, distance ) );
 
@@ -63,7 +63,7 @@ THREE$LensFlare.prototype.add = function ( texture, size, distance, blending, co
  * Set myLensFlare.customUpdateCallback to alter the flares in your project specific way.
  */
 
-THREE$LensFlare.prototype.updateLensFlares = function () {
+LensFlare.prototype.updateLensFlares = function () {
 
 	var f, fl = this.lensFlares.length;
 	var flare;
@@ -84,22 +84,24 @@ THREE$LensFlare.prototype.updateLensFlares = function () {
 
 };
 
-THREE$LensFlare.prototype.copy = function ( source ) {
+LensFlare.prototype.clone = function ( object ) {
 
-	THREE$Object3D.prototype.copy.call( this, source );
+	if ( object === undefined ) object = new LensFlare();
 
-	this.positionScreen.copy( source.positionScreen );
-	this.customUpdateCallback = source.customUpdateCallback;
+	Object3D.prototype.clone.call( this, object );
 
-	for ( var i = 0, l = source.lensFlares.length; i < l; i ++ ) {
+	object.positionScreen.copy( this.positionScreen );
+	object.customUpdateCallback = this.customUpdateCallback;
 
-		this.lensFlares.push( source.lensFlares[ i ] );
+	for ( var i = 0, l = this.lensFlares.length; i < l; i ++ ) {
+
+		object.lensFlares.push( this.lensFlares[ i ] );
 
 	}
 
-	return this;
+	return object;
 
 };
 
 
-export { THREE$LensFlare };
+export { LensFlare };

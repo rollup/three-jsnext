@@ -1,5 +1,5 @@
-import { THREE$Vector3 } from './Vector3';
-import { THREE$Euler } from './Euler';
+import { Vector3 } from './Vector3';
+import { Euler } from './Euler';
 
 /**
  * @author mikael emtinger / http://gomo.se/
@@ -8,7 +8,7 @@ import { THREE$Euler } from './Euler';
  * @author bhouston / http://exocortex.com
  */
 
-function THREE$Quaternion ( x, y, z, w ) {
+function Quaternion ( x, y, z, w ) {
 	this.isQuaternion = true;
 
 	this._x = x || 0;
@@ -18,9 +18,11 @@ function THREE$Quaternion ( x, y, z, w ) {
 
 };
 
-THREE$Quaternion.prototype = {
+Quaternion.prototype = {
 
-	constructor: THREE$Quaternion,
+	constructor: Quaternion,
+
+	_x: 0,_y: 0, _z: 0, _w: 0,
 
 	get x () {
 
@@ -87,12 +89,6 @@ THREE$Quaternion.prototype = {
 
 	},
 
-	clone: function () {
-
-		return new this.constructor( this._x, this._y, this._z, this._w );
-
-	},
-
 	copy: function ( quaternion ) {
 
 		this._x = quaternion.x;
@@ -111,7 +107,6 @@ THREE$Quaternion.prototype = {
 		if ( (euler && euler.isEuler) === false ) {
 
 			throw new Error( 'THREE.Quaternion: .setFromEuler() now expects a Euler rotation rather than a Vector3 and order.' );
-
 		}
 
 		// http://www.mathworks.com/matlabcentral/fileexchange/
@@ -265,7 +260,7 @@ THREE$Quaternion.prototype = {
 
 		return function ( vFrom, vTo ) {
 
-			if ( v1 === undefined ) v1 = new THREE$Vector3();
+			if ( v1 === undefined ) v1 = new Vector3();
 
 			r = vFrom.dot( vTo ) + 1;
 
@@ -514,15 +509,21 @@ THREE$Quaternion.prototype = {
 
 	},
 
-	onChangeCallback: function () {}
+	onChangeCallback: function () {},
+
+	clone: function () {
+
+		return new Quaternion( this._x, this._y, this._z, this._w );
+
+	}
 
 };
 
-THREE$Quaternion.slerp = function ( qa, qb, qm, t ) {
+Quaternion.slerp = function ( qa, qb, qm, t ) {
 
 	return qm.copy( qa ).slerp( qb, t );
 
 };
 
 
-export { THREE$Quaternion };
+export { Quaternion };

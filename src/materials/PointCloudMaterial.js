@@ -1,6 +1,6 @@
-import { THREE$Material } from './Material';
-import { THREE$NoColors } from '../Three';
-import { THREE$Color } from '../math/Color';
+import { Material } from './Material';
+import { NoColors } from '../Three';
+import { Color } from '../math/Color';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -24,21 +24,21 @@ import { THREE$Color } from '../math/Color';
  * }
  */
 
-function THREE$PointCloudMaterial ( parameters ) {
+function PointCloudMaterial ( parameters ) {
 	this.isPointCloudMaterial = true;
 
-	THREE$Material.call( this );
+	Material.call( this );
 
 	this.type = 'PointCloudMaterial';
 
-	this.color = new THREE$Color( 0xffffff );
+	this.color = new Color( 0xffffff );
 
 	this.map = null;
 
 	this.size = 1;
 	this.sizeAttenuation = true;
 
-	this.vertexColors = THREE$NoColors;
+	this.vertexColors = NoColors;
 
 	this.fog = true;
 
@@ -46,45 +46,47 @@ function THREE$PointCloudMaterial ( parameters ) {
 
 };
 
-THREE$PointCloudMaterial.prototype = Object.create( THREE$Material.prototype );
-THREE$PointCloudMaterial.prototype.constructor = THREE$PointCloudMaterial;
+PointCloudMaterial.prototype = Object.create( Material.prototype );
+PointCloudMaterial.prototype.constructor = PointCloudMaterial;
 
-THREE$PointCloudMaterial.prototype.copy = function ( source ) {
+PointCloudMaterial.prototype.clone = function () {
 
-	THREE$Material.prototype.copy.call( this, source );
+	var material = new PointCloudMaterial();
 
-	this.color.copy( source.color );
+	Material.prototype.clone.call( this, material );
 
-	this.map = source.map;
+	material.color.copy( this.color );
 
-	this.size = source.size;
-	this.sizeAttenuation = source.sizeAttenuation;
+	material.map = this.map;
 
-	this.vertexColors = source.vertexColors;
+	material.size = this.size;
+	material.sizeAttenuation = this.sizeAttenuation;
 
-	this.fog = source.fog;
-	
-	return this;
+	material.vertexColors = this.vertexColors;
+
+	material.fog = this.fog;
+
+	return material;
 
 };
 
 // backwards compatibility
 
-function THREE$ParticleBasicMaterial ( parameters ) {
+function ParticleBasicMaterial ( parameters ) {
 	this.isParticleBasicMaterial = true;
 
 	console.warn( 'THREE.ParticleBasicMaterial has been renamed to THREE.PointCloudMaterial.' );
-	return new THREE$PointCloudMaterial( parameters );
+	return new PointCloudMaterial( parameters );
 
 };
 
-function THREE$ParticleSystemMaterial ( parameters ) {
+function ParticleSystemMaterial ( parameters ) {
 	this.isParticleSystemMaterial = true;
 
 	console.warn( 'THREE.ParticleSystemMaterial has been renamed to THREE.PointCloudMaterial.' );
-	return new THREE$PointCloudMaterial( parameters );
+	return new PointCloudMaterial( parameters );
 
 };
 
 
-export { THREE$ParticleSystemMaterial, THREE$ParticleBasicMaterial, THREE$PointCloudMaterial };
+export { ParticleSystemMaterial, ParticleBasicMaterial, PointCloudMaterial };

@@ -1,4 +1,4 @@
-import { THREE$Vector3 } from './Vector3';
+import { Vector3 } from './Vector3';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -6,7 +6,7 @@ import { THREE$Vector3 } from './Vector3';
  * @author bhouston / http://exocortex.com
  */
 
-function THREE$Matrix3 () {
+function Matrix3 () {
 	this.isMatrix3 = true;
 
 	this.elements = new Float32Array( [
@@ -25,9 +25,9 @@ function THREE$Matrix3 () {
 
 };
 
-THREE$Matrix3.prototype = {
+Matrix3.prototype = {
 
-	constructor: THREE$Matrix3,
+	constructor: Matrix3,
 
 	set: function ( n11, n12, n13, n21, n22, n23, n31, n32, n33 ) {
 
@@ -52,12 +52,6 @@ THREE$Matrix3.prototype = {
 		);
 
 		return this;
-
-	},
-
-	clone: function () {
-
-		return new this.constructor().fromArray( this.elements );
 
 	},
 
@@ -97,7 +91,7 @@ THREE$Matrix3.prototype = {
 
 		return function ( array, offset, length ) {
 
-			if ( v1 === undefined ) v1 = new THREE$Vector3();
+			if ( v1 === undefined ) v1 = new Vector3();
 			if ( offset === undefined ) offset = 0;
 			if ( length === undefined ) length = array.length;
 
@@ -121,7 +115,7 @@ THREE$Matrix3.prototype = {
 
 		return function applyToBuffer( buffer, offset, length ) {
 
-			if ( v1 === undefined ) v1 = new THREE$Vector3();
+			if ( v1 === undefined ) v1 = new Vector3();
 			if ( offset === undefined ) offset = 0;
 			if ( length === undefined ) length = buffer.length / buffer.itemSize;
 
@@ -231,7 +225,7 @@ THREE$Matrix3.prototype = {
 
 		var te = this.elements;
 
-		array[ offset ] = te[ 0 ];
+		array[ offset     ] = te[ 0 ];
 		array[ offset + 1 ] = te[ 1 ];
 		array[ offset + 2 ] = te[ 2 ];
 
@@ -293,9 +287,15 @@ THREE$Matrix3.prototype = {
 			te[ 6 ], te[ 7 ], te[ 8 ]
 		];
 
+	},
+
+	clone: function () {
+
+		return new Matrix3().fromArray( this.elements );
+
 	}
 
 };
 
 
-export { THREE$Matrix3 };
+export { Matrix3 };

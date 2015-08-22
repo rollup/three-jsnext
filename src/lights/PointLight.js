@@ -1,14 +1,14 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Light } from './Light';
+import { Object3D } from '../core/Object3D';
+import { Light } from './Light';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$PointLight ( color, intensity, distance, decay ) {
+function PointLight ( color, intensity, distance, decay ) {
 	this.isPointLight = true;
 
-	THREE$Light.call( this, color );
+	Light.call( this, color );
 
 	this.type = 'PointLight';
 
@@ -18,24 +18,26 @@ function THREE$PointLight ( color, intensity, distance, decay ) {
 
 };
 
-THREE$PointLight.prototype = Object.create( THREE$Light.prototype );
-THREE$PointLight.prototype.constructor = THREE$PointLight;
+PointLight.prototype = Object.create( Light.prototype );
+PointLight.prototype.constructor = PointLight;
 
-THREE$PointLight.prototype.copy = function ( source ) {
+PointLight.prototype.clone = function () {
 
-	THREE$Light.prototype.copy.call( this, source );
+	var light = new PointLight();
 
-	this.intensity = source.intensity;
-	this.distance = source.distance;
-	this.decay = source.decay;
+	Light.prototype.clone.call( this, light );
 
-	return this;
+	light.intensity = this.intensity;
+	light.distance = this.distance;
+	light.decay = this.decay;
+
+	return light;
 
 };
 
-THREE$PointLight.prototype.toJSON = function ( meta ) {
+PointLight.prototype.toJSON = function ( meta ) {
 
-	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+	var data = Object3D.prototype.toJSON.call( this, meta );
 
 	data.object.color = this.color.getHex();
 	data.object.intensity = this.intensity;
@@ -47,4 +49,4 @@ THREE$PointLight.prototype.toJSON = function ( meta ) {
 };
 
 
-export { THREE$PointLight };
+export { PointLight };

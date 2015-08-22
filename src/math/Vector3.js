@@ -1,7 +1,7 @@
-import { THREE$Math } from './Math';
-import { THREE$Matrix4 } from './Matrix4';
-import { THREE$Quaternion } from './Quaternion';
-import { THREE$Euler } from './Euler';
+import { _Math } from './Math';
+import { Matrix4 } from './Matrix4';
+import { Quaternion } from './Quaternion';
+import { Euler } from './Euler';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -12,7 +12,7 @@ import { THREE$Euler } from './Euler';
  * @author WestLangley / http://github.com/WestLangley
  */
 
-function THREE$Vector3 ( x, y, z ) {
+function Vector3 ( x, y, z ) {
 	this.isVector3 = true;
 
 	this.x = x || 0;
@@ -21,9 +21,9 @@ function THREE$Vector3 ( x, y, z ) {
 
 };
 
-THREE$Vector3.prototype = {
+Vector3.prototype = {
 
-	constructor: THREE$Vector3,
+	constructor: Vector3,
 
 	set: function ( x, y, z ) {
 
@@ -85,12 +85,6 @@ THREE$Vector3.prototype = {
 
 	},
 
-	clone: function () {
-
-		return new this.constructor( this.x, this.y, this.z );
-
-	},
-
 	copy: function ( v ) {
 
 		this.x = v.x;
@@ -138,16 +132,6 @@ THREE$Vector3.prototype = {
 
 	},
 
-	addScaledVector: function ( v, s ) {
-
-		this.x += v.x * s;
-		this.y += v.y * s;
-		this.z += v.z * s;
-
-		return this;
-
-	},
-
 	sub: function ( v, w ) {
 
 		if ( w !== undefined ) {
@@ -164,7 +148,7 @@ THREE$Vector3.prototype = {
 		return this;
 
 	},
-
+	
 	subScalar: function ( s ) {
 
 		this.x -= s;
@@ -226,7 +210,7 @@ THREE$Vector3.prototype = {
 
 		var quaternion;
 
-		return function applyEuler( euler ) {
+		return function ( euler ) {
 
 			if ( (euler && euler.isEuler) === false ) {
 
@@ -234,7 +218,7 @@ THREE$Vector3.prototype = {
 
 			}
 
-			if ( quaternion === undefined ) quaternion = new THREE$Quaternion();
+			if ( quaternion === undefined ) quaternion = new Quaternion();
 
 			this.applyQuaternion( quaternion.setFromEuler( euler ) );
 
@@ -248,9 +232,9 @@ THREE$Vector3.prototype = {
 
 		var quaternion;
 
-		return function applyAxisAngle( axis, angle ) {
+		return function ( axis, angle ) {
 
-			if ( quaternion === undefined ) quaternion = new THREE$Quaternion();
+			if ( quaternion === undefined ) quaternion = new Quaternion();
 
 			this.applyQuaternion( quaternion.setFromAxisAngle( axis, angle ) );
 
@@ -341,9 +325,9 @@ THREE$Vector3.prototype = {
 
 		var matrix;
 
-		return function project( camera ) {
+		return function ( camera ) {
 
-			if ( matrix === undefined ) matrix = new THREE$Matrix4();
+			if ( matrix === undefined ) matrix = new Matrix4();
 
 			matrix.multiplyMatrices( camera.projectionMatrix, matrix.getInverse( camera.matrixWorld ) );
 			return this.applyProjection( matrix );
@@ -356,9 +340,9 @@ THREE$Vector3.prototype = {
 
 		var matrix;
 
-		return function unproject( camera ) {
+		return function ( camera ) {
 
-			if ( matrix === undefined ) matrix = new THREE$Matrix4();
+			if ( matrix === undefined ) matrix = new Matrix4();
 
 			matrix.multiplyMatrices( camera.matrixWorld, matrix.getInverse( camera.projectionMatrix ) );
 			return this.applyProjection( matrix );
@@ -504,16 +488,16 @@ THREE$Vector3.prototype = {
 
 	},
 
-	clampScalar: function () {
+	clampScalar: ( function () {
 
 		var min, max;
 
-		return function clampScalar( minVal, maxVal ) {
+		return function ( minVal, maxVal ) {
 
 			if ( min === undefined ) {
 
-				min = new THREE$Vector3();
-				max = new THREE$Vector3();
+				min = new Vector3();
+				max = new Vector3();
 
 			}
 
@@ -524,7 +508,7 @@ THREE$Vector3.prototype = {
 
 		};
 
-	}(),
+	} )(),
 
 	floor: function () {
 
@@ -613,7 +597,6 @@ THREE$Vector3.prototype = {
 		if ( oldLength !== 0 && l !== oldLength  ) {
 
 			this.multiplyScalar( l / oldLength );
-
 		}
 
 		return this;
@@ -674,9 +657,9 @@ THREE$Vector3.prototype = {
 
 		var v1, dot;
 
-		return function projectOnVector( vector ) {
+		return function ( vector ) {
 
-			if ( v1 === undefined ) v1 = new THREE$Vector3();
+			if ( v1 === undefined ) v1 = new Vector3();
 
 			v1.copy( vector ).normalize();
 
@@ -692,9 +675,9 @@ THREE$Vector3.prototype = {
 
 		var v1;
 
-		return function projectOnPlane( planeNormal ) {
+		return function ( planeNormal ) {
 
-			if ( v1 === undefined ) v1 = new THREE$Vector3();
+			if ( v1 === undefined ) v1 = new Vector3();
 
 			v1.copy( this ).projectOnVector( planeNormal );
 
@@ -711,9 +694,9 @@ THREE$Vector3.prototype = {
 
 		var v1;
 
-		return function reflect( normal ) {
+		return function ( normal ) {
 
-			if ( v1 === undefined ) v1 = new THREE$Vector3();
+			if ( v1 === undefined ) v1 = new Vector3();
 
 			return this.sub( v1.copy( normal ).multiplyScalar( 2 * this.dot( normal ) ) );
 
@@ -727,7 +710,7 @@ THREE$Vector3.prototype = {
 
 		// clamp, to handle numerical problems
 
-		return Math.acos( THREE$Math.clamp( theta, - 1, 1 ) );
+		return Math.acos( _Math.clamp( theta, - 1, 1 ) );
 
 	},
 
@@ -772,7 +755,6 @@ THREE$Vector3.prototype = {
 		console.warn( 'THREE.Vector3: .getScaleFromMatrix() has been renamed to .setFromMatrixScale().' );
 
 		return this.setFromMatrixScale( m );
-
 	},
 
 	getColumnFromMatrix: function ( index, matrix ) {
@@ -795,8 +777,8 @@ THREE$Vector3.prototype = {
 
 	setFromMatrixScale: function ( m ) {
 
-		var sx = this.set( m.elements[ 0 ], m.elements[ 1 ], m.elements[ 2 ] ).length();
-		var sy = this.set( m.elements[ 4 ], m.elements[ 5 ], m.elements[ 6 ] ).length();
+		var sx = this.set( m.elements[ 0 ], m.elements[ 1 ], m.elements[  2 ] ).length();
+		var sy = this.set( m.elements[ 4 ], m.elements[ 5 ], m.elements[  6 ] ).length();
 		var sz = this.set( m.elements[ 8 ], m.elements[ 9 ], m.elements[ 10 ] ).length();
 
 		this.x = sx;
@@ -804,11 +786,10 @@ THREE$Vector3.prototype = {
 		this.z = sz;
 
 		return this;
-
 	},
 
 	setFromMatrixColumn: function ( index, matrix ) {
-
+		
 		var offset = index * 4;
 
 		var me = matrix.elements;
@@ -864,9 +845,15 @@ THREE$Vector3.prototype = {
 
 		return this;
 
+	},
+
+	clone: function () {
+
+		return new Vector3( this.x, this.y, this.z );
+
 	}
 
 };
 
 
-export { THREE$Vector3 };
+export { Vector3 };

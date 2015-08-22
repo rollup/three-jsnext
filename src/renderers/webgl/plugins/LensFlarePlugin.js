@@ -1,12 +1,12 @@
-import { THREE$Vector2 } from '../../../math/Vector2';
-import { THREE$Vector3 } from '../../../math/Vector3';
+import { Vector2 } from '../../../math/Vector2';
+import { Vector3 } from '../../../math/Vector3';
 
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$LensFlarePlugin ( renderer, flares ) {
+function LensFlarePlugin ( renderer, flares ) {
 	this.isLensFlarePlugin = true;
 
 	var gl = renderer.context;
@@ -21,10 +21,10 @@ function THREE$LensFlarePlugin ( renderer, flares ) {
 	var init = function () {
 
 		var vertices = new Float32Array( [
-			- 1, - 1,  0, 0,
-			 1, - 1,  1, 0,
+			-1, -1,  0, 0,
+			 1, -1,  1, 0,
 			 1,  1,  1, 1,
-			- 1,  1,  0, 1
+			-1,  1,  0, 1
 		] );
 
 		var faces = new Uint16Array( [
@@ -280,17 +280,17 @@ function THREE$LensFlarePlugin ( renderer, flares ) {
 
 		if ( flares.length === 0 ) return;
 
-		var tempPosition = new THREE$Vector3();
+		var tempPosition = new Vector3();
 
 		var invAspect = viewportHeight / viewportWidth,
 			halfViewportWidth = viewportWidth * 0.5,
 			halfViewportHeight = viewportHeight * 0.5;
 
 		var size = 16 / viewportHeight,
-			scale = new THREE$Vector2( size * invAspect, size );
+			scale = new Vector2( size * invAspect, size );
 
-		var screenPosition = new THREE$Vector3( 1, 1, 0 ),
-			screenPositionPixels = new THREE$Vector2( 1, 1 );
+		var screenPosition = new Vector3( 1, 1, 0 ),
+			screenPositionPixels = new Vector2( 1, 1 );
 
 		if ( program === undefined ) {
 
@@ -329,7 +329,7 @@ function THREE$LensFlarePlugin ( renderer, flares ) {
 
 			var flare = flares[ i ];
 
-			tempPosition.set( flare.matrixWorld.elements[ 12 ], flare.matrixWorld.elements[ 13 ], flare.matrixWorld.elements[ 14 ] );
+			tempPosition.set( flare.matrixWorld.elements[12], flare.matrixWorld.elements[13], flare.matrixWorld.elements[14] );
 
 			tempPosition.applyMatrix4( camera.matrixWorldInverse );
 			tempPosition.applyProjection( camera.projectionMatrix );
@@ -365,7 +365,7 @@ function THREE$LensFlarePlugin ( renderer, flares ) {
 				gl.uniform3f( uniforms.screenPosition, screenPosition.x, screenPosition.y, screenPosition.z );
 
 				state.disable( gl.BLEND );
-				state.enable( gl.DEPTH_TEST );
+				gl.enable( gl.DEPTH_TEST );
 
 				gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0 );
 
@@ -380,7 +380,7 @@ function THREE$LensFlarePlugin ( renderer, flares ) {
 				// restore graphics
 
 				gl.uniform1i( uniforms.renderType, 1 );
-				state.disable( gl.DEPTH_TEST );
+				gl.disable( gl.DEPTH_TEST );
 
 				state.activeTexture( gl.TEXTURE1 );
 				state.bindTexture( gl.TEXTURE_2D, tempTexture );
@@ -444,7 +444,7 @@ function THREE$LensFlarePlugin ( renderer, flares ) {
 		// restore gl
 
 		state.enable( gl.CULL_FACE );
-		state.enable( gl.DEPTH_TEST );
+		gl.enable( gl.DEPTH_TEST );
 		gl.depthMask( true );
 
 		renderer.resetGLState();
@@ -478,4 +478,4 @@ function THREE$LensFlarePlugin ( renderer, flares ) {
 };
 
 
-export { THREE$LensFlarePlugin };
+export { LensFlarePlugin };

@@ -1,7 +1,7 @@
-import { THREE$Matrix4 } from '../math/Matrix4';
-import { THREE$NearestFilter, THREE$FloatType, THREE$RGBAFormat } from '../Three';
-import { THREE$DataTexture } from '../textures/DataTexture';
-import { THREE$Math } from '../math/Math';
+import { Matrix4 } from '../math/Matrix4';
+import { NearestFilter, FloatType, RGBAFormat } from '../Three';
+import { DataTexture } from '../textures/DataTexture';
+import { _Math } from '../math/Math';
 
 /**
  * @author mikael emtinger / http://gomo.se/
@@ -10,12 +10,12 @@ import { THREE$Math } from '../math/Math';
  * @author ikerr / http://verold.com
  */
 
-function THREE$Skeleton ( bones, boneInverses, useVertexTexture ) {
+function Skeleton ( bones, boneInverses, useVertexTexture ) {
 	this.isSkeleton = true;
 
 	this.useVertexTexture = useVertexTexture !== undefined ? useVertexTexture : true;
 
-	this.identityMatrix = new THREE$Matrix4();
+	this.identityMatrix = new Matrix4();
 
 	// copy the bone array
 
@@ -34,18 +34,15 @@ function THREE$Skeleton ( bones, boneInverses, useVertexTexture ) {
 		//       32x32 pixel texture max  256 bones * 4 pixels = (32 * 32)
 		//       64x64 pixel texture max 1024 bones * 4 pixels = (64 * 64)
 
-		
-		var size = Math.sqrt( this.bones.length * 4 ); // 4 pixels needed for 1 matrix
-		size = THREE$Math.nextPowerOfTwo( Math.ceil( size ) );
-		size = Math.max( size, 4 );
+		var size = _Math.nextPowerOfTwo( Math.sqrt( this.bones.length * 4 ) ); // 4 pixels needed for 1 matrix
 
 		this.boneTextureWidth = size;
 		this.boneTextureHeight = size;
 
 		this.boneMatrices = new Float32Array( this.boneTextureWidth * this.boneTextureHeight * 4 ); // 4 floats per RGBA pixel
-		this.boneTexture = new THREE$DataTexture( this.boneMatrices, this.boneTextureWidth, this.boneTextureHeight, THREE$RGBAFormat, THREE$FloatType );
-		this.boneTexture.minFilter = THREE$NearestFilter;
-		this.boneTexture.magFilter = THREE$NearestFilter;
+		this.boneTexture = new DataTexture( this.boneMatrices, this.boneTextureWidth, this.boneTextureHeight, RGBAFormat, FloatType );
+		this.boneTexture.minFilter = NearestFilter;
+		this.boneTexture.magFilter = NearestFilter;
 		this.boneTexture.generateMipmaps = false;
 		this.boneTexture.flipY = false;
 
@@ -75,7 +72,7 @@ function THREE$Skeleton ( bones, boneInverses, useVertexTexture ) {
 
 			for ( var b = 0, bl = this.bones.length; b < bl; b ++ ) {
 
-				this.boneInverses.push( new THREE$Matrix4() );
+				this.boneInverses.push( new Matrix4() );
 
 			}
 
@@ -85,13 +82,13 @@ function THREE$Skeleton ( bones, boneInverses, useVertexTexture ) {
 
 };
 
-THREE$Skeleton.prototype.calculateInverses = function () {
+Skeleton.prototype.calculateInverses = function () {
 
 	this.boneInverses = [];
 
 	for ( var b = 0, bl = this.bones.length; b < bl; b ++ ) {
 
-		var inverse = new THREE$Matrix4();
+		var inverse = new Matrix4();
 
 		if ( this.bones[ b ] ) {
 
@@ -105,7 +102,7 @@ THREE$Skeleton.prototype.calculateInverses = function () {
 
 };
 
-THREE$Skeleton.prototype.pose = function () {
+Skeleton.prototype.pose = function () {
 
 	var bone;
 
@@ -150,11 +147,11 @@ THREE$Skeleton.prototype.pose = function () {
 
 };
 
-THREE$Skeleton.prototype.update = ( function () {
+Skeleton.prototype.update = ( function () {
 
-	var offsetMatrix = new THREE$Matrix4();
+	var offsetMatrix = new Matrix4();
 
-	return function update() {
+	return function () {
 
 		// flatten bone matrices to array
 
@@ -179,11 +176,11 @@ THREE$Skeleton.prototype.update = ( function () {
 
 } )();
 
-THREE$Skeleton.prototype.clone = function () {
+Skeleton.prototype.clone = function () {
 
-	return new THREE$Skeleton( this.bones, this.boneInverses, this.useVertexTexture );
+	return new Skeleton( this.bones, this.boneInverses, this.useVertexTexture );
 
 };
 
 
-export { THREE$Skeleton };
+export { Skeleton };

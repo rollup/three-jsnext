@@ -34,7 +34,7 @@
  *	Abstract Curve base class
  **************************************************************/
 
-function THREE$Curve () {
+function Curve () {
 	this.isCurve = true;
 
 };
@@ -42,7 +42,7 @@ function THREE$Curve () {
 // Virtual base class method to overwrite and implement in subclasses
 //	- t [0 .. 1]
 
-THREE$Curve.prototype.getPoint = function ( t ) {
+Curve.prototype.getPoint = function ( t ) {
 
 	console.warn( "THREE.Curve: Warning, getPoint() not implemented!" );
 	return null;
@@ -52,7 +52,7 @@ THREE$Curve.prototype.getPoint = function ( t ) {
 // Get point at relative position in curve according to arc length
 // - u [0 .. 1]
 
-THREE$Curve.prototype.getPointAt = function ( u ) {
+Curve.prototype.getPointAt = function ( u ) {
 
 	var t = this.getUtoTmapping( u );
 	return this.getPoint( t );
@@ -61,7 +61,7 @@ THREE$Curve.prototype.getPointAt = function ( u ) {
 
 // Get sequence of points using getPoint( t )
 
-THREE$Curve.prototype.getPoints = function ( divisions ) {
+Curve.prototype.getPoints = function ( divisions ) {
 
 	if ( ! divisions ) divisions = 5;
 
@@ -79,7 +79,7 @@ THREE$Curve.prototype.getPoints = function ( divisions ) {
 
 // Get sequence of points using getPointAt( u )
 
-THREE$Curve.prototype.getSpacedPoints = function ( divisions ) {
+Curve.prototype.getSpacedPoints = function ( divisions ) {
 
 	if ( ! divisions ) divisions = 5;
 
@@ -97,7 +97,7 @@ THREE$Curve.prototype.getSpacedPoints = function ( divisions ) {
 
 // Get total curve arc length
 
-THREE$Curve.prototype.getLength = function () {
+Curve.prototype.getLength = function () {
 
 	var lengths = this.getLengths();
 	return lengths[ lengths.length - 1 ];
@@ -106,13 +106,13 @@ THREE$Curve.prototype.getLength = function () {
 
 // Get list of cumulative segment lengths
 
-THREE$Curve.prototype.getLengths = function ( divisions ) {
+Curve.prototype.getLengths = function ( divisions ) {
 
-	if ( ! divisions ) divisions = ( this.__arcLengthDivisions ) ? ( this.__arcLengthDivisions ) : 200;
+	if ( ! divisions ) divisions = (this.__arcLengthDivisions) ? (this.__arcLengthDivisions) : 200;
 
 	if ( this.cacheArcLengths
 		&& ( this.cacheArcLengths.length === divisions + 1 )
-		&& ! this.needsUpdate ) {
+		&& ! this.needsUpdate) {
 
 		//console.log( "cached", this.cacheArcLengths );
 		return this.cacheArcLengths;
@@ -143,16 +143,14 @@ THREE$Curve.prototype.getLengths = function ( divisions ) {
 };
 
 
-THREE$Curve.prototype.updateArcLengths = function() {
-
+Curve.prototype.updateArcLengths = function() {
 	this.needsUpdate = true;
 	this.getLengths();
-
 };
 
 // Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
 
-THREE$Curve.prototype.getUtoTmapping = function ( u, distance ) {
+Curve.prototype.getUtoTmapping = function ( u, distance ) {
 
 	var arcLengths = this.getLengths();
 
@@ -219,11 +217,11 @@ THREE$Curve.prototype.getUtoTmapping = function ( u, distance ) {
 
 	var segmentLength = lengthAfter - lengthBefore;
 
-	// determine where we are between the 'before' and 'after' points
+    // determine where we are between the 'before' and 'after' points
 
 	var segmentFraction = ( targetArcLength - lengthBefore ) / segmentLength;
 
-	// add that fractional amount to t
+    // add that fractional amount to t
 
 	var t = ( i + segmentFraction ) / ( il - 1 );
 
@@ -236,7 +234,7 @@ THREE$Curve.prototype.getUtoTmapping = function ( u, distance ) {
 // 2 points a small delta apart will be used to find its gradient
 // which seems to give a reasonable approximation
 
-THREE$Curve.prototype.getTangent = function( t ) {
+Curve.prototype.getTangent = function( t ) {
 
 	var delta = 0.0001;
 	var t1 = t - delta;
@@ -250,13 +248,13 @@ THREE$Curve.prototype.getTangent = function( t ) {
 	var pt1 = this.getPoint( t1 );
 	var pt2 = this.getPoint( t2 );
 
-	var vec = pt2.clone().sub( pt1 );
+	var vec = pt2.clone().sub(pt1);
 	return vec.normalize();
 
 };
 
 
-THREE$Curve.prototype.getTangentAt = function ( u ) {
+Curve.prototype.getTangentAt = function ( u ) {
 
 	var t = this.getUtoTmapping( u );
 	return this.getTangent( t );
@@ -271,7 +269,7 @@ THREE$Curve.prototype.getTangentAt = function ( u ) {
  *	Utils
  **************************************************************/
 
-THREE$Curve.Utils = {
+Curve.Utils = {
 
 	tangentQuadraticBezier: function ( t, p0, p1, p2 ) {
 
@@ -281,11 +279,11 @@ THREE$Curve.Utils = {
 
 	// Puay Bing, thanks for helping with this derivative!
 
-	tangentCubicBezier: function ( t, p0, p1, p2, p3 ) {
+	tangentCubicBezier: function (t, p0, p1, p2, p3 ) {
 
-		return - 3 * p0 * ( 1 - t ) * ( 1 - t )  +
-			3 * p1 * ( 1 - t ) * ( 1 - t ) - 6 * t * p1 * ( 1 - t ) +
-			6 * t *  p2 * ( 1 - t ) - 3 * t * t * p2 +
+		return - 3 * p0 * (1 - t) * (1 - t)  +
+			3 * p1 * (1 - t) * (1 - t) - 6 * t * p1 * (1 - t) +
+			6 * t *  p2 * (1 - t) - 3 * t * t * p2 +
 			3 * t * t * p3;
 
 	},
@@ -326,9 +324,9 @@ THREE$Curve.Utils = {
 
 // A Factory method for creating new curve subclasses
 
-THREE$Curve.create = function ( constructor, getPointFunc ) {
+Curve.create = function ( constructor, getPointFunc ) {
 
-	constructor.prototype = Object.create( THREE$Curve.prototype );
+	constructor.prototype = Object.create( Curve.prototype );
 	constructor.prototype.constructor = constructor;
 	constructor.prototype.getPoint = getPointFunc;
 
@@ -337,4 +335,4 @@ THREE$Curve.create = function ( constructor, getPointFunc ) {
 };
 
 
-export { THREE$Curve };
+export { Curve };

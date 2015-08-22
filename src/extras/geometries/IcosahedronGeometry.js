@@ -1,10 +1,11 @@
-import { THREE$PolyhedronGeometry } from './PolyhedronGeometry';
+import { Geometry } from '../../core/Geometry';
+import { PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
  * @author timothypratley / https://github.com/timothypratley
  */
 
-function THREE$IcosahedronGeometry ( radius, detail ) {
+function IcosahedronGeometry ( radius, detail ) {
 	this.isIcosahedronGeometry = true;
 
 	var t = ( 1 + Math.sqrt( 5 ) ) / 2;
@@ -22,7 +23,7 @@ function THREE$IcosahedronGeometry ( radius, detail ) {
 		 4,  9,  5,    2,  4, 11,    6,  2, 10,    8,  6,  7,    9,  8,  1
 	];
 
-	THREE$PolyhedronGeometry.call( this, vertices, indices, radius, detail );
+	PolyhedronGeometry.call( this, vertices, indices, radius, detail );
 
 	this.type = 'IcosahedronGeometry';
 
@@ -30,24 +31,10 @@ function THREE$IcosahedronGeometry ( radius, detail ) {
 		radius: radius,
 		detail: detail
 	};
-
 };
 
-THREE$IcosahedronGeometry.prototype = Object.create( THREE$PolyhedronGeometry.prototype );
-THREE$IcosahedronGeometry.prototype.constructor = THREE$IcosahedronGeometry;
-
-THREE$IcosahedronGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$IcosahedronGeometry(
-		this.parameters.radius,
-		this.parameters.detail
-	);
-
-	geometry.copy( this );
-
-	return geometry;
-
-};
+IcosahedronGeometry.prototype = Object.create( Geometry.prototype );
+IcosahedronGeometry.prototype.constructor = IcosahedronGeometry;
 
 
-export { THREE$IcosahedronGeometry };
+export { IcosahedronGeometry };

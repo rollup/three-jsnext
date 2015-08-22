@@ -1,13 +1,13 @@
-import { THREE$Object3D } from '../core/Object3D';
+import { Object3D } from '../core/Object3D';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$Scene () {
+function Scene () {
 	this.isScene = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.type = 'Scene';
 
@@ -18,22 +18,24 @@ function THREE$Scene () {
 
 };
 
-THREE$Scene.prototype = Object.create( THREE$Object3D.prototype );
-THREE$Scene.prototype.constructor = THREE$Scene;
+Scene.prototype = Object.create( Object3D.prototype );
+Scene.prototype.constructor = Scene;
 
-THREE$Scene.prototype.copy = function ( source ) {
+Scene.prototype.clone = function ( object ) {
 
-	THREE$Object3D.prototype.copy.call( this, source );
+	if ( object === undefined ) object = new Scene();
 
-	if ( source.fog !== null ) this.fog = source.fog.clone();
-	if ( source.overrideMaterial !== null ) this.overrideMaterial = source.overrideMaterial.clone();
+	Object3D.prototype.clone.call( this, object );
 
-	this.autoUpdate = source.autoUpdate;
-	this.matrixAutoUpdate = source.matrixAutoUpdate;
+	if ( this.fog !== null ) object.fog = this.fog.clone();
+	if ( this.overrideMaterial !== null ) object.overrideMaterial = this.overrideMaterial.clone();
 
-	return this;
+	object.autoUpdate = this.autoUpdate;
+	object.matrixAutoUpdate = this.matrixAutoUpdate;
+
+	return object;
 
 };
 
 
-export { THREE$Scene };
+export { Scene };

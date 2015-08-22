@@ -1,7 +1,6 @@
 import { Sphere } from '../math/Sphere';
 import { Vector3 } from '../math/Vector3';
-import { BufferAttribute } from '../core/BufferAttribute';
-import { BufferGeometry } from '../core/BufferGeometry';
+import { Geometry } from '../core/Geometry';
 import { XHRLoader } from './XHRLoader';
 import { DefaultLoadingManager } from './LoadingManager';
 
@@ -9,22 +8,22 @@ import { DefaultLoadingManager } from './LoadingManager';
  * @author mrdoob / http://mrdoob.com/
  */
 
-function BufferGeometryLoader ( manager ) {
-	this.isBufferGeometryLoader = true;
+function GeometryLoader ( manager ) {
+	this.isGeometryLoader = true;
 
 	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 
 };
 
-BufferGeometryLoader.prototype = {
+GeometryLoader.prototype = {
 
-	constructor: BufferGeometryLoader,
+	constructor: GeometryLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new XHRLoader( scope.manager );
+		var loader = new XHRLoader();
 		loader.setCrossOrigin( this.crossOrigin );
 		loader.load( url, function ( text ) {
 
@@ -42,28 +41,14 @@ BufferGeometryLoader.prototype = {
 
 	parse: function ( json ) {
 
-		var geometry = new BufferGeometry();
+		var geometry = new Geometry();
 
-		var attributes = json.data.attributes;
+		geometry.indices = json.indices;
+		geometry.vertices = json.vertices;
+		geometry.normals = json.normals;
+		geometry.uvs = json.uvs;
 
-		for ( var key in attributes ) {
-
-			var attribute = attributes[ key ];
-			var typedArray = new self[ attribute.type ]( attribute.array );
-
-			geometry.addAttribute( key, new BufferAttribute( typedArray, attribute.itemSize ) );
-
-		}
-
-		var offsets = json.data.offsets;
-
-		if ( offsets !== undefined ) {
-
-			geometry.offsets = JSON.parse( JSON.stringify( offsets ) );
-
-		}
-
-		var boundingSphere = json.data.boundingSphere;
+		var boundingSphere = json.boundingSphere;
 
 		if ( boundingSphere !== undefined ) {
 
@@ -86,4 +71,4 @@ BufferGeometryLoader.prototype = {
 };
 
 
-export { BufferGeometryLoader };
+export { GeometryLoader };

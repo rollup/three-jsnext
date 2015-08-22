@@ -1,16 +1,16 @@
-import { THREE$Curve } from '../core/Curve';
-import { THREE$Vector3 } from '../../math/Vector3';
+import { Curve } from '../core/Curve';
+import { Vector3 } from '../../math/Vector3';
 
-var THREE$ClosedSplineCurve3;
+var ClosedSplineCurve3;
 
 /**************************************************************
  *	Closed Spline 3D curve
  **************************************************************/
 
 
-THREE$ClosedSplineCurve3 = THREE$Curve.create(
+ClosedSplineCurve3 = Curve.create(
 
-	function ( points /* array of Vector3 */ ) {
+	function ( points /* array of Vector3 */) {
 
 		this.points = ( points == undefined ) ? [] : points;
 
@@ -31,11 +31,11 @@ THREE$ClosedSplineCurve3 = THREE$Curve.create(
 		var point2 = points[ ( intPoint + 1 ) % points.length ];
 		var point3 = points[ ( intPoint + 2 ) % points.length ];
 
-		var vector = new THREE$Vector3();
+		var vector = new Vector3();
 
-		vector.x = THREE$Curve.Utils.interpolate( point0.x, point1.x, point2.x, point3.x, weight );
-		vector.y = THREE$Curve.Utils.interpolate( point0.y, point1.y, point2.y, point3.y, weight );
-		vector.z = THREE$Curve.Utils.interpolate( point0.z, point1.z, point2.z, point3.z, weight );
+		vector.x = Curve.Utils.interpolate( point0.x, point1.x, point2.x, point3.x, weight );
+		vector.y = Curve.Utils.interpolate( point0.y, point1.y, point2.y, point3.y, weight );
+		vector.z = Curve.Utils.interpolate( point0.z, point1.z, point2.z, point3.z, weight );
 
 		return vector;
 
@@ -44,4 +44,4 @@ THREE$ClosedSplineCurve3 = THREE$Curve.create(
 );
 
 
-export { THREE$ClosedSplineCurve3 };
+export { ClosedSplineCurve3 };

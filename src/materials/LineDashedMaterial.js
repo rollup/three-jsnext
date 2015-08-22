@@ -1,5 +1,5 @@
-import { THREE$Material } from './Material';
-import { THREE$Color } from '../math/Color';
+import { Material } from './Material';
+import { Color } from '../math/Color';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -24,14 +24,14 @@ import { THREE$Color } from '../math/Color';
  * }
  */
 
-function THREE$LineDashedMaterial ( parameters ) {
+function LineDashedMaterial ( parameters ) {
 	this.isLineDashedMaterial = true;
 
-	THREE$Material.call( this );
+	Material.call( this );
 
 	this.type = 'LineDashedMaterial';
 
-	this.color = new THREE$Color( 0xffffff );
+	this.color = new Color( 0xffffff );
 
 	this.linewidth = 1;
 
@@ -47,28 +47,30 @@ function THREE$LineDashedMaterial ( parameters ) {
 
 };
 
-THREE$LineDashedMaterial.prototype = Object.create( THREE$Material.prototype );
-THREE$LineDashedMaterial.prototype.constructor = THREE$LineDashedMaterial;
+LineDashedMaterial.prototype = Object.create( Material.prototype );
+LineDashedMaterial.prototype.constructor = LineDashedMaterial;
 
-THREE$LineDashedMaterial.prototype.copy = function ( source ) {
+LineDashedMaterial.prototype.clone = function () {
 
-	THREE$Material.prototype.copy.call( this, source );
+	var material = new LineDashedMaterial();
 
-	this.color.copy( source.color );
-	
-	this.linewidth = source.linewidth;
+	Material.prototype.clone.call( this, material );
 
-	this.scale = source.scale;
-	this.dashSize = source.dashSize;
-	this.gapSize = source.gapSize;
+	material.color.copy( this.color );
 
-	this.vertexColors = source.vertexColors;
+	material.linewidth = this.linewidth;
 
-	this.fog = source.fog;
+	material.scale = this.scale;
+	material.dashSize = this.dashSize;
+	material.gapSize = this.gapSize;
 
-	return this;
+	material.vertexColors = this.vertexColors;
+
+	material.fog = this.fog;
+
+	return material;
 
 };
 
 
-export { THREE$LineDashedMaterial };
+export { LineDashedMaterial };

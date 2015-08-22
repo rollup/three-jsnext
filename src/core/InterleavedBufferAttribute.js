@@ -1,13 +1,13 @@
-import { THREE$Math } from '../math/Math';
+import { _Math } from '../math/Math';
 
 /**
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 
-function THREE$InterleavedBufferAttribute ( interleavedBuffer, itemSize, offset ) {
+function InterleavedBufferAttribute ( interleavedBuffer, itemSize, offset ) {
 	this.isInterleavedBufferAttribute = true;
 
-	this.uuid = THREE$Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.data = interleavedBuffer;
 	this.itemSize = itemSize;
@@ -16,9 +16,9 @@ function THREE$InterleavedBufferAttribute ( interleavedBuffer, itemSize, offset 
 };
 
 
-THREE$InterleavedBufferAttribute.prototype = {
+InterleavedBufferAttribute.prototype = {
 
-	constructor: THREE$InterleavedBufferAttribute,
+	constructor: InterleavedBufferAttribute,
 
 	get length() {
 
@@ -128,4 +128,4 @@ THREE$InterleavedBufferAttribute.prototype = {
 };
 
 
-export { THREE$InterleavedBufferAttribute };
+export { InterleavedBufferAttribute };

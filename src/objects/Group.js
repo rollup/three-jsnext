@@ -1,19 +1,29 @@
-import { THREE$Object3D } from '../core/Object3D';
+import { Object3D } from '../core/Object3D';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$Group () {
+function Group () {
 	this.isGroup = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.type = 'Group';
 
 };
 
-THREE$Group.prototype = Object.create( THREE$Object3D.prototype );
-THREE$Group.prototype.constructor = THREE$Group;
+Group.prototype = Object.create( Object3D.prototype );
+Group.prototype.constructor = Group;
 
-export { THREE$Group };
+Group.prototype.clone = function ( object ) {
+
+	if ( object === undefined ) object = new Group();
+
+	Object3D.prototype.clone.call( this, object );
+
+	return object;
+
+};
+
+export { Group };

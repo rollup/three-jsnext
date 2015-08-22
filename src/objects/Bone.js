@@ -1,4 +1,4 @@
-import { THREE$Object3D } from '../core/Object3D';
+import { Object3D } from '../core/Object3D';
 
 /**
  * @author mikael emtinger / http://gomo.se/
@@ -6,10 +6,10 @@ import { THREE$Object3D } from '../core/Object3D';
  * @author ikerr / http://verold.com
  */
 
-function THREE$Bone ( skin ) {
+function Bone ( skin ) {
 	this.isBone = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.type = 'Bone';
 
@@ -17,18 +17,18 @@ function THREE$Bone ( skin ) {
 
 };
 
-THREE$Bone.prototype = Object.create( THREE$Object3D.prototype );
-THREE$Bone.prototype.constructor = THREE$Bone;
+Bone.prototype = Object.create( Object3D.prototype );
+Bone.prototype.constructor = Bone;
 
-THREE$Bone.prototype.copy = function ( source ) {
-	
-	THREE$Object3D.prototype.copy.call( this, source );
-	
-	this.skin = source.skin;
-	
-	return this;
+Bone.prototype.clone = function ( object ) {
+
+	if ( object === undefined ) object = new Bone( this.skin );
+
+	Object3D.prototype.clone.call( this, object );
+	object.skin = this.skin; 
+
+	return object;
 
 };
 
-
-export { THREE$Bone };
+export { Bone };

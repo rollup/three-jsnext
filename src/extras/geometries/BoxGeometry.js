@@ -1,19 +1,19 @@
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Face3 } from '../../core/Face3';
-import { THREE$Vector2 } from '../../math/Vector2';
-import { THREE$Vector3 } from '../../math/Vector3';
+import { Geometry } from '../../core/Geometry';
+import { Face3 } from '../../core/Face3';
+import { Vector2 } from '../../math/Vector2';
+import { Vector3 } from '../../math/Vector3';
 
-var THREE$CubeGeometry;
+var CubeGeometry;
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * based on http://papervision3d.googlecode.com/svn/trunk/as3/trunk/src/org/papervision3d/objects/primitives/Cube.as
  */
 
-function THREE$BoxGeometry ( width, height, depth, widthSegments, heightSegments, depthSegments ) {
+function BoxGeometry ( width, height, depth, widthSegments, heightSegments, depthSegments ) {
 	this.isBoxGeometry = true;
 
-	THREE$Geometry.call( this );
+	Geometry.call( this );
 
 	this.type = 'BoxGeometry';
 
@@ -36,14 +36,14 @@ function THREE$BoxGeometry ( width, height, depth, widthSegments, heightSegments
 	var height_half = height / 2;
 	var depth_half = depth / 2;
 
-	buildPlane( 'z', 'y', - 1, - 1, depth, height, width_half, 0 ); // px
-	buildPlane( 'z', 'y',   1, - 1, depth, height, - width_half, 1 ); // nx
-	buildPlane( 'x', 'z',   1,   1, width, depth, height_half, 2 ); // py
-	buildPlane( 'x', 'z',   1, - 1, width, depth, - height_half, 3 ); // ny
-	buildPlane( 'x', 'y',   1, - 1, width, height, depth_half, 4 ); // pz
-	buildPlane( 'x', 'y', - 1, - 1, width, height, - depth_half, 5 ); // nz
+	buildPlane( 'z', 'y', - 1, - 1, depth, height, width_half ); // px
+	buildPlane( 'z', 'y',   1, - 1, depth, height, - width_half ); // nx
+	buildPlane( 'x', 'z',   1,   1, width, depth, height_half ); // py
+	buildPlane( 'x', 'z',   1, - 1, width, depth, - height_half ); // ny
+	buildPlane( 'x', 'y',   1, - 1, width, height, depth_half ); // pz
+	buildPlane( 'x', 'y', - 1, - 1, width, height, - depth_half ); // nz
 
-	function buildPlane( u, v, udir, vdir, width, height, depth, materialIndex ) {
+	function buildPlane( u, v, udir, vdir, width, height, depth ) {
 
 		var w, ix, iy,
 		gridX = scope.widthSegments,
@@ -72,7 +72,7 @@ function THREE$BoxGeometry ( width, height, depth, widthSegments, heightSegments
 		gridY1 = gridY + 1,
 		segment_width = width / gridX,
 		segment_height = height / gridY,
-		normal = new THREE$Vector3();
+		normal = new Vector3();
 
 		normal[ w ] = depth > 0 ? 1 : - 1;
 
@@ -80,7 +80,7 @@ function THREE$BoxGeometry ( width, height, depth, widthSegments, heightSegments
 
 			for ( ix = 0; ix < gridX1; ix ++ ) {
 
-				var vector = new THREE$Vector3();
+				var vector = new Vector3();
 				vector[ u ] = ( ix * segment_width - width_half ) * udir;
 				vector[ v ] = ( iy * segment_height - height_half ) * vdir;
 				vector[ w ] = depth;
@@ -100,23 +100,21 @@ function THREE$BoxGeometry ( width, height, depth, widthSegments, heightSegments
 				var c = ( ix + 1 ) + gridX1 * ( iy + 1 );
 				var d = ( ix + 1 ) + gridX1 * iy;
 
-				var uva = new THREE$Vector2( ix / gridX, 1 - iy / gridY );
-				var uvb = new THREE$Vector2( ix / gridX, 1 - ( iy + 1 ) / gridY );
-				var uvc = new THREE$Vector2( ( ix + 1 ) / gridX, 1 - ( iy + 1 ) / gridY );
-				var uvd = new THREE$Vector2( ( ix + 1 ) / gridX, 1 - iy / gridY );
+				var uva = new Vector2( ix / gridX, 1 - iy / gridY );
+				var uvb = new Vector2( ix / gridX, 1 - ( iy + 1 ) / gridY );
+				var uvc = new Vector2( ( ix + 1 ) / gridX, 1 - ( iy + 1 ) / gridY );
+				var uvd = new Vector2( ( ix + 1 ) / gridX, 1 - iy / gridY );
 
-				var face = new THREE$Face3( a + offset, b + offset, d + offset );
+				var face = new Face3( a + offset, b + offset, d + offset );
 				face.normal.copy( normal );
 				face.vertexNormals.push( normal.clone(), normal.clone(), normal.clone() );
-				face.materialIndex = materialIndex;
 
 				scope.faces.push( face );
 				scope.faceVertexUvs[ 0 ].push( [ uva, uvb, uvd ] );
 
-				face = new THREE$Face3( b + offset, c + offset, d + offset );
+				face = new Face3( b + offset, c + offset, d + offset );
 				face.normal.copy( normal );
 				face.vertexNormals.push( normal.clone(), normal.clone(), normal.clone() );
-				face.materialIndex = materialIndex;
 
 				scope.faces.push( face );
 				scope.faceVertexUvs[ 0 ].push( [ uvb.clone(), uvc, uvd.clone() ] );
@@ -131,25 +129,10 @@ function THREE$BoxGeometry ( width, height, depth, widthSegments, heightSegments
 
 };
 
-THREE$BoxGeometry.prototype = Object.create( THREE$Geometry.prototype );
-THREE$BoxGeometry.prototype.constructor = THREE$BoxGeometry;
+BoxGeometry.prototype = Object.create( Geometry.prototype );
+BoxGeometry.prototype.constructor = BoxGeometry;
 
-THREE$BoxGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$BoxGeometry(
-		this.parameters.width,
-		this.parameters.height,
-		this.parameters.depth,
-		this.parameters.widthSegments,
-		this.parameters.heightSegments,
-		this.parameters.depthSegments
-	);
-
-	return geometry;
-
-};
-
-THREE$CubeGeometry = THREE$BoxGeometry; // backwards compatibility
+CubeGeometry = BoxGeometry; // backwards compatibility
 
 
-export { THREE$CubeGeometry, THREE$BoxGeometry };
+export { CubeGeometry, BoxGeometry };

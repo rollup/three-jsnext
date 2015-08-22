@@ -1,10 +1,10 @@
-import { THREE$RGBFormat } from '../Three';
-import { THREE$DataTexture } from '../textures/DataTexture';
-import { THREE$CubeTexture } from '../textures/CubeTexture';
-import { THREE$ImageLoader } from '../loaders/ImageLoader';
-import { THREE$Texture } from '../textures/Texture';
+import { RGBFormat } from '../Three';
+import { DataTexture } from '../textures/DataTexture';
+import { CubeTexture } from '../textures/CubeTexture';
+import { ImageLoader } from '../loaders/ImageLoader';
+import { Texture } from '../textures/Texture';
 
-var THREE$ImageUtils;
+var ImageUtils;
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -12,16 +12,16 @@ var THREE$ImageUtils;
  * @author Daosheng Mu / https://github.com/DaoshengMu/
  */
 
-THREE$ImageUtils = {
+ImageUtils = {
 
 	crossOrigin: undefined,
 
 	loadTexture: function ( url, mapping, onLoad, onError ) {
 
-		var loader = new THREE$ImageLoader();
+		var loader = new ImageLoader();
 		loader.crossOrigin = this.crossOrigin;
 
-		var texture = new THREE$Texture( undefined, mapping );
+		var texture = new Texture( undefined, mapping );
 
 		loader.load( url, function ( image ) {
 
@@ -46,10 +46,14 @@ THREE$ImageUtils = {
 
 		var images = [];
 
-		var loader = new THREE$ImageLoader();
+		var loader = new ImageLoader();
 		loader.crossOrigin = this.crossOrigin;
 
-		var texture = new THREE$CubeTexture( images, mapping );
+		var texture = new CubeTexture( images, mapping );
+
+		// no flipping needed for cube textures
+
+		texture.flipY = false;
 
 		var loaded = 0;
 
@@ -215,7 +219,7 @@ THREE$ImageUtils = {
 
 		}
 
-		var texture = new THREE$DataTexture( data, width, height, THREE$RGBFormat );
+		var texture = new DataTexture( data, width, height, RGBFormat );
 		texture.needsUpdate = true;
 
 		return texture;
@@ -225,4 +229,4 @@ THREE$ImageUtils = {
 };
 
 
-export { THREE$ImageUtils };
+export { ImageUtils };

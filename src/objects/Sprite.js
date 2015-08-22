@@ -1,56 +1,55 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Vector3 } from '../math/Vector3';
-import { THREE$SpriteMaterial } from '../materials/SpriteMaterial';
-import { THREE$BufferAttribute } from '../core/BufferAttribute';
-import { THREE$IndexBufferAttribute } from '../core/IndexBufferAttribute';
-import { THREE$BufferGeometry } from '../core/BufferGeometry';
+import { Object3D } from '../core/Object3D';
+import { Vector3 } from '../math/Vector3';
+import { SpriteMaterial } from '../materials/SpriteMaterial';
+import { BufferAttribute } from '../core/BufferAttribute';
+import { BufferGeometry } from '../core/BufferGeometry';
 
-var THREE$Particle;
-var THREE$Sprite;
+var Particle;
+var Sprite;
 
 /**
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE$Sprite = ( function () {
+Sprite = ( function () {
 
 	var indices = new Uint16Array( [ 0, 1, 2,  0, 2, 3 ] );
 	var vertices = new Float32Array( [ - 0.5, - 0.5, 0,   0.5, - 0.5, 0,   0.5, 0.5, 0,   - 0.5, 0.5, 0 ] );
 	var uvs = new Float32Array( [ 0, 0,   1, 0,   1, 1,   0, 1 ] );
 
-	var geometry = new THREE$BufferGeometry();
-	geometry.addAttribute( 'index', new THREE$IndexBufferAttribute( indices, 1 ) );
-	geometry.addAttribute( 'position', new THREE$BufferAttribute( vertices, 3 ) );
-	geometry.addAttribute( 'uv', new THREE$BufferAttribute( uvs, 2 ) );
+	var geometry = new BufferGeometry();
+	geometry.addAttribute( 'index', new BufferAttribute( indices, 1 ) );
+	geometry.addAttribute( 'position', new BufferAttribute( vertices, 3 ) );
+	geometry.addAttribute( 'uv', new BufferAttribute( uvs, 2 ) );
 
-	return function Sprite( material ) {
+	return function ( material ) {
 
-		THREE$Object3D.call( this );
+		Object3D.call( this );
 
 		this.type = 'Sprite';
 
 		this.geometry = geometry;
-		this.material = ( material !== undefined ) ? material : new THREE$SpriteMaterial();
+		this.material = ( material !== undefined ) ? material : new SpriteMaterial();
 
 	};
 
 } )();
 
-THREE$Sprite.prototype = Object.create( THREE$Object3D.prototype );
-THREE$Sprite.prototype.constructor = THREE$Sprite;
+Sprite.prototype = Object.create( Object3D.prototype );
+Sprite.prototype.constructor = Sprite;
 
-THREE$Sprite.prototype.raycast = ( function () {
+Sprite.prototype.raycast = ( function () {
 
-	var matrixPosition = new THREE$Vector3();
+	var matrixPosition = new Vector3();
 
-	return function raycast( raycaster, intersects ) {
+	return function ( raycaster, intersects ) {
 
 		matrixPosition.setFromMatrixPosition( this.matrixWorld );
 
 		var distanceSq = raycaster.ray.distanceSqToPoint( matrixPosition );
 		var guessSizeSq = this.scale.x * this.scale.y;
-
+		
 		if ( distanceSq > guessSizeSq ) {
 
 			return;
@@ -70,21 +69,23 @@ THREE$Sprite.prototype.raycast = ( function () {
 
 }() );
 
-THREE$Sprite.prototype.clone = function () {
+Sprite.prototype.clone = function ( object ) {
 
-	return new this.constructor( this.material ).copy( this );
+	if ( object === undefined ) object = new Sprite( this.material );
+
+	Object3D.prototype.clone.call( this, object );
+
+	return object;
 
 };
 
-THREE$Sprite.prototype.toJSON = function ( meta ) {
+Sprite.prototype.toJSON = function ( meta ) {
 
-	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+	var data = Object3D.prototype.toJSON.call( this, meta );
 
 	// only serialize if not in meta materials cache
 	if ( meta.materials[ this.material.uuid ] === undefined ) {
-
 		meta.materials[ this.material.uuid ] = this.material.toJSON();
-
 	}
 
 	data.object.material = this.material.uuid;
@@ -95,7 +96,7 @@ THREE$Sprite.prototype.toJSON = function ( meta ) {
 
 // Backwards compatibility
 
-THREE$Particle = THREE$Sprite;
+Particle = Sprite;
 
 
-export { THREE$Particle, THREE$Sprite };
+export { Particle, Sprite };

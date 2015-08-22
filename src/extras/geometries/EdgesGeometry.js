@@ -1,27 +1,23 @@
-import { THREE$BufferGeometry } from '../../core/BufferGeometry';
-import { THREE$BufferAttribute } from '../../core/BufferAttribute';
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Math } from '../../math/Math';
+import { BufferGeometry } from '../../core/BufferGeometry';
+import { BufferAttribute } from '../../core/BufferAttribute';
+import { Geometry } from '../../core/Geometry';
+import { _Math } from '../../math/Math';
 
 /**
  * @author WestLangley / http://github.com/WestLangley
  */
 
-function THREE$EdgesGeometry ( geometry, thresholdAngle ) {
+function EdgesGeometry ( geometry, thresholdAngle ) {
 	this.isEdgesGeometry = true;
 
-	THREE$BufferGeometry.call( this );
+	BufferGeometry.call( this );
 
 	thresholdAngle = ( thresholdAngle !== undefined ) ? thresholdAngle : 1;
 
-	var thresholdDot = Math.cos( THREE$Math.degToRad( thresholdAngle ) );
+	var thresholdDot = Math.cos( _Math.degToRad( thresholdAngle ) );
 
 	var edge = [ 0, 0 ], hash = {};
-	var sortFunction = function ( a, b ) {
-
-		return a - b;
-
-	};
+	var sortFunction = function ( a, b ) { return a - b; };
 
 	var keys = [ 'a', 'b', 'c' ];
 
@@ -29,7 +25,7 @@ function THREE$EdgesGeometry ( geometry, thresholdAngle ) {
 
 	if ( (geometry && geometry.isBufferGeometry) ) {
 
-		geometry2 = new THREE$Geometry();
+		geometry2 = new Geometry();
 		geometry2.fromBufferGeometry( geometry );
 
 	} else {
@@ -92,12 +88,12 @@ function THREE$EdgesGeometry ( geometry, thresholdAngle ) {
 
 	}
 
-	this.addAttribute( 'position', new THREE$BufferAttribute( new Float32Array( coords ), 3 ) );
+	this.addAttribute( 'position', new BufferAttribute( new Float32Array( coords ), 3 ) );
 
 };
 
-THREE$EdgesGeometry.prototype = Object.create( THREE$BufferGeometry.prototype );
-THREE$EdgesGeometry.prototype.constructor = THREE$EdgesGeometry;
+EdgesGeometry.prototype = Object.create( BufferGeometry.prototype );
+EdgesGeometry.prototype.constructor = EdgesGeometry;
 
 
-export { THREE$EdgesGeometry };
+export { EdgesGeometry };

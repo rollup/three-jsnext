@@ -1,15 +1,15 @@
-import { THREE$LineSegments } from '../../objects/LineSegments';
-import { THREE$VertexColors } from '../../Three';
-import { THREE$LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { THREE$BufferAttribute } from '../../core/BufferAttribute';
-import { THREE$BufferGeometry } from '../../core/BufferGeometry';
+import { LineSegments } from '../../objects/LineSegments';
+import { VertexColors } from '../../Three';
+import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
+import { BufferAttribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
 
 /**
  * @author sroucheray / http://sroucheray.org/
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$AxisHelper ( size ) {
+function AxisHelper ( size ) {
 	this.isAxisHelper = true;
 
 	size = size || 1;
@@ -26,18 +26,18 @@ function THREE$AxisHelper ( size ) {
 		0, 0, 1,  0, 0.6, 1
 	] );
 
-	var geometry = new THREE$BufferGeometry();
-	geometry.addAttribute( 'position', new THREE$BufferAttribute( vertices, 3 ) );
-	geometry.addAttribute( 'color', new THREE$BufferAttribute( colors, 3 ) );
+	var geometry = new BufferGeometry();
+	geometry.addAttribute( 'position', new BufferAttribute( vertices, 3 ) );
+	geometry.addAttribute( 'color', new BufferAttribute( colors, 3 ) );
 
-	var material = new THREE$LineBasicMaterial( { vertexColors: THREE$VertexColors } );
+	var material = new LineBasicMaterial( { vertexColors: VertexColors } );
 
-	THREE$LineSegments.call( this, geometry, material );
+	LineSegments.call( this, geometry, material );
 
 };
 
-THREE$AxisHelper.prototype = Object.create( THREE$LineSegments.prototype );
-THREE$AxisHelper.prototype.constructor = THREE$AxisHelper;
+AxisHelper.prototype = Object.create( LineSegments.prototype );
+AxisHelper.prototype.constructor = AxisHelper;
 
 
-export { THREE$AxisHelper };
+export { AxisHelper };

@@ -1,46 +1,44 @@
-import { THREE$EventDispatcher } from '../core/EventDispatcher';
-import { THREE$FrontSide, THREE$NormalBlending, THREE$SmoothShading, THREE$NoColors, THREE$LessEqualDepth, THREE$AddEquation, THREE$OneMinusSrcAlphaFactor, THREE$SrcAlphaFactor } from '../Three';
-import { THREE$Texture } from '../textures/Texture';
-import { THREE$Color } from '../math/Color';
-import { THREE$Vector3 } from '../math/Vector3';
-import { THREE$Math } from '../math/Math';
+import { EventDispatcher } from '../core/EventDispatcher';
+import { FrontSide, NormalBlending, SmoothShading, NoColors, LessEqualDepth, AddEquation, OneMinusSrcAlphaFactor, SrcAlphaFactor } from '../Three';
+import { Texture } from '../textures/Texture';
+import { Color } from '../math/Color';
+import { Vector3 } from '../math/Vector3';
+import { _Math } from '../math/Math';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$Material () {
+function Material () {
 	this.isMaterial = true;
 
-	Object.defineProperty( this, 'id', { value: THREE$MaterialIdCount() } );
+	Object.defineProperty( this, 'id', { value: MaterialIdCount() } );
 
-	this.uuid = THREE$Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.name = '';
 	this.type = 'Material';
 
-	this.side = THREE$FrontSide;
+	this.side = FrontSide;
 
 	this.opacity = 1;
 	this.transparent = false;
 
-	this.blending = THREE$NormalBlending;
+	this.blending = NormalBlending;
 
-	this.blendSrc = THREE$SrcAlphaFactor;
-	this.blendDst = THREE$OneMinusSrcAlphaFactor;
-	this.blendEquation = THREE$AddEquation;
+	this.blendSrc = SrcAlphaFactor;
+	this.blendDst = OneMinusSrcAlphaFactor;
+	this.blendEquation = AddEquation;
 	this.blendSrcAlpha = null;
 	this.blendDstAlpha = null;
 	this.blendEquationAlpha = null;
 
-	this.depthFunc = THREE$LessEqualDepth;
+	this.depthFunc = LessEqualDepth;
 	this.depthTest = true;
 	this.depthWrite = true;
 
 	this.colorWrite = true;
-
-	this.precision = null; // override the renderer's default precision for this material
 
 	this.polygonOffset = false;
 	this.polygonOffsetFactor = 0;
@@ -56,9 +54,9 @@ function THREE$Material () {
 
 };
 
-THREE$Material.prototype = {
+Material.prototype = {
 
-	constructor: THREE$Material,
+	constructor: Material,
 
 	get needsUpdate () {
 
@@ -142,84 +140,70 @@ THREE$Material.prototype = {
 		if ( (this.alphaMap && this.alphaMap.isTexture) ) data.alphaMap = this.alphaMap.toJSON( meta ).uuid;
 		if ( (this.lightMap && this.lightMap.isTexture) ) data.lightMap = this.lightMap.toJSON( meta ).uuid;
 		if ( (this.bumpMap && this.bumpMap.isTexture) ) {
-
 			data.bumpMap = this.bumpMap.toJSON( meta ).uuid;
 			data.bumpScale = this.bumpScale;
-
 		}
 		if ( (this.normalMap && this.normalMap.isTexture) ) {
-
 			data.normalMap = this.normalMap.toJSON( meta ).uuid;
 			data.normalScale = this.normalScale; // Removed for now, causes issue in editor ui.js
-
 		}
 		if ( (this.specularMap && this.specularMap.isTexture) ) data.specularMap = this.specularMap.toJSON( meta ).uuid;
 		if ( (this.envMap && this.envMap.isTexture) ) {
-
 			data.envMap = this.envMap.toJSON( meta ).uuid;
 			data.reflectivity = this.reflectivity; // Scale behind envMap
-
 		}
 
 		if ( this.size !== undefined ) data.size = this.size;
 		if ( this.sizeAttenuation !== undefined ) data.sizeAttenuation = this.sizeAttenuation;
 
-		if ( this.vertexColors !== undefined && this.vertexColors !== THREE$NoColors ) data.vertexColors = this.vertexColors;
-		if ( this.shading !== undefined && this.shading !== THREE$SmoothShading ) data.shading = this.shading;
-		if ( this.blending !== undefined && this.blending !== THREE$NormalBlending ) data.blending = this.blending;
-		if ( this.side !== undefined && this.side !== THREE$FrontSide ) data.side = this.side;
+		if ( this.vertexColors !== undefined && this.vertexColors !== NoColors ) data.vertexColors = this.vertexColors;
+		if ( this.shading !== undefined && this.shading !== SmoothShading ) data.shading = this.shading;
+		if ( this.blending !== undefined && this.blending !== NormalBlending ) data.blending = this.blending;
+		if ( this.side !== undefined && this.side !== FrontSide ) data.side = this.side;
 
 		if ( this.opacity < 1 ) data.opacity = this.opacity;
 		if ( this.transparent === true ) data.transparent = this.transparent;
-		if ( this.alphaTest > 0 ) data.alphaTest = this.alphaTest;
 		if ( this.wireframe === true ) data.wireframe = this.wireframe;
-		if ( this.wireframeLinewidth > 1 ) data.wireframeLinewidth = this.wireframeLinewidth;
 
 		return data;
 
 	},
 
-	clone: function () {
+	clone: function ( material ) {
 
-		return new this.constructor().copy( this );
+		if ( material === undefined ) material = new Material();
 
-	},
+		material.name = this.name;
 
-	copy: function ( source ) {
+		material.side = this.side;
 
-		this.name = source.name;
+		material.opacity = this.opacity;
+		material.transparent = this.transparent;
 
-		this.side = source.side;
+		material.blending = this.blending;
 
-		this.opacity = source.opacity;
-		this.transparent = source.transparent;
+		material.blendSrc = this.blendSrc;
+		material.blendDst = this.blendDst;
+		material.blendEquation = this.blendEquation;
+		material.blendSrcAlpha = this.blendSrcAlpha;
+		material.blendDstAlpha = this.blendDstAlpha;
+		material.blendEquationAlpha = this.blendEquationAlpha;
 
-		this.blending = source.blending;
+		material.depthFunc = this.depthFunc;
+		material.depthTest = this.depthTest;
+		material.depthWrite = this.depthWrite;
 
-		this.blendSrc = source.blendSrc;
-		this.blendDst = source.blendDst;
-		this.blendEquation = source.blendEquation;
-		this.blendSrcAlpha = source.blendSrcAlpha;
-		this.blendDstAlpha = source.blendDstAlpha;
-		this.blendEquationAlpha = source.blendEquationAlpha;
+		material.polygonOffset = this.polygonOffset;
+		material.polygonOffsetFactor = this.polygonOffsetFactor;
+		material.polygonOffsetUnits = this.polygonOffsetUnits;
 
-		this.depthFunc = source.depthFunc;
-		this.depthTest = source.depthTest;
-		this.depthWrite = source.depthWrite;
+		material.alphaTest = this.alphaTest;
 
-		this.precision = source.precision;
+		material.overdraw = this.overdraw;
 
-		this.polygonOffset = source.polygonOffset;
-		this.polygonOffsetFactor = source.polygonOffsetFactor;
-		this.polygonOffsetUnits = source.polygonOffsetUnits;
+		material.visible = this.visible;
 
-		this.alphaTest = source.alphaTest;
-
-		this.overdraw = source.overdraw;
-
-		this.visible = source.visible;
-
-		return this;
+		return material;
 
 	},
 
@@ -237,10 +221,10 @@ THREE$Material.prototype = {
 
 };
 
-THREE$EventDispatcher.prototype.apply( THREE$Material.prototype );
+EventDispatcher.prototype.apply( Material.prototype );
 
 var count = 0;
-function THREE$MaterialIdCount () { return count++; };
+function MaterialIdCount () { return count++; };
 
 
-export { THREE$MaterialIdCount, THREE$Material };
+export { MaterialIdCount, Material };

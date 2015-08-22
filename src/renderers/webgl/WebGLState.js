@@ -1,10 +1,10 @@
-import { THREE$NotEqualDepth, THREE$GreaterDepth, THREE$GreaterEqualDepth, THREE$EqualDepth, THREE$LessEqualDepth, THREE$LessDepth, THREE$AlwaysDepth, THREE$NeverDepth, THREE$CustomBlending, THREE$MultiplyBlending, THREE$SubtractiveBlending, THREE$AdditiveBlending, THREE$NoBlending } from '../../Three';
+import { NotEqualDepth, GreaterDepth, GreaterEqualDepth, EqualDepth, LessEqualDepth, LessDepth, AlwaysDepth, NeverDepth, CustomBlending, MultiplyBlending, SubtractiveBlending, AdditiveBlending, NoBlending } from '../../Three';
 
 /**
 * @author mrdoob / http://mrdoob.com/
 */
 
-function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
+function WebGLState ( gl, paramThreeToGL ) {
 	this.isWebGLState = true;
 
 	var _this = this;
@@ -12,9 +12,7 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 	var newAttributes = new Uint8Array( 16 );
 	var enabledAttributes = new Uint8Array( 16 );
 
-	var capabilities = {};
-
-	var compressedTextureFormats = null;
+	var switches = {};
 
 	var currentBlending = null;
 	var currentBlendEquation = null;
@@ -25,6 +23,7 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 	var currentBlendDstAlpha = null;
 
 	var currentDepthFunc = null;
+	var currentDepthTest = null;
 	var currentDepthWrite = null;
 
 	var currentColorWrite = null;
@@ -33,6 +32,7 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 	var currentLineWidth = null;
 
+	var currentPolygonOffset = null;
 	var currentPolygonOffsetFactor = null;
 	var currentPolygonOffsetUnits = null;
 
@@ -47,7 +47,7 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 		gl.clearDepth( 1 );
 		gl.clearStencil( 0 );
 
-		this.enable( gl.DEPTH_TEST );
+		gl.enable( gl.DEPTH_TEST );
 		gl.depthFunc( gl.LEQUAL );
 
 		gl.frontFace( gl.CCW );
@@ -100,10 +100,10 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 	this.enable = function ( id ) {
 
-		if ( capabilities[ id ] !== true ) {
+		if ( switches[ id ] !== true ) {
 
 			gl.enable( id );
-			capabilities[ id ] = true;
+			switches[ id ] = true;
 
 		}
 
@@ -111,67 +111,12 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 	this.disable = function ( id ) {
 
-		if ( capabilities[ id ] !== false ) {
+		if ( switches[ id ] !== false ) {
 
 			gl.disable( id );
-			capabilities[ id ] = false;
+			switches[ id ] = false;
 
 		}
-
-	};
-
-	this.getCompressedTextureFormats = function () {
-
-		if ( compressedTextureFormats === null ) {
-
-			compressedTextureFormats = [];
-
-			if ( extensions.get( 'WEBGL_compressed_texture_pvrtc' ) ||
-			     extensions.get( 'WEBGL_compressed_texture_s3tc' ) ) {
-
-				var formats = gl.getParameter( gl.COMPRESSED_TEXTURE_FORMATS );
-
-				for ( var i = 0; i < formats.length; i ++ ) {
-
-					compressedTextureFormats.push( formats[ i ] );
-
-				}
-
-			}
-
-		}
-
-		return compressedTextureFormats;
-
-	};
-
-	this.getMaxPrecision = function ( precision ) {
-
-		if ( precision === 'highp' ) {
-
-			if ( gl.getShaderPrecisionFormat( gl.VERTEX_SHADER, gl.HIGH_FLOAT ).precision > 0 &&
-			     gl.getShaderPrecisionFormat( gl.FRAGMENT_SHADER, gl.HIGH_FLOAT ).precision > 0 ) {
-
-				return 'highp';
-
-			}
-
-			precision = 'mediump';
-
-		}
-
-		if ( precision === 'mediump' ) {
-
-			if ( gl.getShaderPrecisionFormat( gl.VERTEX_SHADER, gl.MEDIUM_FLOAT ).precision > 0 &&
-			     gl.getShaderPrecisionFormat( gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT ).precision > 0 ) {
-
-				return 'mediump';
-
-			}
-
-		}
-
-		return 'lowp';
 
 	};
 
@@ -179,17 +124,17 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 		if ( blending !== currentBlending ) {
 
-			if ( blending === THREE$NoBlending ) {
+			if ( blending === NoBlending ) {
 
 				this.disable( gl.BLEND );
 
-			} else if ( blending === THREE$AdditiveBlending ) {
+			} else if ( blending === AdditiveBlending ) {
 
 				this.enable( gl.BLEND );
 				gl.blendEquation( gl.FUNC_ADD );
 				gl.blendFunc( gl.SRC_ALPHA, gl.ONE );
 
-			} else if ( blending === THREE$SubtractiveBlending ) {
+			} else if ( blending === SubtractiveBlending ) {
 
 				// TODO: Find blendFuncSeparate() combination
 
@@ -197,7 +142,7 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 				gl.blendEquation( gl.FUNC_ADD );
 				gl.blendFunc( gl.ZERO, gl.ONE_MINUS_SRC_COLOR );
 
-			} else if ( blending === THREE$MultiplyBlending ) {
+			} else if ( blending === MultiplyBlending ) {
 
 				// TODO: Find blendFuncSeparate() combination
 
@@ -205,7 +150,7 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 				gl.blendEquation( gl.FUNC_ADD );
 				gl.blendFunc( gl.ZERO, gl.SRC_COLOR );
 
-			} else if ( blending === THREE$CustomBlending ) {
+			} else if ( blending === CustomBlending ) {
 
 				this.enable( gl.BLEND );
 
@@ -221,7 +166,7 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 		}
 
-		if ( blending === THREE$CustomBlending ) {
+		if ( blending === CustomBlending ) {
 
 			blendEquationAlpha = blendEquationAlpha || blendEquation;
 			blendSrcAlpha = blendSrcAlpha || blendSrc;
@@ -268,42 +213,42 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 				switch ( depthFunc ) {
 
-					case THREE$NeverDepth:
+					case NeverDepth:
 
 						gl.depthFunc( gl.NEVER );
 						break;
 
-					case THREE$AlwaysDepth:
+					case AlwaysDepth:
 
 						gl.depthFunc( gl.ALWAYS );
 						break;
 
-					case THREE$LessDepth:
+					case LessDepth:
 
 						gl.depthFunc( gl.LESS );
 						break;
 
-					case THREE$LessEqualDepth:
+					case LessEqualDepth:
 
 						gl.depthFunc( gl.LEQUAL );
 						break;
 
-					case THREE$EqualDepth:
+					case EqualDepth:
 
 						gl.depthFunc( gl.EQUAL );
 						break;
 
-					case THREE$GreaterEqualDepth:
+					case GreaterEqualDepth:
 
 						gl.depthFunc( gl.GEQUAL );
 						break;
 
-					case THREE$GreaterDepth:
+					case GreaterDepth:
 
 						gl.depthFunc( gl.GREATER );
 						break;
 
-					case THREE$NotEqualDepth:
+					case NotEqualDepth:
 
 						gl.depthFunc( gl.NOTEQUAL );
 						break;
@@ -328,13 +273,19 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 	this.setDepthTest = function ( depthTest ) {
 
-		if ( depthTest ) {
+		if ( currentDepthTest !== depthTest ) {
 
-			this.enable( gl.DEPTH_TEST );
+			if ( depthTest ) {
 
-		} else {
+				gl.enable( gl.DEPTH_TEST );
 
-			this.disable( gl.DEPTH_TEST );
+			} else {
+
+				gl.disable( gl.DEPTH_TEST );
+
+			}
+
+			currentDepthTest = depthTest;
 
 		}
 
@@ -394,38 +345,30 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 	};
 
-	this.setPolygonOffset = function ( polygonOffset, factor, units ) {
+	this.setPolygonOffset = function ( polygonoffset, factor, units ) {
 
-		if ( polygonOffset ) {
+		if ( currentPolygonOffset !== polygonoffset ) {
 
-			this.enable( gl.POLYGON_OFFSET_FILL );
+			if ( polygonoffset ) {
 
-		} else {
+				gl.enable( gl.POLYGON_OFFSET_FILL );
 
-			this.disable( gl.POLYGON_OFFSET_FILL );
+			} else {
+
+				gl.disable( gl.POLYGON_OFFSET_FILL );
+
+			}
+
+			currentPolygonOffset = polygonoffset;
 
 		}
 
-		if ( polygonOffset && ( currentPolygonOffsetFactor !== factor || currentPolygonOffsetUnits !== units ) ) {
+		if ( polygonoffset && ( currentPolygonOffsetFactor !== factor || currentPolygonOffsetUnits !== units ) ) {
 
 			gl.polygonOffset( factor, units );
 
 			currentPolygonOffsetFactor = factor;
 			currentPolygonOffsetUnits = units;
-
-		}
-
-	};
-
-	this.setScissorTest = function ( scissorTest ) {
-
-		if ( scissorTest ) {
-
-			this.enable( gl.SCISSOR_TEST );
-
-		} else {
-
-			this.disable( gl.SCISSOR_TEST );
 
 		}
 
@@ -454,12 +397,12 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 		}
 
-		var boundTexture = currentBoundTextures[ currentTextureSlot ];
+		var boundTexture = currentBoundTextures[currentTextureSlot];
 
 		if ( boundTexture === undefined ) {
 
 			boundTexture = { type: undefined, texture: undefined };
-			currentBoundTextures[ currentTextureSlot ] = boundTexture;
+			currentBoundTextures[currentTextureSlot] = boundTexture;
 
 		}
 
@@ -517,12 +460,10 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 
 		}
 
-		capabilities = {};
-
-		compressedTextureFormats = null;
+		switches = {};
 
 		currentBlending = null;
-
+		currentDepthTest = null;
 		currentDepthWrite = null;
 		currentColorWrite = null;
 
@@ -533,4 +474,4 @@ function THREE$WebGLState ( gl, extensions, paramThreeToGL ) {
 };
 
 
-export { THREE$WebGLState };
+export { WebGLState };

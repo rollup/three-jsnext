@@ -2,19 +2,19 @@
  * https://github.com/mrdoob/eventdispatcher.js/
  */
 
-function THREE$EventDispatcher () {
+function EventDispatcher () {
 	this.isEventDispatcher = true;};
 
-THREE$EventDispatcher.prototype = {
+EventDispatcher.prototype = {
 
-	constructor: THREE$EventDispatcher,
+	constructor: EventDispatcher,
 
 	apply: function ( object ) {
 
-		object.addEventListener = THREE$EventDispatcher.prototype.addEventListener;
-		object.hasEventListener = THREE$EventDispatcher.prototype.hasEventListener;
-		object.removeEventListener = THREE$EventDispatcher.prototype.removeEventListener;
-		object.dispatchEvent = THREE$EventDispatcher.prototype.dispatchEvent;
+		object.addEventListener = EventDispatcher.prototype.addEventListener;
+		object.hasEventListener = EventDispatcher.prototype.hasEventListener;
+		object.removeEventListener = EventDispatcher.prototype.removeEventListener;
+		object.dispatchEvent = EventDispatcher.prototype.dispatchEvent;
 
 	},
 
@@ -108,4 +108,4 @@ THREE$EventDispatcher.prototype = {
 };
 
 
-export { THREE$EventDispatcher };
+export { EventDispatcher };

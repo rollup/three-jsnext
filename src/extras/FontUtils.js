@@ -1,8 +1,8 @@
-import { THREE$Shape } from './core/Shape';
-import { THREE$Path } from './core/Path';
+import { Shape } from './core/Shape';
+import { Path } from './core/Path';
 
-var THREE$typeface_js;
-var THREE$FontUtils;
+var typeface_js;
+var FontUtils;
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
@@ -21,7 +21,7 @@ var THREE$FontUtils;
  *
  */
 
-THREE$FontUtils = {
+FontUtils = {
 
 	faces: {},
 
@@ -39,7 +39,7 @@ THREE$FontUtils = {
 
 			return this.faces[ this.face.toLowerCase() ][ this.weight ][ this.style ];
 
-		} catch ( e ) {
+		} catch (e) {
 
 			throw "The font " + this.face + " with " + this.weight + " weight and " + this.style + " style is missing."
 
@@ -79,7 +79,7 @@ THREE$FontUtils = {
 
 		for ( i = 0; i < length; i ++ ) {
 
-			var path = new THREE$Path();
+			var path = new Path();
 
 			var ret = this.extractGlyphPoints( chars[ i ], face, scale, offset, path );
 			offset += ret.offset;
@@ -180,9 +180,8 @@ THREE$FontUtils = {
 						for ( i2 = 1, divisions = this.divisions; i2 <= divisions; i2 ++ ) {
 
 							var t = i2 / divisions;
-							THREE$Shape.Utils.b2( t, cpx0, cpx1, cpx );
-							THREE$Shape.Utils.b2( t, cpy0, cpy1, cpy );
-
+							Shape.Utils.b2( t, cpx0, cpx1, cpx );
+							Shape.Utils.b2( t, cpy0, cpy1, cpy );
 						}
 
 					}
@@ -212,8 +211,8 @@ THREE$FontUtils = {
 						for ( i2 = 1, divisions = this.divisions; i2 <= divisions; i2 ++ ) {
 
 							var t = i2 / divisions;
-							THREE$Shape.Utils.b3( t, cpx0, cpx1, cpx2, cpx );
-							THREE$Shape.Utils.b3( t, cpy0, cpy1, cpy2, cpy );
+							Shape.Utils.b3( t, cpx0, cpx1, cpx2, cpx );
+							Shape.Utils.b3( t, cpy0, cpy1, cpy2, cpy );
 
 						}
 
@@ -224,19 +223,17 @@ THREE$FontUtils = {
 				}
 
 			}
-
 		}
 
 
 
-		return { offset: glyph.ha * scale, path: path };
-
+		return { offset: glyph.ha * scale, path:path };
 	}
 
 };
 
 
-THREE$FontUtils.generateShapes = function ( text, parameters ) {
+FontUtils.generateShapes = function ( text, parameters ) {
 
 	// Parameters
 
@@ -249,16 +246,16 @@ THREE$FontUtils.generateShapes = function ( text, parameters ) {
 	var weight = parameters.weight !== undefined ? parameters.weight : 'normal';
 	var style = parameters.style !== undefined ? parameters.style : 'normal';
 
-	THREE$FontUtils.size = size;
-	THREE$FontUtils.divisions = curveSegments;
+	FontUtils.size = size;
+	FontUtils.divisions = curveSegments;
 
-	THREE$FontUtils.face = font;
-	THREE$FontUtils.weight = weight;
-	THREE$FontUtils.style = style;
+	FontUtils.face = font;
+	FontUtils.weight = weight;
+	FontUtils.style = style;
 
 	// Get a Font data json object
 
-	var data = THREE$FontUtils.drawText( text );
+	var data = FontUtils.drawText( text );
 
 	var paths = data.paths;
 	var shapes = [];
@@ -466,12 +463,12 @@ THREE$FontUtils.generateShapes = function ( text, parameters ) {
 
 	return namespace;
 
-} )( THREE$FontUtils );
+} )( FontUtils );
 
 // To use the typeface.js face files, hook up the API
 
-THREE$typeface_js = { faces: THREE$FontUtils.faces, loadFace: THREE$FontUtils.loadFace };
-if ( typeof self !== 'undefined' ) self._typeface_js = THREE$typeface_js;
+typeface_js = { faces: FontUtils.faces, loadFace: FontUtils.loadFace };
+if ( typeof self !== 'undefined' ) self._typeface_js = typeface_js;
 
 
-export { THREE$typeface_js, THREE$FontUtils };
+export { typeface_js, FontUtils };

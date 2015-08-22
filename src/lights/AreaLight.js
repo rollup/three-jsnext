@@ -1,6 +1,6 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Light } from './Light';
-import { THREE$Vector3 } from '../math/Vector3';
+import { Object3D } from '../core/Object3D';
+import { Light } from './Light';
+import { Vector3 } from '../math/Vector3';
 
 /**
  * @author MPanknin / http://www.redplant.de/
@@ -8,15 +8,15 @@ import { THREE$Vector3 } from '../math/Vector3';
  * @author prafullit
  */
 
-function THREE$AreaLight ( color, intensity ) {
+function AreaLight ( color, intensity ) {
 	this.isAreaLight = true;
 
-	THREE$Light.call( this, color );
+	Light.call( this, color );
 
 	this.type = 'AreaLight';
 
-	this.normal = new THREE$Vector3( 0, - 1, 0 );
-	this.right = new THREE$Vector3( 1, 0, 0 );
+	this.normal = new Vector3( 0, - 1, 0 );
+	this.right = new Vector3( 1, 0, 0 );
 
 	this.intensity = ( intensity !== undefined ) ? intensity : 1;
 
@@ -29,36 +29,37 @@ function THREE$AreaLight ( color, intensity ) {
 
 };
 
-THREE$AreaLight.prototype = Object.create( THREE$Light.prototype );
-THREE$AreaLight.prototype.constructor = THREE$AreaLight;
+AreaLight.prototype = Object.create( Light.prototype );
+AreaLight.prototype.constructor = AreaLight;
 
-THREE$AreaLight.prototype.copy = function ( source ) {
+AreaLight.prototype.clone = function () {
 
-	THREE$Light.prototype.copy.call( this, source );
+	var light = new AreaLight();
 
-	this.intensity = source.intensity;
-	this.normal.copy( source.normal );
-	this.right.copy( source.right );
-	this.width = source.width;
-	this.height = source.height;
-	this.constantAttenuation = source.constantAttenuation;
-	this.linearAttenuation = source.linearAttenuation;
-	this.quadraticAttenuation = source.quadraticAttenuation;
+	Light.prototype.clone.call( this, light );
 
-	return this;
+	light.normal.copy(this.normal);
+	light.right.copy(this.right);
+	light.intensity = this.intensity;
+	light.width = this.width;
+	light.height = this.height;
+	light.constantAttenuation = this.constantAttenuation;
+	light.linearAttenuation = this.linearAttenuation;
+	light.quadraticAttenuation = this.quadraticAttenuation
+
+	return light;
 
 };
 
-THREE$AreaLight.prototype.toJSON = function ( meta ) {
+AreaLight.prototype.toJSON = function ( meta ) {
 
-	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+	var data = Object3D.prototype.toJSON.call( this, meta );
 
 	data.object.color = this.color.getHex();
 	data.object.intensity = this.intensity;
 
 	return data;
-
 };
 
 
-export { THREE$AreaLight };
+export { AreaLight };

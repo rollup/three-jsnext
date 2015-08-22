@@ -1,7 +1,7 @@
-import { THREE$Material } from './Material';
-import { THREE$NoColors, THREE$SmoothShading, THREE$MultiplyOperation } from '../Three';
-import { THREE$Vector2 } from '../math/Vector2';
-import { THREE$Color } from '../math/Color';
+import { Material } from './Material';
+import { NoColors, SmoothShading, MultiplyOperation } from '../Three';
+import { Vector2 } from '../math/Vector2';
+import { Color } from '../math/Color';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -57,16 +57,16 @@ import { THREE$Color } from '../math/Color';
  * }
  */
 
-function THREE$MeshPhongMaterial ( parameters ) {
+function MeshPhongMaterial ( parameters ) {
 	this.isMeshPhongMaterial = true;
 
-	THREE$Material.call( this );
+	Material.call( this );
 
 	this.type = 'MeshPhongMaterial';
 
-	this.color = new THREE$Color( 0xffffff ); // diffuse
-	this.emissive = new THREE$Color( 0x000000 );
-	this.specular = new THREE$Color( 0x111111 );
+	this.color = new Color( 0xffffff ); // diffuse
+	this.emissive = new Color( 0x000000 );
+	this.specular = new Color( 0x111111 );
 	this.shininess = 30;
 
 	this.metal = false;
@@ -85,27 +85,27 @@ function THREE$MeshPhongMaterial ( parameters ) {
 	this.bumpScale = 1;
 
 	this.normalMap = null;
-	this.normalScale = new THREE$Vector2( 1, 1 );
+	this.normalScale = new Vector2( 1, 1 );
 
 	this.specularMap = null;
 
 	this.alphaMap = null;
 
 	this.envMap = null;
-	this.combine = THREE$MultiplyOperation;
+	this.combine = MultiplyOperation;
 	this.reflectivity = 1;
 	this.refractionRatio = 0.98;
 
 	this.fog = true;
 
-	this.shading = THREE$SmoothShading;
+	this.shading = SmoothShading;
 
 	this.wireframe = false;
 	this.wireframeLinewidth = 1;
 	this.wireframeLinecap = 'round';
 	this.wireframeLinejoin = 'round';
 
-	this.vertexColors = THREE$NoColors;
+	this.vertexColors = NoColors;
 
 	this.skinning = false;
 	this.morphTargets = false;
@@ -115,63 +115,65 @@ function THREE$MeshPhongMaterial ( parameters ) {
 
 };
 
-THREE$MeshPhongMaterial.prototype = Object.create( THREE$Material.prototype );
-THREE$MeshPhongMaterial.prototype.constructor = THREE$MeshPhongMaterial;
+MeshPhongMaterial.prototype = Object.create( Material.prototype );
+MeshPhongMaterial.prototype.constructor = MeshPhongMaterial;
 
-THREE$MeshPhongMaterial.prototype.copy = function ( source ) {
+MeshPhongMaterial.prototype.clone = function () {
 
-	THREE$Material.prototype.copy.call( this, source );
+	var material = new MeshPhongMaterial();
 
-	this.color.copy( source.color );
-	this.emissive.copy( source.emissive );
-	this.specular.copy( source.specular );
-	this.shininess = source.shininess;
+	Material.prototype.clone.call( this, material );
 
-	this.metal = source.metal;
+	material.color.copy( this.color );
+	material.emissive.copy( this.emissive );
+	material.specular.copy( this.specular );
+	material.shininess = this.shininess;
 
-	this.map = source.map;
+	material.metal = this.metal;
 
-	this.lightMap = source.lightMap;
-	this.lightMapIntensity = source.lightMapIntensity;
+	material.map = this.map;
 
-	this.aoMap = source.aoMap;
-	this.aoMapIntensity = source.aoMapIntensity;
+	material.lightMap = this.lightMap;
+	material.lightMapIntensity = this.lightMapIntensity;
 
-	this.emissiveMap = source.emissiveMap;
+	material.aoMap = this.aoMap;
+	material.aoMapIntensity = this.aoMapIntensity;
 
-	this.bumpMap = source.bumpMap;
-	this.bumpScale = source.bumpScale;
+	material.emissiveMap = this.emissiveMap;
 
-	this.normalMap = source.normalMap;
-	this.normalScale.copy( source.normalScale );
+	material.bumpMap = this.bumpMap;
+	material.bumpScale = this.bumpScale;
 
-	this.specularMap = source.specularMap;
+	material.normalMap = this.normalMap;
+	material.normalScale.copy( this.normalScale );
 
-	this.alphaMap = source.alphaMap;
+	material.specularMap = this.specularMap;
 
-	this.envMap = source.envMap;
-	this.combine = source.combine;
-	this.reflectivity = source.reflectivity;
-	this.refractionRatio = source.refractionRatio;
+	material.alphaMap = this.alphaMap;
 
-	this.fog = source.fog;
+	material.envMap = this.envMap;
+	material.combine = this.combine;
+	material.reflectivity = this.reflectivity;
+	material.refractionRatio = this.refractionRatio;
 
-	this.shading = source.shading;
+	material.fog = this.fog;
 
-	this.wireframe = source.wireframe;
-	this.wireframeLinewidth = source.wireframeLinewidth;
-	this.wireframeLinecap = source.wireframeLinecap;
-	this.wireframeLinejoin = source.wireframeLinejoin;
+	material.shading = this.shading;
 
-	this.vertexColors = source.vertexColors;
+	material.wireframe = this.wireframe;
+	material.wireframeLinewidth = this.wireframeLinewidth;
+	material.wireframeLinecap = this.wireframeLinecap;
+	material.wireframeLinejoin = this.wireframeLinejoin;
 
-	this.skinning = source.skinning;
-	this.morphTargets = source.morphTargets;
-	this.morphNormals = source.morphNormals;
+	material.vertexColors = this.vertexColors;
 
-	return this;
+	material.skinning = this.skinning;
+	material.morphTargets = this.morphTargets;
+	material.morphNormals = this.morphNormals;
+
+	return material;
 
 };
 
 
-export { THREE$MeshPhongMaterial };
+export { MeshPhongMaterial };

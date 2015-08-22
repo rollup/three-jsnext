@@ -1,36 +1,36 @@
-import { THREE$EventDispatcher } from '../core/EventDispatcher';
-import { THREE$UnsignedByteType, THREE$RGBAFormat, THREE$LinearMipMapLinearFilter, THREE$LinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
-import { THREE$Vector2 } from '../math/Vector2';
-import { THREE$Math } from '../math/Math';
+import { EventDispatcher } from '../core/EventDispatcher';
+import { UnsignedByteType, RGBAFormat, LinearMipMapLinearFilter, LinearFilter, ClampToEdgeWrapping } from '../Three';
+import { Vector2 } from '../math/Vector2';
+import { _Math } from '../math/Math';
 
 /**
  * @author szimek / https://github.com/szimek/
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$WebGLRenderTarget ( width, height, options ) {
+function WebGLRenderTarget ( width, height, options ) {
 	this.isWebGLRenderTarget = true;
 
-	this.uuid = THREE$Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.width = width;
 	this.height = height;
 
 	options = options || {};
 
-	this.wrapS = options.wrapS !== undefined ? options.wrapS : THREE$ClampToEdgeWrapping;
-	this.wrapT = options.wrapT !== undefined ? options.wrapT : THREE$ClampToEdgeWrapping;
+	this.wrapS = options.wrapS !== undefined ? options.wrapS : ClampToEdgeWrapping;
+	this.wrapT = options.wrapT !== undefined ? options.wrapT : ClampToEdgeWrapping;
 
-	this.magFilter = options.magFilter !== undefined ? options.magFilter : THREE$LinearFilter;
-	this.minFilter = options.minFilter !== undefined ? options.minFilter : THREE$LinearMipMapLinearFilter;
+	this.magFilter = options.magFilter !== undefined ? options.magFilter : LinearFilter;
+	this.minFilter = options.minFilter !== undefined ? options.minFilter : LinearMipMapLinearFilter;
 
 	this.anisotropy = options.anisotropy !== undefined ? options.anisotropy : 1;
 
-	this.offset = new THREE$Vector2( 0, 0 );
-	this.repeat = new THREE$Vector2( 1, 1 );
+	this.offset = new Vector2( 0, 0 );
+	this.repeat = new Vector2( 1, 1 );
 
-	this.format = options.format !== undefined ? options.format : THREE$RGBAFormat;
-	this.type = options.type !== undefined ? options.type : THREE$UnsignedByteType;
+	this.format = options.format !== undefined ? options.format : RGBAFormat;
+	this.type = options.type !== undefined ? options.type : UnsignedByteType;
 
 	this.depthBuffer = options.depthBuffer !== undefined ? options.depthBuffer : true;
 	this.stencilBuffer = options.stencilBuffer !== undefined ? options.stencilBuffer : true;
@@ -41,9 +41,9 @@ function THREE$WebGLRenderTarget ( width, height, options ) {
 
 };
 
-THREE$WebGLRenderTarget.prototype = {
+WebGLRenderTarget.prototype = {
 
-	constructor: THREE$WebGLRenderTarget,
+	constructor: WebGLRenderTarget,
 
 	setSize: function ( width, height ) {
 
@@ -55,42 +55,34 @@ THREE$WebGLRenderTarget.prototype = {
 			this.dispose();
 
 		}
-
 	},
 
 	clone: function () {
 
-		return new this.constructor().copy( this );
+		var tmp = new WebGLRenderTarget( this.width, this.height );
 
-	},
+		tmp.wrapS = this.wrapS;
+		tmp.wrapT = this.wrapT;
 
-	copy: function ( source ) {
+		tmp.magFilter = this.magFilter;
+		tmp.minFilter = this.minFilter;
 
-		this.width = source.width;
-		this.height = source.height;
+		tmp.anisotropy = this.anisotropy;
 
-		this.wrapS = source.wrapS;
-		this.wrapT = source.wrapT;
+		tmp.offset.copy( this.offset );
+		tmp.repeat.copy( this.repeat );
 
-		this.magFilter = source.magFilter;
-		this.minFilter = source.minFilter;
+		tmp.format = this.format;
+		tmp.type = this.type;
 
-		this.anisotropy = source.anisotropy;
+		tmp.depthBuffer = this.depthBuffer;
+		tmp.stencilBuffer = this.stencilBuffer;
 
-		this.offset.copy( source.offset );
-		this.repeat.copy( source.repeat );
+		tmp.generateMipmaps = this.generateMipmaps;
 
-		this.format = source.format;
-		this.type = source.type;
+		tmp.shareDepthFrom = this.shareDepthFrom;
 
-		this.depthBuffer = source.depthBuffer;
-		this.stencilBuffer = source.stencilBuffer;
-
-		this.generateMipmaps = source.generateMipmaps;
-
-		this.shareDepthFrom = source.shareDepthFrom;
-
-		return this;
+		return tmp;
 
 	},
 
@@ -102,7 +94,7 @@ THREE$WebGLRenderTarget.prototype = {
 
 };
 
-THREE$EventDispatcher.prototype.apply( THREE$WebGLRenderTarget.prototype );
+EventDispatcher.prototype.apply( WebGLRenderTarget.prototype );
 
 
-export { THREE$WebGLRenderTarget };
+export { WebGLRenderTarget };

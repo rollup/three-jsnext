@@ -1,8 +1,9 @@
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Object3D } from '../../core/Object3D';
-import { THREE$Mesh } from '../../objects/Mesh';
-import { THREE$MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
-import { THREE$CylinderGeometry } from '../geometries/CylinderGeometry';
+import { Vector3 } from '../../math/Vector3';
+import { Object3D } from '../../core/Object3D';
+import { Mesh } from '../../objects/Mesh';
+import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
+import { Matrix4 } from '../../math/Matrix4';
+import { CylinderGeometry } from '../geometries/CylinderGeometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -10,10 +11,10 @@ import { THREE$CylinderGeometry } from '../geometries/CylinderGeometry';
  * @author WestLangley / http://github.com/WestLangley
 */
 
-function THREE$SpotLightHelper ( light ) {
+function SpotLightHelper ( light ) {
 	this.isSpotLightHelper = true;
 
-	THREE$Object3D.call( this );
+	Object3D.call( this );
 
 	this.light = light;
 	this.light.updateMatrixWorld();
@@ -21,34 +22,32 @@ function THREE$SpotLightHelper ( light ) {
 	this.matrix = light.matrixWorld;
 	this.matrixAutoUpdate = false;
 
-	var geometry = new THREE$CylinderGeometry( 0, 1, 1, 8, 1, true );
+	var geometry = new CylinderGeometry( 0, 1, 1, 8, 1, true );
 
-	geometry.translate( 0, - 0.5, 0 );
-	geometry.rotateX( - Math.PI / 2 );
+	geometry.applyMatrix( new Matrix4().makeTranslation( 0, - 0.5, 0 ) );
+	geometry.applyMatrix( new Matrix4().makeRotationX( - Math.PI / 2 ) );
 
-	var material = new THREE$MeshBasicMaterial( { wireframe: true, fog: false } );
+	var material = new MeshBasicMaterial( { wireframe: true, fog: false } );
 
-	this.cone = new THREE$Mesh( geometry, material );
+	this.cone = new Mesh( geometry, material );
 	this.add( this.cone );
 
 	this.update();
 
 };
 
-THREE$SpotLightHelper.prototype = Object.create( THREE$Object3D.prototype );
-THREE$SpotLightHelper.prototype.constructor = THREE$SpotLightHelper;
+SpotLightHelper.prototype = Object.create( Object3D.prototype );
+SpotLightHelper.prototype.constructor = SpotLightHelper;
 
-THREE$SpotLightHelper.prototype.dispose = function () {
-
+SpotLightHelper.prototype.dispose = function () {
 	this.cone.geometry.dispose();
 	this.cone.material.dispose();
-
 };
 
-THREE$SpotLightHelper.prototype.update = function () {
+SpotLightHelper.prototype.update = function () {
 
-	var vector = new THREE$Vector3();
-	var vector2 = new THREE$Vector3();
+	var vector = new Vector3();
+	var vector2 = new Vector3();
 
 	return function () {
 
@@ -69,4 +68,4 @@ THREE$SpotLightHelper.prototype.update = function () {
 }();
 
 
-export { THREE$SpotLightHelper };
+export { SpotLightHelper };

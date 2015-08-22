@@ -1,8 +1,8 @@
-import { THREE$Face3 } from '../../core/Face3';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Shape } from '../core/Shape';
-import { THREE$ExtrudeGeometry } from './ExtrudeGeometry';
-import { THREE$Geometry } from '../../core/Geometry';
+import { Face3 } from '../../core/Face3';
+import { Vector3 } from '../../math/Vector3';
+import { Shape } from '../core/Shape';
+import { ExtrudeGeometry } from './ExtrudeGeometry';
+import { Geometry } from '../../core/Geometry';
 
 /**
  * @author jonobr1 / http://jonobr1.com
@@ -20,10 +20,10 @@ import { THREE$Geometry } from '../../core/Geometry';
  * }
  **/
 
-function THREE$ShapeGeometry ( shapes, options ) {
+function ShapeGeometry ( shapes, options ) {
 	this.isShapeGeometry = true;
 
-	THREE$Geometry.call( this );
+	Geometry.call( this );
 
 	this.type = 'ShapeGeometry';
 
@@ -35,13 +35,13 @@ function THREE$ShapeGeometry ( shapes, options ) {
 
 };
 
-THREE$ShapeGeometry.prototype = Object.create( THREE$Geometry.prototype );
-THREE$ShapeGeometry.prototype.constructor = THREE$ShapeGeometry;
+ShapeGeometry.prototype = Object.create( Geometry.prototype );
+ShapeGeometry.prototype.constructor = ShapeGeometry;
 
 /**
  * Add an array of shapes to THREE.ShapeGeometry.
  */
-THREE$ShapeGeometry.prototype.addShapeList = function ( shapes, options ) {
+ShapeGeometry.prototype.addShapeList = function ( shapes, options ) {
 
 	for ( var i = 0, l = shapes.length; i < l; i ++ ) {
 
@@ -56,13 +56,13 @@ THREE$ShapeGeometry.prototype.addShapeList = function ( shapes, options ) {
 /**
  * Adds a shape to THREE.ShapeGeometry, based on THREE.ExtrudeGeometry.
  */
-THREE$ShapeGeometry.prototype.addShape = function ( shape, options ) {
+ShapeGeometry.prototype.addShape = function ( shape, options ) {
 
 	if ( options === undefined ) options = {};
 	var curveSegments = options.curveSegments !== undefined ? options.curveSegments : 12;
 
 	var material = options.material;
-	var uvgen = options.UVGenerator === undefined ? THREE$ExtrudeGeometry.WorldUVGenerator : options.UVGenerator;
+	var uvgen = options.UVGenerator === undefined ? ExtrudeGeometry.WorldUVGenerator : options.UVGenerator;
 
 	//
 
@@ -74,7 +74,7 @@ THREE$ShapeGeometry.prototype.addShape = function ( shape, options ) {
 	var vertices = shapePoints.shape;
 	var holes = shapePoints.holes;
 
-	var reverse = ! THREE$Shape.Utils.isClockWise( vertices );
+	var reverse = ! Shape.Utils.isClockWise( vertices );
 
 	if ( reverse ) {
 
@@ -86,7 +86,7 @@ THREE$ShapeGeometry.prototype.addShape = function ( shape, options ) {
 
 			hole = holes[ i ];
 
-			if ( THREE$Shape.Utils.isClockWise( hole ) ) {
+			if ( Shape.Utils.isClockWise( hole ) ) {
 
 				holes[ i ] = hole.reverse();
 
@@ -98,9 +98,11 @@ THREE$ShapeGeometry.prototype.addShape = function ( shape, options ) {
 
 	}
 
-	var faces = THREE$Shape.Utils.triangulateShape( vertices, holes );
+	var faces = Shape.Utils.triangulateShape( vertices, holes );
 
 	// Vertices
+
+	var contour = vertices;
 
 	for ( i = 0, l = holes.length; i < l; i ++ ) {
 
@@ -118,7 +120,7 @@ THREE$ShapeGeometry.prototype.addShape = function ( shape, options ) {
 
 		vert = vertices[ i ];
 
-		this.vertices.push( new THREE$Vector3( vert.x, vert.y, 0 ) );
+		this.vertices.push( new Vector3( vert.x, vert.y, 0 ) );
 
 	}
 
@@ -130,7 +132,7 @@ THREE$ShapeGeometry.prototype.addShape = function ( shape, options ) {
 		var b = face[ 1 ] + shapesOffset;
 		var c = face[ 2 ] + shapesOffset;
 
-		this.faces.push( new THREE$Face3( a, b, c, null, null, material ) );
+		this.faces.push( new Face3( a, b, c, null, null, material ) );
 		this.faceVertexUvs[ 0 ].push( uvgen.generateTopUV( this, a, b, c ) );
 
 	}
@@ -138,4 +140,4 @@ THREE$ShapeGeometry.prototype.addShape = function ( shape, options ) {
 };
 
 
-export { THREE$ShapeGeometry };
+export { ShapeGeometry };

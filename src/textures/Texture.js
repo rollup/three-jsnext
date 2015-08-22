@@ -1,7 +1,7 @@
-import { THREE$EventDispatcher } from '../core/EventDispatcher';
-import { THREE$Math } from '../math/Math';
-import { THREE$UVMapping, THREE$UnsignedByteType, THREE$RGBAFormat, THREE$LinearMipMapLinearFilter, THREE$LinearFilter, THREE$ClampToEdgeWrapping } from '../Three';
-import { THREE$Vector2 } from '../math/Vector2';
+import { EventDispatcher } from '../core/EventDispatcher';
+import { _Math } from '../math/Math';
+import { UVMapping, UnsignedByteType, RGBAFormat, LinearMipMapLinearFilter, LinearFilter, ClampToEdgeWrapping } from '../Three';
+import { Vector2 } from '../math/Vector2';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -9,91 +9,95 @@ import { THREE$Vector2 } from '../math/Vector2';
  * @author szimek / https://github.com/szimek/
  */
 
-function THREE$Texture ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+function Texture ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
 	this.isTexture = true;
 
-	Object.defineProperty( this, 'id', { value: THREE$TextureIdCount() } );
+	Object.defineProperty( this, 'id', { value: TextureIdCount() } );
 
-	this.uuid = THREE$Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.name = '';
 	this.sourceFile = '';
 
-	this.image = image !== undefined ? image : THREE$Texture.DEFAULT_IMAGE;
+	this.image = image !== undefined ? image : Texture.DEFAULT_IMAGE;
 	this.mipmaps = [];
 
-	this.mapping = mapping !== undefined ? mapping : THREE$Texture.DEFAULT_MAPPING;
+	this.mapping = mapping !== undefined ? mapping : Texture.DEFAULT_MAPPING;
 
-	this.wrapS = wrapS !== undefined ? wrapS : THREE$ClampToEdgeWrapping;
-	this.wrapT = wrapT !== undefined ? wrapT : THREE$ClampToEdgeWrapping;
+	this.wrapS = wrapS !== undefined ? wrapS : ClampToEdgeWrapping;
+	this.wrapT = wrapT !== undefined ? wrapT : ClampToEdgeWrapping;
 
-	this.magFilter = magFilter !== undefined ? magFilter : THREE$LinearFilter;
-	this.minFilter = minFilter !== undefined ? minFilter : THREE$LinearMipMapLinearFilter;
+	this.magFilter = magFilter !== undefined ? magFilter : LinearFilter;
+	this.minFilter = minFilter !== undefined ? minFilter : LinearMipMapLinearFilter;
 
 	this.anisotropy = anisotropy !== undefined ? anisotropy : 1;
 
-	this.format = format !== undefined ? format : THREE$RGBAFormat;
-	this.type = type !== undefined ? type : THREE$UnsignedByteType;
+	this.format = format !== undefined ? format : RGBAFormat;
+	this.type = type !== undefined ? type : UnsignedByteType;
 
-	this.offset = new THREE$Vector2( 0, 0 );
-	this.repeat = new THREE$Vector2( 1, 1 );
+	this.offset = new Vector2( 0, 0 );
+	this.repeat = new Vector2( 1, 1 );
 
 	this.generateMipmaps = true;
 	this.premultiplyAlpha = false;
 	this.flipY = true;
 	this.unpackAlignment = 4; // valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
 
-	this.version = 0;
+	this._needsUpdate = false;
 	this.onUpdate = null;
 
 };
 
-THREE$Texture.DEFAULT_IMAGE = undefined;
-THREE$Texture.DEFAULT_MAPPING = THREE$UVMapping;
+Texture.DEFAULT_IMAGE = undefined;
+Texture.DEFAULT_MAPPING = UVMapping;
 
-THREE$Texture.prototype = {
+Texture.prototype = {
 
-	constructor: THREE$Texture,
+	constructor: Texture,
+
+	get needsUpdate () {
+
+		return this._needsUpdate;
+
+	},
 
 	set needsUpdate ( value ) {
 
-		if ( value === true ) this.version ++;
+		if ( value === true ) this.update();
+
+		this._needsUpdate = value;
 
 	},
 
-	clone: function () {
+	clone: function ( texture ) {
 
-		return new this.constructor().copy( this );
+		if ( texture === undefined ) texture = new Texture();
 
-	},
+		texture.image = this.image;
+		texture.mipmaps = this.mipmaps.slice( 0 );
 
-	copy: function ( source ) {
+		texture.mapping = this.mapping;
 
-		this.image = source.image;
-		this.mipmaps = source.mipmaps.slice( 0 );
+		texture.wrapS = this.wrapS;
+		texture.wrapT = this.wrapT;
 
-		this.mapping = source.mapping;
+		texture.magFilter = this.magFilter;
+		texture.minFilter = this.minFilter;
 
-		this.wrapS = source.wrapS;
-		this.wrapT = source.wrapT;
+		texture.anisotropy = this.anisotropy;
 
-		this.magFilter = source.magFilter;
-		this.minFilter = source.minFilter;
+		texture.format = this.format;
+		texture.type = this.type;
 
-		this.anisotropy = source.anisotropy;
+		texture.offset.copy( this.offset );
+		texture.repeat.copy( this.repeat );
 
-		this.format = source.format;
-		this.type = source.type;
+		texture.generateMipmaps = this.generateMipmaps;
+		texture.premultiplyAlpha = this.premultiplyAlpha;
+		texture.flipY = this.flipY;
+		texture.unpackAlignment = this.unpackAlignment;
 
-		this.offset.copy( source.offset );
-		this.repeat.copy( source.repeat );
-
-		this.generateMipmaps = source.generateMipmaps;
-		this.premultiplyAlpha = source.premultiplyAlpha;
-		this.flipY = source.flipY;
-		this.unpackAlignment = source.unpackAlignment;
-
-		return this;
+		return texture;
 
 	},
 
@@ -164,7 +168,7 @@ THREE$Texture.prototype = {
 
 			if ( image.uuid === undefined ) {
 
-				image.uuid = THREE$Math.generateUUID(); // UGH
+				image.uuid = _Math.generateUUID(); // UGH
 
 			}
 
@@ -187,6 +191,12 @@ THREE$Texture.prototype = {
 
 	},
 
+	update: function () {
+
+		this.dispatchEvent( { type: 'update' } );
+
+	},
+
 	dispose: function () {
 
 		this.dispatchEvent( { type: 'dispose' } );
@@ -195,10 +205,10 @@ THREE$Texture.prototype = {
 
 };
 
-THREE$EventDispatcher.prototype.apply( THREE$Texture.prototype );
+EventDispatcher.prototype.apply( Texture.prototype );
 
 var count = 0;
-function THREE$TextureIdCount () { return count++; };
+function TextureIdCount () { return count++; };
 
 
-export { THREE$TextureIdCount, THREE$Texture };
+export { TextureIdCount, Texture };

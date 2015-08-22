@@ -1,19 +1,19 @@
-import { THREE$Geometry } from '../../core/Geometry';
-import { THREE$Vector3 } from '../../math/Vector3';
-import { THREE$Sphere } from '../../math/Sphere';
-import { THREE$Face3 } from '../../core/Face3';
-import { THREE$Vector2 } from '../../math/Vector2';
+import { Geometry } from '../../core/Geometry';
+import { Vector3 } from '../../math/Vector3';
+import { Sphere } from '../../math/Sphere';
+import { Face3 } from '../../core/Face3';
+import { Vector2 } from '../../math/Vector2';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
+function SphereGeometry ( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength ) {
 	this.isSphereGeometry = true;
 
 	console.log( 'THREE.SphereGeometry: Consider using THREE.SphereBufferGeometry for lower memory footprint.' );
 
-	THREE$Geometry.call( this );
+	Geometry.call( this );
 
 	this.type = 'SphereGeometry';
 
@@ -50,7 +50,7 @@ function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart,
 			var u = x / widthSegments;
 			var v = y / heightSegments;
 
-			var vertex = new THREE$Vector3();
+			var vertex = new Vector3();
 			vertex.x = - radius * Math.cos( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength );
 			vertex.y = radius * Math.cos( thetaStart + v * thetaLength );
 			vertex.z = radius * Math.sin( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength );
@@ -58,7 +58,7 @@ function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart,
 			this.vertices.push( vertex );
 
 			verticesRow.push( this.vertices.length - 1 );
-			uvsRow.push( new THREE$Vector2( u, 1 - v ) );
+			uvsRow.push( new Vector2( u, 1 - v ) );
 
 		}
 
@@ -89,21 +89,21 @@ function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart,
 			if ( Math.abs( this.vertices[ v1 ].y ) === radius ) {
 
 				uv1.x = ( uv1.x + uv2.x ) / 2;
-				this.faces.push( new THREE$Face3( v1, v3, v4, [ n1, n3, n4 ] ) );
+				this.faces.push( new Face3( v1, v3, v4, [ n1, n3, n4 ] ) );
 				this.faceVertexUvs[ 0 ].push( [ uv1, uv3, uv4 ] );
 
 			} else if ( Math.abs( this.vertices[ v3 ].y ) === radius ) {
 
 				uv3.x = ( uv3.x + uv4.x ) / 2;
-				this.faces.push( new THREE$Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
+				this.faces.push( new Face3( v1, v2, v3, [ n1, n2, n3 ] ) );
 				this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv3 ] );
 
 			} else {
 
-				this.faces.push( new THREE$Face3( v1, v2, v4, [ n1, n2, n4 ] ) );
+				this.faces.push( new Face3( v1, v2, v4, [ n1, n2, n4 ] ) );
 				this.faceVertexUvs[ 0 ].push( [ uv1, uv2, uv4 ] );
 
-				this.faces.push( new THREE$Face3( v2, v3, v4, [ n2.clone(), n3, n4.clone() ] ) );
+				this.faces.push( new Face3( v2, v3, v4, [ n2.clone(), n3, n4.clone() ] ) );
 				this.faceVertexUvs[ 0 ].push( [ uv2.clone(), uv3, uv4.clone() ] );
 
 			}
@@ -114,28 +114,12 @@ function THREE$SphereGeometry ( radius, widthSegments, heightSegments, phiStart,
 
 	this.computeFaceNormals();
 
-	this.boundingSphere = new THREE$Sphere( new THREE$Vector3(), radius );
+	this.boundingSphere = new Sphere( new Vector3(), radius );
 
 };
 
-THREE$SphereGeometry.prototype = Object.create( THREE$Geometry.prototype );
-THREE$SphereGeometry.prototype.constructor = THREE$SphereGeometry;
-
-THREE$SphereGeometry.prototype.clone = function () {
-
-	var geometry = new THREE$SphereGeometry(
-		this.parameters.radius,
-		this.parameters.widthSegments,
-		this.parameters.heightSegments,
-		this.parameters.phiStart,
-		this.parameters.phiLength,
-		this.parameters.thetaStart,
-		this.parameters.thetaLength
-	);
-
-	return geometry;
-
-};
+SphereGeometry.prototype = Object.create( Geometry.prototype );
+SphereGeometry.prototype.constructor = SphereGeometry;
 
 
-export { THREE$SphereGeometry };
+export { SphereGeometry };

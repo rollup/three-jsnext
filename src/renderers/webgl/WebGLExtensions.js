@@ -2,7 +2,7 @@
 * @author mrdoob / http://mrdoob.com/
 */
 
-function THREE$WebGLExtensions ( gl ) {
+function WebGLExtensions ( gl ) {
 	this.isWebGLExtensions = true;
 
 	var extensions = {};
@@ -51,4 +51,4 @@ function THREE$WebGLExtensions ( gl ) {
 };
 
 
-export { THREE$WebGLExtensions };
+export { WebGLExtensions };

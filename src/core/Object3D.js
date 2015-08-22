@@ -1,10 +1,9 @@
-import { THREE$EventDispatcher } from './EventDispatcher';
-import { THREE$Vector3 } from '../math/Vector3';
-import { THREE$Quaternion } from '../math/Quaternion';
-import { THREE$Euler } from '../math/Euler';
-import { THREE$Matrix4 } from '../math/Matrix4';
-import { THREE$Matrix3 } from '../math/Matrix3';
-import { THREE$Math } from '../math/Math';
+import { EventDispatcher } from './EventDispatcher';
+import { Vector3 } from '../math/Vector3';
+import { Quaternion } from '../math/Quaternion';
+import { Euler } from '../math/Euler';
+import { Matrix4 } from '../math/Matrix4';
+import { _Math } from '../math/Math';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -14,36 +13,32 @@ import { THREE$Math } from '../math/Math';
  * @author elephantatwork / www.elephantatwork.ch
  */
 
-function THREE$Object3D () {
+function Object3D () {
 	this.isObject3D = true;
 
-	Object.defineProperty( this, 'id', { value: THREE$Object3DIdCount() } );
+	Object.defineProperty( this, 'id', { value: Object3DIdCount() } );
 
-	this.uuid = THREE$Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.name = '';
 	this.type = 'Object3D';
 
-	this.parent = null;
+	this.parent = undefined;
 	this.children = [];
 
-	this.up = THREE$Object3D.DefaultUp.clone();
+	this.up = Object3D.DefaultUp.clone();
 
-	var position = new THREE$Vector3();
-	var rotation = new THREE$Euler();
-	var quaternion = new THREE$Quaternion();
-	var scale = new THREE$Vector3( 1, 1, 1 );
+	var position = new Vector3();
+	var rotation = new Euler();
+	var quaternion = new Quaternion();
+	var scale = new Vector3( 1, 1, 1 );
 
 	var onRotationChange = function () {
-
 		quaternion.setFromEuler( rotation, false );
-
 	};
 
 	var onQuaternionChange = function () {
-
 		rotation.setFromQuaternion( quaternion, undefined, false );
-
 	};
 
 	rotation.onChange( onRotationChange );
@@ -65,21 +60,15 @@ function THREE$Object3D () {
 		scale: {
 			enumerable: true,
 			value: scale
-		},
-		modelViewMatrix: {
-			value: new THREE$Matrix4()
-		},
-		normalMatrix: {
-			value: new THREE$Matrix3()
 		}
 	} );
 
 	this.rotationAutoUpdate = true;
 
-	this.matrix = new THREE$Matrix4();
-	this.matrixWorld = new THREE$Matrix4();
+	this.matrix = new Matrix4();
+	this.matrixWorld = new Matrix4();
 
-	this.matrixAutoUpdate = THREE$Object3D.DefaultMatrixAutoUpdate;
+	this.matrixAutoUpdate = true;
 	this.matrixWorldNeedsUpdate = false;
 
 	this.visible = true;
@@ -94,12 +83,11 @@ function THREE$Object3D () {
 
 };
 
-THREE$Object3D.DefaultUp = new THREE$Vector3( 0, 1, 0 );
-THREE$Object3D.DefaultMatrixAutoUpdate = true;
+Object3D.DefaultUp = new Vector3( 0, 1, 0 );
 
-THREE$Object3D.prototype = {
+Object3D.prototype = {
 
-	constructor: THREE$Object3D,
+	constructor: Object3D,
 
 	get eulerOrder () {
 
@@ -178,7 +166,7 @@ THREE$Object3D.prototype = {
 		// rotate object on axis in object space
 		// axis is assumed to be normalized
 
-		var q1 = new THREE$Quaternion();
+		var q1 = new Quaternion();
 
 		return function ( axis, angle ) {
 
@@ -188,13 +176,13 @@ THREE$Object3D.prototype = {
 
 			return this;
 
-		};
+		}
 
 	}(),
 
 	rotateX: function () {
 
-		var v1 = new THREE$Vector3( 1, 0, 0 );
+		var v1 = new Vector3( 1, 0, 0 );
 
 		return function ( angle ) {
 
@@ -206,7 +194,7 @@ THREE$Object3D.prototype = {
 
 	rotateY: function () {
 
-		var v1 = new THREE$Vector3( 0, 1, 0 );
+		var v1 = new Vector3( 0, 1, 0 );
 
 		return function ( angle ) {
 
@@ -218,7 +206,7 @@ THREE$Object3D.prototype = {
 
 	rotateZ: function () {
 
-		var v1 = new THREE$Vector3( 0, 0, 1 );
+		var v1 = new Vector3( 0, 0, 1 );
 
 		return function ( angle ) {
 
@@ -233,7 +221,7 @@ THREE$Object3D.prototype = {
 		// translate object by distance along axis in object space
 		// axis is assumed to be normalized
 
-		var v1 = new THREE$Vector3();
+		var v1 = new Vector3();
 
 		return function ( axis, distance ) {
 
@@ -243,7 +231,7 @@ THREE$Object3D.prototype = {
 
 			return this;
 
-		};
+		}
 
 	}(),
 
@@ -256,7 +244,7 @@ THREE$Object3D.prototype = {
 
 	translateX: function () {
 
-		var v1 = new THREE$Vector3( 1, 0, 0 );
+		var v1 = new Vector3( 1, 0, 0 );
 
 		return function ( distance ) {
 
@@ -268,7 +256,7 @@ THREE$Object3D.prototype = {
 
 	translateY: function () {
 
-		var v1 = new THREE$Vector3( 0, 1, 0 );
+		var v1 = new Vector3( 0, 1, 0 );
 
 		return function ( distance ) {
 
@@ -280,7 +268,7 @@ THREE$Object3D.prototype = {
 
 	translateZ: function () {
 
-		var v1 = new THREE$Vector3( 0, 0, 1 );
+		var v1 = new Vector3( 0, 0, 1 );
 
 		return function ( distance ) {
 
@@ -298,7 +286,7 @@ THREE$Object3D.prototype = {
 
 	worldToLocal: function () {
 
-		var m1 = new THREE$Matrix4();
+		var m1 = new Matrix4();
 
 		return function ( vector ) {
 
@@ -312,7 +300,7 @@ THREE$Object3D.prototype = {
 
 		// This routine does not support objects with rotated and/or translated parent(s)
 
-		var m1 = new THREE$Matrix4();
+		var m1 = new Matrix4();
 
 		return function ( vector ) {
 
@@ -347,7 +335,7 @@ THREE$Object3D.prototype = {
 
 		if ( (object && object.isObject3D) ) {
 
-			if ( object.parent !== null ) {
+			if ( object.parent !== undefined ) {
 
 				object.parent.remove( object );
 
@@ -384,7 +372,7 @@ THREE$Object3D.prototype = {
 
 		if ( index !== - 1 ) {
 
-			object.parent = null;
+			object.parent = undefined;
 
 			object.dispatchEvent( { type: 'removed' } );
 
@@ -436,7 +424,7 @@ THREE$Object3D.prototype = {
 
 	getWorldPosition: function ( optionalTarget ) {
 
-		var result = optionalTarget || new THREE$Vector3();
+		var result = optionalTarget || new Vector3();
 
 		this.updateMatrixWorld( true );
 
@@ -446,12 +434,12 @@ THREE$Object3D.prototype = {
 
 	getWorldQuaternion: function () {
 
-		var position = new THREE$Vector3();
-		var scale = new THREE$Vector3();
+		var position = new Vector3();
+		var scale = new Vector3();
 
 		return function ( optionalTarget ) {
 
-			var result = optionalTarget || new THREE$Quaternion();
+			var result = optionalTarget || new Quaternion();
 
 			this.updateMatrixWorld( true );
 
@@ -459,34 +447,34 @@ THREE$Object3D.prototype = {
 
 			return result;
 
-		};
+		}
 
 	}(),
 
 	getWorldRotation: function () {
 
-		var quaternion = new THREE$Quaternion();
+		var quaternion = new Quaternion();
 
 		return function ( optionalTarget ) {
 
-			var result = optionalTarget || new THREE$Euler();
+			var result = optionalTarget || new Euler();
 
 			this.getWorldQuaternion( quaternion );
 
 			return result.setFromQuaternion( quaternion, this.rotation.order, false );
 
-		};
+		}
 
 	}(),
 
 	getWorldScale: function () {
 
-		var position = new THREE$Vector3();
-		var quaternion = new THREE$Quaternion();
+		var position = new Vector3();
+		var quaternion = new Quaternion();
 
 		return function ( optionalTarget ) {
 
-			var result = optionalTarget || new THREE$Vector3();
+			var result = optionalTarget || new Vector3();
 
 			this.updateMatrixWorld( true );
 
@@ -494,23 +482,23 @@ THREE$Object3D.prototype = {
 
 			return result;
 
-		};
+		}
 
 	}(),
 
 	getWorldDirection: function () {
 
-		var quaternion = new THREE$Quaternion();
+		var quaternion = new Quaternion();
 
 		return function ( optionalTarget ) {
 
-			var result = optionalTarget || new THREE$Vector3();
+			var result = optionalTarget || new Vector3();
 
 			this.getWorldQuaternion( quaternion );
 
 			return result.set( 0, 0, 1 ).applyQuaternion( quaternion );
 
-		};
+		}
 
 	}(),
 
@@ -520,11 +508,9 @@ THREE$Object3D.prototype = {
 
 		callback( this );
 
-		var children = this.children;
+		for ( var i = 0, l = this.children.length; i < l; i ++ ) {
 
-		for ( var i = 0, l = children.length; i < l; i ++ ) {
-
-			children[ i ].traverse( callback );
+			this.children[ i ].traverse( callback );
 
 		}
 
@@ -536,11 +522,9 @@ THREE$Object3D.prototype = {
 
 		callback( this );
 
-		var children = this.children;
+		for ( var i = 0, l = this.children.length; i < l; i ++ ) {
 
-		for ( var i = 0, l = children.length; i < l; i ++ ) {
-
-			children[ i ].traverseVisible( callback );
+			this.children[ i ].traverseVisible( callback );
 
 		}
 
@@ -548,13 +532,11 @@ THREE$Object3D.prototype = {
 
 	traverseAncestors: function ( callback ) {
 
-		var parent = this.parent;
+		if ( this.parent ) {
 
-		if ( parent !== null ) {
+			callback( this.parent );
 
-			callback( parent );
-
-			parent.traverseAncestors( callback );
+			this.parent.traverseAncestors( callback );
 
 		}
 
@@ -574,7 +556,7 @@ THREE$Object3D.prototype = {
 
 		if ( this.matrixWorldNeedsUpdate === true || force === true ) {
 
-			if ( this.parent === null ) {
+			if ( this.parent === undefined ) {
 
 				this.matrixWorld.copy( this.matrix );
 
@@ -674,78 +656,69 @@ THREE$Object3D.prototype = {
 		// remove metadata on each item
 		// and return as array
 		function extractFromCache ( cache ) {
-
 			var values = [];
 			for ( var key in cache ) {
-
 				var data = cache[ key ];
 				delete data.metadata;
 				values.push( data );
-
 			}
 			return values;
-
 		}
 
 	},
 
-	clone: function ( recursive ) {
+	clone: function ( object, recursive ) {
 
-		return new this.constructor().copy( this, recursive );
-
-	},
-
-	copy: function ( source, recursive ) {
-
+		if ( object === undefined ) object = new Object3D();
 		if ( recursive === undefined ) recursive = true;
 
-		this.name = source.name;
+		object.name = this.name;
 
-		this.up.copy( source.up );
+		object.up.copy( this.up );
 
-		this.position.copy( source.position );
-		this.quaternion.copy( source.quaternion );
-		this.scale.copy( source.scale );
+		object.position.copy( this.position );
+		object.quaternion.copy( this.quaternion );
+		object.scale.copy( this.scale );
 
-		this.rotationAutoUpdate = source.rotationAutoUpdate;
+		object.rotationAutoUpdate = this.rotationAutoUpdate;
 
-		this.matrix.copy( source.matrix );
-		this.matrixWorld.copy( source.matrixWorld );
+		object.matrix.copy( this.matrix );
+		object.matrixWorld.copy( this.matrixWorld );
 
-		this.matrixAutoUpdate = source.matrixAutoUpdate;
-		this.matrixWorldNeedsUpdate = source.matrixWorldNeedsUpdate;
+		object.matrixAutoUpdate = this.matrixAutoUpdate;
+		object.matrixWorldNeedsUpdate = this.matrixWorldNeedsUpdate;
 
-		this.visible = source.visible;
+		object.visible = this.visible;
 
-		this.castShadow = source.castShadow;
-		this.receiveShadow = source.receiveShadow;
+		object.castShadow = this.castShadow;
+		object.receiveShadow = this.receiveShadow;
 
-		this.frustumCulled = source.frustumCulled;
-		this.renderOrder = source.renderOrder;
+		object.frustumCulled = this.frustumCulled;
+		object.renderOrder = this.renderOrder;
 
-		this.userData = JSON.parse( JSON.stringify( source.userData ) );
+		object.userData = JSON.parse( JSON.stringify( this.userData ) );
 
 		if ( recursive === true ) {
 
-			for ( var i = 0; i < source.children.length; i ++ ) {
+			for ( var i = 0; i < this.children.length; i ++ ) {
 
-				var child = source.children[ i ];
-				this.add( child.clone() );
+				var child = this.children[ i ];
+				object.add( child.clone() );
 
 			}
 
 		}
 
-		return this;
+		return object;
 
 	}
 
 };
 
-THREE$EventDispatcher.prototype.apply( THREE$Object3D.prototype );
+EventDispatcher.prototype.apply( Object3D.prototype );
 
 var count = 0;
-function THREE$Object3DIdCount () { return count++; };
+function Object3DIdCount () { return count++; };
 
 
-export { THREE$Object3DIdCount, THREE$Object3D };
+export { Object3DIdCount, Object3D };

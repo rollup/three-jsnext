@@ -1,5 +1,5 @@
-import { THREE$ExtrudeGeometry } from './ExtrudeGeometry';
-import { THREE$FontUtils } from '../FontUtils';
+import { ExtrudeGeometry } from './ExtrudeGeometry';
+import { FontUtils } from '../FontUtils';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
@@ -39,12 +39,12 @@ import { THREE$FontUtils } from '../FontUtils';
 */
 
 
-function THREE$TextGeometry ( text, parameters ) {
+function TextGeometry ( text, parameters ) {
 	this.isTextGeometry = true;
 
 	parameters = parameters || {};
 
-	var textShapes = THREE$FontUtils.generateShapes( text, parameters );
+	var textShapes = FontUtils.generateShapes( text, parameters );
 
 	// translate parameters to ExtrudeGeometry API
 
@@ -56,14 +56,14 @@ function THREE$TextGeometry ( text, parameters ) {
 	if ( parameters.bevelSize === undefined ) parameters.bevelSize = 8;
 	if ( parameters.bevelEnabled === undefined ) parameters.bevelEnabled = false;
 
-	THREE$ExtrudeGeometry.call( this, textShapes, parameters );
+	ExtrudeGeometry.call( this, textShapes, parameters );
 
 	this.type = 'TextGeometry';
 
 };
 
-THREE$TextGeometry.prototype = Object.create( THREE$ExtrudeGeometry.prototype );
-THREE$TextGeometry.prototype.constructor = THREE$TextGeometry;
+TextGeometry.prototype = Object.create( ExtrudeGeometry.prototype );
+TextGeometry.prototype.constructor = TextGeometry;
 
 
-export { THREE$TextGeometry };
+export { TextGeometry };

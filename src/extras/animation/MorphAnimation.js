@@ -3,7 +3,7 @@
  * @author willy-vvu / http://willy-vvu.github.io
  */
 
-function THREE$MorphAnimation ( mesh ) {
+function MorphAnimation ( mesh ) {
 	this.isMorphAnimation = true;
 
 	this.mesh = mesh;
@@ -18,9 +18,9 @@ function THREE$MorphAnimation ( mesh ) {
 
 };
 
-THREE$MorphAnimation.prototype = {
+MorphAnimation.prototype = {
 
-	constructor: THREE$MorphAnimation,
+	constructor: MorphAnimation,
 
 	play: function () {
 
@@ -48,8 +48,8 @@ THREE$MorphAnimation.prototype = {
 
 		this.currentTime = Math.min( this.currentTime, this.duration );
 
-		var frameTime = this.duration / this.frames;
-		var frame = Math.floor( this.currentTime / frameTime );
+		var interpolation = this.duration / this.frames;
+		var frame = Math.floor( this.currentTime / interpolation );
 
 		var influences = this.mesh.morphTargetInfluences;
 
@@ -64,14 +64,12 @@ THREE$MorphAnimation.prototype = {
 
 		}
 
-		var mix = ( this.currentTime % frameTime ) / frameTime;
-
-		influences[ frame ] = mix;
-		influences[ this.lastFrame ] = 1 - mix;
+		influences[ frame ] = ( this.currentTime % interpolation ) / interpolation;
+		influences[ this.lastFrame ] = 1 - influences[ frame ];
 
 	}
 
 };
 
 
-export { THREE$MorphAnimation };
+export { MorphAnimation };

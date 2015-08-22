@@ -1,31 +1,31 @@
-import { THREE$Texture } from '../textures/Texture';
-import { THREE$ImageLoader } from './ImageLoader';
-import { THREE$DefaultLoadingManager } from './LoadingManager';
+import { Texture } from '../textures/Texture';
+import { ImageLoader } from './ImageLoader';
+import { DefaultLoadingManager } from './LoadingManager';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$TextureLoader ( manager ) {
+function TextureLoader ( manager ) {
 	this.isTextureLoader = true;
 
-	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
+	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 
 };
 
-THREE$TextureLoader.prototype = {
+TextureLoader.prototype = {
 
-	constructor: THREE$TextureLoader,
+	constructor: TextureLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE$ImageLoader( scope.manager );
+		var loader = new ImageLoader( scope.manager );
 		loader.setCrossOrigin( this.crossOrigin );
 		loader.load( url, function ( image ) {
 
-			var texture = new THREE$Texture( image );
+			var texture = new Texture( image );
 			texture.needsUpdate = true;
 
 			if ( onLoad !== undefined ) {
@@ -47,4 +47,4 @@ THREE$TextureLoader.prototype = {
 };
 
 
-export { THREE$TextureLoader };
+export { TextureLoader };

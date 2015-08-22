@@ -1,24 +1,24 @@
-import { THREE$Vector3 } from './Vector3';
-import { THREE$Sphere } from './Sphere';
-import { THREE$BufferGeometry } from '../core/BufferGeometry';
-import { THREE$Geometry } from '../core/Geometry';
+import { Vector3 } from './Vector3';
+import { Sphere } from './Sphere';
+import { BufferGeometry } from '../core/BufferGeometry';
+import { Geometry } from '../core/Geometry';
 
 /**
  * @author bhouston / http://exocortex.com
  * @author WestLangley / http://github.com/WestLangley
  */
 
-function THREE$Box3 ( min, max ) {
+function Box3 ( min, max ) {
 	this.isBox3 = true;
 
-	this.min = ( min !== undefined ) ? min : new THREE$Vector3( Infinity, Infinity, Infinity );
-	this.max = ( max !== undefined ) ? max : new THREE$Vector3( - Infinity, - Infinity, - Infinity );
+	this.min = ( min !== undefined ) ? min : new Vector3( Infinity, Infinity, Infinity );
+	this.max = ( max !== undefined ) ? max : new Vector3( - Infinity, - Infinity, - Infinity );
 
 };
 
-THREE$Box3.prototype = {
+Box3.prototype = {
 
-	constructor: THREE$Box3,
+	constructor: Box3,
 
 	set: function ( min, max ) {
 
@@ -45,7 +45,7 @@ THREE$Box3.prototype = {
 
 	setFromCenterAndSize: function () {
 
-		var v1 = new THREE$Vector3();
+		var v1 = new Vector3();
 
 		return function ( center, size ) {
 
@@ -65,7 +65,7 @@ THREE$Box3.prototype = {
 		// Computes the world-axis-aligned bounding box of an object (including its children),
 		// accounting for both the object's, and children's, world transforms
 
-		var v1 = new THREE$Vector3();
+		var v1 = new Vector3();
 
 		return function ( object ) {
 
@@ -121,12 +121,6 @@ THREE$Box3.prototype = {
 
 	}(),
 
-	clone: function () {
-
-		return new this.constructor().copy( this );
-
-	},
-
 	copy: function ( box ) {
 
 		this.min.copy( box.min );
@@ -155,14 +149,14 @@ THREE$Box3.prototype = {
 
 	center: function ( optionalTarget ) {
 
-		var result = optionalTarget || new THREE$Vector3();
+		var result = optionalTarget || new Vector3();
 		return result.addVectors( this.min, this.max ).multiplyScalar( 0.5 );
 
 	},
 
 	size: function ( optionalTarget ) {
 
-		var result = optionalTarget || new THREE$Vector3();
+		var result = optionalTarget || new Vector3();
 		return result.subVectors( this.max, this.min );
 
 	},
@@ -227,7 +221,7 @@ THREE$Box3.prototype = {
 		// This can potentially have a divide by zero if the box
 		// has a size dimension of 0.
 
-		var result = optionalTarget || new THREE$Vector3();
+		var result = optionalTarget || new Vector3();
 
 		return result.set(
 			( point.x - this.min.x ) / ( this.max.x - this.min.x ),
@@ -255,14 +249,14 @@ THREE$Box3.prototype = {
 
 	clampPoint: function ( point, optionalTarget ) {
 
-		var result = optionalTarget || new THREE$Vector3();
+		var result = optionalTarget || new Vector3();
 		return result.copy( point ).clamp( this.min, this.max );
 
 	},
 
 	distanceToPoint: function () {
 
-		var v1 = new THREE$Vector3();
+		var v1 = new Vector3();
 
 		return function ( point ) {
 
@@ -275,11 +269,11 @@ THREE$Box3.prototype = {
 
 	getBoundingSphere: function () {
 
-		var v1 = new THREE$Vector3();
+		var v1 = new Vector3();
 
 		return function ( optionalTarget ) {
 
-			var result = optionalTarget || new THREE$Sphere();
+			var result = optionalTarget || new Sphere();
 
 			result.center = this.center();
 			result.radius = this.size( v1 ).length() * 0.5;
@@ -311,14 +305,14 @@ THREE$Box3.prototype = {
 	applyMatrix4: function () {
 
 		var points = [
-			new THREE$Vector3(),
-			new THREE$Vector3(),
-			new THREE$Vector3(),
-			new THREE$Vector3(),
-			new THREE$Vector3(),
-			new THREE$Vector3(),
-			new THREE$Vector3(),
-			new THREE$Vector3()
+			new Vector3(),
+			new Vector3(),
+			new Vector3(),
+			new Vector3(),
+			new Vector3(),
+			new Vector3(),
+			new Vector3(),
+			new Vector3()
 		];
 
 		return function ( matrix ) {
@@ -355,9 +349,15 @@ THREE$Box3.prototype = {
 
 		return box.min.equals( this.min ) && box.max.equals( this.max );
 
+	},
+
+	clone: function () {
+
+		return new Box3().copy( this );
+
 	}
 
 };
 
 
-export { THREE$Box3 };
+export { Box3 };

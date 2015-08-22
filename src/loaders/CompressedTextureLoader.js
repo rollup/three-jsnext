@@ -1,7 +1,6 @@
-import { THREE$LinearFilter } from '../Three';
-import { THREE$XHRLoader } from './XHRLoader';
-import { THREE$CompressedTexture } from '../textures/CompressedTexture';
-import { THREE$DefaultLoadingManager } from './LoadingManager';
+import { LinearFilter } from '../Three';
+import { XHRLoader } from './XHRLoader';
+import { CompressedTexture } from '../textures/CompressedTexture';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -9,10 +8,8 @@ import { THREE$DefaultLoadingManager } from './LoadingManager';
  * Abstract Base class to block based textures loader (dds, pvr, ...)
  */
 
-function THREE$CompressedTextureLoader ( manager ) {
+function CompressedTextureLoader () {
 	this.isCompressedTextureLoader = true;
-
-	this.manager = ( manager !== undefined ) ? manager : THREE$DefaultLoadingManager;
 
 	// override in sub classes
 	this._parser = null;
@@ -20,21 +17,20 @@ function THREE$CompressedTextureLoader ( manager ) {
 };
 
 
-THREE$CompressedTextureLoader.prototype = {
+CompressedTextureLoader.prototype = {
 
-	constructor: THREE$CompressedTextureLoader,
+	constructor: CompressedTextureLoader,
 
-	load: function ( url, onLoad, onProgress, onError ) {
+	load: function ( url, onLoad, onError ) {
 
 		var scope = this;
 
 		var images = [];
 
-		var texture = new THREE$CompressedTexture();
+		var texture = new CompressedTexture();
 		texture.image = images;
 
-		var loader = new THREE$XHRLoader( this.manager );
-		loader.setCrossOrigin( this.crossOrigin );
+		var loader = new XHRLoader();
 		loader.setResponseType( 'arraybuffer' );
 
 		if ( Array.isArray( url ) ) {
@@ -58,8 +54,8 @@ THREE$CompressedTextureLoader.prototype = {
 
 					if ( loaded === 6 ) {
 
-						if ( texDatas.mipmapCount === 1 )
- 							texture.minFilter = THREE$LinearFilter;
+						if (texDatas.mipmapCount === 1)
+ 							texture.minFilter = LinearFilter;
 
 						texture.format = texDatas.format;
 						texture.needsUpdate = true;
@@ -68,7 +64,7 @@ THREE$CompressedTextureLoader.prototype = {
 
 					}
 
-				}, onProgress, onError );
+				} );
 
 			};
 
@@ -115,7 +111,7 @@ THREE$CompressedTextureLoader.prototype = {
 
 				if ( texDatas.mipmapCount === 1 ) {
 
-					texture.minFilter = THREE$LinearFilter;
+					texture.minFilter = LinearFilter;
 
 				}
 
@@ -124,21 +120,15 @@ THREE$CompressedTextureLoader.prototype = {
 
 				if ( onLoad ) onLoad( texture );
 
-			}, onProgress, onError );
+			} );
 
 		}
 
 		return texture;
-
-	},
-
-	setCrossOrigin: function ( value ) {
-
-		this.crossOrigin = value;
 
 	}
 
 };
 
 
-export { THREE$CompressedTextureLoader };
+export { CompressedTextureLoader };

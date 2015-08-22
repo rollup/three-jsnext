@@ -1,14 +1,14 @@
-import { THREE$Object3D } from '../core/Object3D';
-import { THREE$Camera } from './Camera';
+import { Object3D } from '../core/Object3D';
+import { Camera } from './Camera';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-function THREE$OrthographicCamera ( left, right, top, bottom, near, far ) {
+function OrthographicCamera ( left, right, top, bottom, near, far ) {
 	this.isOrthographicCamera = true;
 
-	THREE$Camera.call( this );
+	Camera.call( this );
 
 	this.type = 'OrthographicCamera';
 
@@ -26,10 +26,10 @@ function THREE$OrthographicCamera ( left, right, top, bottom, near, far ) {
 
 };
 
-THREE$OrthographicCamera.prototype = Object.create( THREE$Camera.prototype );
-THREE$OrthographicCamera.prototype.constructor = THREE$OrthographicCamera;
+OrthographicCamera.prototype = Object.create( Camera.prototype );
+OrthographicCamera.prototype.constructor = OrthographicCamera;
 
-THREE$OrthographicCamera.prototype.updateProjectionMatrix = function () {
+OrthographicCamera.prototype.updateProjectionMatrix = function () {
 
 	var dx = ( this.right - this.left ) / ( 2 * this.zoom );
 	var dy = ( this.top - this.bottom ) / ( 2 * this.zoom );
@@ -40,26 +40,28 @@ THREE$OrthographicCamera.prototype.updateProjectionMatrix = function () {
 
 };
 
-THREE$OrthographicCamera.prototype.copy = function ( source ) {
-	
-	THREE$Camera.prototype.copy.call( this, source );
-	
-	this.left = source.left;
-	this.right = source.right;
-	this.top = source.top;
-	this.bottom = source.bottom;
-	this.near = source.near;
-	this.far = source.far;
-	
-	this.zoom = source.zoom;
-	
-	return this;
-		
+OrthographicCamera.prototype.clone = function () {
+
+	var camera = new OrthographicCamera();
+
+	Camera.prototype.clone.call( this, camera );
+
+	camera.zoom = this.zoom;
+
+	camera.left = this.left;
+	camera.right = this.right;
+	camera.top = this.top;
+	camera.bottom = this.bottom;
+
+	camera.near = this.near;
+	camera.far = this.far;
+
+	return camera;
 };
 
-THREE$OrthographicCamera.prototype.toJSON = function ( meta ) {
+OrthographicCamera.prototype.toJSON = function ( meta ) {
 
-	var data = THREE$Object3D.prototype.toJSON.call( this, meta );
+	var data = Object3D.prototype.toJSON.call( this, meta );
 
 	data.object.zoom = this.zoom;
 	data.object.left = this.left;
@@ -74,4 +76,4 @@ THREE$OrthographicCamera.prototype.toJSON = function ( meta ) {
 };
 
 
-export { THREE$OrthographicCamera };
+export { OrthographicCamera };

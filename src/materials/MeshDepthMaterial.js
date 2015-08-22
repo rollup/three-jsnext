@@ -1,4 +1,4 @@
-import { THREE$Material } from './Material';
+import { Material } from './Material';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -16,10 +16,10 @@ import { THREE$Material } from './Material';
  * }
  */
 
-function THREE$MeshDepthMaterial ( parameters ) {
+function MeshDepthMaterial ( parameters ) {
 	this.isMeshDepthMaterial = true;
 
-	THREE$Material.call( this );
+	Material.call( this );
 
 	this.type = 'MeshDepthMaterial';
 
@@ -31,19 +31,21 @@ function THREE$MeshDepthMaterial ( parameters ) {
 
 };
 
-THREE$MeshDepthMaterial.prototype = Object.create( THREE$Material.prototype );
-THREE$MeshDepthMaterial.prototype.constructor = THREE$MeshDepthMaterial;
+MeshDepthMaterial.prototype = Object.create( Material.prototype );
+MeshDepthMaterial.prototype.constructor = MeshDepthMaterial;
 
-THREE$MeshDepthMaterial.prototype.copy = function ( source ) {
+MeshDepthMaterial.prototype.clone = function () {
 
-	THREE$Material.prototype.copy.call( this, source );
+	var material = new MeshDepthMaterial();
 
-	this.wireframe = source.wireframe;
-	this.wireframeLinewidth = source.wireframeLinewidth;
+	Material.prototype.clone.call( this, material );
 
-	return this;
+	material.wireframe = this.wireframe;
+	material.wireframeLinewidth = this.wireframeLinewidth;
+
+	return material;
 
 };
 
 
-export { THREE$MeshDepthMaterial };
+export { MeshDepthMaterial };

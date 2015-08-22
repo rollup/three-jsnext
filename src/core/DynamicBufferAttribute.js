@@ -1,21 +1,27 @@
-import { THREE$BufferAttribute } from './BufferAttribute';
+import { BufferAttribute } from './BufferAttribute';
 
 /**
  * @author benaadams / https://twitter.com/ben_a_adams
  * @author mrdoob / http://mrdoob.com/
  */
 
-function THREE$DynamicBufferAttribute ( array, itemSize ) {
+function DynamicBufferAttribute ( array, itemSize ) {
 	this.isDynamicBufferAttribute = true;
 
-	THREE$BufferAttribute.call( this, array, itemSize );
+	BufferAttribute.call( this, array, itemSize );
 
-	this.updateRange = { offset: 0, count: - 1 };
+	this.updateRange = { offset: 0, count: -1 };
 
 };
 
-THREE$DynamicBufferAttribute.prototype = Object.create( THREE$BufferAttribute.prototype );
-THREE$DynamicBufferAttribute.prototype.constructor = THREE$DynamicBufferAttribute;
+DynamicBufferAttribute.prototype = Object.create( BufferAttribute.prototype );
+DynamicBufferAttribute.prototype.constructor = DynamicBufferAttribute;
+
+DynamicBufferAttribute.prototype.clone = function () {
+
+	return new DynamicBufferAttribute( new this.array.constructor( this.array ), this.itemSize );
+
+};
 
 
-export { THREE$DynamicBufferAttribute };
+export { DynamicBufferAttribute };
