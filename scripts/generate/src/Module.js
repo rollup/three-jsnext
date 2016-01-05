@@ -39,6 +39,11 @@ function getKeypath ( node ) {
 	return `${node.name}.${keypath}`;
 }
 
+const iifeOpen = /\(\s*function\s*\(\s*THREE\s*\)\s*\{[\s\r\n]+/;
+const iifeClose = /[\s\r\n]+\}\(\s*THREE\s*\)\s*\);/;
+
+const aliasedExport = /THREE.(\w+) = THREE.(\w+) = function/;
+
 export default class Module {
 	constructor ( file ) {
 		this.file = file;
@@ -56,6 +61,16 @@ export default class Module {
 					this.src += `\nTHREE.ShaderChunk["${name}"] = ${definition};`;
 				}
 			});
+		}
+
+		// special case – core/Raycaster.js. Module is wrapped in an IIFE, for some reason
+		if ( iifeOpen.test( this.src ) ) {
+			this.src = this.src.replace( iifeOpen, '' ).replace( iifeClose, '' ).replace( /^\t/gm, '' );
+		}
+
+		// special case – loaders/BinaryTextureLoader.js
+		if ( aliasedExport.test( this.src ) ) {
+			this.src = this.src.replace( aliasedExport, `var $1 = $2;\nfunction $2` );
 		}
 
 		this.magicString = new MagicString( this.src );
