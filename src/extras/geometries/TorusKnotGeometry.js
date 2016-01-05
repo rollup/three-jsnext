@@ -32,7 +32,7 @@ function TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments, p, q
 	p = p || 2;
 	q = q || 3;
 	heightScale = heightScale || 1;
-	
+
 	var grid = new Array( radialSegments );
 	var tang = new Vector3();
 	var n = new Vector3();
@@ -93,6 +93,7 @@ function TorusKnotGeometry ( radius, tube, radialSegments, tubularSegments, p, q
 			this.faceVertexUvs[ 0 ].push( [ uvb.clone(), uvc, uvd.clone() ] );
 
 		}
+
 	}
 
 	this.computeFaceNormals();

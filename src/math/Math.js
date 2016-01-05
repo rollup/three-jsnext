@@ -35,6 +35,7 @@ _Math = {
 					uuid[ i ] = chars[ ( i === 19 ) ? ( r & 0x3 ) | 0x8 : r ];
 
 				}
+
 			}
 
 			return uuid.join( '' );
@@ -43,19 +44,9 @@ _Math = {
 
 	}(),
 
-	// Clamp value to range <a, b>
+	clamp: function ( value, min, max ) {
 
-	clamp: function ( x, a, b ) {
-
-		return ( x < a ) ? a : ( ( x > b ) ? b : x );
-
-	},
-
-	// Clamp value to range <a, inf)
-
-	clampBottom: function ( x, a ) {
-
-		return x < a ? a : x;
+		return Math.max( min, Math.min( max, value ) );
 
 	},
 
@@ -100,12 +91,10 @@ _Math = {
 
 	},
 
-	// Random float from <0, 1> with 16 bits of randomness
-	// (standard Math.random() creates repetitive patterns when applied over larger space)
-
 	random16: function () {
 
-		return ( 65280 * Math.random() + 255 * Math.random() ) / 65535;
+		console.warn( 'THREE.Math.random16() has been deprecated. Use Math.random() instead.' );
+		return Math.random();
 
 	},
 
@@ -113,7 +102,7 @@ _Math = {
 
 	randInt: function ( low, high ) {
 
-		return Math.floor( this.randFloat( low, high ) );
+		return low + Math.floor( Math.random() * ( high - low + 1 ) );
 
 	},
 
@@ -160,6 +149,12 @@ _Math = {
 	isPowerOfTwo: function ( value ) {
 
 		return ( value & ( value - 1 ) ) === 0 && value !== 0;
+
+	},
+
+	nearestPowerOfTwo: function ( value ) {
+
+		return Math.pow( 2, Math.round( Math.log( value ) / Math.LN2 ) );
 
 	},
 

@@ -45,6 +45,7 @@ function ParametricGeometry ( func, slices, stacks ) {
 			verts.push( p );
 
 		}
+
 	}
 
 	var a, b, c, d;
@@ -56,8 +57,8 @@ function ParametricGeometry ( func, slices, stacks ) {
 
 			a = i * sliceCount + j;
 			b = i * sliceCount + j + 1;
-			c = (i + 1) * sliceCount + j + 1;
-			d = (i + 1) * sliceCount + j;
+			c = ( i + 1 ) * sliceCount + j + 1;
+			d = ( i + 1 ) * sliceCount + j;
 
 			uva = new Vector2( j / slices, i / stacks );
 			uvb = new Vector2( ( j + 1 ) / slices, i / stacks );

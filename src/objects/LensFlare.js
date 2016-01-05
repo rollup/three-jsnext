@@ -84,22 +84,20 @@ LensFlare.prototype.updateLensFlares = function () {
 
 };
 
-LensFlare.prototype.clone = function ( object ) {
+LensFlare.prototype.copy = function ( source ) {
 
-	if ( object === undefined ) object = new LensFlare();
+	Object3D.prototype.copy.call( this, source );
 
-	Object3D.prototype.clone.call( this, object );
+	this.positionScreen.copy( source.positionScreen );
+	this.customUpdateCallback = source.customUpdateCallback;
 
-	object.positionScreen.copy( this.positionScreen );
-	object.customUpdateCallback = this.customUpdateCallback;
+	for ( var i = 0, l = source.lensFlares.length; i < l; i ++ ) {
 
-	for ( var i = 0, l = this.lensFlares.length; i < l; i ++ ) {
-
-		object.lensFlares.push( this.lensFlares[ i ] );
+		this.lensFlares.push( source.lensFlares[ i ] );
 
 	}
 
-	return object;
+	return this;
 
 };
 

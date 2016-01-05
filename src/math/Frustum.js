@@ -5,7 +5,7 @@ import { Plane } from './Plane';
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  */
 
 function Frustum ( p0, p1, p2, p3, p4, p5 ) {
@@ -40,6 +40,12 @@ Frustum.prototype = {
 		planes[ 5 ].copy( p5 );
 
 		return this;
+
+	},
+
+	clone: function () {
+
+		return new this.constructor().copy( this );
 
 	},
 
@@ -148,9 +154,11 @@ Frustum.prototype = {
 					return false;
 
 				}
+
 			}
 
 			return true;
+
 		};
 
 	}(),
@@ -171,12 +179,6 @@ Frustum.prototype = {
 		}
 
 		return true;
-
-	},
-
-	clone: function () {
-
-		return new Frustum().copy( this );
 
 	}
 

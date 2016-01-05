@@ -1,6 +1,6 @@
 import { Matrix4 } from '../math/Matrix4';
 import { Mesh } from '../objects/Mesh';
-import { Object3D } from '../core/Object3D';
+import { Group } from '../objects/Group';
 
 var SceneUtils;
 
@@ -12,7 +12,7 @@ SceneUtils = {
 
 	createMultiMaterialObject: function ( geometry, materials ) {
 
-		var group = new Object3D();
+		var group = new Group();
 
 		for ( var i = 0, l = materials.length; i < l; i ++ ) {
 

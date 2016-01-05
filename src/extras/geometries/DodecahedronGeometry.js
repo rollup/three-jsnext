@@ -1,4 +1,3 @@
-import { Geometry } from '../../core/Geometry';
 import { PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
@@ -8,33 +7,28 @@ import { PolyhedronGeometry } from './PolyhedronGeometry';
 function DodecahedronGeometry ( radius, detail ) {
 	this.isDodecahedronGeometry = true;
 
-	this.parameters = {
-		radius: radius,
-		detail: detail
-	};
-
 	var t = ( 1 + Math.sqrt( 5 ) ) / 2;
 	var r = 1 / t;
 
 	var vertices = [
 
 		// (±1, ±1, ±1)
-		-1, -1, -1,    -1, -1,  1,
-		-1,  1, -1,    -1,  1,  1,
-		 1, -1, -1,     1, -1,  1,
-		 1,  1, -1,     1,  1,  1,
+		- 1, - 1, - 1,    - 1, - 1,  1,
+		- 1,  1, - 1,    - 1,  1,  1,
+		 1, - 1, - 1,     1, - 1,  1,
+		 1,  1, - 1,     1,  1,  1,
 
 		// (0, ±1/φ, ±φ)
-		 0, -r, -t,     0, -r,  t,
-		 0,  r, -t,     0,  r,  t,
+		 0, - r, - t,     0, - r,  t,
+		 0,  r, - t,     0,  r,  t,
 
 		// (±1/φ, ±φ, 0)
-		-r, -t,  0,    -r,  t,  0,
-		 r, -t,  0,     r,  t,  0,
+		- r, - t,  0,    - r,  t,  0,
+		 r, - t,  0,     r,  t,  0,
 
 		// (±φ, 0, ±1/φ)
-		-t,  0, -r,     t,  0, -r,
-		-t,  0,  r,     t,  0,  r
+		- t,  0, - r,     t,  0, - r,
+		- t,  0,  r,     t,  0,  r
 	];
 
 	var indices = [
@@ -54,9 +48,16 @@ function DodecahedronGeometry ( radius, detail ) {
 
 	PolyhedronGeometry.call( this, vertices, indices, radius, detail );
 
+	this.type = 'DodecahedronGeometry';
+
+	this.parameters = {
+		radius: radius,
+		detail: detail
+	};
+
 };
 
-DodecahedronGeometry.prototype = Object.create( Geometry.prototype );
+DodecahedronGeometry.prototype = Object.create( PolyhedronGeometry.prototype );
 DodecahedronGeometry.prototype.constructor = DodecahedronGeometry;
 
 

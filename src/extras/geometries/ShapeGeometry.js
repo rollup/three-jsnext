@@ -1,6 +1,6 @@
 import { Face3 } from '../../core/Face3';
 import { Vector3 } from '../../math/Vector3';
-import { Shape } from '../core/Shape';
+import { ShapeUtils } from '../ShapeUtils';
 import { ExtrudeGeometry } from './ExtrudeGeometry';
 import { Geometry } from '../../core/Geometry';
 
@@ -74,7 +74,7 @@ ShapeGeometry.prototype.addShape = function ( shape, options ) {
 	var vertices = shapePoints.shape;
 	var holes = shapePoints.holes;
 
-	var reverse = ! Shape.Utils.isClockWise( vertices );
+	var reverse = ! ShapeUtils.isClockWise( vertices );
 
 	if ( reverse ) {
 
@@ -86,7 +86,7 @@ ShapeGeometry.prototype.addShape = function ( shape, options ) {
 
 			hole = holes[ i ];
 
-			if ( Shape.Utils.isClockWise( hole ) ) {
+			if ( ShapeUtils.isClockWise( hole ) ) {
 
 				holes[ i ] = hole.reverse();
 
@@ -98,11 +98,9 @@ ShapeGeometry.prototype.addShape = function ( shape, options ) {
 
 	}
 
-	var faces = Shape.Utils.triangulateShape( vertices, holes );
+	var faces = ShapeUtils.triangulateShape( vertices, holes );
 
 	// Vertices
-
-	var contour = vertices;
 
 	for ( i = 0, l = holes.length; i < l; i ++ ) {
 

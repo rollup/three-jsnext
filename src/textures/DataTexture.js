@@ -1,4 +1,5 @@
 import { Texture } from './Texture';
+import { NearestFilter } from '../Three';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -11,20 +12,16 @@ function DataTexture ( data, width, height, format, type, mapping, wrapS, wrapT,
 
 	this.image = { data: data, width: width, height: height };
 
+	this.magFilter = magFilter !== undefined ? magFilter : NearestFilter;
+	this.minFilter = minFilter !== undefined ? minFilter : NearestFilter;
+	
+	this.flipY = false;
+	this.generateMipmaps  = false;
+
 };
 
 DataTexture.prototype = Object.create( Texture.prototype );
 DataTexture.prototype.constructor = DataTexture;
-
-DataTexture.prototype.clone = function () {
-
-	var texture = new DataTexture();
-
-	Texture.prototype.clone.call( this, texture );
-
-	return texture;
-
-};
 
 
 export { DataTexture };

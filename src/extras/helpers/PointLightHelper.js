@@ -53,6 +53,7 @@ PointLightHelper.prototype.dispose = function () {
 
 	this.geometry.dispose();
 	this.material.dispose();
+
 };
 
 PointLightHelper.prototype.update = function () {

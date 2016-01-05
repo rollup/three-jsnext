@@ -21,19 +21,17 @@ function Scene () {
 Scene.prototype = Object.create( Object3D.prototype );
 Scene.prototype.constructor = Scene;
 
-Scene.prototype.clone = function ( object ) {
+Scene.prototype.copy = function ( source ) {
 
-	if ( object === undefined ) object = new Scene();
+	Object3D.prototype.copy.call( this, source );
 
-	Object3D.prototype.clone.call( this, object );
+	if ( source.fog !== null ) this.fog = source.fog.clone();
+	if ( source.overrideMaterial !== null ) this.overrideMaterial = source.overrideMaterial.clone();
 
-	if ( this.fog !== null ) object.fog = this.fog.clone();
-	if ( this.overrideMaterial !== null ) object.overrideMaterial = this.overrideMaterial.clone();
+	this.autoUpdate = source.autoUpdate;
+	this.matrixAutoUpdate = source.matrixAutoUpdate;
 
-	object.autoUpdate = this.autoUpdate;
-	object.matrixAutoUpdate = this.matrixAutoUpdate;
-
-	return object;
+	return this;
 
 };
 

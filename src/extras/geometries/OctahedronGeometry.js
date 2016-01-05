@@ -1,4 +1,3 @@
-import { Geometry } from '../../core/Geometry';
 import { PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
@@ -8,13 +7,8 @@ import { PolyhedronGeometry } from './PolyhedronGeometry';
 function OctahedronGeometry ( radius, detail ) {
 	this.isOctahedronGeometry = true;
 
-	this.parameters = {
-		radius: radius,
-		detail: detail
-	};
-
 	var vertices = [
-		1, 0, 0,   - 1, 0, 0,    0, 1, 0,    0,- 1, 0,    0, 0, 1,    0, 0,- 1
+		1, 0, 0,   - 1, 0, 0,    0, 1, 0,    0, - 1, 0,    0, 0, 1,    0, 0, - 1
 	];
 
 	var indices = [
@@ -29,9 +23,10 @@ function OctahedronGeometry ( radius, detail ) {
 		radius: radius,
 		detail: detail
 	};
+
 };
 
-OctahedronGeometry.prototype = Object.create( Geometry.prototype );
+OctahedronGeometry.prototype = Object.create( PolyhedronGeometry.prototype );
 OctahedronGeometry.prototype.constructor = OctahedronGeometry;
 
 

@@ -9,27 +9,25 @@ function CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, form
 	this.isCubeTexture = true;
 
 	mapping = mapping !== undefined ? mapping : CubeReflectionMapping;
-	
+
 	Texture.call( this, images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 
 	this.images = images;
+	this.flipY = false;
 
 };
 
 CubeTexture.prototype = Object.create( Texture.prototype );
 CubeTexture.prototype.constructor = CubeTexture;
 
-CubeTexture.clone = function ( texture ) {
+CubeTexture.prototype.copy = function ( source ) {
 
-	if ( texture === undefined ) texture = new CubeTexture();
-
-	Texture.prototype.clone.call( this, texture );
-
-	texture.images = this.images;
-
-	return texture;
+	Texture.prototype.copy.call( this, source );
+	
+	this.images = source.images;
+	
+	return this;
 
 };
-
 
 export { CubeTexture };

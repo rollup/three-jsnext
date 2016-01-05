@@ -35,16 +35,14 @@ function MeshNormalMaterial ( parameters ) {
 MeshNormalMaterial.prototype = Object.create( Material.prototype );
 MeshNormalMaterial.prototype.constructor = MeshNormalMaterial;
 
-MeshNormalMaterial.prototype.clone = function () {
+MeshNormalMaterial.prototype.copy = function ( source ) {
 
-	var material = new MeshNormalMaterial();
+	Material.prototype.copy.call( this, source );
 
-	Material.prototype.clone.call( this, material );
+	this.wireframe = source.wireframe;
+	this.wireframeLinewidth = source.wireframeLinewidth;
 
-	material.wireframe = this.wireframe;
-	material.wireframeLinewidth = this.wireframeLinewidth;
-
-	return material;
+	return this;
 
 };
 

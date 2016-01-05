@@ -1,5 +1,5 @@
-import { Object3D } from '../core/Object3D';
 import { Vector3 } from '../math/Vector3';
+import { Object3D } from '../core/Object3D';
 import { SpriteMaterial } from '../materials/SpriteMaterial';
 import { BufferAttribute } from '../core/BufferAttribute';
 import { BufferGeometry } from '../core/BufferGeometry';
@@ -19,11 +19,11 @@ Sprite = ( function () {
 	var uvs = new Float32Array( [ 0, 0,   1, 0,   1, 1,   0, 1 ] );
 
 	var geometry = new BufferGeometry();
-	geometry.addAttribute( 'index', new BufferAttribute( indices, 1 ) );
+	geometry.setIndex( new BufferAttribute( indices, 1 ) );
 	geometry.addAttribute( 'position', new BufferAttribute( vertices, 3 ) );
 	geometry.addAttribute( 'uv', new BufferAttribute( uvs, 2 ) );
 
-	return function ( material ) {
+	return function Sprite( material ) {
 
 		Object3D.call( this );
 
@@ -43,13 +43,13 @@ Sprite.prototype.raycast = ( function () {
 
 	var matrixPosition = new Vector3();
 
-	return function ( raycaster, intersects ) {
+	return function raycast( raycaster, intersects ) {
 
 		matrixPosition.setFromMatrixPosition( this.matrixWorld );
 
 		var distanceSq = raycaster.ray.distanceSqToPoint( matrixPosition );
 		var guessSizeSq = this.scale.x * this.scale.y;
-		
+
 		if ( distanceSq > guessSizeSq ) {
 
 			return;
@@ -69,28 +69,9 @@ Sprite.prototype.raycast = ( function () {
 
 }() );
 
-Sprite.prototype.clone = function ( object ) {
+Sprite.prototype.clone = function () {
 
-	if ( object === undefined ) object = new Sprite( this.material );
-
-	Object3D.prototype.clone.call( this, object );
-
-	return object;
-
-};
-
-Sprite.prototype.toJSON = function ( meta ) {
-
-	var data = Object3D.prototype.toJSON.call( this, meta );
-
-	// only serialize if not in meta materials cache
-	if ( meta.materials[ this.material.uuid ] === undefined ) {
-		meta.materials[ this.material.uuid ] = this.material.toJSON();
-	}
-
-	data.object.material = this.material.uuid;
-
-	return data;
+	return new this.constructor( this.material ).copy( this );
 
 };
 

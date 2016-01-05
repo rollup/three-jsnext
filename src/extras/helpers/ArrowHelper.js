@@ -4,7 +4,6 @@ import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
 import { Mesh } from '../../objects/Mesh';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Line } from '../../objects/Line';
-import { Matrix4 } from '../../math/Matrix4';
 import { CylinderGeometry } from '../geometries/CylinderGeometry';
 import { Geometry } from '../../core/Geometry';
 
@@ -13,7 +12,7 @@ var ArrowHelper;
 /**
  * @author WestLangley / http://github.com/WestLangley
  * @author zz85 / http://github.com/zz85
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  *
  * Creates an arrow for visualizing directions
  *
@@ -32,9 +31,9 @@ ArrowHelper = ( function () {
 	lineGeometry.vertices.push( new Vector3( 0, 0, 0 ), new Vector3( 0, 1, 0 ) );
 
 	var coneGeometry = new CylinderGeometry( 0, 0.5, 1, 5, 1 );
-	coneGeometry.applyMatrix( new Matrix4().makeTranslation( 0, - 0.5, 0 ) );
+	coneGeometry.translate( 0, - 0.5, 0 );
 
-	return function ( dir, origin, length, color, headLength, headWidth ) {
+	return function ArrowHelper( dir, origin, length, color, headLength, headWidth ) {
 
 		// dir is assumed to be normalized
 
@@ -46,7 +45,7 @@ ArrowHelper = ( function () {
 		if ( headWidth === undefined ) headWidth = 0.2 * headLength;
 
 		this.position.copy( origin );
-
+		
 		this.line = new Line( lineGeometry, new LineBasicMaterial( { color: color } ) );
 		this.line.matrixAutoUpdate = false;
 		this.add( this.line );
@@ -70,7 +69,7 @@ ArrowHelper.prototype.setDirection = ( function () {
 	var axis = new Vector3();
 	var radians;
 
-	return function ( dir ) {
+	return function setDirection( dir ) {
 
 		// dir is assumed to be normalized
 
@@ -101,7 +100,7 @@ ArrowHelper.prototype.setLength = function ( length, headLength, headWidth ) {
 	if ( headLength === undefined ) headLength = 0.2 * length;
 	if ( headWidth === undefined ) headWidth = 0.2 * headLength;
 
-	this.line.scale.set( 1, length - headLength, 1 );
+	this.line.scale.set( 1, Math.max( 0, length - headLength ), 1 );
 	this.line.updateMatrix();
 
 	this.cone.scale.set( headWidth, headLength, headWidth );

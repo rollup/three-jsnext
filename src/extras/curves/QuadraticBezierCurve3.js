@@ -1,5 +1,5 @@
-import { Shape } from '../core/Shape';
 import { Vector3 } from '../../math/Vector3';
+import { ShapeUtils } from '../ShapeUtils';
 import { Curve } from '../core/Curve';
 
 var QuadraticBezierCurve3;
@@ -20,13 +20,13 @@ QuadraticBezierCurve3 = Curve.create(
 
 	function ( t ) {
 
-		var vector = new Vector3();
+		var b2 = ShapeUtils.b2;		
 
-		vector.x = Shape.Utils.b2( t, this.v0.x, this.v1.x, this.v2.x );
-		vector.y = Shape.Utils.b2( t, this.v0.y, this.v1.y, this.v2.y );
-		vector.z = Shape.Utils.b2( t, this.v0.z, this.v1.z, this.v2.z );
-
-		return vector;
+		return new Vector3(
+			b2( t, this.v0.x, this.v1.x, this.v2.x ),
+			b2( t, this.v0.y, this.v1.y, this.v2.y ),
+			b2( t, this.v0.z, this.v1.z, this.v2.z )
+		);
 
 	}
 

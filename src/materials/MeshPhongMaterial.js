@@ -23,12 +23,17 @@ import { Color } from '../math/Color';
  *  aoMapIntensity: <float>
  *
  *  emissiveMap: new THREE.Texture( <Image> ),
+ *  emissiveMapIntensity: <float>
  *
  *  bumpMap: new THREE.Texture( <Image> ),
  *  bumpScale: <float>,
  *
  *  normalMap: new THREE.Texture( <Image> ),
  *  normalScale: <Vector2>,
+ *
+ *  displacementMap: new THREE.Texture( <Image> ),
+ *  displacementScale: <float>,
+ *  displacementBias: <float>,
  *
  *  specularMap: new THREE.Texture( <Image> ),
  *
@@ -69,8 +74,6 @@ function MeshPhongMaterial ( parameters ) {
 	this.specular = new Color( 0x111111 );
 	this.shininess = 30;
 
-	this.metal = false;
-
 	this.map = null;
 
 	this.lightMap = null;
@@ -80,12 +83,17 @@ function MeshPhongMaterial ( parameters ) {
 	this.aoMapIntensity = 1.0;
 
 	this.emissiveMap = null;
+	this.emissiveMapIntensity = 1.0;
 
 	this.bumpMap = null;
 	this.bumpScale = 1;
 
 	this.normalMap = null;
 	this.normalScale = new Vector2( 1, 1 );
+
+	this.displacementMap = null;
+	this.displacementScale = 1;
+	this.displacementBias = 0;
 
 	this.specularMap = null;
 
@@ -118,60 +126,61 @@ function MeshPhongMaterial ( parameters ) {
 MeshPhongMaterial.prototype = Object.create( Material.prototype );
 MeshPhongMaterial.prototype.constructor = MeshPhongMaterial;
 
-MeshPhongMaterial.prototype.clone = function () {
+MeshPhongMaterial.prototype.copy = function ( source ) {
 
-	var material = new MeshPhongMaterial();
+	Material.prototype.copy.call( this, source );
 
-	Material.prototype.clone.call( this, material );
+	this.color.copy( source.color );
+	this.emissive.copy( source.emissive );
+	this.specular.copy( source.specular );
+	this.shininess = source.shininess;
 
-	material.color.copy( this.color );
-	material.emissive.copy( this.emissive );
-	material.specular.copy( this.specular );
-	material.shininess = this.shininess;
+	this.map = source.map;
 
-	material.metal = this.metal;
+	this.lightMap = source.lightMap;
+	this.lightMapIntensity = source.lightMapIntensity;
 
-	material.map = this.map;
+	this.aoMap = source.aoMap;
+	this.aoMapIntensity = source.aoMapIntensity;
 
-	material.lightMap = this.lightMap;
-	material.lightMapIntensity = this.lightMapIntensity;
+	this.emissiveMap = source.emissiveMap;
+	this.emissiveMapIntensity = source.emissiveMapIntensity;
 
-	material.aoMap = this.aoMap;
-	material.aoMapIntensity = this.aoMapIntensity;
+	this.bumpMap = source.bumpMap;
+	this.bumpScale = source.bumpScale;
 
-	material.emissiveMap = this.emissiveMap;
+	this.normalMap = source.normalMap;
+	this.normalScale.copy( source.normalScale );
 
-	material.bumpMap = this.bumpMap;
-	material.bumpScale = this.bumpScale;
+	this.displacementMap = source.displacementMap;
+	this.displacementScale = source.displacementScale;
+	this.displacementBias = source.displacementBias;
 
-	material.normalMap = this.normalMap;
-	material.normalScale.copy( this.normalScale );
+	this.specularMap = source.specularMap;
 
-	material.specularMap = this.specularMap;
+	this.alphaMap = source.alphaMap;
 
-	material.alphaMap = this.alphaMap;
+	this.envMap = source.envMap;
+	this.combine = source.combine;
+	this.reflectivity = source.reflectivity;
+	this.refractionRatio = source.refractionRatio;
 
-	material.envMap = this.envMap;
-	material.combine = this.combine;
-	material.reflectivity = this.reflectivity;
-	material.refractionRatio = this.refractionRatio;
+	this.fog = source.fog;
 
-	material.fog = this.fog;
+	this.shading = source.shading;
 
-	material.shading = this.shading;
+	this.wireframe = source.wireframe;
+	this.wireframeLinewidth = source.wireframeLinewidth;
+	this.wireframeLinecap = source.wireframeLinecap;
+	this.wireframeLinejoin = source.wireframeLinejoin;
 
-	material.wireframe = this.wireframe;
-	material.wireframeLinewidth = this.wireframeLinewidth;
-	material.wireframeLinecap = this.wireframeLinecap;
-	material.wireframeLinejoin = this.wireframeLinejoin;
+	this.vertexColors = source.vertexColors;
 
-	material.vertexColors = this.vertexColors;
+	this.skinning = source.skinning;
+	this.morphTargets = source.morphTargets;
+	this.morphNormals = source.morphNormals;
 
-	material.skinning = this.skinning;
-	material.morphTargets = this.morphTargets;
-	material.morphNormals = this.morphNormals;
-
-	return material;
+	return this;
 
 };
 

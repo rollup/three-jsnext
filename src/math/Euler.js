@@ -6,7 +6,7 @@ import { _Math } from './Math';
 /**
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  */
 
 function Euler ( x, y, z, order ) {
@@ -26,8 +26,6 @@ Euler.DefaultOrder = 'XYZ';
 Euler.prototype = {
 
 	constructor: Euler,
-
-	_x: 0, _y: 0, _z: 0, _order: Euler.DefaultOrder,
 
 	get x () {
 
@@ -91,6 +89,12 @@ Euler.prototype = {
 		this.onChangeCallback();
 
 		return this;
+
+	},
+
+	clone: function () {
+
+		return new this.constructor( this._x, this._y, this._z, this._order );
 
 	},
 
@@ -297,6 +301,7 @@ Euler.prototype = {
 		array[ offset + 3 ] = this._order;
 
 		return array;
+
 	},
 
 	toVector3: function ( optionalResult ) {
@@ -321,13 +326,7 @@ Euler.prototype = {
 
 	},
 
-	onChangeCallback: function () {},
-
-	clone: function () {
-
-		return new Euler( this._x, this._y, this._z, this._order );
-
-	}
+	onChangeCallback: function () {}
 
 };
 

@@ -16,14 +16,4 @@ function Group () {
 Group.prototype = Object.create( Object3D.prototype );
 Group.prototype.constructor = Group;
 
-Group.prototype.clone = function ( object ) {
-
-	if ( object === undefined ) object = new Group();
-
-	Object3D.prototype.clone.call( this, object );
-
-	return object;
-
-};
-
 export { Group };

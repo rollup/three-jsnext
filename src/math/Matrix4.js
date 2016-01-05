@@ -11,7 +11,7 @@ import { Euler } from './Euler';
  * @author alteredq / http://alteredqualia.com/
  * @author mikael emtinger / http://gomo.se/
  * @author timknip / http://www.floorplanner.com/
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  * @author WestLangley / http://github.com/WestLangley
  */
 
@@ -67,18 +67,17 @@ Matrix4.prototype = {
 
 	},
 
+	clone: function () {
+
+		return new Matrix4().fromArray( this.elements );
+
+	},
+
 	copy: function ( m ) {
 
 		this.elements.set( m.elements );
 
 		return this;
-
-	},
-
-	extractPosition: function ( m ) {
-
-		console.warn( 'THREE.Matrix4: .extractPosition() has been renamed to .copyPosition().' );
-		return this.copyPosition( m );
 
 	},
 
@@ -281,14 +280,6 @@ Matrix4.prototype = {
 
 	},
 
-	setRotationFromQuaternion: function ( q ) {
-
-		console.warn( 'THREE.Matrix4: .setRotationFromQuaternion() has been renamed to .makeRotationFromQuaternion().' );
-
-		return this.makeRotationFromQuaternion( q );
-
-	},
-
 	makeRotationFromQuaternion: function ( q ) {
 
 		var te = this.elements;
@@ -340,7 +331,7 @@ Matrix4.prototype = {
 
 			z.subVectors( eye, target ).normalize();
 
-			if ( z.length() === 0 ) {
+			if ( z.lengthSq() === 0 ) {
 
 				z.z = 1;
 
@@ -348,7 +339,7 @@ Matrix4.prototype = {
 
 			x.crossVectors( up, z ).normalize();
 
-			if ( x.length() === 0 ) {
+			if ( x.lengthSq() === 0 ) {
 
 				z.x += 0.0001;
 				x.crossVectors( up, z ).normalize();
@@ -449,27 +440,6 @@ Matrix4.prototype = {
 
 	},
 
-	multiplyVector3: function ( vector ) {
-
-		console.warn( 'THREE.Matrix4: .multiplyVector3() has been removed. Use vector.applyMatrix4( matrix ) or vector.applyProjection( matrix ) instead.' );
-		return vector.applyProjection( this );
-
-	},
-
-	multiplyVector4: function ( vector ) {
-
-		console.warn( 'THREE.Matrix4: .multiplyVector4() has been removed. Use vector.applyMatrix4( matrix ) instead.' );
-		return vector.applyMatrix4( this );
-
-	},
-
-	multiplyVector3Array: function ( a ) {
-
-		console.warn( 'THREE.Matrix4: .multiplyVector3Array() has been renamed. Use matrix.applyToVector3Array( array ) instead.' );
-		return this.applyToVector3Array( a );
-
-	},
-
 	applyToVector3Array: function () {
 
 		var v1;
@@ -521,21 +491,6 @@ Matrix4.prototype = {
 		};
 
 	}(),
-
-	rotateAxis: function ( v ) {
-
-		console.warn( 'THREE.Matrix4: .rotateAxis() has been removed. Use Vector3.transformDirection( matrix ) instead.' );
-
-		v.transformDirection( this );
-
-	},
-
-	crossVector: function ( vector ) {
-
-		console.warn( 'THREE.Matrix4: .crossVector() has been removed. Use vector.applyMatrix4( matrix ) instead.' );
-		return vector.applyMatrix4( this );
-
-	},
 
 	determinant: function () {
 
@@ -608,7 +563,7 @@ Matrix4.prototype = {
 
 		var te = this.elements;
 
-		array[ offset     ] = te[ 0 ];
+		array[ offset ] = te[ 0 ];
 		array[ offset + 1 ] = te[ 1 ];
 		array[ offset + 2 ] = te[ 2 ];
 		array[ offset + 3 ] = te[ 3 ];
@@ -716,36 +671,6 @@ Matrix4.prototype = {
 
 	},
 
-	translate: function ( v ) {
-
-		console.error( 'THREE.Matrix4: .translate() has been removed.' );
-
-	},
-
-	rotateX: function ( angle ) {
-
-		console.error( 'THREE.Matrix4: .rotateX() has been removed.' );
-
-	},
-
-	rotateY: function ( angle ) {
-
-		console.error( 'THREE.Matrix4: .rotateY() has been removed.' );
-
-	},
-
-	rotateZ: function ( angle ) {
-
-		console.error( 'THREE.Matrix4: .rotateZ() has been removed.' );
-
-	},
-
-	rotateByAxis: function ( axis, angle ) {
-
-		console.error( 'THREE.Matrix4: .rotateByAxis() has been removed.' );
-
-	},
-
 	scale: function ( v ) {
 
 		var te = this.elements;
@@ -768,7 +693,7 @@ Matrix4.prototype = {
 		var scaleYSq = te[ 4 ] * te[ 4 ] + te[ 5 ] * te[ 5 ] + te[ 6 ] * te[ 6 ];
 		var scaleZSq = te[ 8 ] * te[ 8 ] + te[ 9 ] * te[ 9 ] + te[ 10 ] * te[ 10 ];
 
-		return Math.sqrt( Math.max( scaleXSq, Math.max( scaleYSq, scaleZSq ) ) );
+		return Math.sqrt( Math.max( scaleXSq, scaleYSq, scaleZSq ) );
 
 	},
 
@@ -996,6 +921,21 @@ Matrix4.prototype = {
 
 	},
 
+	equals: function ( matrix ) {
+
+		var te = this.elements;
+		var me = matrix.elements;
+
+		for ( var i = 0; i < 16; i ++ ) {
+
+			if ( te[ i ] !== me[ i ] ) return false;
+
+		}
+
+		return true;
+
+	},
+
 	fromArray: function ( array ) {
 
 		this.elements.set( array );
@@ -1014,12 +954,6 @@ Matrix4.prototype = {
 			te[ 8 ], te[ 9 ], te[ 10 ], te[ 11 ],
 			te[ 12 ], te[ 13 ], te[ 14 ], te[ 15 ]
 		];
-
-	},
-
-	clone: function () {
-
-		return new Matrix4().fromArray( this.elements );
 
 	}
 

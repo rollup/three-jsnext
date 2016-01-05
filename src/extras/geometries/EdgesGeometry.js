@@ -17,7 +17,12 @@ function EdgesGeometry ( geometry, thresholdAngle ) {
 	var thresholdDot = Math.cos( _Math.degToRad( thresholdAngle ) );
 
 	var edge = [ 0, 0 ], hash = {};
-	var sortFunction = function ( a, b ) { return a - b; };
+
+	function sortFunction( a, b ) {
+
+		return a - b;
+
+	}
 
 	var keys = [ 'a', 'b', 'c' ];
 

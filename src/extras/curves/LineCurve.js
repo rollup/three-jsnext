@@ -17,7 +17,7 @@ LineCurve.prototype.constructor = LineCurve;
 
 LineCurve.prototype.getPoint = function ( t ) {
 
-	var point = this.v2.clone().sub(this.v1);
+	var point = this.v2.clone().sub( this.v1 );
 	point.multiplyScalar( t ).add( this.v1 );
 
 	return point;
@@ -34,7 +34,7 @@ LineCurve.prototype.getPointAt = function ( u ) {
 
 LineCurve.prototype.getTangent = function( t ) {
 
-	var tangent = this.v2.clone().sub(this.v1);
+	var tangent = this.v2.clone().sub( this.v1 );
 
 	return tangent.normalize();
 

@@ -3,7 +3,6 @@ import { Object3D } from '../../core/Object3D';
 import { Mesh } from '../../objects/Mesh';
 import { FaceColors } from '../../Three';
 import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
-import { Matrix4 } from '../../math/Matrix4';
 import { SphereGeometry } from '../geometries/SphereGeometry';
 import { Color } from '../../math/Color';
 
@@ -26,7 +25,7 @@ function HemisphereLightHelper ( light, sphereSize ) {
 	this.colors = [ new Color(), new Color() ];
 
 	var geometry = new SphereGeometry( sphereSize, 4, 2 );
-	geometry.applyMatrix( new Matrix4().makeRotationX( - Math.PI / 2 ) );
+	geometry.rotateX( - Math.PI / 2 );
 
 	for ( var i = 0, il = 8; i < il; i ++ ) {
 
@@ -47,8 +46,10 @@ HemisphereLightHelper.prototype = Object.create( Object3D.prototype );
 HemisphereLightHelper.prototype.constructor = HemisphereLightHelper;
 
 HemisphereLightHelper.prototype.dispose = function () {
+
 	this.lightSphere.geometry.dispose();
 	this.lightSphere.material.dispose();
+
 };
 
 HemisphereLightHelper.prototype.update = function () {

@@ -1,6 +1,7 @@
-import { Curve } from '../core/Curve';
 import { Vector2 } from '../../math/Vector2';
-import { Shape } from '../core/Shape';
+import { CurveUtils } from '../CurveUtils';
+import { ShapeUtils } from '../ShapeUtils';
+import { Curve } from '../core/Curve';
 
 /**************************************************************
  *	Quadratic Bezier curve
@@ -22,26 +23,24 @@ QuadraticBezierCurve.prototype.constructor = QuadraticBezierCurve;
 
 QuadraticBezierCurve.prototype.getPoint = function ( t ) {
 
-	var vector = new Vector2();
+	var b2 = ShapeUtils.b2;
 
-	vector.x = Shape.Utils.b2( t, this.v0.x, this.v1.x, this.v2.x );
-	vector.y = Shape.Utils.b2( t, this.v0.y, this.v1.y, this.v2.y );
-
-	return vector;
+	return new Vector2(
+		b2( t, this.v0.x, this.v1.x, this.v2.x ),
+		b2( t, this.v0.y, this.v1.y, this.v2.y )
+	);
 
 };
 
 
 QuadraticBezierCurve.prototype.getTangent = function( t ) {
 
-	var vector = new Vector2();
+	var tangentQuadraticBezier = CurveUtils.tangentQuadraticBezier;
 
-	vector.x = Curve.Utils.tangentQuadraticBezier( t, this.v0.x, this.v1.x, this.v2.x );
-	vector.y = Curve.Utils.tangentQuadraticBezier( t, this.v0.y, this.v1.y, this.v2.y );
-
-	// returns unit vector
-
-	return vector.normalize();
+	return new Vector2(
+		tangentQuadraticBezier( t, this.v0.x, this.v1.x, this.v2.x ),
+		tangentQuadraticBezier( t, this.v0.y, this.v1.y, this.v2.y )
+	).normalize();
 
 };
 

@@ -27,15 +27,5 @@ function CompressedTexture ( mipmaps, width, height, format, type, mapping, wrap
 CompressedTexture.prototype = Object.create( Texture.prototype );
 CompressedTexture.prototype.constructor = CompressedTexture;
 
-CompressedTexture.prototype.clone = function () {
-
-	var texture = new CompressedTexture();
-
-	Texture.prototype.clone.call( this, texture );
-
-	return texture;
-
-};
-
 
 export { CompressedTexture };

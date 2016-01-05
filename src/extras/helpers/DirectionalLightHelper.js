@@ -63,6 +63,7 @@ DirectionalLightHelper.prototype.dispose = function () {
 	this.lightPlane.material.dispose();
 	this.targetLine.geometry.dispose();
 	this.targetLine.material.dispose();
+
 };
 
 DirectionalLightHelper.prototype.update = function () {

@@ -1,6 +1,6 @@
 import { EventDispatcher } from '../core/EventDispatcher';
+import { MirroredRepeatWrapping, ClampToEdgeWrapping, RepeatWrapping, UVMapping, UnsignedByteType, RGBAFormat, LinearMipMapLinearFilter, LinearFilter } from '../Three';
 import { _Math } from '../math/Math';
-import { UVMapping, UnsignedByteType, RGBAFormat, LinearMipMapLinearFilter, LinearFilter, ClampToEdgeWrapping } from '../Three';
 import { Vector2 } from '../math/Vector2';
 
 /**
@@ -43,7 +43,7 @@ function Texture ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, t
 	this.flipY = true;
 	this.unpackAlignment = 4; // valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
 
-	this._needsUpdate = false;
+	this.version = 0;
 	this.onUpdate = null;
 
 };
@@ -55,49 +55,45 @@ Texture.prototype = {
 
 	constructor: Texture,
 
-	get needsUpdate () {
-
-		return this._needsUpdate;
-
-	},
-
 	set needsUpdate ( value ) {
 
-		if ( value === true ) this.update();
-
-		this._needsUpdate = value;
+		if ( value === true ) this.version ++;
 
 	},
 
-	clone: function ( texture ) {
+	clone: function () {
 
-		if ( texture === undefined ) texture = new Texture();
+		return new this.constructor().copy( this );
 
-		texture.image = this.image;
-		texture.mipmaps = this.mipmaps.slice( 0 );
+	},
 
-		texture.mapping = this.mapping;
+	copy: function ( source ) {
 
-		texture.wrapS = this.wrapS;
-		texture.wrapT = this.wrapT;
+		this.image = source.image;
+		this.mipmaps = source.mipmaps.slice( 0 );
 
-		texture.magFilter = this.magFilter;
-		texture.minFilter = this.minFilter;
+		this.mapping = source.mapping;
 
-		texture.anisotropy = this.anisotropy;
+		this.wrapS = source.wrapS;
+		this.wrapT = source.wrapT;
 
-		texture.format = this.format;
-		texture.type = this.type;
+		this.magFilter = source.magFilter;
+		this.minFilter = source.minFilter;
 
-		texture.offset.copy( this.offset );
-		texture.repeat.copy( this.repeat );
+		this.anisotropy = source.anisotropy;
 
-		texture.generateMipmaps = this.generateMipmaps;
-		texture.premultiplyAlpha = this.premultiplyAlpha;
-		texture.flipY = this.flipY;
-		texture.unpackAlignment = this.unpackAlignment;
+		this.format = source.format;
+		this.type = source.type;
 
-		return texture;
+		this.offset.copy( source.offset );
+		this.repeat.copy( source.repeat );
+
+		this.generateMipmaps = source.generateMipmaps;
+		this.premultiplyAlpha = source.premultiplyAlpha;
+		this.flipY = source.flipY;
+		this.unpackAlignment = source.unpackAlignment;
+
+		return this;
 
 	},
 
@@ -191,15 +187,86 @@ Texture.prototype = {
 
 	},
 
-	update: function () {
-
-		this.dispatchEvent( { type: 'update' } );
-
-	},
-
 	dispose: function () {
 
 		this.dispatchEvent( { type: 'dispose' } );
+
+	},
+
+	transformUv: function ( uv ) {
+
+		if ( this.mapping !== UVMapping )  return;
+
+		uv.multiply( this.repeat );
+		uv.add( this.offset );
+
+		if ( uv.x < 0 || uv.x > 1 ) {
+
+			switch ( this.wrapS ) {
+
+				case RepeatWrapping:
+
+					uv.x = uv.x - Math.floor( uv.x );
+					break;
+
+				case ClampToEdgeWrapping:
+
+					uv.x = uv.x < 0 ? 0 : 1;
+					break;
+
+				case MirroredRepeatWrapping:
+
+					if ( Math.abs( Math.floor( uv.x ) % 2 ) === 1 ) {
+
+						uv.x = Math.ceil( uv.x ) - uv.x;
+
+					} else {
+
+						uv.x = uv.x - Math.floor( uv.x );
+
+					}
+					break;
+
+			}
+
+		}
+
+		if ( uv.y < 0 || uv.y > 1 ) {
+
+			switch ( this.wrapT ) {
+
+				case RepeatWrapping:
+
+					uv.y = uv.y - Math.floor( uv.y );
+					break;
+
+				case ClampToEdgeWrapping:
+
+					uv.y = uv.y < 0 ? 0 : 1;
+					break;
+
+				case MirroredRepeatWrapping:
+
+					if ( Math.abs( Math.floor( uv.y ) % 2 ) === 1 ) {
+
+						uv.y = Math.ceil( uv.y ) - uv.y;
+
+					} else {
+
+						uv.y = uv.y - Math.floor( uv.y );
+
+					}
+					break;
+
+			}
+
+		}
+
+		if ( this.flipY ) {
+
+			uv.y = 1 - uv.y;
+
+		}
 
 	}
 

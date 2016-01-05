@@ -1,6 +1,6 @@
 import { Object3D } from '../core/Object3D';
-import { LinearFilter, RGBFormat } from '../Three';
 import { WebGLRenderTargetCube } from '../renderers/WebGLRenderTargetCube';
+import { LinearFilter, RGBFormat } from '../Three';
 import { Vector3 } from '../math/Vector3';
 import { PerspectiveCamera } from './PerspectiveCamera';
 
@@ -50,16 +50,18 @@ function CubeCamera ( near, far, cubeResolution ) {
 	cameraNZ.lookAt( new Vector3( 0, 0, - 1 ) );
 	this.add( cameraNZ );
 
-	this.renderTarget = new WebGLRenderTargetCube( cubeResolution, cubeResolution, { format: RGBFormat, magFilter: LinearFilter, minFilter: LinearFilter } );
+	var options = { format: RGBFormat, magFilter: LinearFilter, minFilter: LinearFilter };
+
+	this.renderTarget = new WebGLRenderTargetCube( cubeResolution, cubeResolution, options );
 
 	this.updateCubeMap = function ( renderer, scene ) {
 
-		if ( this.parent === undefined ) this.updateMatrixWorld();
+		if ( this.parent === null ) this.updateMatrixWorld();
 
 		var renderTarget = this.renderTarget;
-		var generateMipmaps = renderTarget.generateMipmaps;
+		var generateMipmaps = renderTarget.texture.generateMipmaps;
 
-		renderTarget.generateMipmaps = false;
+		renderTarget.texture.generateMipmaps = false;
 
 		renderTarget.activeCubeFace = 0;
 		renderer.render( scene, cameraPX, renderTarget );
@@ -76,7 +78,7 @@ function CubeCamera ( near, far, cubeResolution ) {
 		renderTarget.activeCubeFace = 4;
 		renderer.render( scene, cameraPZ, renderTarget );
 
-		renderTarget.generateMipmaps = generateMipmaps;
+		renderTarget.texture.generateMipmaps = generateMipmaps;
 
 		renderTarget.activeCubeFace = 5;
 		renderer.render( scene, cameraNZ, renderTarget );

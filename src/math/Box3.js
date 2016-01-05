@@ -1,10 +1,8 @@
 import { Vector3 } from './Vector3';
 import { Sphere } from './Sphere';
-import { BufferGeometry } from '../core/BufferGeometry';
-import { Geometry } from '../core/Geometry';
 
 /**
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  * @author WestLangley / http://github.com/WestLangley
  */
 
@@ -65,15 +63,17 @@ Box3.prototype = {
 		// Computes the world-axis-aligned bounding box of an object (including its children),
 		// accounting for both the object's, and children's, world transforms
 
-		var v1 = new Vector3();
+		var box;
 
 		return function ( object ) {
 
+			if ( box === undefined ) box = new Box3();
+
 			var scope = this;
 
-			object.updateMatrixWorld( true );
-
 			this.makeEmpty();
+
+			object.updateMatrixWorld( true );
 
 			object.traverse( function ( node ) {
 
@@ -81,35 +81,15 @@ Box3.prototype = {
 
 				if ( geometry !== undefined ) {
 
-					if ( (geometry && geometry.isGeometry) ) {
+					if ( geometry.boundingBox === null ) {
 
-						var vertices = geometry.vertices;
-
-						for ( var i = 0, il = vertices.length; i < il; i ++ ) {
-
-							v1.copy( vertices[ i ] );
-
-							v1.applyMatrix4( node.matrixWorld );
-
-							scope.expandByPoint( v1 );
-
-						}
-
-					} else if ( (geometry && geometry.isBufferGeometry) && geometry.attributes[ 'position' ] !== undefined ) {
-
-						var positions = geometry.attributes[ 'position' ].array;
-
-						for ( var i = 0, il = positions.length; i < il; i += 3 ) {
-
-							v1.set( positions[ i ], positions[ i + 1 ], positions[ i + 2 ] );
-
-							v1.applyMatrix4( node.matrixWorld );
-
-							scope.expandByPoint( v1 );
-
-						}
+						geometry.computeBoundingBox();
 
 					}
+
+					box.copy( geometry.boundingBox );
+					box.applyMatrix4( node.matrixWorld );
+					scope.union( box );
 
 				}
 
@@ -120,6 +100,12 @@ Box3.prototype = {
 		};
 
 	}(),
+
+	clone: function () {
+
+		return new this.constructor().copy( this );
+
+	},
 
 	copy: function ( box ) {
 
@@ -139,7 +125,7 @@ Box3.prototype = {
 
 	},
 
-	empty: function () {
+	isEmpty: function () {
 
 		// this is a more robust check for empty than ( volume <= 0 ) because volume can get positive with two negative axes
 
@@ -191,8 +177,8 @@ Box3.prototype = {
 	containsPoint: function ( point ) {
 
 		if ( point.x < this.min.x || point.x > this.max.x ||
-		     point.y < this.min.y || point.y > this.max.y ||
-		     point.z < this.min.z || point.z > this.max.z ) {
+				 point.y < this.min.y || point.y > this.max.y ||
+				 point.z < this.min.z || point.z > this.max.z ) {
 
 			return false;
 
@@ -231,19 +217,84 @@ Box3.prototype = {
 
 	},
 
-	isIntersectionBox: function ( box ) {
+	intersectsBox: function ( box ) {
 
 		// using 6 splitting planes to rule out intersections.
 
 		if ( box.max.x < this.min.x || box.min.x > this.max.x ||
-		     box.max.y < this.min.y || box.min.y > this.max.y ||
-		     box.max.z < this.min.z || box.min.z > this.max.z ) {
+				 box.max.y < this.min.y || box.min.y > this.max.y ||
+				 box.max.z < this.min.z || box.min.z > this.max.z ) {
 
 			return false;
 
 		}
 
 		return true;
+
+	},
+
+	intersectsSphere: ( function () {
+
+		var closestPoint;
+
+		return function intersectsSphere( sphere ) {
+
+			if ( closestPoint === undefined ) closestPoint = new Vector3();
+
+			// Find the point on the AABB closest to the sphere center.
+			this.clampPoint( sphere.center, closestPoint );
+
+			// If that point is inside the sphere, the AABB and sphere intersect.
+			return closestPoint.distanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius );
+
+		};
+
+	} )(),
+
+	intersectsPlane: function ( plane ) {
+
+		// We compute the minimum and maximum dot product values. If those values
+		// are on the same side (back or front) of the plane, then there is no intersection.
+
+		var min, max;
+
+		if ( plane.normal.x > 0 ) {
+
+			min = plane.normal.x * this.min.x;
+			max = plane.normal.x * this.max.x;
+
+		} else {
+
+			min = plane.normal.x * this.max.x;
+			max = plane.normal.x * this.min.x;
+
+		}
+
+		if ( plane.normal.y > 0 ) {
+
+			min += plane.normal.y * this.min.y;
+			max += plane.normal.y * this.max.y;
+
+		} else {
+
+			min += plane.normal.y * this.max.y;
+			max += plane.normal.y * this.min.y;
+
+		}
+
+		if ( plane.normal.z > 0 ) {
+
+			min += plane.normal.z * this.min.z;
+			max += plane.normal.z * this.max.z;
+
+		} else {
+
+			min += plane.normal.z * this.max.z;
+			max += plane.normal.z * this.min.z;
+
+		}
+
+		return ( min <= plane.constant && max >= plane.constant );
 
 	},
 
@@ -325,7 +376,7 @@ Box3.prototype = {
 			points[ 4 ].set( this.max.x, this.min.y, this.min.z ).applyMatrix4( matrix ); // 100
 			points[ 5 ].set( this.max.x, this.min.y, this.max.z ).applyMatrix4( matrix ); // 101
 			points[ 6 ].set( this.max.x, this.max.y, this.min.z ).applyMatrix4( matrix ); // 110
-			points[ 7 ].set( this.max.x, this.max.y, this.max.z ).applyMatrix4( matrix );  // 111
+			points[ 7 ].set( this.max.x, this.max.y, this.max.z ).applyMatrix4( matrix );	// 111
 
 			this.makeEmpty();
 			this.setFromPoints( points );
@@ -348,12 +399,6 @@ Box3.prototype = {
 	equals: function ( box ) {
 
 		return box.min.equals( this.min ) && box.max.equals( this.max );
-
-	},
-
-	clone: function () {
-
-		return new Box3().copy( this );
 
 	}
 

@@ -35,9 +35,13 @@ function RingGeometry ( innerRadius, outerRadius, thetaSegments, phiSegments, th
 
 	var i, o, uvs = [], radius = innerRadius, radiusStep = ( ( outerRadius - innerRadius ) / phiSegments );
 
-	for ( i = 0; i < phiSegments + 1; i ++ ) { // concentric circles inside ring
+	for ( i = 0; i < phiSegments + 1; i ++ ) {
 
-		for ( o = 0; o < thetaSegments + 1; o ++ ) { // number of segments per circle
+		// concentric circles inside ring
+
+		for ( o = 0; o < thetaSegments + 1; o ++ ) {
+
+			// number of segments per circle
 
 			var vertex = new Vector3();
 			var segment = thetaStart + o / thetaSegments * thetaLength;
@@ -46,6 +50,7 @@ function RingGeometry ( innerRadius, outerRadius, thetaSegments, phiSegments, th
 
 			this.vertices.push( vertex );
 			uvs.push( new Vector2( ( vertex.x / outerRadius + 1 ) / 2, ( vertex.y / outerRadius + 1 ) / 2 ) );
+
 		}
 
 		radius += radiusStep;
@@ -54,11 +59,15 @@ function RingGeometry ( innerRadius, outerRadius, thetaSegments, phiSegments, th
 
 	var n = new Vector3( 0, 0, 1 );
 
-	for ( i = 0; i < phiSegments; i ++ ) { // concentric circles inside ring
+	for ( i = 0; i < phiSegments; i ++ ) {
 
-		var thetaSegment = i * (thetaSegments + 1);
+		// concentric circles inside ring
 
-		for ( o = 0; o < thetaSegments ; o ++ ) { // number of segments per circle
+		var thetaSegment = i * ( thetaSegments + 1 );
+
+		for ( o = 0; o < thetaSegments ; o ++ ) {
+
+			// number of segments per circle
 
 			var segment = o + thetaSegment;
 
@@ -67,16 +76,17 @@ function RingGeometry ( innerRadius, outerRadius, thetaSegments, phiSegments, th
 			var v3 = segment + thetaSegments + 2;
 
 			this.faces.push( new Face3( v1, v2, v3, [ n.clone(), n.clone(), n.clone() ] ) );
-			this.faceVertexUvs[ 0 ].push( [ uvs[ v1 ].clone(), uvs[ v2 ].clone(), uvs[ v3 ].clone() ]);
+			this.faceVertexUvs[ 0 ].push( [ uvs[ v1 ].clone(), uvs[ v2 ].clone(), uvs[ v3 ].clone() ] );
 
 			v1 = segment;
 			v2 = segment + thetaSegments + 2;
 			v3 = segment + 1;
 
 			this.faces.push( new Face3( v1, v2, v3, [ n.clone(), n.clone(), n.clone() ] ) );
-			this.faceVertexUvs[ 0 ].push( [ uvs[ v1 ].clone(), uvs[ v2 ].clone(), uvs[ v3 ].clone() ]);
+			this.faceVertexUvs[ 0 ].push( [ uvs[ v1 ].clone(), uvs[ v2 ].clone(), uvs[ v3 ].clone() ] );
 
 		}
+
 	}
 
 	this.computeFaceNormals();
@@ -87,7 +97,6 @@ function RingGeometry ( innerRadius, outerRadius, thetaSegments, phiSegments, th
 
 RingGeometry.prototype = Object.create( Geometry.prototype );
 RingGeometry.prototype.constructor = RingGeometry;
-
 
 
 export { RingGeometry };

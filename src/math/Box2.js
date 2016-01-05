@@ -1,7 +1,7 @@
 import { Vector2 } from './Vector2';
 
 /**
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  */
 
 function Box2 ( min, max ) {
@@ -31,7 +31,7 @@ Box2.prototype = {
 
 		for ( var i = 0, il = points.length; i < il; i ++ ) {
 
-			this.expandByPoint( points[ i ] )
+			this.expandByPoint( points[ i ] );
 
 		}
 
@@ -55,6 +55,12 @@ Box2.prototype = {
 
 	}(),
 
+	clone: function () {
+
+		return new this.constructor().copy( this );
+
+	},
+
 	copy: function ( box ) {
 
 		this.min.copy( box.min );
@@ -73,7 +79,7 @@ Box2.prototype = {
 
 	},
 
-	empty: function () {
+	isEmpty: function () {
 
 		// this is a more robust check for empty than ( volume <= 0 ) because volume can get positive with two negative axes
 
@@ -101,6 +107,7 @@ Box2.prototype = {
 		this.max.max( point );
 
 		return this;
+
 	},
 
 	expandByVector: function ( vector ) {
@@ -109,6 +116,7 @@ Box2.prototype = {
 		this.max.add( vector );
 
 		return this;
+
 	},
 
 	expandByScalar: function ( scalar ) {
@@ -117,6 +125,7 @@ Box2.prototype = {
 		this.max.addScalar( scalar );
 
 		return this;
+
 	},
 
 	containsPoint: function ( point ) {
@@ -159,7 +168,7 @@ Box2.prototype = {
 
 	},
 
-	isIntersectionBox: function ( box ) {
+	intersectsBox: function ( box ) {
 
 		// using 6 splitting planes to rule out intersections.
 
@@ -224,12 +233,6 @@ Box2.prototype = {
 	equals: function ( box ) {
 
 		return box.min.equals( this.min ) && box.max.equals( this.max );
-
-	},
-
-	clone: function () {
-
-		return new Box2().copy( this );
 
 	}
 

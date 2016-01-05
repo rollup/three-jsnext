@@ -1,4 +1,3 @@
-import { Geometry } from '../../core/Geometry';
 import { PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
@@ -31,9 +30,10 @@ function IcosahedronGeometry ( radius, detail ) {
 		radius: radius,
 		detail: detail
 	};
+
 };
 
-IcosahedronGeometry.prototype = Object.create( Geometry.prototype );
+IcosahedronGeometry.prototype = Object.create( PolyhedronGeometry.prototype );
 IcosahedronGeometry.prototype.constructor = IcosahedronGeometry;
 
 

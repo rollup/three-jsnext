@@ -6,7 +6,7 @@ import { Vector3 } from '../../math/Vector3';
 /**
  * @author astrodud / http://astrodud.isgreat.org/
  * @author zz85 / https://github.com/zz85
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  */
 
 // points - to create a closed torus, one must use a set of points 

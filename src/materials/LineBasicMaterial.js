@@ -48,23 +48,21 @@ function LineBasicMaterial ( parameters ) {
 LineBasicMaterial.prototype = Object.create( Material.prototype );
 LineBasicMaterial.prototype.constructor = LineBasicMaterial;
 
-LineBasicMaterial.prototype.clone = function () {
+LineBasicMaterial.prototype.copy = function ( source ) {
 
-	var material = new LineBasicMaterial();
+	Material.prototype.copy.call( this, source );
 
-	Material.prototype.clone.call( this, material );
+	this.color.copy( source.color );
 
-	material.color.copy( this.color );
+	this.linewidth = source.linewidth;
+	this.linecap = source.linecap;
+	this.linejoin = source.linejoin;
 
-	material.linewidth = this.linewidth;
-	material.linecap = this.linecap;
-	material.linejoin = this.linejoin;
+	this.vertexColors = source.vertexColors;
 
-	material.vertexColors = this.vertexColors;
+	this.fog = source.fog;
 
-	material.fog = this.fog;
-
-	return material;
+	return this;
 
 };
 

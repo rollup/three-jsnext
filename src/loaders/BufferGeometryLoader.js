@@ -25,7 +25,6 @@ BufferGeometryLoader.prototype = {
 		var scope = this;
 
 		var loader = new XHRLoader( scope.manager );
-		loader.setCrossOrigin( this.crossOrigin );
 		loader.load( url, function ( text ) {
 
 			onLoad( scope.parse( JSON.parse( text ) ) );
@@ -34,15 +33,18 @@ BufferGeometryLoader.prototype = {
 
 	},
 
-	setCrossOrigin: function ( value ) {
-
-		this.crossOrigin = value;
-
-	},
-
 	parse: function ( json ) {
 
 		var geometry = new BufferGeometry();
+
+		var index = json.data.index;
+
+		if ( index !== undefined ) {
+
+			var typedArray = new self[ index.type ]( index.array );
+			geometry.setIndex( new BufferAttribute( typedArray, 1 ) );
+
+		}
 
 		var attributes = json.data.attributes;
 
@@ -55,11 +57,17 @@ BufferGeometryLoader.prototype = {
 
 		}
 
-		var offsets = json.data.offsets;
+		var groups = json.data.groups || json.data.drawcalls || json.data.offsets;
 
-		if ( offsets !== undefined ) {
+		if ( groups !== undefined ) {
 
-			geometry.offsets = JSON.parse( JSON.stringify( offsets ) );
+			for ( var i = 0, n = groups.length; i !== n; ++ i ) {
+
+				var group = groups[ i ];
+
+				geometry.addGroup( group.start, group.count, group.materialIndex );
+
+			}
 
 		}
 

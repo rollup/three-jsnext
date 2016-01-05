@@ -1,4 +1,3 @@
-import { Object3D } from '../core/Object3D';
 import { Geometry } from '../core/Geometry';
 import { BufferGeometry } from '../core/BufferGeometry';
 import { LineSegments } from './LineSegments';
@@ -6,6 +5,7 @@ import { Vector3 } from '../math/Vector3';
 import { Sphere } from '../math/Sphere';
 import { Ray } from '../math/Ray';
 import { Matrix4 } from '../math/Matrix4';
+import { Object3D } from '../core/Object3D';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial';
 
 var LinePieces;
@@ -20,7 +20,8 @@ function Line ( geometry, material, mode ) {
 
 	if ( mode === 1 ) {
 
-		console.error( 'THREE.Line: THREE.LinePieces mode has been removed. Use THREE.LineSegments instead.' );
+		console.warn( 'THREE.Line: parameter THREE.LinePieces no longer supported. Created THREE.LineSegments instead.' );
+		return new LineSegments( geometry, material );
 
 	}
 
@@ -42,27 +43,26 @@ Line.prototype.raycast = ( function () {
 	var ray = new Ray();
 	var sphere = new Sphere();
 
-	return function ( raycaster, intersects ) {
+	return function raycast( raycaster, intersects ) {
 
 		var precision = raycaster.linePrecision;
 		var precisionSq = precision * precision;
 
 		var geometry = this.geometry;
-
-		if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
+		var matrixWorld = this.matrixWorld;
 
 		// Checking boundingSphere distance to ray
 
+		if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
+
 		sphere.copy( geometry.boundingSphere );
-		sphere.applyMatrix4( this.matrixWorld );
+		sphere.applyMatrix4( matrixWorld );
 
-		if ( raycaster.ray.isIntersectionSphere( sphere ) === false ) {
+		if ( raycaster.ray.intersectsSphere( sphere ) === false ) return;
 
-			return;
+		//
 
-		}
-
-		inverseMatrix.getInverse( this.matrixWorld );
+		inverseMatrix.getInverse( matrixWorld );
 		ray.copy( raycaster.ray ).applyMatrix4( inverseMatrix );
 
 		var vStart = new Vector3();
@@ -73,65 +73,50 @@ Line.prototype.raycast = ( function () {
 
 		if ( (geometry && geometry.isBufferGeometry) ) {
 
+			var index = geometry.index;
 			var attributes = geometry.attributes;
+			var positions = attributes.position.array;
 
-			if ( attributes.index !== undefined ) {
+			if ( index !== null ) {
 
-				var indices = attributes.index.array;
-				var positions = attributes.position.array;
-				var offsets = geometry.offsets;
+				var indices = index.array;
 
-				if ( offsets.length === 0 ) {
+				for ( var i = 0, l = indices.length - 1; i < l; i += step ) {
 
-					offsets = [ { start: 0, count: indices.length, index: 0 } ];
+					var a = indices[ i ];
+					var b = indices[ i + 1 ];
 
-				}
+					vStart.fromArray( positions, a * 3 );
+					vEnd.fromArray( positions, b * 3 );
 
-				for ( var oi = 0; oi < offsets.length; oi ++) {
+					var distSq = ray.distanceSqToSegment( vStart, vEnd, interRay, interSegment );
 
-					var start = offsets[ oi ].start;
-					var count = offsets[ oi ].count;
-					var index = offsets[ oi ].index;
+					if ( distSq > precisionSq ) continue;
 
-					for ( var i = start; i < start + count - 1; i += step ) {
+					interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
 
-						var a = index + indices[ i ];
-						var b = index + indices[ i + 1 ];
+					var distance = raycaster.ray.origin.distanceTo( interRay );
 
-						vStart.fromArray( positions, a * 3 );
-						vEnd.fromArray( positions, b * 3 );
+					if ( distance < raycaster.near || distance > raycaster.far ) continue;
 
-						var distSq = ray.distanceSqToSegment( vStart, vEnd, interRay, interSegment );
+					intersects.push( {
 
-						if ( distSq > precisionSq ) continue;
+						distance: distance,
+						// What do we want? intersection point on the ray or on the segment??
+						// point: raycaster.ray.at( distance ),
+						point: interSegment.clone().applyMatrix4( this.matrixWorld ),
+						index: i,
+						face: null,
+						faceIndex: null,
+						object: this
 
-						var distance = ray.origin.distanceTo( interRay );
-
-						if ( distance < raycaster.near || distance > raycaster.far ) continue;
-
-						intersects.push( {
-
-							distance: distance,
-							// What do we want? intersection point on the ray or on the segment??
-							// point: raycaster.ray.at( distance ),
-							point: interSegment.clone().applyMatrix4( this.matrixWorld ),
-							index: i,
-							offsetIndex: oi,
-							face: null,
-							faceIndex: null,
-							object: this
-
-						} );
-
-					}
+					} );
 
 				}
 
 			} else {
 
-				var positions = attributes.position.array;
-
-				for ( var i = 0; i < positions.length / 3 - 1; i += step ) {
+				for ( var i = 0, l = positions.length / 3 - 1; i < l; i += step ) {
 
 					vStart.fromArray( positions, 3 * i );
 					vEnd.fromArray( positions, 3 * i + 3 );
@@ -140,7 +125,9 @@ Line.prototype.raycast = ( function () {
 
 					if ( distSq > precisionSq ) continue;
 
-					var distance = ray.origin.distanceTo( interRay );
+					interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
+
+					var distance = raycaster.ray.origin.distanceTo( interRay );
 
 					if ( distance < raycaster.near || distance > raycaster.far ) continue;
 
@@ -172,7 +159,9 @@ Line.prototype.raycast = ( function () {
 
 				if ( distSq > precisionSq ) continue;
 
-				var distance = ray.origin.distanceTo( interRay );
+				interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
+
+				var distance = raycaster.ray.origin.distanceTo( interRay );
 
 				if ( distance < raycaster.near || distance > raycaster.far ) continue;
 
@@ -197,34 +186,9 @@ Line.prototype.raycast = ( function () {
 
 }() );
 
-Line.prototype.clone = function ( object ) {
+Line.prototype.clone = function () {
 
-	if ( object === undefined ) object = new THREE[ this.type ]( this.geometry, this.material );
-
-	Object3D.prototype.clone.call( this, object );
-
-	return object;
-
-};
-
-Line.prototype.toJSON = function ( meta ) {
-
-	var data = Object3D.prototype.toJSON.call( this, meta );
-
-	// only serialize if not in meta geometries cache
-	if ( meta.geometries[ this.geometry.uuid ] === undefined ) {
-		meta.geometries[ this.geometry.uuid ] = this.geometry.toJSON();
-	}
-
-	// only serialize if not in meta materials cache
-	if ( meta.materials[ this.material.uuid ] === undefined ) {
-		meta.materials[ this.material.uuid ] = this.material.toJSON();
-	}
-
-	data.object.geometry = this.geometry.uuid;
-	data.object.material = this.material.uuid;
-
-	return data;
+	return new this.constructor( this.geometry, this.material ).copy( this );
 
 };
 

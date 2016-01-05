@@ -84,43 +84,41 @@ function MeshBasicMaterial ( parameters ) {
 MeshBasicMaterial.prototype = Object.create( Material.prototype );
 MeshBasicMaterial.prototype.constructor = MeshBasicMaterial;
 
-MeshBasicMaterial.prototype.clone = function () {
+MeshBasicMaterial.prototype.copy = function ( source ) {
 
-	var material = new MeshBasicMaterial();
+	Material.prototype.copy.call( this, source );
 
-	Material.prototype.clone.call( this, material );
+	this.color.copy( source.color );
 
-	material.color.copy( this.color );
+	this.map = source.map;
 
-	material.map = this.map;
+	this.aoMap = source.aoMap;
+	this.aoMapIntensity = source.aoMapIntensity;
 
-	material.aoMap = this.aoMap;
-	material.aoMapIntensity = this.aoMapIntensity;
+	this.specularMap = source.specularMap;
 
-	material.specularMap = this.specularMap;
+	this.alphaMap = source.alphaMap;
 
-	material.alphaMap = this.alphaMap;
+	this.envMap = source.envMap;
+	this.combine = source.combine;
+	this.reflectivity = source.reflectivity;
+	this.refractionRatio = source.refractionRatio;
 
-	material.envMap = this.envMap;
-	material.combine = this.combine;
-	material.reflectivity = this.reflectivity;
-	material.refractionRatio = this.refractionRatio;
+	this.fog = source.fog;
 
-	material.fog = this.fog;
+	this.shading = source.shading;
 
-	material.shading = this.shading;
+	this.wireframe = source.wireframe;
+	this.wireframeLinewidth = source.wireframeLinewidth;
+	this.wireframeLinecap = source.wireframeLinecap;
+	this.wireframeLinejoin = source.wireframeLinejoin;
 
-	material.wireframe = this.wireframe;
-	material.wireframeLinewidth = this.wireframeLinewidth;
-	material.wireframeLinecap = this.wireframeLinecap;
-	material.wireframeLinejoin = this.wireframeLinejoin;
+	this.vertexColors = source.vertexColors;
 
-	material.vertexColors = this.vertexColors;
+	this.skinning = source.skinning;
+	this.morphTargets = source.morphTargets;
 
-	material.skinning = this.skinning;
-	material.morphTargets = this.morphTargets;
-
-	return material;
+	return this;
 
 };
 

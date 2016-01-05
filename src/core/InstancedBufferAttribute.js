@@ -1,25 +1,28 @@
-import { DynamicBufferAttribute } from './DynamicBufferAttribute';
+import { BufferAttribute } from './BufferAttribute';
 
 /**
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 
-function InstancedBufferAttribute (array, itemSize, meshPerAttribute, dynamic) {
+function InstancedBufferAttribute ( array, itemSize, meshPerAttribute ) {
 	this.isInstancedBufferAttribute = true;
 
-	DynamicBufferAttribute.call( this, array, itemSize );
+	BufferAttribute.call( this, array, itemSize );
 
-	this.dynamic = dynamic || false;
 	this.meshPerAttribute = meshPerAttribute || 1;
 
 };
 
-InstancedBufferAttribute.prototype = Object.create( DynamicBufferAttribute.prototype );
+InstancedBufferAttribute.prototype = Object.create( BufferAttribute.prototype );
 InstancedBufferAttribute.prototype.constructor = InstancedBufferAttribute;
 
-InstancedBufferAttribute.prototype.clone = function () {
+InstancedBufferAttribute.prototype.copy = function ( source ) {
 
-	return new InstancedBufferAttribute( new this.array.constructor( this.array ), this.itemSize, this.meshPerAttribute, this.dynamic );
+	BufferAttribute.prototype.copy.call( this, source );
+
+	this.meshPerAttribute = source.meshPerAttribute;
+
+	return this;
 
 };
 

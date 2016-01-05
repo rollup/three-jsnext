@@ -8,6 +8,26 @@ WebGLProgram = ( function () {
 
 	var programIdCount = 0;
 
+	// TODO: Combine the regex
+	var structRe = /^([\w\d_]+)\.([\w\d_]+)$/;
+	var arrayStructRe = /^([\w\d_]+)\[(\d+)\]\.([\w\d_]+)$/;
+	var arrayRe = /^([\w\d_]+)\[0\]$/;
+
+	function generateExtensions( extensions, parameters, rendererExtensions ) {
+
+		extensions = extensions || {};
+
+		var chunks = [
+			( extensions.derivatives || parameters.bumpMap || parameters.normalMap || parameters.flatShading ) ? '#extension GL_OES_standard_derivatives : enable' : '',
+			( extensions.fragDepth || parameters.logarithmicDepthBuffer ) && rendererExtensions.get( 'EXT_frag_depth' ) ? '#extension GL_EXT_frag_depth : enable' : '',
+			( extensions.drawBuffers ) && rendererExtensions.get( 'WEBGL_draw_buffers' ) ? '#extension GL_EXT_draw_buffers : require' : '',
+			( extensions.shaderTextureLOD || parameters.envMap ) && rendererExtensions.get( 'EXT_shader_texture_lod' ) ? '#extension GL_EXT_shader_texture_lod : enable' : '',
+		];
+
+		return chunks.filter( filterEmptyLine ).join( '\n' );
+
+	}
+
 	function generateDefines( defines ) {
 
 		var chunks = [];
@@ -34,16 +54,71 @@ WebGLProgram = ( function () {
 
 		for ( var i = 0; i < n; i ++ ) {
 
-			var info = gl.getActiveUniform( program , i );
+			var info = gl.getActiveUniform( program, i );
 			var name = info.name;
 			var location = gl.getUniformLocation( program, name );
 
 			//console.log("THREE.WebGLProgram: ACTIVE UNIFORM:", name);
 
-			var suffixPos = name.lastIndexOf( '[0]' );
-			if ( suffixPos !== -1 && suffixPos === name.length - 3 ) {
+			var matches = structRe.exec( name );
+			if ( matches ) {
 
-				uniforms[ name.substr( 0, suffixPos ) ] = location;
+				var structName = matches[ 1 ];
+				var structProperty = matches[ 2 ];
+
+				var uniformsStruct = uniforms[ structName ];
+
+				if ( ! uniformsStruct ) {
+
+					uniformsStruct = uniforms[ structName ] = {};
+
+				}
+
+				uniformsStruct[ structProperty ] = location;
+
+				continue;
+
+			}
+
+			matches = arrayStructRe.exec( name );
+
+			if ( matches ) {
+
+				var arrayName = matches[ 1 ];
+				var arrayIndex = matches[ 2 ];
+				var arrayProperty = matches[ 3 ];
+
+				var uniformsArray = uniforms[ arrayName ];
+
+				if ( ! uniformsArray ) {
+
+					uniformsArray = uniforms[ arrayName ] = [];
+
+				}
+
+				var uniformsArrayIndex = uniformsArray[ arrayIndex ];
+
+				if ( ! uniformsArrayIndex ) {
+
+					uniformsArrayIndex = uniformsArray[ arrayIndex ] = {};
+
+				}
+
+				uniformsArrayIndex[ arrayProperty ] = location;
+
+				continue;
+
+			}
+
+			matches = arrayRe.exec( name );
+
+			if ( matches ) {
+
+				var arrayName = matches[ 1 ];
+
+				uniforms[ arrayName ] = location;
+
+				continue;
 
 			}
 
@@ -63,10 +138,10 @@ WebGLProgram = ( function () {
 
 		for ( var i = 0; i < n; i ++ ) {
 
-			var info = gl.getActiveAttrib( program , i );
+			var info = gl.getActiveAttrib( program, i );
 			var name = info.name;
 
-			//console.log("THREE.WebGLProgram: ACTIVE VERTEX ATTRIBUTE:", name);
+			// console.log("THREE.WebGLProgram: ACTIVE VERTEX ATTRIBUTE:", name, i );
 
 			attributes[ name ] = gl.getAttribLocation( program, name );
 
@@ -82,28 +157,15 @@ WebGLProgram = ( function () {
 
 	}
 
-	return function ( renderer, code, material, parameters ) {
+	return function WebGLProgram( renderer, code, material, parameters ) {
 
 		var gl = renderer.context;
 
+		var extensions = material.extensions;
 		var defines = material.defines;
-		var uniforms = material.__webglShader.uniforms;
-		var attributes = material.attributes;
 
 		var vertexShader = material.__webglShader.vertexShader;
 		var fragmentShader = material.__webglShader.fragmentShader;
-
-		var index0AttributeName = material.index0AttributeName;
-
-		/*
-		if ( index0AttributeName === undefined && parameters.morphTargets === true ) {
-
-			// programs with morphTargets displace position out of attribute 0
-
-			index0AttributeName = 'position';
-
-		}
-		*/
 
 		var shadowMapTypeDefine = 'SHADOWMAP_TYPE_BASIC';
 
@@ -174,6 +236,8 @@ WebGLProgram = ( function () {
 
 		//
 
+		var customExtensions = generateExtensions( extensions, parameters, renderer.extensions );
+
 		var customDefines = generateDefines( defines );
 
 		//
@@ -204,12 +268,12 @@ WebGLProgram = ( function () {
 				renderer.gammaOutput ? '#define GAMMA_OUTPUT' : '',
 				'#define GAMMA_FACTOR ' + gammaFactorDefine,
 
-				'#define MAX_DIR_LIGHTS ' + parameters.maxDirLights,
-				'#define MAX_POINT_LIGHTS ' + parameters.maxPointLights,
-				'#define MAX_SPOT_LIGHTS ' + parameters.maxSpotLights,
-				'#define MAX_HEMI_LIGHTS ' + parameters.maxHemiLights,
+				'#define NUM_DIR_LIGHTS ' + parameters.numDirLights,
+				'#define NUM_POINT_LIGHTS ' + parameters.numPointLights,
+				'#define NUM_SPOT_LIGHTS ' + parameters.numSpotLights,
+				'#define NUM_HEMI_LIGHTS ' + parameters.numHemiLights,
 
-				'#define MAX_SHADOWS ' + parameters.maxShadows,
+				'#define NUM_SHADOWS ' + parameters.numShadows,
 
 				'#define MAX_BONES ' + parameters.maxBones,
 
@@ -221,29 +285,32 @@ WebGLProgram = ( function () {
 				parameters.emissiveMap ? '#define USE_EMISSIVEMAP' : '',
 				parameters.bumpMap ? '#define USE_BUMPMAP' : '',
 				parameters.normalMap ? '#define USE_NORMALMAP' : '',
+				parameters.displacementMap && parameters.supportsVertexTextures ? '#define USE_DISPLACEMENTMAP' : '',
 				parameters.specularMap ? '#define USE_SPECULARMAP' : '',
+				parameters.roughnessMap ? '#define USE_ROUGHNESSMAP' : '',
+				parameters.metalnessMap ? '#define USE_METALNESSMAP' : '',
 				parameters.alphaMap ? '#define USE_ALPHAMAP' : '',
 				parameters.vertexColors ? '#define USE_COLOR' : '',
 
-				parameters.flatShading ? '#define FLAT_SHADED': '',
+				parameters.flatShading ? '#define FLAT_SHADED' : '',
 
 				parameters.skinning ? '#define USE_SKINNING' : '',
 				parameters.useVertexTexture ? '#define BONE_TEXTURE' : '',
 
 				parameters.morphTargets ? '#define USE_MORPHTARGETS' : '',
-				parameters.morphNormals ? '#define USE_MORPHNORMALS' : '',
+				parameters.morphNormals && parameters.flatShading === false ? '#define USE_MORPHNORMALS' : '',
 				parameters.doubleSided ? '#define DOUBLE_SIDED' : '',
 				parameters.flipSided ? '#define FLIP_SIDED' : '',
 
 				parameters.shadowMapEnabled ? '#define USE_SHADOWMAP' : '',
 				parameters.shadowMapEnabled ? '#define ' + shadowMapTypeDefine : '',
 				parameters.shadowMapDebug ? '#define SHADOWMAP_DEBUG' : '',
-				parameters.shadowMapCascade ? '#define SHADOWMAP_CASCADE' : '',
+				parameters.pointLightShadows > 0 ? '#define POINT_LIGHT_SHADOWS' : '',
 
 				parameters.sizeAttenuation ? '#define USE_SIZEATTENUATION' : '',
 
 				parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
-				parameters.logarithmicDepthBuffer && renderer.extensions.get('EXT_frag_depth') ? '#define USE_LOGDEPTHBUF_EXT' : '',
+				parameters.logarithmicDepthBuffer && renderer.extensions.get( 'EXT_frag_depth' ) ? '#define USE_LOGDEPTHBUF_EXT' : '',
 
 
 				'uniform mat4 modelMatrix;',
@@ -299,9 +366,10 @@ WebGLProgram = ( function () {
 
 			].filter( filterEmptyLine ).join( '\n' );
 
+
 			prefixFragment = [
 
-				( parameters.bumpMap || parameters.normalMap || parameters.flatShading || material.derivatives ) ? '#extension GL_OES_standard_derivatives : enable' : '',
+				customExtensions,
 
 				'precision ' + parameters.precision + ' float;',
 				'precision ' + parameters.precision + ' int;',
@@ -310,12 +378,12 @@ WebGLProgram = ( function () {
 
 				customDefines,
 
-				'#define MAX_DIR_LIGHTS ' + parameters.maxDirLights,
-				'#define MAX_POINT_LIGHTS ' + parameters.maxPointLights,
-				'#define MAX_SPOT_LIGHTS ' + parameters.maxSpotLights,
-				'#define MAX_HEMI_LIGHTS ' + parameters.maxHemiLights,
+				'#define NUM_DIR_LIGHTS ' + parameters.numDirLights,
+				'#define NUM_POINT_LIGHTS ' + parameters.numPointLights,
+				'#define NUM_SPOT_LIGHTS ' + parameters.numSpotLights,
+				'#define NUM_HEMI_LIGHTS ' + parameters.numHemiLights,
 
-				'#define MAX_SHADOWS ' + parameters.maxShadows,
+				'#define NUM_SHADOWS ' + parameters.numShadows,
 
 				parameters.alphaTest ? '#define ALPHATEST ' + parameters.alphaTest : '',
 
@@ -337,22 +405,25 @@ WebGLProgram = ( function () {
 				parameters.bumpMap ? '#define USE_BUMPMAP' : '',
 				parameters.normalMap ? '#define USE_NORMALMAP' : '',
 				parameters.specularMap ? '#define USE_SPECULARMAP' : '',
+				parameters.roughnessMap ? '#define USE_ROUGHNESSMAP' : '',
+				parameters.metalnessMap ? '#define USE_METALNESSMAP' : '',
 				parameters.alphaMap ? '#define USE_ALPHAMAP' : '',
 				parameters.vertexColors ? '#define USE_COLOR' : '',
 
-				parameters.flatShading ? '#define FLAT_SHADED': '',
+				parameters.flatShading ? '#define FLAT_SHADED' : '',
 
-				parameters.metal ? '#define METAL' : '',
 				parameters.doubleSided ? '#define DOUBLE_SIDED' : '',
 				parameters.flipSided ? '#define FLIP_SIDED' : '',
 
 				parameters.shadowMapEnabled ? '#define USE_SHADOWMAP' : '',
 				parameters.shadowMapEnabled ? '#define ' + shadowMapTypeDefine : '',
 				parameters.shadowMapDebug ? '#define SHADOWMAP_DEBUG' : '',
-				parameters.shadowMapCascade ? '#define SHADOWMAP_CASCADE' : '',
+				parameters.pointLightShadows > 0 ? '#define POINT_LIGHT_SHADOWS' : '',
 
 				parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
-				parameters.logarithmicDepthBuffer && renderer.extensions.get('EXT_frag_depth') ? '#define USE_LOGDEPTHBUF_EXT' : '',
+				parameters.logarithmicDepthBuffer && renderer.extensions.get( 'EXT_frag_depth' ) ? '#define USE_LOGDEPTHBUF_EXT' : '',
+
+				parameters.envMap && renderer.extensions.get( 'EXT_shader_texture_lod' ) ? '#define TEXTURE_LOD_EXT' : '',
 
 				'uniform mat4 viewMatrix;',
 				'uniform vec3 cameraPosition;',
@@ -372,13 +443,16 @@ WebGLProgram = ( function () {
 		gl.attachShader( program, glVertexShader );
 		gl.attachShader( program, glFragmentShader );
 
-		if ( index0AttributeName !== undefined ) {
+		// Force a particular attribute to index 0.
 
-			// Force a particular attribute to index 0.
-			// because potentially expensive emulation is done by browser if attribute 0 is disabled.
-			// And, color, for example is often automatically bound to index 0 so disabling it
+		if ( material.index0AttributeName !== undefined ) {
 
-			gl.bindAttribLocation( program, 0, index0AttributeName );
+			gl.bindAttribLocation( program, 0, material.index0AttributeName );
+
+		} else if ( parameters.morphTargets === true ) {
+
+			// programs with morphTargets displace position out of attribute 0
+			gl.bindAttribLocation( program, 0, 'position' );
 
 		}
 
@@ -471,6 +545,15 @@ WebGLProgram = ( function () {
 
 		};
 
+		// free resource
+
+		this.destroy = function() {
+
+			gl.deleteProgram( program );
+			this.program = undefined;
+
+		};
+
 		// DEPRECATED
 
 		Object.defineProperties( this, {
@@ -493,7 +576,7 @@ WebGLProgram = ( function () {
 				}
 			}
 
-		});
+		} );
 
 
 		//

@@ -26,7 +26,7 @@ function SpritePlugin ( renderer, sprites ) {
 	var spriteRotation = new Quaternion();
 	var spriteScale = new Vector3();
 
-	var init = function () {
+	function init() {
 
 		var vertices = new Float32Array( [
 			- 0.5, - 0.5,  0, 0,
@@ -90,7 +90,7 @@ function SpritePlugin ( renderer, sprites ) {
 		texture = new Texture( canvas );
 		texture.needsUpdate = true;
 
-	};
+	}
 
 	this.render = function ( scene, camera ) {
 
@@ -167,8 +167,8 @@ function SpritePlugin ( renderer, sprites ) {
 
 			var sprite = sprites[ i ];
 
-			sprite._modelViewMatrix.multiplyMatrices( camera.matrixWorldInverse, sprite.matrixWorld );
-			sprite.z = - sprite._modelViewMatrix.elements[ 14 ];
+			sprite.modelViewMatrix.multiplyMatrices( camera.matrixWorldInverse, sprite.matrixWorld );
+			sprite.z = - sprite.modelViewMatrix.elements[ 14 ];
 
 		}
 
@@ -184,7 +184,7 @@ function SpritePlugin ( renderer, sprites ) {
 			var material = sprite.material;
 
 			gl.uniform1f( uniforms.alphaTest, material.alphaTest );
-			gl.uniformMatrix4fv( uniforms.modelViewMatrix, false, sprite._modelViewMatrix.elements );
+			gl.uniformMatrix4fv( uniforms.modelViewMatrix, false, sprite.modelViewMatrix.elements );
 
 			sprite.matrixWorld.decompose( spritePosition, spriteRotation, spriteScale );
 

@@ -47,12 +47,12 @@ function PlaneBufferGeometry ( width, height, widthSegments, heightSegments ) {
 
 			var x = ix * segment_width - width_half;
 
-			vertices[ offset     ] = x;
+			vertices[ offset ] = x;
 			vertices[ offset + 1 ] = - y;
 
 			normals[ offset + 2 ] = 1;
 
-			uvs[ offset2     ] = ix / gridX;
+			uvs[ offset2 ] = ix / gridX;
 			uvs[ offset2 + 1 ] = 1 - ( iy / gridY );
 
 			offset += 3;
@@ -75,7 +75,7 @@ function PlaneBufferGeometry ( width, height, widthSegments, heightSegments ) {
 			var c = ( ix + 1 ) + gridX1 * ( iy + 1 );
 			var d = ( ix + 1 ) + gridX1 * iy;
 
-			indices[ offset     ] = a;
+			indices[ offset ] = a;
 			indices[ offset + 1 ] = b;
 			indices[ offset + 2 ] = d;
 
@@ -89,7 +89,7 @@ function PlaneBufferGeometry ( width, height, widthSegments, heightSegments ) {
 
 	}
 
-	this.addAttribute( 'index', new BufferAttribute( indices, 1 ) );
+	this.setIndex( new BufferAttribute( indices, 1 ) );
 	this.addAttribute( 'position', new BufferAttribute( vertices, 3 ) );
 	this.addAttribute( 'normal', new BufferAttribute( normals, 3 ) );
 	this.addAttribute( 'uv', new BufferAttribute( uvs, 2 ) );

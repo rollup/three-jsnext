@@ -18,13 +18,13 @@ function LensFlarePlugin ( renderer, flares ) {
 
 	var tempTexture, occlusionTexture;
 
-	var init = function () {
+	function init() {
 
 		var vertices = new Float32Array( [
-			-1, -1,  0, 0,
-			 1, -1,  1, 0,
+			- 1, - 1,  0, 0,
+			 1, - 1,  1, 0,
 			 1,  1,  1, 1,
-			-1,  1,  0, 1
+			- 1,  1,  0, 1
 		] );
 
 		var faces = new Uint16Array( [
@@ -92,7 +92,7 @@ function LensFlarePlugin ( renderer, flares ) {
 
 						"vec2 pos = position;",
 
-						"if( renderType == 2 ) {",
+						"if ( renderType == 2 ) {",
 
 							"vec4 visibility = texture2D( occlusionMap, vec2( 0.1, 0.1 ) );",
 							"visibility += texture2D( occlusionMap, vec2( 0.5, 0.1 ) );",
@@ -135,13 +135,13 @@ function LensFlarePlugin ( renderer, flares ) {
 
 						// pink square
 
-						"if( renderType == 0 ) {",
+						"if ( renderType == 0 ) {",
 
 							"gl_FragColor = vec4( 1.0, 0.0, 1.0, 0.0 );",
 
 						// restore
 
-						"} else if( renderType == 1 ) {",
+						"} else if ( renderType == 1 ) {",
 
 							"gl_FragColor = texture2D( map, vUV );",
 
@@ -185,7 +185,7 @@ function LensFlarePlugin ( renderer, flares ) {
 
 						"vec2 pos = position;",
 
-						"if( renderType == 2 ) {",
+						"if ( renderType == 2 ) {",
 
 							"pos.x = cos( rotation ) * position.x - sin( rotation ) * position.y;",
 							"pos.y = sin( rotation ) * position.x + cos( rotation ) * position.y;",
@@ -215,13 +215,13 @@ function LensFlarePlugin ( renderer, flares ) {
 
 						// pink square
 
-						"if( renderType == 0 ) {",
+						"if ( renderType == 0 ) {",
 
 							"gl_FragColor = vec4( texture2D( map, vUV ).rgb, 0.0 );",
 
 						// restore
 
-						"} else if( renderType == 1 ) {",
+						"} else if ( renderType == 1 ) {",
 
 							"gl_FragColor = texture2D( map, vUV );",
 
@@ -268,7 +268,7 @@ function LensFlarePlugin ( renderer, flares ) {
 			screenPosition: gl.getUniformLocation( program, "screenPosition" )
 		};
 
-	};
+	}
 
 	/*
 	 * Render lens flares
@@ -276,17 +276,17 @@ function LensFlarePlugin ( renderer, flares ) {
 	 *         reads these back and calculates occlusion.
 	 */
 
-	this.render = function ( scene, camera, viewportWidth, viewportHeight ) {
+	this.render = function ( scene, camera, viewport ) {
 
 		if ( flares.length === 0 ) return;
 
 		var tempPosition = new Vector3();
 
-		var invAspect = viewportHeight / viewportWidth,
-			halfViewportWidth = viewportWidth * 0.5,
-			halfViewportHeight = viewportHeight * 0.5;
+		var invAspect = viewport.w / viewport.z,
+			halfViewportWidth = viewport.z * 0.5,
+			halfViewportHeight = viewport.w * 0.5;
 
-		var size = 16 / viewportHeight,
+		var size = 16 / viewport.w,
 			scale = new Vector2( size * invAspect, size );
 
 		var screenPosition = new Vector3( 1, 1, 0 ),
@@ -318,18 +318,18 @@ function LensFlarePlugin ( renderer, flares ) {
 		gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, elementBuffer );
 
 		state.disable( gl.CULL_FACE );
-		gl.depthMask( false );
+		state.setDepthWrite( false );
 
 		for ( var i = 0, l = flares.length; i < l; i ++ ) {
 
-			size = 16 / viewportHeight;
+			size = 16 / viewport.w;
 			scale.set( size * invAspect, size );
 
 			// calc object screen position
 
 			var flare = flares[ i ];
 
-			tempPosition.set( flare.matrixWorld.elements[12], flare.matrixWorld.elements[13], flare.matrixWorld.elements[14] );
+			tempPosition.set( flare.matrixWorld.elements[ 12 ], flare.matrixWorld.elements[ 13 ], flare.matrixWorld.elements[ 14 ] );
 
 			tempPosition.applyMatrix4( camera.matrixWorldInverse );
 			tempPosition.applyProjection( camera.projectionMatrix );
@@ -345,9 +345,9 @@ function LensFlarePlugin ( renderer, flares ) {
 
 			if ( hasVertexTexture || (
 				screenPositionPixels.x > 0 &&
-				screenPositionPixels.x < viewportWidth &&
+				screenPositionPixels.x < viewport.z &&
 				screenPositionPixels.y > 0 &&
-				screenPositionPixels.y < viewportHeight ) ) {
+				screenPositionPixels.y < viewport.w ) ) {
 
 				// save current RGB to temp texture
 
@@ -355,7 +355,7 @@ function LensFlarePlugin ( renderer, flares ) {
 				state.bindTexture( gl.TEXTURE_2D, null );
 				state.activeTexture( gl.TEXTURE1 );
 				state.bindTexture( gl.TEXTURE_2D, tempTexture );
-				gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGB, screenPositionPixels.x - 8, screenPositionPixels.y - 8, 16, 16, 0 );
+				gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGB, viewport.x + screenPositionPixels.x - 8, viewport.y + screenPositionPixels.y - 8, 16, 16, 0 );
 
 
 				// render pink quad
@@ -365,7 +365,7 @@ function LensFlarePlugin ( renderer, flares ) {
 				gl.uniform3f( uniforms.screenPosition, screenPosition.x, screenPosition.y, screenPosition.z );
 
 				state.disable( gl.BLEND );
-				gl.enable( gl.DEPTH_TEST );
+				state.enable( gl.DEPTH_TEST );
 
 				gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0 );
 
@@ -374,13 +374,13 @@ function LensFlarePlugin ( renderer, flares ) {
 
 				state.activeTexture( gl.TEXTURE0 );
 				state.bindTexture( gl.TEXTURE_2D, occlusionTexture );
-				gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGBA, screenPositionPixels.x - 8, screenPositionPixels.y - 8, 16, 16, 0 );
+				gl.copyTexImage2D( gl.TEXTURE_2D, 0, gl.RGBA, viewport.x + screenPositionPixels.x - 8, viewport.y + screenPositionPixels.y - 8, 16, 16, 0 );
 
 
 				// restore graphics
 
 				gl.uniform1i( uniforms.renderType, 1 );
-				gl.disable( gl.DEPTH_TEST );
+				state.disable( gl.DEPTH_TEST );
 
 				state.activeTexture( gl.TEXTURE1 );
 				state.bindTexture( gl.TEXTURE_2D, tempTexture );
@@ -416,7 +416,7 @@ function LensFlarePlugin ( renderer, flares ) {
 						screenPosition.y = sprite.y;
 						screenPosition.z = sprite.z;
 
-						size = sprite.size * sprite.scale / viewportHeight;
+						size = sprite.size * sprite.scale / viewport.w;
 
 						scale.x = size * invAspect;
 						scale.y = size;
@@ -444,8 +444,8 @@ function LensFlarePlugin ( renderer, flares ) {
 		// restore gl
 
 		state.enable( gl.CULL_FACE );
-		gl.enable( gl.DEPTH_TEST );
-		gl.depthMask( true );
+		state.enable( gl.DEPTH_TEST );
+		state.setDepthWrite( true );
 
 		renderer.resetGLState();
 

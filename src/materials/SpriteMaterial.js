@@ -43,20 +43,18 @@ function SpriteMaterial ( parameters ) {
 SpriteMaterial.prototype = Object.create( Material.prototype );
 SpriteMaterial.prototype.constructor = SpriteMaterial;
 
-SpriteMaterial.prototype.clone = function () {
+SpriteMaterial.prototype.copy = function ( source ) {
 
-	var material = new SpriteMaterial();
+	Material.prototype.copy.call( this, source );
 
-	Material.prototype.clone.call( this, material );
+	this.color.copy( source.color );
+	this.map = source.map;
 
-	material.color.copy( this.color );
-	material.map = this.map;
+	this.rotation = source.rotation;
 
-	material.rotation = this.rotation;
+	this.fog = source.fog;
 
-	material.fog = this.fog;
-
-	return material;
+	return this;
 
 };
 

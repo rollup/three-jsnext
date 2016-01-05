@@ -6,29 +6,49 @@ import { Color } from '../math/Color';
  * @author alteredq / http://alteredqualia.com/
  */
 
-function Light ( color ) {
+function Light ( color, intensity ) {
 	this.isLight = true;
 
 	Object3D.call( this );
 
 	this.type = 'Light';
-	
+
 	this.color = new Color( color );
+	this.intensity = intensity !== undefined ? intensity : 1;
+
+	this.receiveShadow = undefined;
 
 };
 
 Light.prototype = Object.create( Object3D.prototype );
 Light.prototype.constructor = Light;
 
-Light.prototype.clone = function ( light ) {
+Light.prototype.copy = function ( source ) {
 
-	if ( light === undefined ) light = new Light();
+	Object3D.prototype.copy.call( this, source );
 
-	Object3D.prototype.clone.call( this, light );
+	this.color.copy( source.color );
+	this.intensity = source.intensity;
 
-	light.color.copy( this.color );
+	return this;
 
-	return light;
+};
+
+Light.prototype.toJSON = function ( meta ) {
+
+	var data = Object3D.prototype.toJSON.call( this, meta );
+
+	data.object.color = this.color.getHex();
+	data.object.intensity = this.intensity;
+
+	if ( this.groundColor !== undefined ) data.object.groundColor = this.groundColor.getHex();
+
+	if ( this.distance !== undefined ) data.object.distance = this.distance;
+	if ( this.angle !== undefined ) data.object.angle = this.angle;
+	if ( this.decay !== undefined ) data.object.decay = this.decay;
+	if ( this.exponent !== undefined ) data.object.exponent = this.exponent;
+
+	return data;
 
 };
 

@@ -18,11 +18,15 @@ ImageLoader.prototype = {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
+		if ( this.path !== undefined ) url = this.path + url;
+
 		var scope = this;
 
 		var cached = Cache.get( url );
 
 		if ( cached !== undefined ) {
+
+			scope.manager.itemStart( url );
 
 			if ( onLoad ) {
 
@@ -30,7 +34,13 @@ ImageLoader.prototype = {
 
 					onLoad( cached );
 
+					scope.manager.itemEnd( url );
+
 				}, 0 );
+
+			} else {
+
+				scope.manager.itemEnd( url );
 
 			}
 
@@ -60,15 +70,13 @@ ImageLoader.prototype = {
 
 		}
 
-		if ( onError !== undefined ) {
+		image.addEventListener( 'error', function ( event ) {
 
-			image.addEventListener( 'error', function ( event ) {
+			if ( onError ) onError( event );
 
-				onError( event );
+			scope.manager.itemError( url );
 
-			}, false );
-
-		}
+		}, false );
 
 		if ( this.crossOrigin !== undefined ) image.crossOrigin = this.crossOrigin;
 
@@ -83,6 +91,12 @@ ImageLoader.prototype = {
 	setCrossOrigin: function ( value ) {
 
 		this.crossOrigin = value;
+
+	},
+
+	setPath: function ( value ) {
+
+		this.path = value;
 
 	}
 

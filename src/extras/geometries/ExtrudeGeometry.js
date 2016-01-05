@@ -1,7 +1,7 @@
 import { Vector2 } from '../../math/Vector2';
 import { Face3 } from '../../core/Face3';
 import { Vector3 } from '../../math/Vector3';
-import { Shape } from '../core/Shape';
+import { ShapeUtils } from '../ShapeUtils';
 import { TubeGeometry } from './TubeGeometry';
 import { Geometry } from '../../core/Geometry';
 
@@ -33,8 +33,10 @@ function ExtrudeGeometry ( shapes, options ) {
 	this.isExtrudeGeometry = true;
 
 	if ( typeof( shapes ) === "undefined" ) {
+
 		shapes = [];
 		return;
+
 	}
 
 	Geometry.call( this );
@@ -61,12 +63,16 @@ ExtrudeGeometry.prototype = Object.create( Geometry.prototype );
 ExtrudeGeometry.prototype.constructor = ExtrudeGeometry;
 
 ExtrudeGeometry.prototype.addShapeList = function ( shapes, options ) {
+
 	var sl = shapes.length;
 
 	for ( var s = 0; s < sl; s ++ ) {
+
 		var shape = shapes[ s ];
 		this.addShape( shape, options );
+
 	}
+
 };
 
 ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
@@ -102,7 +108,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 		// Reuse TNB from TubeGeomtry for now.
 		// TODO1 - have a .isClosed in spline?
 
-		splineTube = options.frames !== undefined ? options.frames : new TubeGeometry.FrenetFrames(extrudePath, steps, false);
+		splineTube = options.frames !== undefined ? options.frames : new TubeGeometry.FrenetFrames( extrudePath, steps, false );
 
 		// console.log(splineTube, 'splineTube', splineTube.normals.length, 'steps', steps, 'extrudePts', extrudePts.length);
 
@@ -122,7 +128,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 
 	}
 
-	// Variables initialization 
+	// Variables initialization
 
 	var ahole, h, hl; // looping of holes
 	var scope = this;
@@ -134,7 +140,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 	var vertices = shapePoints.shape;
 	var holes = shapePoints.holes;
 
-	var reverse = ! Shape.Utils.isClockWise( vertices ) ;
+	var reverse = ! ShapeUtils.isClockWise( vertices );
 
 	if ( reverse ) {
 
@@ -146,7 +152,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 
 			ahole = holes[ h ];
 
-			if ( Shape.Utils.isClockWise( ahole ) ) {
+			if ( ShapeUtils.isClockWise( ahole ) ) {
 
 				holes[ h ] = ahole.reverse();
 
@@ -159,7 +165,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 	}
 
 
-	var faces = Shape.Utils.triangulateShape ( vertices, holes );
+	var faces = ShapeUtils.triangulateShape( vertices, holes );
 
 	/* Vertices */
 
@@ -192,8 +198,6 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 
 	function getBevelVec( inPt, inPrev, inNext ) {
 
-		var EPSILON = 0.0000000001;
-
 		// computes for inPt the corresponding point inPt' on a new contour
 		//   shifted by 1 unit (length of normalized vector) to the left
 		// if we walk along contour clockwise, this new contour is outside the old one
@@ -214,7 +218,9 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 		// check for collinear edges
 		var collinear0 = ( v_prev_x * v_next_y - v_prev_y * v_next_x );
 
-		if ( Math.abs( collinear0 ) > EPSILON ) {		// not collinear
+		if ( Math.abs( collinear0 ) > Number.EPSILON ) {
+
+			// not collinear
 
 			// length of vectors for normalizing
 
@@ -244,34 +250,64 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 			//  but prevent crazy spikes
 			var v_trans_lensq = ( v_trans_x * v_trans_x + v_trans_y * v_trans_y );
 			if ( v_trans_lensq <= 2 ) {
+
 				return	new Vector2( v_trans_x, v_trans_y );
+
 			} else {
+
 				shrink_by = Math.sqrt( v_trans_lensq / 2 );
+
 			}
 
-		} else {		// handle special case of collinear edges
+		} else {
+
+			// handle special case of collinear edges
 
 			var direction_eq = false;		// assumes: opposite
-			if ( v_prev_x > EPSILON ) {
-				if ( v_next_x > EPSILON ) { direction_eq = true; }
-			} else {
-				if ( v_prev_x < - EPSILON ) {
-					if ( v_next_x < - EPSILON ) { direction_eq = true; }
-				} else {
-					if ( Math.sign(v_prev_y) === Math.sign(v_next_y) ) { direction_eq = true; }
+			if ( v_prev_x > Number.EPSILON ) {
+
+				if ( v_next_x > Number.EPSILON ) {
+
+					direction_eq = true;
+
 				}
+
+			} else {
+
+				if ( v_prev_x < - Number.EPSILON ) {
+
+					if ( v_next_x < - Number.EPSILON ) {
+
+						direction_eq = true;
+
+					}
+
+				} else {
+
+					if ( Math.sign( v_prev_y ) === Math.sign( v_next_y ) ) {
+
+						direction_eq = true;
+
+					}
+
+				}
+
 			}
 
 			if ( direction_eq ) {
+
 				// console.log("Warning: lines are a straight sequence");
 				v_trans_x = - v_prev_y;
 				v_trans_y =  v_prev_x;
 				shrink_by = Math.sqrt( v_prev_lensq );
+
 			} else {
+
 				// console.log("Warning: lines are a straight spike");
 				v_trans_x = v_prev_x;
 				v_trans_y = v_prev_y;
 				shrink_by = Math.sqrt( v_prev_lensq / 2 );
+
 			}
 
 		}
@@ -322,14 +358,15 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 	// Loop bevelSegments, 1 for the front, 1 for the back
 
 	for ( b = 0; b < bevelSegments; b ++ ) {
-	//for ( b = bevelSegments; b > 0; b -- ) {
+
+		//for ( b = bevelSegments; b > 0; b -- ) {
 
 		t = b / bevelSegments;
 		z = bevelThickness * ( 1 - t );
 
 		//z = bevelThickness * t;
-		bs = bevelSize * ( Math.sin ( t * Math.PI / 2 ) ) ; // curved
-		//bs = bevelSize * t ; // linear
+		bs = bevelSize * ( Math.sin ( t * Math.PI / 2 ) ); // curved
+		//bs = bevelSize * t; // linear
 
 		// contract shape
 
@@ -376,10 +413,10 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 
 			// v( vert.x, vert.y + extrudePts[ 0 ].y, extrudePts[ 0 ].x );
 
-			normal.copy( splineTube.normals[0] ).multiplyScalar(vert.x);
-			binormal.copy( splineTube.binormals[0] ).multiplyScalar(vert.y);
+			normal.copy( splineTube.normals[ 0 ] ).multiplyScalar( vert.x );
+			binormal.copy( splineTube.binormals[ 0 ] ).multiplyScalar( vert.y );
 
-			position2.copy( extrudePts[0] ).add(normal).add(binormal);
+			position2.copy( extrudePts[ 0 ] ).add( normal ).add( binormal );
 
 			v( position2.x, position2.y, position2.z );
 
@@ -406,10 +443,10 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 
 				// v( vert.x, vert.y + extrudePts[ s - 1 ].y, extrudePts[ s - 1 ].x );
 
-				normal.copy( splineTube.normals[s] ).multiplyScalar( vert.x );
-				binormal.copy( splineTube.binormals[s] ).multiplyScalar( vert.y );
+				normal.copy( splineTube.normals[ s ] ).multiplyScalar( vert.x );
+				binormal.copy( splineTube.binormals[ s ] ).multiplyScalar( vert.y );
 
-				position2.copy( extrudePts[s] ).add( normal ).add( binormal );
+				position2.copy( extrudePts[ s ] ).add( normal ).add( binormal );
 
 				v( position2.x, position2.y, position2.z );
 
@@ -428,7 +465,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 		t = b / bevelSegments;
 		z = bevelThickness * ( 1 - t );
 		//bs = bevelSize * ( 1-Math.sin ( ( 1 - t ) * Math.PI/2 ) );
-		bs = bevelSize * Math.sin ( t * Math.PI / 2 ) ;
+		bs = bevelSize * Math.sin ( t * Math.PI / 2 );
 
 		// contract shape
 
@@ -483,7 +520,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 
 		if ( bevelEnabled ) {
 
-			var layer = 0 ; // steps + 1
+			var layer = 0; // steps + 1
 			var offset = vlen * layer;
 
 			// Bottom faces
@@ -526,6 +563,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 				f3( face[ 0 ] + vlen * steps, face[ 1 ] + vlen * steps, face[ 2 ] + vlen * steps );
 
 			}
+
 		}
 
 	}
@@ -578,6 +616,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 				f4( a, b, c, d, contour, s, sl, j, k );
 
 			}
+
 		}
 
 	}
@@ -595,7 +634,7 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 		b += shapesOffset;
 		c += shapesOffset;
 
-		scope.faces.push( new Face3( a, b, c ) );
+		scope.faces.push( new Face3( a, b, c, null, null, 0 ) );
 
 		var uvs = uvgen.generateTopUV( scope, a, b, c );
 
@@ -610,8 +649,8 @@ ExtrudeGeometry.prototype.addShape = function ( shape, options ) {
 		c += shapesOffset;
 		d += shapesOffset;
 
-		scope.faces.push( new Face3( a, b, d ) );
-		scope.faces.push( new Face3( b, c, d ) );
+		scope.faces.push( new Face3( a, b, d, null, null, 1 ) );
+		scope.faces.push( new Face3( b, c, d, null, null, 1 ) );
 
 		var uvs = uvgen.generateSideWallUV( scope, a, b, c, d );
 
@@ -650,20 +689,25 @@ ExtrudeGeometry.WorldUVGenerator = {
 		var d = vertices[ indexD ];
 
 		if ( Math.abs( a.y - b.y ) < 0.01 ) {
+
 			return [
 				new Vector2( a.x, 1 - a.z ),
 				new Vector2( b.x, 1 - b.z ),
 				new Vector2( c.x, 1 - c.z ),
 				new Vector2( d.x, 1 - d.z )
 			];
+
 		} else {
+
 			return [
 				new Vector2( a.y, 1 - a.z ),
 				new Vector2( b.y, 1 - b.z ),
 				new Vector2( c.y, 1 - c.z ),
 				new Vector2( d.y, 1 - d.z )
 			];
+
 		}
+
 	}
 };
 

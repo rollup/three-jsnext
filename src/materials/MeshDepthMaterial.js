@@ -34,16 +34,14 @@ function MeshDepthMaterial ( parameters ) {
 MeshDepthMaterial.prototype = Object.create( Material.prototype );
 MeshDepthMaterial.prototype.constructor = MeshDepthMaterial;
 
-MeshDepthMaterial.prototype.clone = function () {
+MeshDepthMaterial.prototype.copy = function ( source ) {
 
-	var material = new MeshDepthMaterial();
+	Material.prototype.copy.call( this, source );
 
-	Material.prototype.clone.call( this, material );
+	this.wireframe = source.wireframe;
+	this.wireframeLinewidth = source.wireframeLinewidth;
 
-	material.wireframe = this.wireframe;
-	material.wireframeLinewidth = this.wireframeLinewidth;
-
-	return material;
+	return this;
 
 };
 

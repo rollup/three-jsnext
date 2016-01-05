@@ -2,7 +2,7 @@ var WebGLShader;
 
 WebGLShader = ( function () {
 
-	var addLineNumbers = function ( string ) {
+	function addLineNumbers( string ) {
 
 		var lines = string.split( '\n' );
 
@@ -14,9 +14,9 @@ WebGLShader = ( function () {
 
 		return lines.join( '\n' );
 
-	};
+	}
 
-	return function ( gl, type, string ) {
+	return function WebGLShader( gl, type, string ) {
 
 		var shader = gl.createShader( type );
 

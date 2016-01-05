@@ -1,8 +1,7 @@
 import { LinearFilter, LinearMipMapLinearFilter, ClampToEdgeWrapping } from '../Three';
 import { XHRLoader } from './XHRLoader';
 import { DataTexture } from '../textures/DataTexture';
-
-var DataTextureLoader;
+import { DefaultLoadingManager } from './LoadingManager';
 
 /**
  * @author Nikos M. / https://github.com/foo123/
@@ -10,8 +9,10 @@ var DataTextureLoader;
  * Abstract Base class to load generic binary textures formats (rgbe, hdr, ...)
  */
 
-DataTextureLoader = function BinaryTextureLoader () {
-	this.isBinaryTextureLoader = true;
+var DataTextureLoader = BinaryTextureLoader;
+function BinaryTextureLoader ( manager ) {
+
+	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 
 	// override in sub classes
 	this._parser = null;
@@ -26,16 +27,16 @@ BinaryTextureLoader.prototype = {
 
 		var scope = this;
 
-		var texture = new DataTexture( );
+		var texture = new DataTexture();
 
-		var loader = new XHRLoader();
+		var loader = new XHRLoader( this.manager );
 		loader.setResponseType( 'arraybuffer' );
 
 		loader.load( url, function ( buffer ) {
 
 			var texData = scope._parser( buffer );
 
-			if ( !texData ) return;
+			if ( ! texData ) return;
 
 			if ( undefined !== texData.image ) {
 
@@ -92,6 +93,3 @@ BinaryTextureLoader.prototype = {
 	}
 
 };
-
-
-export { DataTextureLoader, BinaryTextureLoader };

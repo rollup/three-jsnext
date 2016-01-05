@@ -13,7 +13,7 @@ function VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter, form
 
 	var scope = this;
 
-	var update = function () {
+	function update() {
 
 		requestAnimationFrame( update );
 
@@ -23,7 +23,7 @@ function VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter, form
 
 		}
 
-	};
+	}
 
 	update();
 

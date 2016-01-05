@@ -38,7 +38,12 @@ function Material () {
 	this.depthTest = true;
 	this.depthWrite = true;
 
+	this.stencilTest = false;
+	this.stencilWrite = false;
+
 	this.colorWrite = true;
+
+	this.precision = null; // override the renderer's default precision for this material
 
 	this.polygonOffset = false;
 	this.polygonOffsetFactor = 0;
@@ -87,28 +92,31 @@ Material.prototype = {
 
 			}
 
-			if ( key in this ) {
+			var currentValue = this[ key ];
 
-				var currentValue = this[ key ];
+			if ( currentValue === undefined ) {
 
-				if ( (currentValue && currentValue.isColor) ) {
+				console.warn( "THREE." + this.type + ": '" + key + "' is not a property of this material." );
+				continue;
 
-					currentValue.set( newValue );
+			}
 
-				} else if ( (currentValue && currentValue.isVector3) && (newValue && newValue.isVector3) ) {
+			if ( (currentValue && currentValue.isColor) ) {
 
-					currentValue.copy( newValue );
+				currentValue.set( newValue );
 
-				} else if ( key === 'overdraw' ) {
+			} else if ( (currentValue && currentValue.isVector3) && (newValue && newValue.isVector3) ) {
 
-					// ensure overdraw is backwards-compatible with legacy boolean type
-					this[ key ] = Number( newValue );
+				currentValue.copy( newValue );
 
-				} else {
+			} else if ( key === 'overdraw' ) {
 
-					this[ key ] = newValue;
+				// ensure overdraw is backwards-compatible with legacy boolean type
+				this[ key ] = Number( newValue );
 
-				}
+			} else {
+
+				this[ key ] = newValue;
 
 			}
 
@@ -117,6 +125,17 @@ Material.prototype = {
 	},
 
 	toJSON: function ( meta ) {
+
+		var isRoot = meta === undefined;
+
+		if ( isRoot ) {
+
+			meta = {
+				textures: {},
+				images: {}
+			};
+
+		}
 
 		var data = {
 			metadata: {
@@ -132,6 +151,10 @@ Material.prototype = {
 		if ( this.name !== '' ) data.name = this.name;
 
 		if ( (this.color && this.color.isColor) ) data.color = this.color.getHex();
+
+		if ( this.roughness !== 0.5 ) data.roughness = this.roughness;
+		if ( this.metalness > 0 ) data.metalness = this.metalness;
+
 		if ( (this.emissive && this.emissive.isColor) ) data.emissive = this.emissive.getHex();
 		if ( (this.specular && this.specular.isColor) ) data.specular = this.specular.getHex();
 		if ( this.shininess !== undefined ) data.shininess = this.shininess;
@@ -140,17 +163,35 @@ Material.prototype = {
 		if ( (this.alphaMap && this.alphaMap.isTexture) ) data.alphaMap = this.alphaMap.toJSON( meta ).uuid;
 		if ( (this.lightMap && this.lightMap.isTexture) ) data.lightMap = this.lightMap.toJSON( meta ).uuid;
 		if ( (this.bumpMap && this.bumpMap.isTexture) ) {
+
 			data.bumpMap = this.bumpMap.toJSON( meta ).uuid;
 			data.bumpScale = this.bumpScale;
+
 		}
 		if ( (this.normalMap && this.normalMap.isTexture) ) {
+
 			data.normalMap = this.normalMap.toJSON( meta ).uuid;
-			data.normalScale = this.normalScale; // Removed for now, causes issue in editor ui.js
+			data.normalScale = this.normalScale.toArray();
+
 		}
+		if ( (this.displacementMap && this.displacementMap.isTexture) ) {
+
+			data.displacementMap = this.displacementMap.toJSON( meta ).uuid;
+			data.displacementScale = this.displacementScale;
+			data.displacementBias = this.displacementBias;
+
+		}
+		if ( (this.roughnessMap && this.roughnessMap.isTexture) ) data.roughnessMap = this.roughnessMap.toJSON( meta ).uuid;
+		if ( (this.metalnessMap && this.metalnessMap.isTexture) ) data.metalnessMap = this.metalnessMap.toJSON( meta ).uuid;
+
+		if ( (this.emissiveMap && this.emissiveMap.isTexture) ) data.emissiveMap = this.emissiveMap.toJSON( meta ).uuid;
 		if ( (this.specularMap && this.specularMap.isTexture) ) data.specularMap = this.specularMap.toJSON( meta ).uuid;
+
 		if ( (this.envMap && this.envMap.isTexture) ) {
+
 			data.envMap = this.envMap.toJSON( meta ).uuid;
 			data.reflectivity = this.reflectivity; // Scale behind envMap
+
 		}
 
 		if ( this.size !== undefined ) data.size = this.size;
@@ -163,47 +204,88 @@ Material.prototype = {
 
 		if ( this.opacity < 1 ) data.opacity = this.opacity;
 		if ( this.transparent === true ) data.transparent = this.transparent;
+		if ( this.alphaTest > 0 ) data.alphaTest = this.alphaTest;
 		if ( this.wireframe === true ) data.wireframe = this.wireframe;
+		if ( this.wireframeLinewidth > 1 ) data.wireframeLinewidth = this.wireframeLinewidth;
+
+		// TODO: Copied from Object3D.toJSON
+
+		function extractFromCache ( cache ) {
+
+			var values = [];
+
+			for ( var key in cache ) {
+
+				var data = cache[ key ];
+				delete data.metadata;
+				values.push( data );
+
+			}
+
+			return values;
+
+		}
+
+		if ( isRoot ) {
+
+			var textures = extractFromCache( meta.textures );
+			var images = extractFromCache( meta.images );
+
+			if ( textures.length > 0 ) data.textures = textures;
+			if ( images.length > 0 ) data.images = images;
+
+		}
 
 		return data;
 
 	},
 
-	clone: function ( material ) {
+	clone: function () {
 
-		if ( material === undefined ) material = new Material();
+		return new this.constructor().copy( this );
 
-		material.name = this.name;
+	},
 
-		material.side = this.side;
+	copy: function ( source ) {
 
-		material.opacity = this.opacity;
-		material.transparent = this.transparent;
+		this.name = source.name;
 
-		material.blending = this.blending;
+		this.side = source.side;
 
-		material.blendSrc = this.blendSrc;
-		material.blendDst = this.blendDst;
-		material.blendEquation = this.blendEquation;
-		material.blendSrcAlpha = this.blendSrcAlpha;
-		material.blendDstAlpha = this.blendDstAlpha;
-		material.blendEquationAlpha = this.blendEquationAlpha;
+		this.opacity = source.opacity;
+		this.transparent = source.transparent;
 
-		material.depthFunc = this.depthFunc;
-		material.depthTest = this.depthTest;
-		material.depthWrite = this.depthWrite;
+		this.blending = source.blending;
 
-		material.polygonOffset = this.polygonOffset;
-		material.polygonOffsetFactor = this.polygonOffsetFactor;
-		material.polygonOffsetUnits = this.polygonOffsetUnits;
+		this.blendSrc = source.blendSrc;
+		this.blendDst = source.blendDst;
+		this.blendEquation = source.blendEquation;
+		this.blendSrcAlpha = source.blendSrcAlpha;
+		this.blendDstAlpha = source.blendDstAlpha;
+		this.blendEquationAlpha = source.blendEquationAlpha;
 
-		material.alphaTest = this.alphaTest;
+		this.depthFunc = source.depthFunc;
+		this.depthTest = source.depthTest;
+		this.depthWrite = source.depthWrite;
 
-		material.overdraw = this.overdraw;
+		this.stencilTest = source.stencilTest;
+		this.stencilWrite = source.stencilWrite;
 
-		material.visible = this.visible;
+		this.colorWrite = source.colorWrite;
 
-		return material;
+		this.precision = source.precision;
+
+		this.polygonOffset = source.polygonOffset;
+		this.polygonOffsetFactor = source.polygonOffsetFactor;
+		this.polygonOffsetUnits = source.polygonOffsetUnits;
+
+		this.alphaTest = source.alphaTest;
+
+		this.overdraw = source.overdraw;
+
+		this.visible = source.visible;
+
+		return this;
 
 	},
 

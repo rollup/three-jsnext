@@ -2,7 +2,7 @@ import { Vector3 } from './Vector3';
 import { _Math } from './Math';
 
 /**
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  */
 
 function Line3 ( start, end ) {
@@ -23,6 +23,12 @@ Line3.prototype = {
 		this.end.copy( end );
 
 		return this;
+
+	},
+
+	clone: function () {
+
+		return new this.constructor().copy( this );
 
 	},
 
@@ -118,12 +124,6 @@ Line3.prototype = {
 	equals: function ( line ) {
 
 		return line.start.equals( this.start ) && line.end.equals( this.end );
-
-	},
-
-	clone: function () {
-
-		return new Line3().copy( this );
 
 	}
 

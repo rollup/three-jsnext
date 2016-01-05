@@ -1,4 +1,5 @@
 import { Material } from './Material';
+import { NoColors } from '../Three';
 import { Color } from '../math/Color';
 
 /**
@@ -18,7 +19,7 @@ import { Color } from '../math/Color';
  *  dashSize: <float>,
  *  gapSize: <float>,
  *
- *  vertexColors: <bool>
+ *  vertexColors: THREE.NoColors / THREE.FaceColors / THREE.VertexColors
  *
  *  fog: <bool>
  * }
@@ -39,7 +40,7 @@ function LineDashedMaterial ( parameters ) {
 	this.dashSize = 3;
 	this.gapSize = 1;
 
-	this.vertexColors = false;
+	this.vertexColors = NoColors;
 
 	this.fog = true;
 
@@ -50,25 +51,23 @@ function LineDashedMaterial ( parameters ) {
 LineDashedMaterial.prototype = Object.create( Material.prototype );
 LineDashedMaterial.prototype.constructor = LineDashedMaterial;
 
-LineDashedMaterial.prototype.clone = function () {
+LineDashedMaterial.prototype.copy = function ( source ) {
 
-	var material = new LineDashedMaterial();
+	Material.prototype.copy.call( this, source );
 
-	Material.prototype.clone.call( this, material );
+	this.color.copy( source.color );
+	
+	this.linewidth = source.linewidth;
 
-	material.color.copy( this.color );
+	this.scale = source.scale;
+	this.dashSize = source.dashSize;
+	this.gapSize = source.gapSize;
 
-	material.linewidth = this.linewidth;
+	this.vertexColors = source.vertexColors;
 
-	material.scale = this.scale;
-	material.dashSize = this.dashSize;
-	material.gapSize = this.gapSize;
+	this.fog = source.fog;
 
-	material.vertexColors = this.vertexColors;
-
-	material.fog = this.fog;
-
-	return material;
+	return this;
 
 };
 

@@ -2,7 +2,7 @@ import { Matrix3 } from './Matrix3';
 import { Vector3 } from './Vector3';
 
 /**
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  */
 
 function Plane ( normal, constant ) {
@@ -63,6 +63,11 @@ Plane.prototype = {
 
 	}(),
 
+	clone: function () {
+
+		return new this.constructor().copy( this );
+
+	},
 
 	copy: function ( plane ) {
 
@@ -121,17 +126,6 @@ Plane.prototype = {
 
 	},
 
-	isIntersectionLine: function ( line ) {
-
-		// Note: this tests if a line intersects the plane, not whether it (or its end-points) are coplanar with it.
-
-		var startSign = this.distanceToPoint( line.start );
-		var endSign = this.distanceToPoint( line.end );
-
-		return ( startSign < 0 && endSign > 0 ) || ( endSign < 0 && startSign > 0 );
-
-	},
-
 	intersectLine: function () {
 
 		var v1 = new Vector3();
@@ -172,6 +166,28 @@ Plane.prototype = {
 
 	}(),
 
+	intersectsLine: function ( line ) {
+
+		// Note: this tests if a line intersects the plane, not whether it (or its end-points) are coplanar with it.
+
+		var startSign = this.distanceToPoint( line.start );
+		var endSign = this.distanceToPoint( line.end );
+
+		return ( startSign < 0 && endSign > 0 ) || ( endSign < 0 && startSign > 0 );
+
+	},
+
+	intersectsBox: function ( box ) {
+
+		return box.intersectsPlane( this );
+
+	},
+
+	intersectsSphere: function ( sphere ) {
+
+		return sphere.intersectsPlane( this );
+
+	},
 
 	coplanarPoint: function ( optionalTarget ) {
 
@@ -215,12 +231,6 @@ Plane.prototype = {
 	equals: function ( plane ) {
 
 		return plane.normal.equals( this.normal ) && ( plane.constant === this.constant );
-
-	},
-
-	clone: function () {
-
-		return new Plane().copy( this );
 
 	}
 

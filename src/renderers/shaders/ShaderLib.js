@@ -1,4 +1,5 @@
 import { ShaderChunk } from './ShaderChunk';
+import { Vector3 } from '../../math/Vector3';
 import { UniformsLib } from './UniformsLib';
 import { UniformsUtils } from './UniformsUtils';
 import { Color } from '../../math/Color';
@@ -48,15 +49,17 @@ ShaderLib = {
 
 			"	#ifdef USE_ENVMAP",
 
+				ShaderChunk[ "beginnormal_vertex" ],
 				ShaderChunk[ "morphnormal_vertex" ],
 				ShaderChunk[ "skinnormal_vertex" ],
 				ShaderChunk[ "defaultnormal_vertex" ],
 
 			"	#endif",
 
+				ShaderChunk[ "begin_vertex" ],
 				ShaderChunk[ "morphtarget_vertex" ],
 				ShaderChunk[ "skinning_vertex" ],
-				ShaderChunk[ "default_vertex" ],
+				ShaderChunk[ "project_vertex" ],
 				ShaderChunk[ "logdepthbuf_vertex" ],
 
 				ShaderChunk[ "worldpos_vertex" ],
@@ -65,12 +68,18 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
 			"uniform vec3 diffuse;",
 			"uniform float opacity;",
+
+			"#ifndef FLAT_SHADED",
+
+			"	varying vec3 vNormal;",
+
+			"#endif",
 
 			ShaderChunk[ "common" ],
 			ShaderChunk[ "color_pars_fragment" ],
@@ -87,9 +96,7 @@ ShaderLib = {
 
 			"void main() {",
 
-			"	vec3 outgoingLight = vec3( 0.0 );",
 			"	vec4 diffuseColor = vec4( diffuse, opacity );",
-			"	vec3 totalAmbientLight = vec3( 1.0 );", // hardwired
 
 				ShaderChunk[ "logdepthbuf_fragment" ],
 				ShaderChunk[ "map_fragment" ],
@@ -97,22 +104,29 @@ ShaderLib = {
 				ShaderChunk[ "alphamap_fragment" ],
 				ShaderChunk[ "alphatest_fragment" ],
 				ShaderChunk[ "specularmap_fragment" ],
-				ShaderChunk[ "aomap_fragment" ],
 
-			"	outgoingLight = diffuseColor.rgb * totalAmbientLight;", // simple shader
+			"	ReflectedLight reflectedLight;",
+			"	reflectedLight.directDiffuse = vec3( 0.0 );",
+			"	reflectedLight.directSpecular = vec3( 0.0 );",
+			"	reflectedLight.indirectDiffuse = diffuseColor.rgb;",
+			"	reflectedLight.indirectSpecular = vec3( 0.0 );",
+
+				ShaderChunk[ "aomap_fragment" ],
+				ShaderChunk[ "shadowmap_fragment" ],
+
+				"reflectedLight.indirectDiffuse *= shadowMask;",
+
+				"vec3 outgoingLight = reflectedLight.indirectDiffuse;",
 
 				ShaderChunk[ "envmap_fragment" ],
-				ShaderChunk[ "shadowmap_fragment" ],		// TODO: Shadows on an otherwise unlit surface doesn't make sense.
-
 				ShaderChunk[ "linear_to_gamma_fragment" ],
-
 				ShaderChunk[ "fog_fragment" ],
 
 			"	gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -121,7 +135,11 @@ ShaderLib = {
 		uniforms: UniformsUtils.merge( [
 
 			UniformsLib[ "common" ],
+			UniformsLib[ "aomap" ],
+			UniformsLib[ "lightmap" ],
+			UniformsLib[ "emissivemap" ],
 			UniformsLib[ "fog" ],
+			UniformsLib[ "ambient" ],
 			UniformsLib[ "lights" ],
 			UniformsLib[ "shadowmap" ],
 
@@ -147,7 +165,8 @@ ShaderLib = {
 			ShaderChunk[ "uv_pars_vertex" ],
 			ShaderChunk[ "uv2_pars_vertex" ],
 			ShaderChunk[ "envmap_pars_vertex" ],
-			ShaderChunk[ "lights_lambert_pars_vertex" ],
+			ShaderChunk[ "bsdfs" ],
+			ShaderChunk[ "lights_pars" ],
 			ShaderChunk[ "color_pars_vertex" ],
 			ShaderChunk[ "morphtarget_pars_vertex" ],
 			ShaderChunk[ "skinning_pars_vertex" ],
@@ -160,14 +179,16 @@ ShaderLib = {
 				ShaderChunk[ "uv2_vertex" ],
 				ShaderChunk[ "color_vertex" ],
 
+				ShaderChunk[ "beginnormal_vertex" ],
 				ShaderChunk[ "morphnormal_vertex" ],
 				ShaderChunk[ "skinbase_vertex" ],
 				ShaderChunk[ "skinnormal_vertex" ],
 				ShaderChunk[ "defaultnormal_vertex" ],
 
+				ShaderChunk[ "begin_vertex" ],
 				ShaderChunk[ "morphtarget_vertex" ],
 				ShaderChunk[ "skinning_vertex" ],
-				ShaderChunk[ "default_vertex" ],
+				ShaderChunk[ "project_vertex" ],
 				ShaderChunk[ "logdepthbuf_vertex" ],
 
 				ShaderChunk[ "worldpos_vertex" ],
@@ -177,7 +198,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -199,7 +220,12 @@ ShaderLib = {
 			ShaderChunk[ "uv2_pars_fragment" ],
 			ShaderChunk[ "map_pars_fragment" ],
 			ShaderChunk[ "alphamap_pars_fragment" ],
+			ShaderChunk[ "aomap_pars_fragment" ],
+			ShaderChunk[ "lightmap_pars_fragment" ],
+			ShaderChunk[ "emissivemap_pars_fragment" ],
 			ShaderChunk[ "envmap_pars_fragment" ],
+			ShaderChunk[ "bsdfs" ],
+			ShaderChunk[ "ambient_pars" ],
 			ShaderChunk[ "fog_pars_fragment" ],
 			ShaderChunk[ "shadowmap_pars_fragment" ],
 			ShaderChunk[ "specularmap_pars_fragment" ],
@@ -207,8 +233,9 @@ ShaderLib = {
 
 			"void main() {",
 
-			"	vec3 outgoingLight = vec3( 0.0 );",	// outgoing light does not have an alpha, the surface does
 			"	vec4 diffuseColor = vec4( diffuse, opacity );",
+			"	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );",
+			"	vec3 totalEmissiveLight = emissive;",
 
 				ShaderChunk[ "logdepthbuf_fragment" ],
 				ShaderChunk[ "map_fragment" ],
@@ -216,22 +243,34 @@ ShaderLib = {
 				ShaderChunk[ "alphamap_fragment" ],
 				ShaderChunk[ "alphatest_fragment" ],
 				ShaderChunk[ "specularmap_fragment" ],
+				ShaderChunk[ "emissivemap_fragment" ],
+				ShaderChunk[ "shadowmap_fragment" ],
+
+				// accumulation
+			"	reflectedLight.indirectDiffuse = getAmbientLightIrradiance( ambientLightColor );",
+
+				ShaderChunk[ "lightmap_fragment" ],
+
+			"	reflectedLight.indirectDiffuse *= BRDF_Diffuse_Lambert( diffuseColor.rgb );",
 
 			"	#ifdef DOUBLE_SIDED",
 
-			"		if ( gl_FrontFacing )",
-			"			outgoingLight += diffuseColor.rgb * vLightFront + emissive;",
-			"		else",
-			"			outgoingLight += diffuseColor.rgb * vLightBack + emissive;",
+			"		reflectedLight.directDiffuse = ( gl_FrontFacing ) ? vLightFront : vLightBack;",
 
 			"	#else",
 
-			"		outgoingLight += diffuseColor.rgb * vLightFront + emissive;",
+			"		reflectedLight.directDiffuse = vLightFront;",
 
 			"	#endif",
 
+			"	reflectedLight.directDiffuse *= ( BRDF_Diffuse_Lambert( diffuseColor.rgb ) * shadowMask );",
+
+				// modulation
+				ShaderChunk[ "aomap_fragment" ],
+
+			"	vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + totalEmissiveLight;",
+
 				ShaderChunk[ "envmap_fragment" ],
-				ShaderChunk[ "shadowmap_fragment" ],
 
 				ShaderChunk[ "linear_to_gamma_fragment" ],
 
@@ -241,7 +280,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -253,9 +292,11 @@ ShaderLib = {
 			UniformsLib[ "aomap" ],
 			UniformsLib[ "lightmap" ],
 			UniformsLib[ "emissivemap" ],
-			UniformsLib[ "bump" ],
+			UniformsLib[ "bumpmap" ],
 			UniformsLib[ "normalmap" ],
+			UniformsLib[ "displacementmap" ],
 			UniformsLib[ "fog" ],
+			UniformsLib[ "ambient" ],
 			UniformsLib[ "lights" ],
 			UniformsLib[ "shadowmap" ],
 
@@ -282,6 +323,7 @@ ShaderLib = {
 			ShaderChunk[ "common" ],
 			ShaderChunk[ "uv_pars_vertex" ],
 			ShaderChunk[ "uv2_pars_vertex" ],
+			ShaderChunk[ "displacementmap_pars_vertex" ],
 			ShaderChunk[ "envmap_pars_vertex" ],
 			ShaderChunk[ "lights_phong_pars_vertex" ],
 			ShaderChunk[ "color_pars_vertex" ],
@@ -296,6 +338,7 @@ ShaderLib = {
 				ShaderChunk[ "uv2_vertex" ],
 				ShaderChunk[ "color_vertex" ],
 
+				ShaderChunk[ "beginnormal_vertex" ],
 				ShaderChunk[ "morphnormal_vertex" ],
 				ShaderChunk[ "skinbase_vertex" ],
 				ShaderChunk[ "skinnormal_vertex" ],
@@ -307,9 +350,11 @@ ShaderLib = {
 
 			"#endif",
 
+				ShaderChunk[ "begin_vertex" ],
+				ShaderChunk[ "displacementmap_vertex" ],
 				ShaderChunk[ "morphtarget_vertex" ],
 				ShaderChunk[ "skinning_vertex" ],
-				ShaderChunk[ "default_vertex" ],
+				ShaderChunk[ "project_vertex" ],
 				ShaderChunk[ "logdepthbuf_vertex" ],
 
 			"	vViewPosition = - mvPosition.xyz;",
@@ -321,7 +366,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -344,6 +389,9 @@ ShaderLib = {
 			ShaderChunk[ "emissivemap_pars_fragment" ],
 			ShaderChunk[ "envmap_pars_fragment" ],
 			ShaderChunk[ "fog_pars_fragment" ],
+			ShaderChunk[ "bsdfs" ],
+			ShaderChunk[ "ambient_pars" ],
+			ShaderChunk[ "lights_pars" ],
 			ShaderChunk[ "lights_phong_pars_fragment" ],
 			ShaderChunk[ "shadowmap_pars_fragment" ],
 			ShaderChunk[ "bumpmap_pars_fragment" ],
@@ -353,9 +401,8 @@ ShaderLib = {
 
 			"void main() {",
 
-			"	vec3 outgoingLight = vec3( 0.0 );",
 			"	vec4 diffuseColor = vec4( diffuse, opacity );",
-			"	vec3 totalAmbientLight = ambientLightColor;",
+			"	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );",
 			"	vec3 totalEmissiveLight = emissive;",
 
 				ShaderChunk[ "logdepthbuf_fragment" ],
@@ -364,14 +411,188 @@ ShaderLib = {
 				ShaderChunk[ "alphamap_fragment" ],
 				ShaderChunk[ "alphatest_fragment" ],
 				ShaderChunk[ "specularmap_fragment" ],
-				ShaderChunk[ "lightmap_fragment" ],
-				ShaderChunk[ "aomap_fragment" ],
+				ShaderChunk[ "normal_fragment" ],
 				ShaderChunk[ "emissivemap_fragment" ],
 
+				ShaderChunk[ "shadowmap_fragment" ],
+
+				// accumulation
 				ShaderChunk[ "lights_phong_fragment" ],
+				ShaderChunk[ "lights_template" ],
+
+				// modulation
+				ShaderChunk[ "aomap_fragment" ],
+
+				"vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveLight;",
 
 				ShaderChunk[ "envmap_fragment" ],
+				ShaderChunk[ "linear_to_gamma_fragment" ],
+
+				ShaderChunk[ "fog_fragment" ],
+
+			"	gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
+
+			"}"
+
+		].join( "\n" )
+
+	},
+
+	'standard': {
+
+		uniforms: UniformsUtils.merge( [
+
+			UniformsLib[ "common" ],
+			UniformsLib[ "aomap" ],
+			UniformsLib[ "lightmap" ],
+			UniformsLib[ "emissivemap" ],
+			UniformsLib[ "bumpmap" ],
+			UniformsLib[ "normalmap" ],
+			UniformsLib[ "displacementmap" ],
+			UniformsLib[ "roughnessmap" ],
+			UniformsLib[ "metalnessmap" ],
+			UniformsLib[ "fog" ],
+			UniformsLib[ "ambient" ],
+			UniformsLib[ "lights" ],
+			UniformsLib[ "shadowmap" ],
+
+			{
+				"emissive" : { type: "c", value: new Color( 0x000000 ) },
+				"roughness": { type: "f", value: 0.5 },
+				"metalness": { type: "f", value: 0 },
+				"envMapIntensity" : { type: "f", value: 1 } // temporary
+			}
+
+		] ),
+
+		vertexShader: [
+
+			"#define STANDARD",
+
+			"varying vec3 vViewPosition;",
+
+			"#ifndef FLAT_SHADED",
+
+			"	varying vec3 vNormal;",
+
+			"#endif",
+
+			ShaderChunk[ "common" ],
+			ShaderChunk[ "uv_pars_vertex" ],
+			ShaderChunk[ "uv2_pars_vertex" ],
+			ShaderChunk[ "displacementmap_pars_vertex" ],
+			ShaderChunk[ "envmap_pars_vertex" ],
+			ShaderChunk[ "color_pars_vertex" ],
+			ShaderChunk[ "morphtarget_pars_vertex" ],
+			ShaderChunk[ "skinning_pars_vertex" ],
+			ShaderChunk[ "shadowmap_pars_vertex" ],
+			ShaderChunk[ "specularmap_pars_fragment" ],
+			ShaderChunk[ "logdepthbuf_pars_vertex" ],
+
+			"void main() {", // STANDARD
+
+				ShaderChunk[ "uv_vertex" ],
+				ShaderChunk[ "uv2_vertex" ],
+				ShaderChunk[ "color_vertex" ],
+
+				ShaderChunk[ "beginnormal_vertex" ],
+				ShaderChunk[ "morphnormal_vertex" ],
+				ShaderChunk[ "skinbase_vertex" ],
+				ShaderChunk[ "skinnormal_vertex" ],
+				ShaderChunk[ "defaultnormal_vertex" ],
+
+			"#ifndef FLAT_SHADED", // Normal computed with derivatives when FLAT_SHADED
+
+			"	vNormal = normalize( transformedNormal );",
+
+			"#endif",
+
+				ShaderChunk[ "begin_vertex" ],
+				ShaderChunk[ "displacementmap_vertex" ],
+				ShaderChunk[ "morphtarget_vertex" ],
+				ShaderChunk[ "skinning_vertex" ],
+				ShaderChunk[ "project_vertex" ],
+				ShaderChunk[ "logdepthbuf_vertex" ],
+
+			"	vViewPosition = - mvPosition.xyz;",
+
+				ShaderChunk[ "worldpos_vertex" ],
+				ShaderChunk[ "envmap_vertex" ],
+				ShaderChunk[ "shadowmap_vertex" ],
+
+			"}"
+
+		].join( "\n" ),
+
+		fragmentShader: [
+
+			"#define STANDARD",
+
+			"uniform vec3 diffuse;",
+			"uniform vec3 emissive;",
+			"uniform float roughness;",
+			"uniform float metalness;",
+			"uniform float opacity;",
+
+			"uniform float envMapIntensity;", // temporary
+
+			"varying vec3 vViewPosition;",
+
+			"#ifndef FLAT_SHADED",
+
+			"	varying vec3 vNormal;",
+
+			"#endif",
+
+			ShaderChunk[ "common" ],
+			ShaderChunk[ "color_pars_fragment" ],
+			ShaderChunk[ "uv_pars_fragment" ],
+			ShaderChunk[ "uv2_pars_fragment" ],
+			ShaderChunk[ "map_pars_fragment" ],
+			ShaderChunk[ "alphamap_pars_fragment" ],
+			ShaderChunk[ "aomap_pars_fragment" ],
+			ShaderChunk[ "lightmap_pars_fragment" ],
+			ShaderChunk[ "emissivemap_pars_fragment" ],
+			ShaderChunk[ "envmap_pars_fragment" ],
+			ShaderChunk[ "fog_pars_fragment" ],
+			ShaderChunk[ "bsdfs" ],
+			ShaderChunk[ "ambient_pars" ],
+			ShaderChunk[ "lights_pars" ],
+			ShaderChunk[ "lights_standard_pars_fragment" ],
+			ShaderChunk[ "shadowmap_pars_fragment" ],
+			ShaderChunk[ "bumpmap_pars_fragment" ],
+			ShaderChunk[ "normalmap_pars_fragment" ],
+			ShaderChunk[ "roughnessmap_pars_fragment" ],
+			ShaderChunk[ "metalnessmap_pars_fragment" ],
+			ShaderChunk[ "logdepthbuf_pars_fragment" ],
+
+			"void main() {",
+
+			"	vec4 diffuseColor = vec4( diffuse, opacity );",
+			"	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );",
+			"	vec3 totalEmissiveLight = emissive;",
+
+				ShaderChunk[ "logdepthbuf_fragment" ],
+				ShaderChunk[ "map_fragment" ],
+				ShaderChunk[ "color_fragment" ],
+				ShaderChunk[ "alphamap_fragment" ],
+				ShaderChunk[ "alphatest_fragment" ],
+				ShaderChunk[ "specularmap_fragment" ],
+				ShaderChunk[ "roughnessmap_fragment" ],
+				ShaderChunk[ "metalnessmap_fragment" ],
+				ShaderChunk[ "normal_fragment" ],
+				ShaderChunk[ "emissivemap_fragment" ],
+
 				ShaderChunk[ "shadowmap_fragment" ],
+
+				// accumulation
+				ShaderChunk[ "lights_standard_fragment" ],
+				ShaderChunk[ "lights_template" ],
+
+				// modulation
+				ShaderChunk[ "aomap_fragment" ],
+
+				"vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveLight;",
 
 				ShaderChunk[ "linear_to_gamma_fragment" ],
 
@@ -381,15 +602,16 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
-	'particle_basic': {
+	'points': {
 
 		uniforms: UniformsUtils.merge( [
 
-			UniformsLib[ "particle" ],
+			UniformsLib[ "points" ],
+			UniformsLib[ "fog" ],
 			UniformsLib[ "shadowmap" ]
 
 		] ),
@@ -407,16 +629,14 @@ ShaderLib = {
 			"void main() {",
 
 				ShaderChunk[ "color_vertex" ],
-
-			"	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+				ShaderChunk[ "begin_vertex" ],
+				ShaderChunk[ "project_vertex" ],
 
 			"	#ifdef USE_SIZEATTENUATION",
-			"		gl_PointSize = size * ( scale / length( mvPosition.xyz ) );",
+			"		gl_PointSize = size * ( scale / - mvPosition.z );",
 			"	#else",
 			"		gl_PointSize = size;",
 			"	#endif",
-
-			"	gl_Position = projectionMatrix * mvPosition;",
 
 				ShaderChunk[ "logdepthbuf_vertex" ],
 				ShaderChunk[ "worldpos_vertex" ],
@@ -424,11 +644,11 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
-			"uniform vec3 psColor;",
+			"uniform vec3 diffuse;",
 			"uniform float opacity;",
 
 			ShaderChunk[ "common" ],
@@ -441,23 +661,23 @@ ShaderLib = {
 			"void main() {",
 
 			"	vec3 outgoingLight = vec3( 0.0 );",
-			"	vec4 diffuseColor = vec4( psColor, opacity );",
+			"	vec4 diffuseColor = vec4( diffuse, opacity );",
 
 				ShaderChunk[ "logdepthbuf_fragment" ],
 				ShaderChunk[ "map_particle_fragment" ],
 				ShaderChunk[ "color_fragment" ],
 				ShaderChunk[ "alphatest_fragment" ],
-
-			"	outgoingLight = diffuseColor.rgb;", // simple shader
-
 				ShaderChunk[ "shadowmap_fragment" ],
+
+			"	outgoingLight = diffuseColor.rgb * shadowMask;",
+
 				ShaderChunk[ "fog_fragment" ],
 
 			"	gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -500,7 +720,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -539,7 +759,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -561,13 +781,14 @@ ShaderLib = {
 
 			"void main() {",
 
+				ShaderChunk[ "begin_vertex" ],
 				ShaderChunk[ "morphtarget_vertex" ],
-				ShaderChunk[ "default_vertex" ],
+				ShaderChunk[ "project_vertex" ],
 				ShaderChunk[ "logdepthbuf_vertex" ],
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -597,7 +818,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -621,13 +842,14 @@ ShaderLib = {
 
 			"	vNormal = normalize( normalMatrix * normal );",
 
+				ShaderChunk[ "begin_vertex" ],
 				ShaderChunk[ "morphtarget_vertex" ],
-				ShaderChunk[ "default_vertex" ],
+				ShaderChunk[ "project_vertex" ],
 				ShaderChunk[ "logdepthbuf_vertex" ],
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -645,7 +867,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -655,8 +877,10 @@ ShaderLib = {
 
 	'cube': {
 
-		uniforms: { "tCube": { type: "t", value: null },
-					"tFlip": { type: "f", value: - 1 } },
+		uniforms: {
+			"tCube": { type: "t", value: null },
+			"tFlip": { type: "f", value: - 1 }
+		},
 
 		vertexShader: [
 
@@ -675,7 +899,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -695,7 +919,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -705,8 +929,10 @@ ShaderLib = {
 
 	'equirect': {
 
-		uniforms: { "tEquirect": { type: "t", value: null },
-					"tFlip": { type: "f", value: - 1 } },
+		uniforms: {
+			"tEquirect": { type: "t", value: null },
+			"tFlip": { type: "f", value: - 1 }
+		},
 
 		vertexShader: [
 
@@ -725,7 +951,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -750,7 +976,7 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
 
 	},
 
@@ -780,14 +1006,16 @@ ShaderLib = {
 			"void main() {",
 
 				ShaderChunk[ "skinbase_vertex" ],
+
+				ShaderChunk[ "begin_vertex" ],
 				ShaderChunk[ "morphtarget_vertex" ],
 				ShaderChunk[ "skinning_vertex" ],
-				ShaderChunk[ "default_vertex" ],
+				ShaderChunk[ "project_vertex" ],
 				ShaderChunk[ "logdepthbuf_vertex" ],
 
 			"}"
 
-		].join("\n"),
+		].join( "\n" ),
 
 		fragmentShader: [
 
@@ -825,7 +1053,74 @@ ShaderLib = {
 
 			"}"
 
-		].join("\n")
+		].join( "\n" )
+
+	},
+
+
+	'distanceRGBA': {
+
+		uniforms: {
+
+			"lightPos": { type: "v3", value: new Vector3( 0, 0, 0 ) }
+
+		},
+
+		vertexShader: [
+
+			"varying vec4 vWorldPosition;",
+
+			ShaderChunk[ "common" ],
+			ShaderChunk[ "morphtarget_pars_vertex" ],
+			ShaderChunk[ "skinning_pars_vertex" ],
+
+			"void main() {",
+
+				ShaderChunk[ "skinbase_vertex" ],
+				ShaderChunk[ "begin_vertex" ],
+				ShaderChunk[ "morphtarget_vertex" ],
+				ShaderChunk[ "skinning_vertex" ],
+				ShaderChunk[ "project_vertex" ],
+				ShaderChunk[ "worldpos_vertex" ],
+
+				"vWorldPosition = worldPosition;",
+
+			"}"
+
+		].join( "\n" ),
+
+		fragmentShader: [
+
+			"uniform vec3 lightPos;",
+			"varying vec4 vWorldPosition;",
+
+			ShaderChunk[ "common" ],
+
+			"vec4 pack1K ( float depth ) {",
+
+			"   depth /= 1000.0;",
+			"   const vec4 bitSh = vec4( 256.0 * 256.0 * 256.0, 256.0 * 256.0, 256.0, 1.0 );",
+  			"	const vec4 bitMsk = vec4( 0.0, 1.0 / 256.0, 1.0 / 256.0, 1.0 / 256.0 );",
+   			"	vec4 res = fract( depth * bitSh );",
+   			"	res -= res.xxyz * bitMsk;",
+   			"	return res; ",
+
+			"}",
+
+			"float unpack1K ( vec4 color ) {",
+
+			"	const vec4 bitSh = vec4( 1.0 / ( 256.0 * 256.0 * 256.0 ), 1.0 / ( 256.0 * 256.0 ), 1.0 / 256.0, 1.0 );",
+			"	return dot( color, bitSh ) * 1000.0;",
+
+			"}",
+
+			"void main () {",
+
+			"	gl_FragColor = pack1K( length( vWorldPosition.xyz - lightPos.xyz ) );",
+
+			"}"
+
+		].join( "\n" )
 
 	}
 

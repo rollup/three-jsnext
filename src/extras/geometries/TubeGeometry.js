@@ -31,7 +31,8 @@ function TubeGeometry ( path, segments, radius, radialSegments, closed, taper ) 
 		segments: segments,
 		radius: radius,
 		radialSegments: radialSegments,
-		closed: closed
+		closed: closed,
+		taper: taper
 	};
 
 	segments = segments || 64;
@@ -106,6 +107,7 @@ function TubeGeometry ( path, segments, radius, radialSegments, closed, taper ) 
 			grid[ i ][ j ] = vert( pos2.x, pos2.y, pos2.z );
 
 		}
+
 	}
 
 
@@ -115,8 +117,8 @@ function TubeGeometry ( path, segments, radius, radialSegments, closed, taper ) 
 
 		for ( j = 0; j < radialSegments; j ++ ) {
 
-			ip = ( closed ) ? (i + 1) % segments : i + 1;
-			jp = (j + 1) % radialSegments;
+			ip = ( closed ) ? ( i + 1 ) % segments : i + 1;
+			jp = ( j + 1 ) % radialSegments;
 
 			a = grid[ i ][ j ];		// *** NOT NECESSARILY PLANAR ! ***
 			b = grid[ ip ][ j ];
@@ -135,6 +137,7 @@ function TubeGeometry ( path, segments, radius, radialSegments, closed, taper ) 
 			this.faceVertexUvs[ 0 ].push( [ uvb.clone(), uvc, uvd.clone() ] );
 
 		}
+
 	}
 
 	this.computeFaceNormals();
@@ -171,7 +174,6 @@ TubeGeometry.FrenetFrames = function ( path, segments, closed ) {
 
 		numpoints = segments + 1,
 		theta,
-		epsilon = 0.0001,
 		smallest,
 
 		tx, ty, tz,
@@ -221,6 +223,7 @@ TubeGeometry.FrenetFrames = function ( path, segments, closed ) {
 	*/
 
 	function initialNormal3() {
+
 		// select an initial normal vector perpendicular to the first tangent vector,
 		// and in the direction of the smallest tangent xyz component
 
@@ -232,23 +235,30 @@ TubeGeometry.FrenetFrames = function ( path, segments, closed ) {
 		tz = Math.abs( tangents[ 0 ].z );
 
 		if ( tx <= smallest ) {
+
 			smallest = tx;
 			normal.set( 1, 0, 0 );
+
 		}
 
 		if ( ty <= smallest ) {
+
 			smallest = ty;
 			normal.set( 0, 1, 0 );
+
 		}
 
 		if ( tz <= smallest ) {
+
 			normal.set( 0, 0, 1 );
+
 		}
 
 		vec.crossVectors( tangents[ 0 ], normal ).normalize();
 
 		normals[ 0 ].crossVectors( tangents[ 0 ], vec );
 		binormals[ 0 ].crossVectors( tangents[ 0 ], normals[ 0 ] );
+
 	}
 
 
@@ -262,7 +272,7 @@ TubeGeometry.FrenetFrames = function ( path, segments, closed ) {
 
 		vec.crossVectors( tangents[ i - 1 ], tangents[ i ] );
 
-		if ( vec.length() > epsilon ) {
+		if ( vec.length() > Number.EPSILON ) {
 
 			vec.normalize();
 
@@ -299,6 +309,7 @@ TubeGeometry.FrenetFrames = function ( path, segments, closed ) {
 		}
 
 	}
+
 };
 
 

@@ -1,5 +1,5 @@
 import { Matrix4 } from '../math/Matrix4';
-import { NearestFilter, FloatType, RGBAFormat } from '../Three';
+import { FloatType, RGBAFormat } from '../Three';
 import { DataTexture } from '../textures/DataTexture';
 import { _Math } from '../math/Math';
 
@@ -34,17 +34,16 @@ function Skeleton ( bones, boneInverses, useVertexTexture ) {
 		//       32x32 pixel texture max  256 bones * 4 pixels = (32 * 32)
 		//       64x64 pixel texture max 1024 bones * 4 pixels = (64 * 64)
 
-		var size = _Math.nextPowerOfTwo( Math.sqrt( this.bones.length * 4 ) ); // 4 pixels needed for 1 matrix
+		
+		var size = Math.sqrt( this.bones.length * 4 ); // 4 pixels needed for 1 matrix
+		size = _Math.nextPowerOfTwo( Math.ceil( size ) );
+		size = Math.max( size, 4 );
 
 		this.boneTextureWidth = size;
 		this.boneTextureHeight = size;
 
 		this.boneMatrices = new Float32Array( this.boneTextureWidth * this.boneTextureHeight * 4 ); // 4 floats per RGBA pixel
 		this.boneTexture = new DataTexture( this.boneMatrices, this.boneTextureWidth, this.boneTextureHeight, RGBAFormat, FloatType );
-		this.boneTexture.minFilter = NearestFilter;
-		this.boneTexture.magFilter = NearestFilter;
-		this.boneTexture.generateMipmaps = false;
-		this.boneTexture.flipY = false;
 
 	} else {
 
@@ -151,7 +150,7 @@ Skeleton.prototype.update = ( function () {
 
 	var offsetMatrix = new Matrix4();
 
-	return function () {
+	return function update() {
 
 		// flatten bone matrices to array
 

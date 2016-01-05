@@ -1,6 +1,7 @@
 import { LinearFilter } from '../Three';
 import { XHRLoader } from './XHRLoader';
 import { CompressedTexture } from '../textures/CompressedTexture';
+import { DefaultLoadingManager } from './LoadingManager';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -8,8 +9,10 @@ import { CompressedTexture } from '../textures/CompressedTexture';
  * Abstract Base class to block based textures loader (dds, pvr, ...)
  */
 
-function CompressedTextureLoader () {
+function CompressedTextureLoader ( manager ) {
 	this.isCompressedTextureLoader = true;
+
+	this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
 
 	// override in sub classes
 	this._parser = null;
@@ -21,7 +24,7 @@ CompressedTextureLoader.prototype = {
 
 	constructor: CompressedTextureLoader,
 
-	load: function ( url, onLoad, onError ) {
+	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
@@ -30,43 +33,44 @@ CompressedTextureLoader.prototype = {
 		var texture = new CompressedTexture();
 		texture.image = images;
 
-		var loader = new XHRLoader();
+		var loader = new XHRLoader( this.manager );
+		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
+
+		function loadTexture( i ) {
+
+			loader.load( url[ i ], function ( buffer ) {
+
+				var texDatas = scope._parser( buffer, true );
+
+				images[ i ] = {
+					width: texDatas.width,
+					height: texDatas.height,
+					format: texDatas.format,
+					mipmaps: texDatas.mipmaps
+				};
+
+				loaded += 1;
+
+				if ( loaded === 6 ) {
+
+					if ( texDatas.mipmapCount === 1 )
+						texture.minFilter = LinearFilter;
+
+					texture.format = texDatas.format;
+					texture.needsUpdate = true;
+
+					if ( onLoad ) onLoad( texture );
+
+				}
+
+			}, onProgress, onError );
+
+		}
 
 		if ( Array.isArray( url ) ) {
 
 			var loaded = 0;
-
-			var loadTexture = function ( i ) {
-
-				loader.load( url[ i ], function ( buffer ) {
-
-					var texDatas = scope._parser( buffer, true );
-
-					images[ i ] = {
-						width: texDatas.width,
-						height: texDatas.height,
-						format: texDatas.format,
-						mipmaps: texDatas.mipmaps
-					};
-
-					loaded += 1;
-
-					if ( loaded === 6 ) {
-
-						if (texDatas.mipmapCount === 1)
- 							texture.minFilter = LinearFilter;
-
-						texture.format = texDatas.format;
-						texture.needsUpdate = true;
-
-						if ( onLoad ) onLoad( texture );
-
-					}
-
-				} );
-
-			};
 
 			for ( var i = 0, il = url.length; i < il; ++ i ) {
 
@@ -120,11 +124,17 @@ CompressedTextureLoader.prototype = {
 
 				if ( onLoad ) onLoad( texture );
 
-			} );
+			}, onProgress, onError );
 
 		}
 
 		return texture;
+
+	},
+
+	setPath: function ( value ) {
+
+		this.path = value;
 
 	}
 

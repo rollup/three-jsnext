@@ -2,7 +2,7 @@ import { Plane } from './Plane';
 import { Vector3 } from './Vector3';
 
 /**
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  * @author mrdoob / http://mrdoob.com/
  */
 
@@ -66,9 +66,11 @@ Triangle.barycoordFromPoint = function () {
 
 		// collinear or singular triangle
 		if ( denom === 0 ) {
+
 			// arbitrary location outside of triangle?
 			// not sure if this is the best idea, maybe should be returning undefined
 			return result.set( - 2, - 1, - 1 );
+
 		}
 
 		var invDenom = 1 / denom;
@@ -117,6 +119,12 @@ Triangle.prototype = {
 		this.c.copy( points[ i2 ] );
 
 		return this;
+
+	},
+
+	clone: function () {
+
+		return new this.constructor().copy( this );
 
 	},
 
@@ -182,12 +190,6 @@ Triangle.prototype = {
 	equals: function ( triangle ) {
 
 		return triangle.a.equals( this.a ) && triangle.b.equals( this.b ) && triangle.c.equals( this.c );
-
-	},
-
-	clone: function () {
-
-		return new Triangle().copy( this );
 
 	}
 

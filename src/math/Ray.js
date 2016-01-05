@@ -1,7 +1,7 @@
 import { Vector3 } from './Vector3';
 
 /**
- * @author bhouston / http://exocortex.com
+ * @author bhouston / http://clara.io
  */
 
 function Ray ( origin, direction ) {
@@ -22,6 +22,12 @@ Ray.prototype = {
 		this.direction.copy( direction );
 
 		return this;
+
+	},
+
+	clone: function () {
+
+		return new this.constructor().copy( this );
 
 	},
 
@@ -229,16 +235,7 @@ Ray.prototype = {
 
 	}(),
 
-
-	isIntersectionSphere: function ( sphere ) {
-
-		return this.distanceToPoint( sphere.center ) <= sphere.radius;
-
-	},
-
 	intersectSphere: function () {
-
-		// from http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-sphere-intersection/
 
 		var v1 = new Vector3();
 
@@ -277,35 +274,16 @@ Ray.prototype = {
 
 	}(),
 
-	isIntersectionPlane: function ( plane ) {
+	intersectsSphere: function ( sphere ) {
 
-		// check if the ray lies on the plane first
-
-		var distToPoint = plane.distanceToPoint( this.origin );
-
-		if ( distToPoint === 0 ) {
-
-			return true;
-
-		}
-
-		var denominator = plane.normal.dot( this.direction );
-
-		if ( denominator * distToPoint < 0 ) {
-
-			return true;
-
-		}
-
-		// ray origin is behind the plane (and is pointing behind it)
-
-		return false;
+		return this.distanceToPoint( sphere.center ) <= sphere.radius;
 
 	},
 
 	distanceToPlane: function ( plane ) {
 
 		var denominator = plane.normal.dot( this.direction );
+
 		if ( denominator === 0 ) {
 
 			// line is coplanar, return origin
@@ -336,29 +314,44 @@ Ray.prototype = {
 		if ( t === null ) {
 
 			return null;
+
 		}
 
 		return this.at( t, optionalTarget );
 
 	},
 
-	isIntersectionBox: function () {
 
-		var v = new Vector3();
 
-		return function ( box ) {
+	intersectsPlane: function ( plane ) {
 
-			return this.intersectBox( box, v ) !== null;
+		// check if the ray lies on the plane first
 
-		};
+		var distToPoint = plane.distanceToPoint( this.origin );
 
-	}(),
+		if ( distToPoint === 0 ) {
+
+			return true;
+
+		}
+
+		var denominator = plane.normal.dot( this.direction );
+
+		if ( denominator * distToPoint < 0 ) {
+
+			return true;
+
+		}
+
+		// ray origin is behind the plane (and is pointing behind it)
+
+		return false;
+
+	},
 
 	intersectBox: function ( box, optionalTarget ) {
 
-		// http://www.scratchapixel.com/lessons/3d-basic-lessons/lesson-7-intersecting-simple-shapes/ray-box-intersection/
-
-		var tmin,tmax,tymin,tymax,tzmin,tzmax;
+		var tmin, tmax, tymin, tymax, tzmin, tzmax;
 
 		var invdirx = 1 / this.direction.x,
 			invdiry = 1 / this.direction.y,
@@ -375,6 +368,7 @@ Ray.prototype = {
 
 			tmin = ( box.max.x - origin.x ) * invdirx;
 			tmax = ( box.min.x - origin.x ) * invdirx;
+
 		}
 
 		if ( invdiry >= 0 ) {
@@ -386,6 +380,7 @@ Ray.prototype = {
 
 			tymin = ( box.max.y - origin.y ) * invdiry;
 			tymax = ( box.min.y - origin.y ) * invdiry;
+
 		}
 
 		if ( ( tmin > tymax ) || ( tymin > tmax ) ) return null;
@@ -406,6 +401,7 @@ Ray.prototype = {
 
 			tzmin = ( box.max.z - origin.z ) * invdirz;
 			tzmax = ( box.min.z - origin.z ) * invdirz;
+
 		}
 
 		if ( ( tmin > tzmax ) || ( tzmin > tmax ) ) return null;
@@ -421,6 +417,18 @@ Ray.prototype = {
 		return this.at( tmin >= 0 ? tmin : tmax, optionalTarget );
 
 	},
+
+	intersectsBox: ( function () {
+
+		var v = new Vector3();
+
+		return function ( box ) {
+
+			return this.intersectBox( box, v ) !== null;
+
+		};
+
+	} )(),
 
 	intersectTriangle: function () {
 
@@ -513,17 +521,12 @@ Ray.prototype = {
 		this.direction.normalize();
 
 		return this;
+
 	},
 
 	equals: function ( ray ) {
 
 		return ray.origin.equals( this.origin ) && ray.direction.equals( this.direction );
-
-	},
-
-	clone: function () {
-
-		return new Ray().copy( this );
 
 	}
 

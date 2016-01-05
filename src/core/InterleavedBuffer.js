@@ -4,7 +4,7 @@ import { _Math } from '../math/Math';
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 
-function InterleavedBuffer ( array, stride, dynamic ) {
+function InterleavedBuffer ( array, stride ) {
 	this.isInterleavedBuffer = true;
 
 	this.uuid = _Math.generateUUID();
@@ -12,10 +12,10 @@ function InterleavedBuffer ( array, stride, dynamic ) {
 	this.array = array;
 	this.stride = stride;
 
-	this.needsUpdate = false;
+	this.dynamic = false;
+	this.updateRange = { offset: 0, count: - 1 };
 
-	this.dynamic = dynamic || false;
-	this.updateRange = { offset: 0, count: -1 };
+	this.version = 0;
 
 };
 
@@ -35,12 +35,36 @@ InterleavedBuffer.prototype = {
 
 	},
 
+	set needsUpdate( value ) {
+
+		if ( value === true ) this.version ++;
+
+	},
+
+	setDynamic: function ( value ) {
+
+		this.dynamic = value;
+
+		return this;
+
+	},
+
+	copy: function ( source ) {
+
+		this.array = new source.array.constructor( source.array );
+		this.stride = source.stride;
+		this.dynamic = source.dynamic;
+
+		return this;
+
+	},
+
 	copyAt: function ( index1, attribute, index2 ) {
 
 		index1 *= this.stride;
 		index2 *= attribute.stride;
 
-		for ( var i = 0, l = this.stride; i < l; i++ ) {
+		for ( var i = 0, l = this.stride; i < l; i ++ ) {
 
 			this.array[ index1 + i ] = attribute.array[ index2 + i ];
 
@@ -62,7 +86,7 @@ InterleavedBuffer.prototype = {
 
 	clone: function () {
 
-		return new InterleavedBuffer( new this.array.constructor( this.array ), this.stride, this.dynamic );
+		return new this.constructor().copy( this );
 
 	}
 

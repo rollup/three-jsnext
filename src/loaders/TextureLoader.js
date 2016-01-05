@@ -1,5 +1,5 @@
-import { Texture } from '../textures/Texture';
 import { ImageLoader } from './ImageLoader';
+import { Texture } from '../textures/Texture';
 import { DefaultLoadingManager } from './LoadingManager';
 
 /**
@@ -19,13 +19,14 @@ TextureLoader.prototype = {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
-		var scope = this;
+		var texture = new Texture();
 
-		var loader = new ImageLoader( scope.manager );
+		var loader = new ImageLoader( this.manager );
 		loader.setCrossOrigin( this.crossOrigin );
+		loader.setPath( this.path );
 		loader.load( url, function ( image ) {
 
-			var texture = new Texture( image );
+			texture.image = image;
 			texture.needsUpdate = true;
 
 			if ( onLoad !== undefined ) {
@@ -36,11 +37,19 @@ TextureLoader.prototype = {
 
 		}, onProgress, onError );
 
+		return texture;
+
 	},
 
 	setCrossOrigin: function ( value ) {
 
 		this.crossOrigin = value;
+
+	},
+
+	setPath: function ( value ) {
+
+		this.path = value;
 
 	}
 

@@ -16,14 +16,5 @@ function LineSegments ( geometry, material ) {
 LineSegments.prototype = Object.create( Line.prototype );
 LineSegments.prototype.constructor = LineSegments;
 
-LineSegments.prototype.clone = function ( object ) {
-
-	if ( object === undefined ) object = new LineSegments( this.geometry, this.material );
-
-	Line.prototype.clone.call( this, object );
-
-	return object;
-
-};
 
 export { LineSegments };

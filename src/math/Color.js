@@ -11,11 +11,11 @@ function Color ( color ) {
 
 	if ( arguments.length === 3 ) {
 
-		return this.setRGB( arguments[ 0 ], arguments[ 1 ], arguments[ 2 ] );
+		return this.fromArray( arguments );
 
 	}
 
-	return this.set( color )
+	return this.set( color );
 
 };
 
@@ -45,6 +45,14 @@ Color.prototype = {
 
 	},
 
+	setScalar: function ( scalar ) {
+
+		this.r = scalar;
+		this.g = scalar;
+		this.b = scalar;
+
+	},
+
 	setHex: function ( hex ) {
 
 		hex = Math.floor( hex );
@@ -69,7 +77,7 @@ Color.prototype = {
 
 	setHSL: function () {
 
-		function hue2rgb ( p, q, t ) {
+		function hue2rgb( p, q, t ) {
 
 			if ( t < 0 ) t += 1;
 			if ( t > 1 ) t -= 1;
@@ -78,7 +86,7 @@ Color.prototype = {
 			if ( t < 2 / 3 ) return p + ( q - p ) * 6 * ( 2 / 3 - t );
 			return p;
 
-		};
+		}
 
 		return function ( h, s, l ) {
 
@@ -110,68 +118,137 @@ Color.prototype = {
 
 	setStyle: function ( style ) {
 
-		// rgb(255,0,0)
+		function handleAlpha( string ) {
 
-		if ( /^rgb\((\d+), ?(\d+), ?(\d+)\)$/i.test( style ) ) {
+			if ( string === undefined ) return;
 
-			var color = /^rgb\((\d+), ?(\d+), ?(\d+)\)$/i.exec( style );
+			if ( parseFloat( string ) < 1 ) {
 
-			this.r = Math.min( 255, parseInt( color[ 1 ], 10 ) ) / 255;
-			this.g = Math.min( 255, parseInt( color[ 2 ], 10 ) ) / 255;
-			this.b = Math.min( 255, parseInt( color[ 3 ], 10 ) ) / 255;
+				console.warn( 'THREE.Color: Alpha component of ' + style + ' will be ignored.' );
 
-			return this;
+			}
 
 		}
 
-		// rgb(100%,0%,0%)
 
-		if ( /^rgb\((\d+)\%, ?(\d+)\%, ?(\d+)\%\)$/i.test( style ) ) {
+		var m;
 
-			var color = /^rgb\((\d+)\%, ?(\d+)\%, ?(\d+)\%\)$/i.exec( style );
+		if ( m = /^((?:rgb|hsl)a?)\(\s*([^\)]*)\)/.exec( style ) ) {
 
-			this.r = Math.min( 100, parseInt( color[ 1 ], 10 ) ) / 100;
-			this.g = Math.min( 100, parseInt( color[ 2 ], 10 ) ) / 100;
-			this.b = Math.min( 100, parseInt( color[ 3 ], 10 ) ) / 100;
+			// rgb / hsl
 
-			return this;
+			var color;
+			var name = m[ 1 ];
+			var components = m[ 2 ];
+
+			switch ( name ) {
+
+				case 'rgb':
+				case 'rgba':
+
+					if ( color = /^(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec( components ) ) {
+
+						// rgb(255,0,0) rgba(255,0,0,0.5)
+						this.r = Math.min( 255, parseInt( color[ 1 ], 10 ) ) / 255;
+						this.g = Math.min( 255, parseInt( color[ 2 ], 10 ) ) / 255;
+						this.b = Math.min( 255, parseInt( color[ 3 ], 10 ) ) / 255;
+
+						handleAlpha( color[ 5 ] );
+
+						return this;
+
+					}
+
+					if ( color = /^(\d+)\%\s*,\s*(\d+)\%\s*,\s*(\d+)\%\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec( components ) ) {
+
+						// rgb(100%,0%,0%) rgba(100%,0%,0%,0.5)
+						this.r = Math.min( 100, parseInt( color[ 1 ], 10 ) ) / 100;
+						this.g = Math.min( 100, parseInt( color[ 2 ], 10 ) ) / 100;
+						this.b = Math.min( 100, parseInt( color[ 3 ], 10 ) ) / 100;
+
+						handleAlpha( color[ 5 ] );
+
+						return this;
+
+					}
+
+					break;
+
+				case 'hsl':
+				case 'hsla':
+
+					if ( color = /^([0-9]*\.?[0-9]+)\s*,\s*(\d+)\%\s*,\s*(\d+)\%\s*(,\s*([0-9]*\.?[0-9]+)\s*)?$/.exec( components ) ) {
+
+						// hsl(120,50%,50%) hsla(120,50%,50%,0.5)
+						var h = parseFloat( color[ 1 ] ) / 360;
+						var s = parseInt( color[ 2 ], 10 ) / 100;
+						var l = parseInt( color[ 3 ], 10 ) / 100;
+
+						handleAlpha( color[ 5 ] );
+
+						return this.setHSL( h, s, l );
+
+					}
+
+					break;
+
+			}
+
+		} else if ( m = /^\#([A-Fa-f0-9]+)$/.exec( style ) ) {
+
+			// hex color
+
+			var hex = m[ 1 ];
+			var size = hex.length;
+
+			if ( size === 3 ) {
+
+				// #ff0
+				this.r = parseInt( hex.charAt( 0 ) + hex.charAt( 0 ), 16 ) / 255;
+				this.g = parseInt( hex.charAt( 1 ) + hex.charAt( 1 ), 16 ) / 255;
+				this.b = parseInt( hex.charAt( 2 ) + hex.charAt( 2 ), 16 ) / 255;
+
+				return this;
+
+			} else if ( size === 6 ) {
+
+				// #ff0000
+				this.r = parseInt( hex.charAt( 0 ) + hex.charAt( 1 ), 16 ) / 255;
+				this.g = parseInt( hex.charAt( 2 ) + hex.charAt( 3 ), 16 ) / 255;
+				this.b = parseInt( hex.charAt( 4 ) + hex.charAt( 5 ), 16 ) / 255;
+
+				return this;
+
+			}
 
 		}
 
-		// #ff0000
+		if ( style && style.length > 0 ) {
 
-		if ( /^\#([0-9a-f]{6})$/i.test( style ) ) {
+			// color keywords
+			var hex = ColorKeywords[ style ];
 
-			var color = /^\#([0-9a-f]{6})$/i.exec( style );
+			if ( hex !== undefined ) {
 
-			this.setHex( parseInt( color[ 1 ], 16 ) );
+				// red
+				this.setHex( hex );
 
-			return this;
+			} else {
 
-		}
+				// unknown color
+				console.warn( 'THREE.Color: Unknown color ' + style );
 
-		// #f00
-
-		if ( /^\#([0-9a-f])([0-9a-f])([0-9a-f])$/i.test( style ) ) {
-
-			var color = /^\#([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec( style );
-
-			this.setHex( parseInt( color[ 1 ] + color[ 1 ] + color[ 2 ] + color[ 2 ] + color[ 3 ] + color[ 3 ], 16 ) );
-
-			return this;
+			}
 
 		}
 
-		// red
+		return this;
 
-		if ( /^(\w+)$/i.test( style ) ) {
+	},
 
-			this.setHex( ColorKeywords[ style ] );
+	clone: function () {
 
-			return this;
-
-		}
-
+		return new this.constructor( this.r, this.g, this.b );
 
 	},
 
@@ -374,11 +451,13 @@ Color.prototype = {
 
 	},
 
-	fromArray: function ( array ) {
+	fromArray: function ( array, offset ) {
 
-		this.r = array[ 0 ];
-		this.g = array[ 1 ];
-		this.b = array[ 2 ];
+		if ( offset === undefined ) offset = 0;
+
+		this.r = array[ offset ];
+		this.g = array[ offset + 1 ];
+		this.b = array[ offset + 2 ];
 
 		return this;
 
@@ -394,11 +473,6 @@ Color.prototype = {
 		array[ offset + 2 ] = this.b;
 
 		return array;
-	},
-
-	clone: function () {
-
-		return new Color().setRGB( this.r, this.g, this.b );
 
 	}
 

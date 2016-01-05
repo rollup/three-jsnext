@@ -56,16 +56,21 @@ Camera.prototype.lookAt = function () {
 
 }();
 
-Camera.prototype.clone = function ( camera ) {
+Camera.prototype.clone = function () {
 
-	if ( camera === undefined ) camera = new Camera();
+	return new this.constructor().copy( this );
 
-	Object3D.prototype.clone.call( this, camera );
+};
 
-	camera.matrixWorldInverse.copy( this.matrixWorldInverse );
-	camera.projectionMatrix.copy( this.projectionMatrix );
+Camera.prototype.copy = function ( source ) {
 
-	return camera;
+	Object3D.prototype.copy.call( this, source );
+
+	this.matrixWorldInverse.copy( source.matrixWorldInverse );
+	this.projectionMatrix.copy( source.projectionMatrix );
+
+	return this;
+
 };
 
 

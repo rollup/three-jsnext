@@ -34,21 +34,21 @@ function CircleBufferGeometry ( radius, segments, thetaStart, thetaLength ) {
 	var uvs = new Float32Array( vertices * 2 );
 
 	// center data is already zero, but need to set a few extras
-	normals[3] = 1.0;
-	uvs[0] = 0.5;
-	uvs[1] = 0.5;
+	normals[ 2 ] = 1.0;
+	uvs[ 0 ] = 0.5;
+	uvs[ 1 ] = 0.5;
 
-	for ( var s = 0, i = 3, ii = 2 ; s <= segments; s++, i += 3, ii += 2 ) {
+	for ( var s = 0, i = 3, ii = 2 ; s <= segments; s ++, i += 3, ii += 2 ) {
 
 		var segment = thetaStart + s / segments * thetaLength;
 
-		positions[i] = radius * Math.cos( segment );
-		positions[i + 1] = radius * Math.sin( segment );
+		positions[ i ] = radius * Math.cos( segment );
+		positions[ i + 1 ] = radius * Math.sin( segment );
 
-		normals[i + 2] = 1; // normal z
+		normals[ i + 2 ] = 1; // normal z
 
-		uvs[ii] = ( positions[i] / radius + 1 ) / 2;
-		uvs[ii + 1] = ( positions[i + 1] / radius + 1 ) / 2;
+		uvs[ ii ] = ( positions[ i ] / radius + 1 ) / 2;
+		uvs[ ii + 1 ] = ( positions[ i + 1 ] / radius + 1 ) / 2;
 
 	}
 
@@ -56,13 +56,11 @@ function CircleBufferGeometry ( radius, segments, thetaStart, thetaLength ) {
 
 	for ( var i = 1; i <= segments; i ++ ) {
 
-		indices.push( i );
-		indices.push( i + 1 );
-		indices.push( 0 );
+		indices.push( i, i + 1, 0 );
 
 	}
 
-	this.addAttribute( 'index', new BufferAttribute( new Uint16Array( indices ), 1 ) );
+	this.setIndex( new BufferAttribute( new Uint16Array( indices ), 1 ) );
 	this.addAttribute( 'position', new BufferAttribute( positions, 3 ) );
 	this.addAttribute( 'normal', new BufferAttribute( normals, 3 ) );
 	this.addAttribute( 'uv', new BufferAttribute( uvs, 2 ) );

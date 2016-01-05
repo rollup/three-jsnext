@@ -37,8 +37,8 @@ MorphBlendMesh.prototype.createAnimation = function ( name, start, end, fps ) {
 
 	var animation = {
 
-		startFrame: start,
-		endFrame: end,
+		start: start,
+		end: end,
 
 		length: end - start + 1,
 
@@ -66,7 +66,7 @@ MorphBlendMesh.prototype.createAnimation = function ( name, start, end, fps ) {
 
 MorphBlendMesh.prototype.autoCreateAnimations = function ( fps ) {
 
-	var pattern = /([a-z]+)_?(\d+)/;
+	var pattern = /([a-z]+)_?(\d+)/i;
 
 	var firstAnimation, frameRanges = {};
 
@@ -284,7 +284,7 @@ MorphBlendMesh.prototype.update = function ( delta ) {
 
 		}
 
-		var keyframe = animation.startFrame + _Math.clamp( Math.floor( animation.time / frameTime ), 0, animation.length - 1 );
+		var keyframe = animation.start + _Math.clamp( Math.floor( animation.time / frameTime ), 0, animation.length - 1 );
 		var weight = animation.weight;
 
 		if ( keyframe !== animation.currentFrame ) {
@@ -303,8 +303,16 @@ MorphBlendMesh.prototype.update = function ( delta ) {
 
 		if ( animation.directionBackwards ) mix = 1 - mix;
 
-		this.morphTargetInfluences[ animation.currentFrame ] = mix * weight;
-		this.morphTargetInfluences[ animation.lastFrame ] = ( 1 - mix ) * weight;
+		if ( animation.currentFrame !== animation.lastFrame ) {
+
+			this.morphTargetInfluences[ animation.currentFrame ] = mix * weight;
+			this.morphTargetInfluences[ animation.lastFrame ] = ( 1 - mix ) * weight;
+
+		} else {
+
+			this.morphTargetInfluences[ animation.currentFrame ] = weight;
+
+		}
 
 	}
 

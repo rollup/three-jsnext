@@ -2,7 +2,6 @@ import { Vector3 } from '../../math/Vector3';
 import { Object3D } from '../../core/Object3D';
 import { Mesh } from '../../objects/Mesh';
 import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
-import { Matrix4 } from '../../math/Matrix4';
 import { CylinderGeometry } from '../geometries/CylinderGeometry';
 
 /**
@@ -24,8 +23,8 @@ function SpotLightHelper ( light ) {
 
 	var geometry = new CylinderGeometry( 0, 1, 1, 8, 1, true );
 
-	geometry.applyMatrix( new Matrix4().makeTranslation( 0, - 0.5, 0 ) );
-	geometry.applyMatrix( new Matrix4().makeRotationX( - Math.PI / 2 ) );
+	geometry.translate( 0, - 0.5, 0 );
+	geometry.rotateX( - Math.PI / 2 );
 
 	var material = new MeshBasicMaterial( { wireframe: true, fog: false } );
 
@@ -40,8 +39,10 @@ SpotLightHelper.prototype = Object.create( Object3D.prototype );
 SpotLightHelper.prototype.constructor = SpotLightHelper;
 
 SpotLightHelper.prototype.dispose = function () {
+
 	this.cone.geometry.dispose();
 	this.cone.material.dispose();
+
 };
 
 SpotLightHelper.prototype.update = function () {

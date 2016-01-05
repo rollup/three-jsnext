@@ -1,6 +1,7 @@
 import { Vector2 } from '../../math/Vector2';
+import { CurveUtils } from '../CurveUtils';
+import { ShapeUtils } from '../ShapeUtils';
 import { Curve } from '../core/Curve';
-import { Shape } from '../core/Shape';
 
 /**************************************************************
  *	Cubic Bezier curve
@@ -21,26 +22,23 @@ CubicBezierCurve.prototype.constructor = CubicBezierCurve;
 
 CubicBezierCurve.prototype.getPoint = function ( t ) {
 
-	var tx, ty;
+	var b3 = ShapeUtils.b3;
 
-	tx = Shape.Utils.b3( t, this.v0.x, this.v1.x, this.v2.x, this.v3.x );
-	ty = Shape.Utils.b3( t, this.v0.y, this.v1.y, this.v2.y, this.v3.y );
-
-	return new Vector2( tx, ty );
+	return new Vector2( 
+		b3( t, this.v0.x, this.v1.x, this.v2.x, this.v3.x ),
+		b3( t, this.v0.y, this.v1.y, this.v2.y, this.v3.y )
+	);
 
 };
 
 CubicBezierCurve.prototype.getTangent = function( t ) {
 
-	var tx, ty;
+	var tangentCubicBezier = CurveUtils.tangentCubicBezier;
 
-	tx = Curve.Utils.tangentCubicBezier( t, this.v0.x, this.v1.x, this.v2.x, this.v3.x );
-	ty = Curve.Utils.tangentCubicBezier( t, this.v0.y, this.v1.y, this.v2.y, this.v3.y );
-
-	var tangent = new Vector2( tx, ty );
-	tangent.normalize();
-
-	return tangent;
+	return new Vector2( 
+		tangentCubicBezier( t, this.v0.x, this.v1.x, this.v2.x, this.v3.x ),
+		tangentCubicBezier( t, this.v0.y, this.v1.y, this.v2.y, this.v3.y )
+	).normalize();
 
 };
 

@@ -1,8 +1,8 @@
 import { BufferGeometry } from '../../core/BufferGeometry';
 import { Geometry } from '../../core/Geometry';
+import { Matrix3 } from '../../math/Matrix3';
 import { Vector3 } from '../../math/Vector3';
 import { LineSegments } from '../../objects/LineSegments';
-import { Matrix3 } from '../../math/Matrix3';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Float32Attribute } from '../../core/BufferAttribute';
 
@@ -52,8 +52,6 @@ function VertexNormalsHelper ( object, size, hex, linewidth ) {
 
 	this.matrixAutoUpdate = false;
 
-	this.normalMatrix = new Matrix3();
-
 	this.update();
 
 };
@@ -65,14 +63,15 @@ VertexNormalsHelper.prototype.update = ( function () {
 
 	var v1 = new Vector3();
 	var v2 = new Vector3();
+	var normalMatrix = new Matrix3();
 
-	return function() {
+	return function update() {
 
 		var keys = [ 'a', 'b', 'c' ];
 
 		this.object.updateMatrixWorld( true );
 
-		this.normalMatrix.getNormalMatrix( this.object.matrixWorld );
+		normalMatrix.getNormalMatrix( this.object.matrixWorld );
 
 		var matrixWorld = this.object.matrixWorld;
 
@@ -102,7 +101,7 @@ VertexNormalsHelper.prototype.update = ( function () {
 
 					v1.copy( vertex ).applyMatrix4( matrixWorld );
 
-					v2.copy( normal ).applyMatrix3( this.normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
+					v2.copy( normal ).applyMatrix3( normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
 
 					position.setXYZ( idx, v1.x, v1.y, v1.z );
 
@@ -132,7 +131,7 @@ VertexNormalsHelper.prototype.update = ( function () {
 
 				v2.set( objNorm.getX( j ), objNorm.getY( j ), objNorm.getZ( j ) );
 
-				v2.applyMatrix3( this.normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
+				v2.applyMatrix3( normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
 
 				position.setXYZ( idx, v1.x, v1.y, v1.z );
 
@@ -152,7 +151,7 @@ VertexNormalsHelper.prototype.update = ( function () {
 
 	}
 
-}());
+}() );
 
 
 export { VertexNormalsHelper };

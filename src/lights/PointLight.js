@@ -1,50 +1,39 @@
-import { Object3D } from '../core/Object3D';
 import { Light } from './Light';
+import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
+import { LightShadow } from './LightShadow';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
+
 function PointLight ( color, intensity, distance, decay ) {
 	this.isPointLight = true;
 
-	Light.call( this, color );
+	Light.call( this, color, intensity );
 
 	this.type = 'PointLight';
 
-	this.intensity = ( intensity !== undefined ) ? intensity : 1;
 	this.distance = ( distance !== undefined ) ? distance : 0;
 	this.decay = ( decay !== undefined ) ? decay : 1;	// for physically correct lights, should be 2.
+
+	this.shadow = new LightShadow( new PerspectiveCamera( 90, 1, 0.5, 500 ) );
 
 };
 
 PointLight.prototype = Object.create( Light.prototype );
 PointLight.prototype.constructor = PointLight;
 
-PointLight.prototype.clone = function () {
+PointLight.prototype.copy = function ( source ) {
 
-	var light = new PointLight();
+	Light.prototype.copy.call( this, source );
 
-	Light.prototype.clone.call( this, light );
+	this.distance = source.distance;
+	this.decay = source.decay;
 
-	light.intensity = this.intensity;
-	light.distance = this.distance;
-	light.decay = this.decay;
+	this.shadow = source.shadow.clone();
 
-	return light;
-
-};
-
-PointLight.prototype.toJSON = function ( meta ) {
-
-	var data = Object3D.prototype.toJSON.call( this, meta );
-
-	data.object.color = this.color.getHex();
-	data.object.intensity = this.intensity;
-	data.object.distance = this.distance;
-	data.object.decay = this.decay;
-
-	return data;
+	return this;
 
 };
 

@@ -1,6 +1,6 @@
+import { Matrix3 } from '../../math/Matrix3';
 import { Vector3 } from '../../math/Vector3';
 import { LineSegments } from '../../objects/LineSegments';
-import { Matrix3 } from '../../math/Matrix3';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Float32Attribute } from '../../core/BufferAttribute';
 import { BufferGeometry } from '../../core/BufferGeometry';
@@ -53,9 +53,6 @@ function FaceNormalsHelper ( object, size, hex, linewidth ) {
 	//
 
 	this.matrixAutoUpdate = false;
-
-	this.normalMatrix = new Matrix3();
-
 	this.update();
 
 };
@@ -67,12 +64,13 @@ FaceNormalsHelper.prototype.update = ( function () {
 
 	var v1 = new Vector3();
 	var v2 = new Vector3();
+	var normalMatrix = new Matrix3();
 
-	return function() {
+	return function update() {
 
 		this.object.updateMatrixWorld( true );
 
-		this.normalMatrix.getNormalMatrix( this.object.matrixWorld );
+		normalMatrix.getNormalMatrix( this.object.matrixWorld );
 
 		var matrixWorld = this.object.matrixWorld;
 
@@ -100,7 +98,7 @@ FaceNormalsHelper.prototype.update = ( function () {
 				.divideScalar( 3 )
 				.applyMatrix4( matrixWorld );
 
-			v2.copy( normal ).applyMatrix3( this.normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
+			v2.copy( normal ).applyMatrix3( normalMatrix ).normalize().multiplyScalar( this.size ).add( v1 );
 
 			position.setXYZ( idx, v1.x, v1.y, v1.z );
 
@@ -118,7 +116,7 @@ FaceNormalsHelper.prototype.update = ( function () {
 
 	}
 
-}());
+}() );
 
 
 export { FaceNormalsHelper };

@@ -8,6 +8,7 @@ function ArcCurve ( aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise ) {
 	this.isArcCurve = true;
 
 	EllipseCurve.call( this, aX, aY, aRadius, aRadius, aStartAngle, aEndAngle, aClockwise );
+
 };
 
 ArcCurve.prototype = Object.create( EllipseCurve.prototype );

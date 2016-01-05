@@ -20,15 +20,15 @@ function Bone ( skin ) {
 Bone.prototype = Object.create( Object3D.prototype );
 Bone.prototype.constructor = Bone;
 
-Bone.prototype.clone = function ( object ) {
-
-	if ( object === undefined ) object = new Bone( this.skin );
-
-	Object3D.prototype.clone.call( this, object );
-	object.skin = this.skin; 
-
-	return object;
+Bone.prototype.copy = function ( source ) {
+	
+	Object3D.prototype.copy.call( this, source );
+	
+	this.skin = source.skin;
+	
+	return this;
 
 };
+
 
 export { Bone };

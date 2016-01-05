@@ -5,7 +5,7 @@ import { Curve } from '../core/Curve';
  *	Ellipse curve
  **************************************************************/
 
-function EllipseCurve ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise ) {
+function EllipseCurve ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation ) {
 	this.isEllipseCurve = true;
 
 	this.aX = aX;
@@ -18,6 +18,8 @@ function EllipseCurve ( aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClock
 	this.aEndAngle = aEndAngle;
 
 	this.aClockwise = aClockwise;
+	
+	this.aRotation = aRotation || 0;
 
 };
 
@@ -43,12 +45,23 @@ EllipseCurve.prototype.getPoint = function ( t ) {
 
 	}
 	
-	var vector = new Vector2();
+	var x = this.aX + this.xRadius * Math.cos( angle );
+	var y = this.aY + this.yRadius * Math.sin( angle );
 
-	vector.x = this.aX + this.xRadius * Math.cos( angle );
-	vector.y = this.aY + this.yRadius * Math.sin( angle );
+	if ( this.aRotation !== 0 ) {
 
-	return vector;
+		var cos = Math.cos( this.aRotation );
+		var sin = Math.sin( this.aRotation );
+
+		var tx = x, ty = y;
+
+		// Rotate the point about the center of the ellipse.
+		x = ( tx - this.aX ) * cos - ( ty - this.aY ) * sin + this.aX;
+		y = ( tx - this.aX ) * sin + ( ty - this.aY ) * cos + this.aY;
+
+	}
+
+	return new Vector2( x, y );
 
 };
 

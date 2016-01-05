@@ -1,4 +1,3 @@
-import { Geometry } from '../../core/Geometry';
 import { PolyhedronGeometry } from './PolyhedronGeometry';
 
 /**
@@ -27,7 +26,7 @@ function TetrahedronGeometry ( radius, detail ) {
 
 };
 
-TetrahedronGeometry.prototype = Object.create( Geometry.prototype );
+TetrahedronGeometry.prototype = Object.create( PolyhedronGeometry.prototype );
 TetrahedronGeometry.prototype.constructor = TetrahedronGeometry;
 
 

@@ -12,6 +12,8 @@ function LOD () {
 
 	Object3D.call( this );
 
+	this.type = 'LOD';
+
 	Object.defineProperties( this, {
 		levels: {
 			enumerable: true,
@@ -19,8 +21,10 @@ function LOD () {
 		},
 		objects: {
 			get: function () {
+
 				console.warn( 'THREE.LOD: .objects has been renamed to .levels.' );
 				return this.levels;
+
 			}
 		}
 	} );
@@ -77,7 +81,7 @@ LOD.prototype.raycast = ( function () {
 
 	var matrixPosition = new Vector3();
 
-	return function ( raycaster, intersects ) {
+	return function raycast( raycaster, intersects ) {
 
 		matrixPosition.setFromMatrixPosition( this.matrixWorld );
 
@@ -94,7 +98,7 @@ LOD.prototype.update = function () {
 	var v1 = new Vector3();
 	var v2 = new Vector3();
 
-	return function ( camera ) {
+	return function update( camera ) {
 
 		var levels = this.levels;
 
@@ -112,7 +116,7 @@ LOD.prototype.update = function () {
 				if ( distance >= levels[ i ].distance ) {
 
 					levels[ i - 1 ].object.visible = false;
-					levels[ i     ].object.visible = true;
+					levels[ i ].object.visible = true;
 
 				} else {
 
@@ -134,11 +138,29 @@ LOD.prototype.update = function () {
 
 }();
 
-LOD.prototype.clone = function ( object ) {
+LOD.prototype.copy = function ( source ) {
 
-	if ( object === undefined ) object = new LOD();
+	Object3D.prototype.copy.call( this, source, false );
 
-	Object3D.prototype.clone.call( this, object, false );
+	var levels = source.levels;
+
+	for ( var i = 0, l = levels.length; i < l; i ++ ) {
+
+		var level = levels[ i ];
+
+		this.addLevel( level.object.clone(), level.distance );
+
+	}
+
+	return this;
+
+};
+
+LOD.prototype.toJSON = function ( meta ) {
+
+	var data = Object3D.prototype.toJSON.call( this, meta );
+
+	data.object.levels = [];
 
 	var levels = this.levels;
 
@@ -146,11 +168,14 @@ LOD.prototype.clone = function ( object ) {
 
 		var level = levels[ i ];
 
-		object.addLevel( level.object.clone(), level.distance );
+		data.object.levels.push( {
+			object: level.object.uuid,
+			distance: level.distance
+		} );
 
 	}
 
-	return object;
+	return data;
 
 };
 

@@ -1,5 +1,5 @@
 import { Material } from './Material';
-import { NoColors, SmoothShading, MultiplyOperation } from '../Three';
+import { NoColors, MultiplyOperation } from '../Three';
 import { Color } from '../math/Color';
 
 /**
@@ -13,6 +13,15 @@ import { Color } from '../math/Color';
  *
  *  map: new THREE.Texture( <Image> ),
  *
+ *  lightMap: new THREE.Texture( <Image> ),
+ *  lightMapIntensity: <float>
+ *
+ *  aoMap: new THREE.Texture( <Image> ),
+ *  aoMapIntensity: <float>
+ *
+ *  emissiveMap: new THREE.Texture( <Image> ),
+ *  emissiveMapIntensity: <float>
+ *
  *  specularMap: new THREE.Texture( <Image> ),
  *
  *  alphaMap: new THREE.Texture( <Image> ),
@@ -22,7 +31,6 @@ import { Color } from '../math/Color';
  *  reflectivity: <float>,
  *  refractionRatio: <float>,
  *
- *  shading: THREE.SmoothShading,
  *  blending: THREE.NormalBlending,
  *  depthTest: <bool>,
  *  depthWrite: <bool>,
@@ -52,6 +60,15 @@ function MeshLambertMaterial ( parameters ) {
 
 	this.map = null;
 
+	this.lightMap = null;
+	this.lightMapIntensity = 1.0;
+
+	this.aoMap = null;
+	this.aoMapIntensity = 1.0;
+
+	this.emissiveMap = null;
+	this.emissiveMapIntensity = 1.0;
+
 	this.specularMap = null;
 
 	this.alphaMap = null;
@@ -62,8 +79,6 @@ function MeshLambertMaterial ( parameters ) {
 	this.refractionRatio = 0.98;
 
 	this.fog = true;
-
-	this.shading = SmoothShading;
 
 	this.wireframe = false;
 	this.wireframeLinewidth = 1;
@@ -83,42 +98,47 @@ function MeshLambertMaterial ( parameters ) {
 MeshLambertMaterial.prototype = Object.create( Material.prototype );
 MeshLambertMaterial.prototype.constructor = MeshLambertMaterial;
 
-MeshLambertMaterial.prototype.clone = function () {
+MeshLambertMaterial.prototype.copy = function ( source ) {
 
-	var material = new MeshLambertMaterial();
+	Material.prototype.copy.call( this, source );
 
-	Material.prototype.clone.call( this, material );
+	this.color.copy( source.color );
+	this.emissive.copy( source.emissive );
 
-	material.color.copy( this.color );
-	material.emissive.copy( this.emissive );
+	this.map = source.map;
 
-	material.map = this.map;
+	this.lightMap = source.lightMap;
+	this.lightMapIntensity = source.lightMapIntensity;
 
-	material.specularMap = this.specularMap;
+	this.aoMap = source.aoMap;
+	this.aoMapIntensity = source.aoMapIntensity;
 
-	material.alphaMap = this.alphaMap;
+	this.emissiveMap = source.emissiveMap;
+	this.emissiveMapIntensity = source.emissiveMapIntensity;
 
-	material.envMap = this.envMap;
-	material.combine = this.combine;
-	material.reflectivity = this.reflectivity;
-	material.refractionRatio = this.refractionRatio;
+	this.specularMap = source.specularMap;
 
-	material.fog = this.fog;
+	this.alphaMap = source.alphaMap;
 
-	material.shading = this.shading;
+	this.envMap = source.envMap;
+	this.combine = source.combine;
+	this.reflectivity = source.reflectivity;
+	this.refractionRatio = source.refractionRatio;
 
-	material.wireframe = this.wireframe;
-	material.wireframeLinewidth = this.wireframeLinewidth;
-	material.wireframeLinecap = this.wireframeLinecap;
-	material.wireframeLinejoin = this.wireframeLinejoin;
+	this.fog = source.fog;
 
-	material.vertexColors = this.vertexColors;
+	this.wireframe = source.wireframe;
+	this.wireframeLinewidth = source.wireframeLinewidth;
+	this.wireframeLinecap = source.wireframeLinecap;
+	this.wireframeLinejoin = source.wireframeLinejoin;
 
-	material.skinning = this.skinning;
-	material.morphTargets = this.morphTargets;
-	material.morphNormals = this.morphNormals;
+	this.vertexColors = source.vertexColors;
 
-	return material;
+	this.skinning = source.skinning;
+	this.morphTargets = source.morphTargets;
+	this.morphNormals = source.morphNormals;
+
+	return this;
 
 };
 

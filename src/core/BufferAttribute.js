@@ -16,7 +16,10 @@ function BufferAttribute ( array, itemSize ) {
 	this.array = array;
 	this.itemSize = itemSize;
 
-	this.needsUpdate = false;
+	this.dynamic = false;
+	this.updateRange = { offset: 0, count: - 1 };
+
+	this.version = 0;
 
 };
 
@@ -24,16 +27,34 @@ BufferAttribute.prototype = {
 
 	constructor: BufferAttribute,
 
-	get length () {
-
-		console.warn( 'THREE.BufferAttribute: .length has been deprecated. Please use .count.' );
-		return this.array.length;
-
-	},
-
 	get count() {
 
 		return this.array.length / this.itemSize;
+
+	},
+
+	set needsUpdate( value ) {
+
+		if ( value === true ) this.version ++;
+
+	},
+
+	setDynamic: function ( value ) {
+
+		this.dynamic = value;
+
+		return this;
+
+	},
+
+	copy: function ( source ) {
+
+		this.array = new source.array.constructor( source.array );
+		this.itemSize = source.itemSize;
+
+		this.dynamic = source.dynamic;
+
+		return this;
 
 	},
 
@@ -282,7 +303,7 @@ BufferAttribute.prototype = {
 
 	clone: function () {
 
-		return new BufferAttribute( new this.array.constructor( this.array ), this.itemSize );
+		return new this.constructor().copy( this );
 
 	}
 
@@ -354,7 +375,19 @@ function Float64Attribute ( array, itemSize ) {
 };
 
 
+// Deprecated
+
+function DynamicBufferAttribute ( array, itemSize ) {
+	this.isDynamicBufferAttribute = true;
+
+	console.warn( 'THREE.DynamicBufferAttribute has been removed. Use new THREE.BufferAttribute().setDynamic( true ) instead.' );
+	return new BufferAttribute( array, itemSize ).setDynamic( true );
+
+};
+
+
 export {
+  DynamicBufferAttribute,
   Float64Attribute,
   Float32Attribute,
   Uint32Attribute,
