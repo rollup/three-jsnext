@@ -25,7 +25,7 @@ StringKeyframeTrack.prototype =
 	ValueTypeName: 'string',
 	ValueBufferType: Array,
 
-	DefaultInterpolation: IntepolateDiscrete,
+	DefaultInterpolation: InterpolateDiscrete,
 
 	InterpolantFactoryMethodLinear: undefined,
 

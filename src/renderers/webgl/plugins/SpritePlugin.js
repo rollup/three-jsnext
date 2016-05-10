@@ -228,13 +228,13 @@ function SpritePlugin ( renderer, sprites ) {
 			state.setDepthTest( material.depthTest );
 			state.setDepthWrite( material.depthWrite );
 
-			if ( material.map && material.map.image && material.map.image.width ) {
+			if ( material.map ) {
 
-				renderer.setTexture( material.map, 0 );
+				renderer.setTexture2D( material.map, 0 );
 
 			} else {
 
-				renderer.setTexture( texture, 0 );
+				renderer.setTexture2D( texture, 0 );
 
 			}
 
@@ -358,8 +358,12 @@ function SpritePlugin ( renderer, sprites ) {
 	}
 
 	function painterSortStable ( a, b ) {
+		
+		if ( a.renderOrder !== b.renderOrder ) {
 
-		if ( a.z !== b.z ) {
+			return a.renderOrder - b.renderOrder;
+
+		} else if ( a.z !== b.z ) {
 
 			return b.z - a.z;
 

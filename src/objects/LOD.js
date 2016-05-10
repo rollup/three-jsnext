@@ -18,14 +18,6 @@ function LOD () {
 		levels: {
 			enumerable: true,
 			value: []
-		},
-		objects: {
-			get: function () {
-
-				console.warn( 'THREE.LOD: .objects has been renamed to .levels.' );
-				return this.levels;
-
-			}
 		}
 	} );
 

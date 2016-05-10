@@ -1,4 +1,3 @@
-import { LinearFilter } from '../Three';
 import { XHRLoader } from './XHRLoader';
 import { CompressedTexture } from '../textures/CompressedTexture';
 import { DefaultLoadingManager } from './LoadingManager';

@@ -1,5 +1,4 @@
 import { Material } from './Material';
-import { NoColors } from '../Three';
 import { Color } from '../math/Color';
 
 /**
@@ -12,15 +11,7 @@ import { Color } from '../math/Color';
  *  map: new THREE.Texture( <Image> ),
  *
  *  size: <float>,
- *  sizeAttenuation: <bool>,
- *
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
- *  depthWrite: <bool>,
- *
- *  vertexColors: <bool>,
- *
- *  fog: <bool>
+ *  sizeAttenuation: <bool>
  * }
  */
 
@@ -38,9 +29,7 @@ function PointsMaterial ( parameters ) {
 	this.size = 1;
 	this.sizeAttenuation = true;
 
-	this.vertexColors = NoColors;
-
-	this.fog = true;
+	this.lights = false;
 
 	this.setValues( parameters );
 
@@ -59,10 +48,6 @@ PointsMaterial.prototype.copy = function ( source ) {
 
 	this.size = source.size;
 	this.sizeAttenuation = source.sizeAttenuation;
-
-	this.vertexColors = source.vertexColors;
-
-	this.fog = source.fog;
 
 	return this;
 

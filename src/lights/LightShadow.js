@@ -1,3 +1,4 @@
+import { Matrix4 } from '../math/Matrix4';
 import { Vector2 } from '../math/Vector2';
 
 /**
@@ -10,12 +11,12 @@ function LightShadow ( camera ) {
 	this.camera = camera;
 
 	this.bias = 0;
-	this.darkness = 1;
+	this.radius = 1;
 
 	this.mapSize = new Vector2( 512, 512 );
 
 	this.map = null;
-	this.matrix = null;
+	this.matrix = new Matrix4();
 
 };
 
@@ -28,7 +29,7 @@ LightShadow.prototype = {
 		this.camera = source.camera.clone();
 
 		this.bias = source.bias;
-		this.darkness = source.darkness;
+		this.radius = source.radius;
 
 		this.mapSize.copy( source.mapSize );
 

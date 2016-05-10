@@ -6,11 +6,6 @@ import { Material } from './Material';
  * parameters = {
  *  opacity: <float>,
  *
- *  shading: THREE.FlatShading,
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
- *  depthWrite: <bool>,
- *
  *  wireframe: <boolean>,
  *  wireframeLinewidth: <float>
  * }
@@ -26,6 +21,8 @@ function MeshNormalMaterial ( parameters ) {
 	this.wireframe = false;
 	this.wireframeLinewidth = 1;
 
+	this.fog = false;
+	this.lights = false;
 	this.morphTargets = false;
 
 	this.setValues( parameters );

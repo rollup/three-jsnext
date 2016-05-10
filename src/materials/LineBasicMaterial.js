@@ -1,5 +1,4 @@
 import { Material } from './Material';
-import { NoColors } from '../Three';
 import { Color } from '../math/Color';
 
 /**
@@ -10,17 +9,9 @@ import { Color } from '../math/Color';
  *  color: <hex>,
  *  opacity: <float>,
  *
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
- *  depthWrite: <bool>,
- *
  *  linewidth: <float>,
  *  linecap: "round",
- *  linejoin: "round",
- *
- *  vertexColors: <bool>
- *
- *  fog: <bool>
+ *  linejoin: "round"
  * }
  */
 
@@ -37,9 +28,7 @@ function LineBasicMaterial ( parameters ) {
 	this.linecap = 'round';
 	this.linejoin = 'round';
 
-	this.vertexColors = NoColors;
-
-	this.fog = true;
+	this.lights = false;
 
 	this.setValues( parameters );
 
@@ -57,10 +46,6 @@ LineBasicMaterial.prototype.copy = function ( source ) {
 	this.linewidth = source.linewidth;
 	this.linecap = source.linecap;
 	this.linejoin = source.linejoin;
-
-	this.vertexColors = source.vertexColors;
-
-	this.fog = source.fog;
 
 	return this;
 

@@ -5,7 +5,6 @@ import { Ray } from '../math/Ray';
 import { Matrix4 } from '../math/Matrix4';
 import { Object3D } from '../core/Object3D';
 import { PointsMaterial } from '../materials/PointsMaterial';
-import { Geometry } from '../core/Geometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -18,7 +17,7 @@ function Points ( geometry, material ) {
 
 	this.type = 'Points';
 
-	this.geometry = geometry !== undefined ? geometry : new Geometry();
+	this.geometry = geometry !== undefined ? geometry : new BufferGeometry();
 	this.material = material !== undefined ? material : new PointsMaterial( { color: Math.random() * 0xffffff } );
 
 };

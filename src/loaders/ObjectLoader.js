@@ -21,19 +21,6 @@ import { ImageLoader } from './ImageLoader';
 import { LoadingManager, DefaultLoadingManager } from './LoadingManager';
 import { AnimationClip } from '../animation/AnimationClip';
 import { MaterialLoader } from './MaterialLoader';
-import { TorusKnotGeometry } from '../extras/geometries/TorusKnotGeometry';
-import { TorusGeometry } from '../extras/geometries/TorusGeometry';
-import { RingGeometry } from '../extras/geometries/RingGeometry';
-import { TetrahedronGeometry } from '../extras/geometries/TetrahedronGeometry';
-import { OctahedronGeometry } from '../extras/geometries/OctahedronGeometry';
-import { IcosahedronGeometry } from '../extras/geometries/IcosahedronGeometry';
-import { DodecahedronGeometry } from '../extras/geometries/DodecahedronGeometry';
-import { SphereBufferGeometry } from '../extras/geometries/SphereBufferGeometry';
-import { SphereGeometry } from '../extras/geometries/SphereGeometry';
-import { CylinderGeometry } from '../extras/geometries/CylinderGeometry';
-import { CircleGeometry } from '../extras/geometries/CircleGeometry';
-import { CircleBufferGeometry } from '../extras/geometries/CircleBufferGeometry';
-import { BoxGeometry } from '../extras/geometries/BoxGeometry';
 import { BufferGeometryLoader } from './BufferGeometryLoader';
 import { JSONLoader } from './JSONLoader';
 import { XHRLoader } from './XHRLoader';
@@ -145,9 +132,10 @@ ObjectLoader.prototype = {
 						break;
 
 					case 'BoxGeometry':
+					case 'BoxBufferGeometry':
 					case 'CubeGeometry': // backwards compatible
 
-						geometry = new BoxGeometry(
+						geometry = new THREE[ data.type ](
 							data.width,
 							data.height,
 							data.depth,
@@ -158,20 +146,10 @@ ObjectLoader.prototype = {
 
 						break;
 
+					case 'CircleGeometry':
 					case 'CircleBufferGeometry':
 
-						geometry = new CircleBufferGeometry(
-							data.radius,
-							data.segments,
-							data.thetaStart,
-							data.thetaLength
-						);
-
-						break;
-
-					case 'CircleGeometry':
-
-						geometry = new CircleGeometry(
+						geometry = new THREE[ data.type ](
 							data.radius,
 							data.segments,
 							data.thetaStart,
@@ -181,8 +159,9 @@ ObjectLoader.prototype = {
 						break;
 
 					case 'CylinderGeometry':
+					case 'CylinderBufferGeometry':
 
-						geometry = new CylinderGeometry(
+						geometry = new THREE[ data.type ](
 							data.radiusTop,
 							data.radiusBottom,
 							data.height,
@@ -195,23 +174,25 @@ ObjectLoader.prototype = {
 
 						break;
 
-					case 'SphereGeometry':
+					case 'ConeGeometry':
+					case 'ConeBufferGeometry':
 
-						geometry = new SphereGeometry(
+						geometry = new THREE [ data.type ](
 							data.radius,
-							data.widthSegments,
+							data.height,
+							data.radialSegments,
 							data.heightSegments,
-							data.phiStart,
-							data.phiLength,
+							data.openEnded,
 							data.thetaStart,
 							data.thetaLength
 						);
 
 						break;
 
+					case 'SphereGeometry':
 					case 'SphereBufferGeometry':
 
-						geometry = new SphereBufferGeometry(
+						geometry = new THREE[ data.type ](
 							data.radius,
 							data.widthSegments,
 							data.heightSegments,
@@ -224,35 +205,11 @@ ObjectLoader.prototype = {
 						break;
 
 					case 'DodecahedronGeometry':
-
-						geometry = new DodecahedronGeometry(
-							data.radius,
-							data.detail
-						);
-
-						break;
-
 					case 'IcosahedronGeometry':
-
-						geometry = new IcosahedronGeometry(
-							data.radius,
-							data.detail
-						);
-
-						break;
-
 					case 'OctahedronGeometry':
-
-						geometry = new OctahedronGeometry(
-							data.radius,
-							data.detail
-						);
-
-						break;
-
 					case 'TetrahedronGeometry':
 
-						geometry = new TetrahedronGeometry(
+						geometry = new THREE[ data.type ](
 							data.radius,
 							data.detail
 						);
@@ -260,8 +217,9 @@ ObjectLoader.prototype = {
 						break;
 
 					case 'RingGeometry':
+					case 'RingBufferGeometry':
 
-						geometry = new RingGeometry(
+						geometry = new THREE[ data.type ](
 							data.innerRadius,
 							data.outerRadius,
 							data.thetaSegments,
@@ -273,8 +231,9 @@ ObjectLoader.prototype = {
 						break;
 
 					case 'TorusGeometry':
+					case 'TorusBufferGeometry':
 
-						geometry = new TorusGeometry(
+						geometry = new THREE[ data.type ](
 							data.radius,
 							data.tube,
 							data.radialSegments,
@@ -285,15 +244,27 @@ ObjectLoader.prototype = {
 						break;
 
 					case 'TorusKnotGeometry':
+					case 'TorusKnotBufferGeometry':
 
-						geometry = new TorusKnotGeometry(
+						geometry = new THREE[ data.type ](
 							data.radius,
 							data.tube,
-							data.radialSegments,
 							data.tubularSegments,
+							data.radialSegments,
 							data.p,
-							data.q,
-							data.heightScale
+							data.q
+						);
+
+						break;
+
+					case 'LatheGeometry':
+					case 'LatheBufferGeometry':
+
+						geometry = new THREE[ data.type ](
+							data.points,
+							data.segments,
+							data.phiStart,
+							data.phiLength
 						);
 
 						break;
@@ -516,6 +487,12 @@ ObjectLoader.prototype = {
 
 					object = new PerspectiveCamera( data.fov, data.aspect, data.near, data.far );
 
+					if ( data.focus !== undefined ) object.focus = data.focus;
+					if ( data.zoom !== undefined ) object.zoom = data.zoom;
+					if ( data.filmGauge !== undefined ) object.filmGauge = data.filmGauge;
+					if ( data.filmOffset !== undefined ) object.filmOffset = data.filmOffset;
+					if ( data.view !== undefined ) object.view = Object.assign( {}, data.view );
+
 					break;
 
 				case 'OrthographicCamera':
@@ -544,7 +521,7 @@ ObjectLoader.prototype = {
 
 				case 'SpotLight':
 
-					object = new SpotLight( data.color, data.intensity, data.distance, data.angle, data.exponent, data.decay );
+					object = new SpotLight( data.color, data.intensity, data.distance, data.angle, data.penumbra, data.decay );
 
 					break;
 
@@ -661,7 +638,7 @@ ObjectLoader.prototype = {
 
 			return object;
 
-		}
+		};
 
 	}()
 

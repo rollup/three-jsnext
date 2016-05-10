@@ -1,7 +1,5 @@
 import { Geometry } from '../../core/Geometry';
-import { Vector2 } from '../../math/Vector2';
-import { Face3 } from '../../core/Face3';
-import { Vector3 } from '../../math/Vector3';
+import { LatheBufferGeometry } from './LatheBufferGeometry';
 
 /**
  * @author astrodud / http://astrodud.isgreat.org/
@@ -9,12 +7,12 @@ import { Vector3 } from '../../math/Vector3';
  * @author bhouston / http://clara.io
  */
 
-// points - to create a closed torus, one must use a set of points 
+// points - to create a closed torus, one must use a set of points
 //    like so: [ a, b, c, d, a ], see first is the same as last.
 // segments - the number of circumference segments to create
 // phiStart - the starting radian
-// phiLength - the radian (0 to 2*PI) range of the lathed section
-//    2*pi is a closed lathe, less than 2PI is a portion.
+// phiLength - the radian (0 to 2PI) range of the lathed section
+//    2PI is a closed lathe, less than 2PI is a portion.
 
 function LatheGeometry ( points, segments, phiStart, phiLength ) {
 	this.isLatheGeometry = true;
@@ -30,81 +28,8 @@ function LatheGeometry ( points, segments, phiStart, phiLength ) {
 		phiLength: phiLength
 	};
 
-	segments = segments || 12;
-	phiStart = phiStart || 0;
-	phiLength = phiLength || 2 * Math.PI;
-
-	var inversePointLength = 1.0 / ( points.length - 1 );
-	var inverseSegments = 1.0 / segments;
-
-	for ( var i = 0, il = segments; i <= il; i ++ ) {
-
-		var phi = phiStart + i * inverseSegments * phiLength;
-
-		var c = Math.cos( phi ),
-			s = Math.sin( phi );
-
-		for ( var j = 0, jl = points.length; j < jl; j ++ ) {
-
-			var pt = points[ j ];
-
-			var vertex = new Vector3();
-
-			vertex.x = c * pt.x - s * pt.y;
-			vertex.y = s * pt.x + c * pt.y;
-			vertex.z = pt.z;
-
-			this.vertices.push( vertex );
-
-		}
-
-	}
-
-	var np = points.length;
-
-	for ( var i = 0, il = segments; i < il; i ++ ) {
-
-		for ( var j = 0, jl = points.length - 1; j < jl; j ++ ) {
-
-			var base = j + np * i;
-			var a = base;
-			var b = base + np;
-			var c = base + 1 + np;
-			var d = base + 1;
-
-			var u0 = i * inverseSegments;
-			var v0 = j * inversePointLength;
-			var u1 = u0 + inverseSegments;
-			var v1 = v0 + inversePointLength;
-
-			this.faces.push( new Face3( a, b, d ) );
-
-			this.faceVertexUvs[ 0 ].push( [
-
-				new Vector2( u0, v0 ),
-				new Vector2( u1, v0 ),
-				new Vector2( u0, v1 )
-
-			] );
-
-			this.faces.push( new Face3( b, c, d ) );
-
-			this.faceVertexUvs[ 0 ].push( [
-
-				new Vector2( u1, v0 ),
-				new Vector2( u1, v1 ),
-				new Vector2( u0, v1 )
-
-			] );
-
-
-		}
-
-	}
-
+	this.fromBufferGeometry( new LatheBufferGeometry( points, segments, phiStart, phiLength ) );
 	this.mergeVertices();
-	this.computeFaceNormals();
-	this.computeVertexNormals();
 
 };
 

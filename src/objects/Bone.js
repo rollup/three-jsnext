@@ -21,11 +21,11 @@ Bone.prototype = Object.create( Object3D.prototype );
 Bone.prototype.constructor = Bone;
 
 Bone.prototype.copy = function ( source ) {
-	
+
 	Object3D.prototype.copy.call( this, source );
-	
+
 	this.skin = source.skin;
-	
+
 	return this;
 
 };

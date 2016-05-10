@@ -127,7 +127,7 @@ Object.assign( AnimationClip, {
 	},
 
 
-	CreateFromMorphTargetSequence: function( name, morphTargetSequence, fps ) {
+	CreateFromMorphTargetSequence: function( name, morphTargetSequence, fps, noLoop ) {
 
 		var numMorphTargets = morphTargetSequence.length;
 		var tracks = [];
@@ -150,7 +150,7 @@ Object.assign( AnimationClip, {
 
 			// if there is a key at the first frame, duplicate it as the
 			// last frame as well for perfect loop.
-			if ( times[ 0 ] === 0 ) {
+			if ( ! noLoop && times[ 0 ] === 0 ) {
 
 				times.push( numMorphTargets );
 				values.push( values[ 0 ] );
@@ -183,7 +183,7 @@ Object.assign( AnimationClip, {
 
 	},
 
-	CreateClipsFromMorphTargetSequences: function( morphTargets, fps ) {
+	CreateClipsFromMorphTargetSequences: function( morphTargets, fps, noLoop ) {
 
 		var animationToMorphTargets = {};
 
@@ -219,7 +219,7 @@ Object.assign( AnimationClip, {
 
 		for ( var name in animationToMorphTargets ) {
 
-			clips.push( AnimationClip.CreateFromMorphTargetSequence( name, animationToMorphTargets[ name ], fps ) );
+			clips.push( AnimationClip.CreateFromMorphTargetSequence( name, animationToMorphTargets[ name ], fps, noLoop ) );
 
 		}
 
@@ -274,7 +274,7 @@ Object.assign( AnimationClip, {
 			var animationKeys = hierarchyTracks[ h ].keys;
 
 			// skip empty tracks
-			if ( ! animationKeys || animationKeys.length == 0 ) continue;
+			if ( ! animationKeys || animationKeys.length === 0 ) continue;
 
 			// process morph targets in a way exactly compatible
 			// with AnimationHandler.init( animation )
@@ -309,7 +309,7 @@ Object.assign( AnimationClip, {
 						var animationKey = animationKeys[k];
 
 						times.push( animationKey.time );
-						values.push( ( animationKey.morphTarget === morphTargetName ) ? 1 : 0 )
+						values.push( ( animationKey.morphTarget === morphTargetName ) ? 1 : 0 );
 
 					}
 
@@ -354,7 +354,6 @@ Object.assign( AnimationClip, {
 	}
 
 } );
-
 
 
 export { AnimationClip };

@@ -14,9 +14,7 @@ function AudioAnalyser ( audio, fftSize ) {
 
 };
 
-AudioAnalyser.prototype = {
-
-	constructor: AudioAnalyser,
+Object.assign( AudioAnalyser.prototype, {
 
 	getData: function () {
 
@@ -25,7 +23,7 @@ AudioAnalyser.prototype = {
 
 	}
 
-};
+} );
 
 
 export { AudioAnalyser };

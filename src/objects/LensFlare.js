@@ -1,5 +1,4 @@
 import { Object3D } from '../core/Object3D';
-import { NormalBlending } from '../Three';
 import { Color } from '../math/Color';
 import { Vector3 } from '../math/Vector3';
 

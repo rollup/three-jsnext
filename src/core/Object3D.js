@@ -1,8 +1,8 @@
-import { EventDispatcher } from './EventDispatcher';
 import { Vector3 } from '../math/Vector3';
 import { Quaternion } from '../math/Quaternion';
 import { Euler } from '../math/Euler';
 import { Matrix4 } from '../math/Matrix4';
+import { EventDispatcher } from './EventDispatcher';
 import { Layers } from './Layers';
 import { Matrix3 } from '../math/Matrix3';
 import { _Math } from '../math/Math';
@@ -99,9 +99,7 @@ function Object3D () {
 Object3D.DefaultUp = new Vector3( 0, 1, 0 );
 Object3D.DefaultMatrixAutoUpdate = true;
 
-Object3D.prototype = {
-
-	constructor: Object3D,
+Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 	applyMatrix: function ( matrix ) {
 
@@ -556,7 +554,8 @@ Object3D.prototype = {
 
 	toJSON: function ( meta ) {
 
-		var isRootObject = ( meta === undefined );
+		// meta is '' when called from JSON.stringify
+		var isRootObject = ( meta === undefined || meta === '' );
 
 		var output = {};
 
@@ -724,9 +723,7 @@ Object3D.prototype = {
 
 	}
 
-};
-
-EventDispatcher.prototype.apply( Object3D.prototype );
+} );
 
 var count = 0;
 function Object3DIdCount () { return count++; };

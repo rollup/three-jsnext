@@ -1,6 +1,6 @@
 import { Mesh } from '../../objects/Mesh';
 import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
-import { SphereGeometry } from '../geometries/SphereGeometry';
+import { SphereBufferGeometry } from '../geometries/SphereBufferGeometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -13,7 +13,7 @@ function PointLightHelper ( light, sphereSize ) {
 	this.light = light;
 	this.light.updateMatrixWorld();
 
-	var geometry = new SphereGeometry( sphereSize, 4, 2 );
+	var geometry = new SphereBufferGeometry( sphereSize, 4, 2 );
 	var material = new MeshBasicMaterial( { wireframe: true, fog: false } );
 	material.color.copy( this.light.color ).multiplyScalar( this.light.intensity );
 

@@ -13,9 +13,7 @@ function Font ( data ) {
 
 };
 
-Font.prototype = {
-
-	constructor: Font,
+Object.assign( Font.prototype, {
 
 	generateShapes: function ( text, size, divisions ) {
 
@@ -167,7 +165,7 @@ Font.prototype = {
 
 	}
 
-};
+} );
 
 
 export { Font };

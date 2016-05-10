@@ -9,14 +9,8 @@ import { Color } from '../math/Color';
  *  opacity: <float>,
  *  map: new THREE.Texture( <Image> ),
  *
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
- *  depthWrite: <bool>,
- *
  *	uvOffset: new THREE.Vector2(),
- *	uvScale: new THREE.Vector2(),
- *
- *  fog: <bool>
+ *	uvScale: new THREE.Vector2()
  * }
  */
 
@@ -33,8 +27,7 @@ function SpriteMaterial ( parameters ) {
 	this.rotation = 0;
 
 	this.fog = false;
-
-	// set parameters
+	this.lights = false;
 
 	this.setValues( parameters );
 
@@ -51,8 +44,6 @@ SpriteMaterial.prototype.copy = function ( source ) {
 	this.map = source.map;
 
 	this.rotation = source.rotation;
-
-	this.fog = source.fog;
 
 	return this;
 

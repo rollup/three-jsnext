@@ -16,4 +16,5 @@ function Group () {
 Group.prototype = Object.create( Object3D.prototype );
 Group.prototype.constructor = Group;
 
+
 export { Group };

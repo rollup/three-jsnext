@@ -25,7 +25,7 @@ BooleanKeyframeTrack.prototype =
 	ValueTypeName: 'bool',
 	ValueBufferType: Array,
 
-	DefaultInterpolation: IntepolateDiscrete,
+	DefaultInterpolation: InterpolateDiscrete,
 
 	InterpolantFactoryMethodLinear: undefined,
 	InterpolantFactoryMethodSmooth: undefined

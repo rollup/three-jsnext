@@ -1,12 +1,12 @@
-import { basename, dirname, extname, relative, resolve } from 'path';
-import { readdirSync, readFileSync } from 'sander';
-import { parse } from 'acorn';
-import MagicString from 'magic-string';
-import attachScopes from './ast/attachScopes';
-import walk from './ast/walk';
-import createAlias from './utils/createAlias';
-import dedupe from './utils/dedupe';
-import isExport from './utils/isExport';
+const { basename, dirname, extname, relative, resolve } = require( 'path' );
+const { readdirSync, readFileSync } = require( 'sander' );
+const { parse } = require( 'acorn' );
+const MagicString = require( 'magic-string' );
+const attachScopes = require( './ast/attachScopes' );
+const walk = require( './ast/walk' );
+const createAlias = require( './utils/createAlias' );
+const dedupe = require( './utils/dedupe' );
+const isExport = require( './utils/isExport' );
 
 function isIdentifier ( node, parent ) {
 	if ( node.type !== 'Identifier' ) return false;
@@ -44,7 +44,7 @@ const iifeClose = /[\s\r\n]+\}\(\s*THREE\s*\)\s*\);/;
 
 const aliasedExport = /THREE.(\w+) = THREE.(\w+) = function/;
 
-export default class Module {
+module.exports = class Module {
 	constructor ( file ) {
 		this.file = file;
 		this.dir = dirname( file );

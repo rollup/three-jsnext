@@ -16,4 +16,5 @@ function RawShaderMaterial ( parameters ) {
 RawShaderMaterial.prototype = Object.create( ShaderMaterial.prototype );
 RawShaderMaterial.prototype.constructor = RawShaderMaterial;
 
+
 export { RawShaderMaterial };

@@ -23,26 +23,24 @@ function StereoCamera () {
 
 };
 
-StereoCamera.prototype = {
-
-	constructor: StereoCamera,
+Object.assign( StereoCamera.prototype, {
 
 	update: ( function () {
 
-		var focalLength, fov, aspect, near, far;
+		var focus, fov, aspect, near, far;
 
 		var eyeRight = new Matrix4();
 		var eyeLeft = new Matrix4();
 
 		return function update ( camera ) {
 
-			var needsUpdate = focalLength !== camera.focalLength || fov !== camera.fov ||
+			var needsUpdate = focus !== camera.focus || fov !== camera.fov ||
 												aspect !== camera.aspect * this.aspect || near !== camera.near ||
 												far !== camera.far;
 
 			if ( needsUpdate ) {
 
-				focalLength = camera.focalLength;
+				focus = camera.focus;
 				fov = camera.fov;
 				aspect = camera.aspect * this.aspect;
 				near = camera.near;
@@ -52,9 +50,9 @@ StereoCamera.prototype = {
 				// http://paulbourke.net/stereographics/stereorender/
 
 				var projectionMatrix = camera.projectionMatrix.clone();
-				var eyeSep = focalLength / 30 * 0.5;
-				var eyeSepOnProjection = eyeSep * near / focalLength;
-				var ymax = near * Math.tan( _Math.degToRad( fov * 0.5 ) );
+				var eyeSep = 0.064 / 2;
+				var eyeSepOnProjection = eyeSep * near / focus;
+				var ymax = near * Math.tan( _Math.DEG2RAD * fov * 0.5 );
 				var xmin, xmax;
 
 				// translate xOffset
@@ -91,7 +89,7 @@ StereoCamera.prototype = {
 
 	} )()
 
-};
+} );
 
 
 export { StereoCamera };

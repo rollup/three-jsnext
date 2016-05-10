@@ -1,5 +1,4 @@
 import { EventDispatcher } from '../core/EventDispatcher';
-import { FrontSide, NormalBlending, SmoothShading, NoColors, LessEqualDepth, AddEquation, OneMinusSrcAlphaFactor, SrcAlphaFactor } from '../Three';
 import { Texture } from '../textures/Texture';
 import { Color } from '../math/Color';
 import { Vector3 } from '../math/Vector3';
@@ -20,12 +19,16 @@ function Material () {
 	this.name = '';
 	this.type = 'Material';
 
+	this.fog = true;
+	this.lights = true;
+
+	this.blending = NormalBlending;
 	this.side = FrontSide;
+	this.shading = SmoothShading; // THREE.FlatShading, THREE.SmoothShading
+	this.vertexColors = NoColors; // THREE.NoColors, THREE.VertexColors, THREE.FaceColors
 
 	this.opacity = 1;
 	this.transparent = false;
-
-	this.blending = NormalBlending;
 
 	this.blendSrc = SrcAlphaFactor;
 	this.blendDst = OneMinusSrcAlphaFactor;
@@ -38,8 +41,8 @@ function Material () {
 	this.depthTest = true;
 	this.depthWrite = true;
 
-	this.stencilTest = false;
-	this.stencilWrite = false;
+	this.clippingPlanes = null;
+	this.clipShadows = false;
 
 	this.colorWrite = true;
 
@@ -50,6 +53,7 @@ function Material () {
 	this.polygonOffsetUnits = 0;
 
 	this.alphaTest = 0;
+	this.premultipliedAlpha = false;
 
 	this.overdraw = 0; // Overdrawn pixels (typically between 0 and 1) for fixing antialiasing gaps in CanvasRenderer
 
@@ -63,16 +67,15 @@ Material.prototype = {
 
 	constructor: Material,
 
-	get needsUpdate () {
+	get needsUpdate() {
 
 		return this._needsUpdate;
 
 	},
 
-	set needsUpdate ( value ) {
+	set needsUpdate( value ) {
 
 		if ( value === true ) this.update();
-
 		this._needsUpdate = value;
 
 	},
@@ -148,12 +151,13 @@ Material.prototype = {
 		// standard Material serialization
 		data.uuid = this.uuid;
 		data.type = this.type;
+
 		if ( this.name !== '' ) data.name = this.name;
 
 		if ( (this.color && this.color.isColor) ) data.color = this.color.getHex();
 
 		if ( this.roughness !== 0.5 ) data.roughness = this.roughness;
-		if ( this.metalness > 0 ) data.metalness = this.metalness;
+		if ( this.metalness !== 0.5 ) data.metalness = this.metalness;
 
 		if ( (this.emissive && this.emissive.isColor) ) data.emissive = this.emissive.getHex();
 		if ( (this.specular && this.specular.isColor) ) data.specular = this.specular.getHex();
@@ -197,14 +201,15 @@ Material.prototype = {
 		if ( this.size !== undefined ) data.size = this.size;
 		if ( this.sizeAttenuation !== undefined ) data.sizeAttenuation = this.sizeAttenuation;
 
-		if ( this.vertexColors !== undefined && this.vertexColors !== NoColors ) data.vertexColors = this.vertexColors;
-		if ( this.shading !== undefined && this.shading !== SmoothShading ) data.shading = this.shading;
-		if ( this.blending !== undefined && this.blending !== NormalBlending ) data.blending = this.blending;
-		if ( this.side !== undefined && this.side !== FrontSide ) data.side = this.side;
+		if ( this.blending !== NormalBlending ) data.blending = this.blending;
+		if ( this.shading !== SmoothShading ) data.shading = this.shading;
+		if ( this.side !== FrontSide ) data.side = this.side;
+		if ( this.vertexColors !== NoColors ) data.vertexColors = this.vertexColors;
 
 		if ( this.opacity < 1 ) data.opacity = this.opacity;
 		if ( this.transparent === true ) data.transparent = this.transparent;
 		if ( this.alphaTest > 0 ) data.alphaTest = this.alphaTest;
+		if ( this.premultipliedAlpha === true ) data.premultipliedAlpha = this.premultipliedAlpha;
 		if ( this.wireframe === true ) data.wireframe = this.wireframe;
 		if ( this.wireframeLinewidth > 1 ) data.wireframeLinewidth = this.wireframeLinewidth;
 
@@ -250,12 +255,15 @@ Material.prototype = {
 
 		this.name = source.name;
 
+		this.fog = source.fog;
+		this.lights = source.lights;
+
+		this.blending = source.blending;
 		this.side = source.side;
+		this.vertexColors = source.vertexColors;
 
 		this.opacity = source.opacity;
 		this.transparent = source.transparent;
-
-		this.blending = source.blending;
 
 		this.blendSrc = source.blendSrc;
 		this.blendDst = source.blendDst;
@@ -268,9 +276,6 @@ Material.prototype = {
 		this.depthTest = source.depthTest;
 		this.depthWrite = source.depthWrite;
 
-		this.stencilTest = source.stencilTest;
-		this.stencilWrite = source.stencilWrite;
-
 		this.colorWrite = source.colorWrite;
 
 		this.precision = source.precision;
@@ -281,9 +286,27 @@ Material.prototype = {
 
 		this.alphaTest = source.alphaTest;
 
+		this.premultipliedAlpha = source.premultipliedAlpha;
+
 		this.overdraw = source.overdraw;
 
 		this.visible = source.visible;
+		this.clipShadows = source.clipShadows;
+
+		var srcPlanes = source.clippingPlanes,
+			dstPlanes = null;
+
+		if ( srcPlanes !== null ) {
+
+			var n = srcPlanes.length;
+			dstPlanes = new Array( n );
+
+			for ( var i = 0; i !== n; ++ i )
+				dstPlanes[ i ] = srcPlanes[ i ].clone();
+
+		}
+
+		this.clippingPlanes = dstPlanes;
 
 		return this;
 
@@ -303,7 +326,7 @@ Material.prototype = {
 
 };
 
-EventDispatcher.prototype.apply( Material.prototype );
+Object.assign( Material.prototype, EventDispatcher.prototype );
 
 var count = 0;
 function MaterialIdCount () { return count++; };

@@ -1,4 +1,3 @@
-import { EventDispatcher } from './EventDispatcher';
 import { BufferGeometry } from './BufferGeometry';
 
 /**
@@ -61,8 +60,6 @@ InstancedBufferGeometry.prototype.copy = function ( source ) {
 	return this;
 
 };
-
-EventDispatcher.prototype.apply( InstancedBufferGeometry.prototype );
 
 
 export { InstancedBufferGeometry };

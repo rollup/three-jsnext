@@ -2,7 +2,6 @@ import { Camera } from '../../cameras/Camera';
 import { Vector3 } from '../../math/Vector3';
 import { LineSegments } from '../../objects/LineSegments';
 import { Color } from '../../math/Color';
-import { FaceColors } from '../../Three';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Geometry } from '../../core/Geometry';
 

@@ -26,52 +26,55 @@ function OrthographicCamera ( left, right, top, bottom, near, far ) {
 
 };
 
-OrthographicCamera.prototype = Object.create( Camera.prototype );
-OrthographicCamera.prototype.constructor = OrthographicCamera;
+OrthographicCamera.prototype = Object.assign( Object.create( Camera.prototype ), {
 
-OrthographicCamera.prototype.updateProjectionMatrix = function () {
+	constructor: OrthographicCamera,
 
-	var dx = ( this.right - this.left ) / ( 2 * this.zoom );
-	var dy = ( this.top - this.bottom ) / ( 2 * this.zoom );
-	var cx = ( this.right + this.left ) / 2;
-	var cy = ( this.top + this.bottom ) / 2;
+	copy: function ( source ) {
 
-	this.projectionMatrix.makeOrthographic( cx - dx, cx + dx, cy + dy, cy - dy, this.near, this.far );
+		Camera.prototype.copy.call( this, source );
 
-};
+		this.left = source.left;
+		this.right = source.right;
+		this.top = source.top;
+		this.bottom = source.bottom;
+		this.near = source.near;
+		this.far = source.far;
 
-OrthographicCamera.prototype.copy = function ( source ) {
+		this.zoom = source.zoom;
 
-	Camera.prototype.copy.call( this, source );
+		return this;
 
-	this.left = source.left;
-	this.right = source.right;
-	this.top = source.top;
-	this.bottom = source.bottom;
-	this.near = source.near;
-	this.far = source.far;
+	},
 
-	this.zoom = source.zoom;
+	updateProjectionMatrix: function () {
 
-	return this;
+		var dx = ( this.right - this.left ) / ( 2 * this.zoom );
+		var dy = ( this.top - this.bottom ) / ( 2 * this.zoom );
+		var cx = ( this.right + this.left ) / 2;
+		var cy = ( this.top + this.bottom ) / 2;
 
-};
+		this.projectionMatrix.makeOrthographic( cx - dx, cx + dx, cy + dy, cy - dy, this.near, this.far );
 
-OrthographicCamera.prototype.toJSON = function ( meta ) {
+	},
 
-	var data = Object3D.prototype.toJSON.call( this, meta );
+	toJSON: function ( meta ) {
 
-	data.object.zoom = this.zoom;
-	data.object.left = this.left;
-	data.object.right = this.right;
-	data.object.top = this.top;
-	data.object.bottom = this.bottom;
-	data.object.near = this.near;
-	data.object.far = this.far;
+		var data = Object3D.prototype.toJSON.call( this, meta );
 
-	return data;
+		data.object.zoom = this.zoom;
+		data.object.left = this.left;
+		data.object.right = this.right;
+		data.object.top = this.top;
+		data.object.bottom = this.bottom;
+		data.object.near = this.near;
+		data.object.far = this.far;
 
-};
+		return data;
+
+	}
+
+} );
 
 
 export { OrthographicCamera };

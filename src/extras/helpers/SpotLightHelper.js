@@ -1,8 +1,9 @@
 import { Vector3 } from '../../math/Vector3';
 import { Object3D } from '../../core/Object3D';
-import { Mesh } from '../../objects/Mesh';
-import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
-import { CylinderGeometry } from '../geometries/CylinderGeometry';
+import { LineSegments } from '../../objects/LineSegments';
+import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
+import { Float32Attribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -21,14 +22,33 @@ function SpotLightHelper ( light ) {
 	this.matrix = light.matrixWorld;
 	this.matrixAutoUpdate = false;
 
-	var geometry = new CylinderGeometry( 0, 1, 1, 8, 1, true );
+	var geometry = new BufferGeometry();
 
-	geometry.translate( 0, - 0.5, 0 );
-	geometry.rotateX( - Math.PI / 2 );
+	var positions = [
+		0, 0, 0,   0,   0,   1,
+		0, 0, 0,   1,   0,   1,
+		0, 0, 0, - 1,   0,   1,
+		0, 0, 0,   0,   1,   1,
+		0, 0, 0,   0, - 1,   1
+	];
 
-	var material = new MeshBasicMaterial( { wireframe: true, fog: false } );
+	for ( var i = 0, j = 1, l = 32; i < l; i ++, j ++ ) {
 
-	this.cone = new Mesh( geometry, material );
+		var p1 = ( i / l ) * Math.PI * 2;
+		var p2 = ( j / l ) * Math.PI * 2;
+
+		positions.push(
+			Math.cos( p1 ), Math.sin( p1 ), 1,
+			Math.cos( p2 ), Math.sin( p2 ), 1
+		);
+
+	}
+
+	geometry.addAttribute( 'position', new Float32Attribute( positions, 3 ) );
+
+	var material = new LineBasicMaterial( { fog: false } );
+
+	this.cone = new LineSegments( geometry, material );
 	this.add( this.cone );
 
 	this.update();
@@ -52,7 +72,7 @@ SpotLightHelper.prototype.update = function () {
 
 	return function () {
 
-		var coneLength = this.light.distance ? this.light.distance : 10000;
+		var coneLength = this.light.distance ? this.light.distance : 1000;
 		var coneWidth = coneLength * Math.tan( this.light.angle );
 
 		this.cone.scale.set( coneWidth, coneWidth, coneLength );

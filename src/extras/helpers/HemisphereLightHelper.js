@@ -1,7 +1,6 @@
 import { Vector3 } from '../../math/Vector3';
 import { Object3D } from '../../core/Object3D';
 import { Mesh } from '../../objects/Mesh';
-import { FaceColors } from '../../Three';
 import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
 import { SphereGeometry } from '../geometries/SphereGeometry';
 import { Color } from '../../math/Color';
@@ -64,7 +63,7 @@ HemisphereLightHelper.prototype.update = function () {
 		this.lightSphere.lookAt( vector.setFromMatrixPosition( this.light.matrixWorld ).negate() );
 		this.lightSphere.geometry.colorsNeedUpdate = true;
 
-	}
+	};
 
 }();
 

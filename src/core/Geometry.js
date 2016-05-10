@@ -1,4 +1,3 @@
-import { EventDispatcher } from './EventDispatcher';
 import { Mesh } from '../objects/Mesh';
 import { Face3 } from './Face3';
 import { Matrix3 } from '../math/Matrix3';
@@ -9,6 +8,7 @@ import { Matrix4 } from '../math/Matrix4';
 import { Vector2 } from '../math/Vector2';
 import { Color } from '../math/Color';
 import { Object3D } from './Object3D';
+import { EventDispatcher } from './EventDispatcher';
 import { _Math } from '../math/Math';
 
 /**
@@ -58,9 +58,7 @@ function Geometry () {
 
 };
 
-Geometry.prototype = {
-
-	constructor: Geometry,
+Object.assign( Geometry.prototype, EventDispatcher.prototype, {
 
 	applyMatrix: function ( matrix ) {
 
@@ -100,6 +98,8 @@ Geometry.prototype = {
 
 		this.verticesNeedUpdate = true;
 		this.normalsNeedUpdate = true;
+
+		return this;
 
 	},
 
@@ -270,12 +270,12 @@ Geometry.prototype = {
 
 		}
 
-		function addFace( a, b, c ) {
+		function addFace( a, b, c, materialIndex ) {
 
 			var vertexNormals = normals !== undefined ? [ tempNormals[ a ].clone(), tempNormals[ b ].clone(), tempNormals[ c ].clone() ] : [];
 			var vertexColors = colors !== undefined ? [ scope.colors[ a ].clone(), scope.colors[ b ].clone(), scope.colors[ c ].clone() ] : [];
 
-			var face = new Face3( a, b, c, vertexNormals, vertexColors );
+			var face = new Face3( a, b, c, vertexNormals, vertexColors, materialIndex );
 
 			scope.faces.push( face );
 
@@ -308,7 +308,7 @@ Geometry.prototype = {
 
 					for ( var j = start, jl = start + count; j < jl; j += 3 ) {
 
-						addFace( indices[ j ], indices[ j + 1 ], indices[ j + 2 ] );
+						addFace( indices[ j ], indices[ j + 1 ], indices[ j + 2 ], group.materialIndex  );
 
 					}
 
@@ -1214,9 +1214,7 @@ Geometry.prototype = {
 
 	}
 
-};
-
-EventDispatcher.prototype.apply( Geometry.prototype );
+} );
 
 var count = 0;
 function GeometryIdCount () { return count++; };

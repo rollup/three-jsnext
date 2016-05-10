@@ -1,3 +1,3 @@
-require( 'babel-register' );
+require( 'buble/register' );
 
-require( './src' ).default();
+require( './src' )();

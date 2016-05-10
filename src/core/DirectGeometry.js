@@ -1,6 +1,6 @@
-import { EventDispatcher } from './EventDispatcher';
 import { Vector2 } from '../math/Vector2';
 import { Geometry, GeometryIdCount } from './Geometry';
+import { EventDispatcher } from './EventDispatcher';
 import { _Math } from '../math/Math';
 
 /**
@@ -46,9 +46,7 @@ function DirectGeometry () {
 
 };
 
-DirectGeometry.prototype = {
-
-	constructor: DirectGeometry,
+Object.assign( DirectGeometry.prototype, EventDispatcher.prototype, {
 
 	computeBoundingBox: Geometry.prototype.computeBoundingBox,
 	computeBoundingSphere: Geometry.prototype.computeBoundingSphere,
@@ -291,9 +289,7 @@ DirectGeometry.prototype = {
 
 	}
 
-};
-
-EventDispatcher.prototype.apply( DirectGeometry.prototype );
+} );
 
 
 export { DirectGeometry };

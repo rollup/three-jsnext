@@ -1,35 +1,41 @@
 import { LineSegments } from '../../objects/LineSegments';
-import { Vector3 } from '../../math/Vector3';
-import { Color } from '../../math/Color';
-import { VertexColors } from '../../Three';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { Geometry } from '../../core/Geometry';
+import { Float32Attribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
+import { Color } from '../../math/Color';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function GridHelper ( size, step ) {
+function GridHelper ( size, step, color1, color2 ) {
 	this.isGridHelper = true;
 
-	var geometry = new Geometry();
-	var material = new LineBasicMaterial( { vertexColors: VertexColors } );
+	color1 = new Color( color1 !== undefined ? color1 : 0x444444 );
+	color2 = new Color( color2 !== undefined ? color2 : 0x888888 );
 
-	this.color1 = new Color( 0x444444 );
-	this.color2 = new Color( 0x888888 );
+	var vertices = [];
+	var colors = [];
 
-	for ( var i = - size; i <= size; i += step ) {
+	for ( var i = - size, j = 0; i <= size; i += step ) {
 
-		geometry.vertices.push(
-			new Vector3( - size, 0, i ), new Vector3( size, 0, i ),
-			new Vector3( i, 0, - size ), new Vector3( i, 0, size )
-		);
+		vertices.push( - size, 0, i, size, 0, i );
+		vertices.push( i, 0, - size, i, 0, size );
 
-		var color = i === 0 ? this.color1 : this.color2;
+		var color = i === 0 ? color1 : color2;
 
-		geometry.colors.push( color, color, color, color );
+		color.toArray( colors, j ); j += 3;
+		color.toArray( colors, j ); j += 3;
+		color.toArray( colors, j ); j += 3;
+		color.toArray( colors, j ); j += 3;
 
 	}
+
+	var geometry = new BufferGeometry();
+	geometry.addAttribute( 'position', new Float32Attribute( vertices, 3 ) );
+	geometry.addAttribute( 'color', new Float32Attribute( colors, 3 ) );
+
+	var material = new LineBasicMaterial( { vertexColors: VertexColors } );
 
 	LineSegments.call( this, geometry, material );
 
@@ -38,12 +44,9 @@ function GridHelper ( size, step ) {
 GridHelper.prototype = Object.create( LineSegments.prototype );
 GridHelper.prototype.constructor = GridHelper;
 
-GridHelper.prototype.setColors = function( colorCenterLine, colorGrid ) {
+GridHelper.prototype.setColors = function () {
 
-	this.color1.set( colorCenterLine );
-	this.color2.set( colorGrid );
-
-	this.geometry.colorsNeedUpdate = true;
+	console.error( 'THREE.GridHelper: setColors() has been deprecated, pass them in the constructor instead.' );
 
 };
 

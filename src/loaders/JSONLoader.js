@@ -411,7 +411,7 @@ JSONLoader.prototype = {
 
 			}
 
-		};
+		}
 
 		function parseSkin() {
 
@@ -456,7 +456,7 @@ JSONLoader.prototype = {
 
 			}
 
-		};
+		}
 
 		function parseMorphing( scale ) {
 
@@ -548,7 +548,7 @@ JSONLoader.prototype = {
 
 			if ( outputAnimations.length > 0 ) geometry.animations = outputAnimations;
 
-		};
+		}
 
 		if ( json.materials === undefined || json.materials.length === 0 ) {
 

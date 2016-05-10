@@ -52,7 +52,8 @@ function SkinnedMesh ( geometry, material, useVertexTexture ) {
 
 			gbone = this.geometry.bones[ b ];
 
-			if ( gbone.parent !== - 1 && gbone.parent !== null ) {
+			if ( gbone.parent !== - 1 && gbone.parent !== null &&
+					bones[ gbone.parent ] !== undefined ) {
 
 				bones[ gbone.parent ].add( bones[ b ] );
 

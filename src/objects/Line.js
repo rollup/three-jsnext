@@ -29,7 +29,7 @@ function Line ( geometry, material, mode ) {
 
 	this.type = 'Line';
 
-	this.geometry = geometry !== undefined ? geometry : new Geometry();
+	this.geometry = geometry !== undefined ? geometry : new BufferGeometry();
 	this.material = material !== undefined ? material : new LineBasicMaterial( { color: Math.random() * 0xffffff } );
 
 };

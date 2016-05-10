@@ -14,7 +14,7 @@ function EdgesGeometry ( geometry, thresholdAngle ) {
 
 	thresholdAngle = ( thresholdAngle !== undefined ) ? thresholdAngle : 1;
 
-	var thresholdDot = Math.cos( _Math.degToRad( thresholdAngle ) );
+	var thresholdDot = Math.cos( _Math.DEG2RAD * thresholdAngle );
 
 	var edge = [ 0, 0 ], hash = {};
 

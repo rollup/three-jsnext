@@ -1,7 +1,7 @@
 let shouldSkip;
 let shouldAbort;
 
-export default function walk ( ast, { enter, leave }) {
+module.exports = function walk ( ast, { enter, leave }) {
 	shouldAbort = false;
 	visit( ast, null, enter, leave );
 }

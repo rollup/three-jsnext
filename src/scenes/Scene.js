@@ -21,9 +21,9 @@ function Scene () {
 Scene.prototype = Object.create( Object3D.prototype );
 Scene.prototype.constructor = Scene;
 
-Scene.prototype.copy = function ( source ) {
+Scene.prototype.copy = function ( source, recursive ) {
 
-	Object3D.prototype.copy.call( this, source );
+	Object3D.prototype.copy.call( this, source, recursive );
 
 	if ( source.fog !== null ) this.fog = source.fog.clone();
 	if ( source.overrideMaterial !== null ) this.overrideMaterial = source.overrideMaterial.clone();

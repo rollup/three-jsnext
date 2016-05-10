@@ -1,5 +1,4 @@
 import { Material } from './Material';
-import { NoColors, MultiplyOperation } from '../Three';
 import { Color } from '../math/Color';
 
 /**
@@ -8,7 +7,6 @@ import { Color } from '../math/Color';
  *
  * parameters = {
  *  color: <hex>,
- *  emissive: <hex>,
  *  opacity: <float>,
  *
  *  map: new THREE.Texture( <Image> ),
@@ -19,8 +17,9 @@ import { Color } from '../math/Color';
  *  aoMap: new THREE.Texture( <Image> ),
  *  aoMapIntensity: <float>
  *
+ *  emissive: <hex>,
+ *  emissiveIntensity: <float>
  *  emissiveMap: new THREE.Texture( <Image> ),
- *  emissiveMapIntensity: <float>
  *
  *  specularMap: new THREE.Texture( <Image> ),
  *
@@ -31,20 +30,12 @@ import { Color } from '../math/Color';
  *  reflectivity: <float>,
  *  refractionRatio: <float>,
  *
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
- *  depthWrite: <bool>,
- *
  *  wireframe: <boolean>,
  *  wireframeLinewidth: <float>,
  *
- *  vertexColors: THREE.NoColors / THREE.VertexColors / THREE.FaceColors,
- *
  *  skinning: <bool>,
  *  morphTargets: <bool>,
- *  morphNormals: <bool>,
- *
- *	fog: <bool>
+ *  morphNormals: <bool>
  * }
  */
 
@@ -56,7 +47,6 @@ function MeshLambertMaterial ( parameters ) {
 	this.type = 'MeshLambertMaterial';
 
 	this.color = new Color( 0xffffff ); // diffuse
-	this.emissive = new Color( 0x000000 );
 
 	this.map = null;
 
@@ -66,8 +56,9 @@ function MeshLambertMaterial ( parameters ) {
 	this.aoMap = null;
 	this.aoMapIntensity = 1.0;
 
+	this.emissive = new Color( 0x000000 );
+	this.emissiveIntensity = 1.0;
 	this.emissiveMap = null;
-	this.emissiveMapIntensity = 1.0;
 
 	this.specularMap = null;
 
@@ -78,14 +69,10 @@ function MeshLambertMaterial ( parameters ) {
 	this.reflectivity = 1;
 	this.refractionRatio = 0.98;
 
-	this.fog = true;
-
 	this.wireframe = false;
 	this.wireframeLinewidth = 1;
 	this.wireframeLinecap = 'round';
 	this.wireframeLinejoin = 'round';
-
-	this.vertexColors = NoColors;
 
 	this.skinning = false;
 	this.morphTargets = false;
@@ -103,7 +90,6 @@ MeshLambertMaterial.prototype.copy = function ( source ) {
 	Material.prototype.copy.call( this, source );
 
 	this.color.copy( source.color );
-	this.emissive.copy( source.emissive );
 
 	this.map = source.map;
 
@@ -113,8 +99,9 @@ MeshLambertMaterial.prototype.copy = function ( source ) {
 	this.aoMap = source.aoMap;
 	this.aoMapIntensity = source.aoMapIntensity;
 
+	this.emissive.copy( source.emissive );
 	this.emissiveMap = source.emissiveMap;
-	this.emissiveMapIntensity = source.emissiveMapIntensity;
+	this.emissiveIntensity = source.emissiveIntensity;
 
 	this.specularMap = source.specularMap;
 
@@ -125,14 +112,10 @@ MeshLambertMaterial.prototype.copy = function ( source ) {
 	this.reflectivity = source.reflectivity;
 	this.refractionRatio = source.refractionRatio;
 
-	this.fog = source.fog;
-
 	this.wireframe = source.wireframe;
 	this.wireframeLinewidth = source.wireframeLinewidth;
 	this.wireframeLinecap = source.wireframeLinecap;
 	this.wireframeLinejoin = source.wireframeLinejoin;
-
-	this.vertexColors = source.vertexColors;
 
 	this.skinning = source.skinning;
 	this.morphTargets = source.morphTargets;

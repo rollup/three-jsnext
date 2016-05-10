@@ -1,9 +1,14 @@
+import { LOD } from './objects/LOD';
 import { MultiMaterial } from './materials/MultiMaterial';
 import { CubeTextureLoader } from './loaders/CubeTextureLoader';
 import { TextureLoader } from './loaders/TextureLoader';
 import { Mesh } from './objects/Mesh';
+import { AudioLoader } from './loaders/AudioLoader';
+import { Audio } from './audio/Audio';
 import { WebGLRenderTarget } from './renderers/WebGLRenderTarget';
+import { WebGLShadowMap } from './renderers/webgl/WebGLShadowMap';
 import { WebGLRenderer } from './renderers/WebGLRenderer';
+import { EventDispatcher } from './core/EventDispatcher';
 import { ShaderMaterial } from './materials/ShaderMaterial';
 import { MeshPhongMaterial } from './materials/MeshPhongMaterial';
 import { PointsMaterial } from './materials/PointsMaterial';
@@ -12,9 +17,11 @@ import { Material } from './materials/Material';
 import { BufferGeometry } from './core/BufferGeometry';
 import { BufferAttribute } from './core/BufferAttribute';
 import { Light } from './lights/Light';
+import { Sprite } from './objects/Sprite';
 import { Points } from './objects/Points';
 import { Object3D } from './core/Object3D';
 import { Vector3 } from './math/Vector3';
+import { Face3 } from './core/Face3';
 import { Ray } from './math/Ray';
 import { Quaternion } from './math/Quaternion';
 import { Plane } from './math/Plane';
@@ -26,6 +33,7 @@ import { Box2 } from './math/Box2';
 var MeshFaceMaterial;
 var ImageUtils;
 var GeometryUtils;
+var Particle;
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -217,10 +225,28 @@ Object.defineProperties( Vector3.prototype, {
 	getColumnFromMatrix: {
 		value: function ( index, matrix ) {
 			console.warn( 'THREE.Vector3: .getColumnFromMatrix() has been renamed to .setFromMatrixColumn().' );
-			return this.setFromMatrixColumn( index, matrix );
+			return this.setFromMatrixColumn( matrix, index );
 		}
 	}
 } );
+
+//
+
+function Face4 ( a, b, c, d, normal, color, materialIndex ) {
+	this.isFace4 = true;
+
+	console.warn( 'THREE.Face4 has been removed. A THREE.Face3 will be created instead.' );
+	return new Face3( a, b, c, normal, color, materialIndex );
+
+};
+
+function Vertex ( x, y, z ) {
+	this.isVertex = true;
+
+	console.warn( 'THREE.Vertex has been removed. Use THREE.Vector3 instead.' );
+	return new Vector3( x, y, z );
+
+};
 
 //
 
@@ -279,6 +305,8 @@ Object.defineProperties( THREE, {
 	}
 } );
 
+Particle = Sprite;
+
 //
 
 Object.defineProperties( Light.prototype, {
@@ -289,36 +317,43 @@ Object.defineProperties( Light.prototype, {
 	},
 	shadowCameraFov: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowCameraFov is now .shadow.camera.fov.' );
 			this.shadow.camera.fov = value;
 		}
 	},
 	shadowCameraLeft: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowCameraLeft is now .shadow.camera.left.' );
 			this.shadow.camera.left = value;
 		}
 	},
 	shadowCameraRight: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowCameraRight is now .shadow.camera.right.' );
 			this.shadow.camera.right = value;
 		}
 	},
 	shadowCameraTop: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowCameraTop is now .shadow.camera.top.' );
 			this.shadow.camera.top = value;
 		}
 	},
 	shadowCameraBottom: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowCameraBottom is now .shadow.camera.bottom.' );
 			this.shadow.camera.bottom = value;
 		}
 	},
 	shadowCameraNear: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowCameraNear is now .shadow.camera.near.' );
 			this.shadow.camera.near = value;
 		}
 	},
 	shadowCameraFar: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowCameraFar is now .shadow.camera.far.' );
 			this.shadow.camera.far = value;
 		}
 	},
@@ -329,21 +364,24 @@ Object.defineProperties( Light.prototype, {
 	},
 	shadowBias: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowBias is now .shadow.bias.' );
 			this.shadow.bias = value;
 		}
 	},
 	shadowDarkness: {
 		set: function ( value ) {
-			this.shadow.darkness = value;
+			console.warn( 'THREE.Light: .shadowDarkness has been removed.' );
 		}
 	},
 	shadowMapWidth: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowMapWidth is now .shadow.mapSize.width.' );
 			this.shadow.mapSize.width = value;
 		}
 	},
 	shadowMapHeight: {
 		set: function ( value ) {
+			console.warn( 'THREE.Light: .shadowMapHeight is now .shadow.mapSize.height.' );
 			this.shadow.mapSize.height = value;
 		}
 	}
@@ -473,6 +511,25 @@ Object.defineProperties( ShaderMaterial.prototype, {
 
 //
 
+EventDispatcher.prototype = Object.assign( Object.create( {
+
+    // Note: Extra base ensures these properties are not 'assign'ed.
+
+	constructor: EventDispatcher,
+
+	apply: function( target ) {
+
+		console.warn( "THREE.EventDispatcher: .apply is deprecated, " +
+				"just inherit or Object.assign the prototype to mix-in." );
+
+		Object.assign( target, this );
+
+	}
+
+} ), EventDispatcher.prototype );
+
+//
+
 Object.defineProperties( WebGLRenderer.prototype, {
 	supportsFloatTextures: {
 		value: function () {
@@ -573,15 +630,17 @@ Object.defineProperties( WebGLRenderer.prototype, {
 			console.warn( 'THREE.WebGLRenderer: .shadowMapCullFace is now .shadowMap.cullFace.' );
 			this.shadowMap.cullFace = value;
 		}
+	}
+} );
+
+Object.defineProperty( WebGLShadowMap.prototype, 'cullFace', {
+	set: function( cullFace ) {
+		var value = ( cullFace !== CullFaceBack );
+		console.warn( "WebGLRenderer: .shadowMap.cullFace is deprecated. Set .shadowMap.renderReverseSided to " + value + "." );
+		this.renderReverseSided = value;
 	},
-	shadowMapDebug: {
-		get: function () {
-			return this.shadowMap.debug;
-		},
-		set: function ( value ) {
-			console.warn( 'THREE.WebGLRenderer: .shadowMapDebug is now .shadowMap.debug.' );
-			this.shadowMap.debug = value;
-		}
+	get: function() {
+		return this.renderReverseSided ? CullFaceFront : CullFaceBack;
 	}
 } );
 
@@ -686,6 +745,30 @@ Object.defineProperties( WebGLRenderTarget.prototype, {
 		set: function ( value ) {
 			console.warn( 'THREE.WebGLRenderTarget: .generateMipmaps is now .texture.generateMipmaps.' );
 			this.texture.generateMipmaps = value;
+		}
+	}
+} );
+
+//
+
+Object.defineProperties( Audio.prototype, {
+	load: {
+		value: function ( file ) {
+
+			console.warn( 'THREE.Audio: .load has been deprecated. Please use THREE.AudioLoader.' );
+
+			var scope = this;
+
+			var audioLoader = new AudioLoader();
+
+			audioLoader.load( file, function ( buffer ) {
+
+				scope.setBuffer( buffer );
+
+			} );
+
+			return this;
+
 		}
 	}
 } );
@@ -818,11 +901,27 @@ function CanvasRenderer () {
 
 MeshFaceMaterial = MultiMaterial;
 
+//
+
+Object.defineProperties( LOD.prototype, {
+	objects: {
+		get: function () {
+
+			console.warn( 'THREE.LOD: .objects has been renamed to .levels.' );
+			return this.levels;
+
+		}
+	}
+} );
+
 
 export {
   MeshFaceMaterial,
   CanvasRenderer,
   Projector,
   ImageUtils,
-  GeometryUtils
+  GeometryUtils,
+  Particle,
+  Vertex,
+  Face4
 };

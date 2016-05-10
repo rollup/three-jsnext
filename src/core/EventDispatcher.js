@@ -5,18 +5,7 @@
 function EventDispatcher () {
 	this.isEventDispatcher = true;};
 
-EventDispatcher.prototype = {
-
-	constructor: EventDispatcher,
-
-	apply: function ( object ) {
-
-		object.addEventListener = EventDispatcher.prototype.addEventListener;
-		object.hasEventListener = EventDispatcher.prototype.hasEventListener;
-		object.removeEventListener = EventDispatcher.prototype.removeEventListener;
-		object.dispatchEvent = EventDispatcher.prototype.dispatchEvent;
-
-	},
+Object.assign( EventDispatcher.prototype, {
 
 	addEventListener: function ( type, listener ) {
 
@@ -86,16 +75,16 @@ EventDispatcher.prototype = {
 
 			event.target = this;
 
-			var array = [];
+			var array = [], i = 0;
 			var length = listenerArray.length;
 
-			for ( var i = 0; i < length; i ++ ) {
+			for ( i = 0; i < length; i ++ ) {
 
 				array[ i ] = listenerArray[ i ];
 
 			}
 
-			for ( var i = 0; i < length; i ++ ) {
+			for ( i = 0; i < length; i ++ ) {
 
 				array[ i ].call( this, event );
 
@@ -105,7 +94,7 @@ EventDispatcher.prototype = {
 
 	}
 
-};
+} );
 
 
 export { EventDispatcher };

@@ -1,13 +1,12 @@
 import { Light } from './Light';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
-import { LightShadow } from './LightShadow';
+import { SpotLightShadow } from './SpotLightShadow';
 import { Object3D } from '../core/Object3D';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-function SpotLight ( color, intensity, distance, angle, exponent, decay ) {
+function SpotLight ( color, intensity, distance, angle, penumbra, decay ) {
 	this.isSpotLight = true;
 
 	Light.call( this, color, intensity );
@@ -21,15 +20,35 @@ function SpotLight ( color, intensity, distance, angle, exponent, decay ) {
 
 	this.distance = ( distance !== undefined ) ? distance : 0;
 	this.angle = ( angle !== undefined ) ? angle : Math.PI / 3;
-	this.exponent = ( exponent !== undefined ) ? exponent : 10;
+	this.penumbra = ( penumbra !== undefined ) ? penumbra : 0;
 	this.decay = ( decay !== undefined ) ? decay : 1;	// for physically correct lights, should be 2.
 
-	this.shadow = new LightShadow( new PerspectiveCamera( 50, 1, 0.5, 500 ) );
+	this.shadow = new SpotLightShadow();
 
 };
 
 SpotLight.prototype = Object.create( Light.prototype );
 SpotLight.prototype.constructor = SpotLight;
+
+Object.defineProperty( SpotLight.prototype, "power", {
+
+	get: function () {
+
+		// intensity = power per solid angle.
+		// ref: equation (17) from http://www.frostbite.com/wp-content/uploads/2014/11/course_notes_moving_frostbite_to_pbr.pdf
+		return this.intensity * Math.PI;
+
+	},
+
+	set: function ( power ) {
+
+		// intensity = power per solid angle.
+		// ref: equation (17) from http://www.frostbite.com/wp-content/uploads/2014/11/course_notes_moving_frostbite_to_pbr.pdf
+		this.intensity = power / Math.PI;
+
+	}
+
+} );
 
 SpotLight.prototype.copy = function ( source ) {
 
@@ -37,7 +56,7 @@ SpotLight.prototype.copy = function ( source ) {
 
 	this.distance = source.distance;
 	this.angle = source.angle;
-	this.exponent = source.exponent;
+	this.penumbra = source.penumbra;
 	this.decay = source.decay;
 
 	this.target = source.target.clone();

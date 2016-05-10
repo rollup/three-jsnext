@@ -1,18 +1,17 @@
 import { Texture } from './Texture';
-import { CubeReflectionMapping } from '../Three';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
-function CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+function CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding ) {
 	this.isCubeTexture = true;
 
+	images = images !== undefined ? images : [];
 	mapping = mapping !== undefined ? mapping : CubeReflectionMapping;
 
-	Texture.call( this, images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
+	Texture.call( this, images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding );
 
-	this.images = images;
 	this.flipY = false;
 
 };
@@ -20,14 +19,21 @@ function CubeTexture ( images, mapping, wrapS, wrapT, magFilter, minFilter, form
 CubeTexture.prototype = Object.create( Texture.prototype );
 CubeTexture.prototype.constructor = CubeTexture;
 
-CubeTexture.prototype.copy = function ( source ) {
+Object.defineProperty( CubeTexture.prototype, 'images', {
 
-	Texture.prototype.copy.call( this, source );
-	
-	this.images = source.images;
-	
-	return this;
+	get: function () {
 
-};
+		return this.image;
+
+	},
+
+	set: function ( value ) {
+
+		this.image = value;
+
+	}
+
+} );
+
 
 export { CubeTexture };

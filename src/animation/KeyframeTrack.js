@@ -5,7 +5,6 @@ import { ColorKeyframeTrack } from './tracks/ColorKeyframeTrack';
 import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack';
 import { NumberKeyframeTrack } from './tracks/NumberKeyframeTrack';
 import { AnimationUtils } from './AnimationUtils';
-import { InterpolateSmooth, InterpolateLinear, InterpolateDiscrete } from '../Three';
 import { CubicInterpolant } from '../math/interpolants/CubicInterpolant';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant';
 import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant';
@@ -75,7 +74,7 @@ KeyframeTrack.prototype = {
 
 	setInterpolation: function( interpolation ) {
 
-		var factoryMethod = undefined;
+		var factoryMethod;
 
 		switch ( interpolation ) {
 
@@ -196,35 +195,25 @@ KeyframeTrack.prototype = {
 	// IMPORTANT: We do not shift around keys to the start of the track time, because for interpolated keys this will change their values
 	trim: function( startTime, endTime ) {
 
-		var times = this.times;
-		var nKeys = times.length;
+		var times = this.times,
+			nKeys = times.length,
+			from = 0,
+			to = nKeys - 1;
 
-		var firstKeysToRemove = 0;
-		for ( var i = 1; i !== nKeys; ++ i ) {
+		while ( from !== nKeys && times[ from ] < startTime ) ++ from;
+		while ( to !== -1 && times[ to ] > endTime ) -- to;
 
-			if ( times[i] <= startTime ) ++ firstKeysToRemove;
+		++ to; // inclusive -> exclusive bound
 
-		}
+		if( from !== 0 || to !== nKeys ) {
 
-		var lastKeysToRemove = 0;
-		for ( var i = nKeys - 2; i !== 0; -- i ) {
+			// empty tracks are forbidden, so keep at least one keyframe
+			if ( from >= to ) to = Math.max( to , 1 ), from = to - 1;
 
-			if ( times[i] >= endTime ) ++ lastKeysToRemove;
-			else break;
-
-		}
-
-		// remove last keys first because it doesn't affect the position of the first keys (the otherway around doesn't work as easily)
-		if( ( firstKeysToRemove + lastKeysToRemove ) !== 0 ) {
-
-			var from = firstKeysToRemove;
-			var to = nKeys - lastKeysToRemove - firstKeysToRemove;
-
-			this.times = AnimationUtils.arraySlice( times, from, to );
-
-			var values = this.values;
 			var stride = this.getValueSize();
-			this.values = AnimationUtils.arraySlice( values, from * stride, to * stride );
+			this.times = AnimationUtils.arraySlice( times, from, to );
+			this.values = AnimationUtils.
+					arraySlice( this.values, from * stride, to * stride );
 
 		}
 
@@ -409,8 +398,6 @@ Object.assign( KeyframeTrack, {
 
 		if ( json.times === undefined ) {
 
-			console.warn( "legacy JSON format detected, converting" );
-
 			var times = [], values = [];
 
 			AnimationUtils.flattenJSON( json.keys, times, values, 'value' );
@@ -509,7 +496,7 @@ Object.assign( KeyframeTrack, {
 
 				return StringKeyframeTrack;
 
-		};
+		}
 
 		throw new Error( "Unsupported typeName: " + typeName );
 

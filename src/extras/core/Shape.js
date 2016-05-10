@@ -22,60 +22,60 @@ function Shape () {
 
 };
 
-Shape.prototype = Object.create( Path.prototype );
-Shape.prototype.constructor = Shape;
+Shape.prototype = Object.assign( Object.create( Path.prototype ), {
 
-// Convenience method to return ExtrudeGeometry
+	constructor: Shape,
 
-Shape.prototype.extrude = function ( options ) {
+	// Convenience method to return ExtrudeGeometry
 
-	return new ExtrudeGeometry( this, options );
+	extrude: function ( options ) {
 
-};
+		return new ExtrudeGeometry( this, options );
 
-// Convenience method to return ShapeGeometry
+	},
 
-Shape.prototype.makeGeometry = function ( options ) {
+	// Convenience method to return ShapeGeometry
 
-	return new ShapeGeometry( this, options );
+	makeGeometry: function ( options ) {
 
-};
+		return new ShapeGeometry( this, options );
 
-// Get points of holes
+	},
 
-Shape.prototype.getPointsHoles = function ( divisions ) {
+	getPointsHoles: function ( divisions ) {
 
-	var holesPts = [];
+		var holesPts = [];
 
-	for ( var i = 0, l = this.holes.length; i < l; i ++ ) {
+		for ( var i = 0, l = this.holes.length; i < l; i ++ ) {
 
-		holesPts[ i ] = this.holes[ i ].getPoints( divisions );
+			holesPts[ i ] = this.holes[ i ].getPoints( divisions );
+
+		}
+
+		return holesPts;
+
+	},
+
+	// Get points of shape and holes (keypoints based on segments parameter)
+
+	extractAllPoints: function ( divisions ) {
+
+		return {
+
+			shape: this.getPoints( divisions ),
+			holes: this.getPointsHoles( divisions )
+
+		};
+
+	},
+
+	extractPoints: function ( divisions ) {
+
+		return this.extractAllPoints( divisions );
 
 	}
 
-	return holesPts;
-
-};
-
-
-// Get points of shape and holes (keypoints based on segments parameter)
-
-Shape.prototype.extractAllPoints = function ( divisions ) {
-
-	return {
-
-		shape: this.getPoints( divisions ),
-		holes: this.getPointsHoles( divisions )
-
-	};
-
-};
-
-Shape.prototype.extractPoints = function ( divisions ) {
-
-	return this.extractAllPoints( divisions );
-
-};
+} );
 
 
 export { Shape };

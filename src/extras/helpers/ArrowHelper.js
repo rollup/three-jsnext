@@ -4,8 +4,9 @@ import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial';
 import { Mesh } from '../../objects/Mesh';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Line } from '../../objects/Line';
-import { CylinderGeometry } from '../geometries/CylinderGeometry';
-import { Geometry } from '../../core/Geometry';
+import { CylinderBufferGeometry } from '../geometries/CylinderBufferGeometry';
+import { Float32Attribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
 
 var ArrowHelper;
 
@@ -27,10 +28,10 @@ var ArrowHelper;
 
 ArrowHelper = ( function () {
 
-	var lineGeometry = new Geometry();
-	lineGeometry.vertices.push( new Vector3( 0, 0, 0 ), new Vector3( 0, 1, 0 ) );
+	var lineGeometry = new BufferGeometry();
+	lineGeometry.addAttribute( 'position', new Float32Attribute( [ 0, 0, 0, 0, 1, 0 ], 3 ) );
 
-	var coneGeometry = new CylinderGeometry( 0, 0.5, 1, 5, 1 );
+	var coneGeometry = new CylinderBufferGeometry( 0, 0.5, 1, 5, 1 );
 	coneGeometry.translate( 0, - 0.5, 0 );
 
 	return function ArrowHelper( dir, origin, length, color, headLength, headWidth ) {
@@ -45,7 +46,7 @@ ArrowHelper = ( function () {
 		if ( headWidth === undefined ) headWidth = 0.2 * headLength;
 
 		this.position.copy( origin );
-		
+
 		this.line = new Line( lineGeometry, new LineBasicMaterial( { color: color } ) );
 		this.line.matrixAutoUpdate = false;
 		this.add( this.line );
@@ -57,7 +58,7 @@ ArrowHelper = ( function () {
 		this.setDirection( dir );
 		this.setLength( length, headLength, headWidth );
 
-	}
+	};
 
 }() );
 
@@ -111,8 +112,8 @@ ArrowHelper.prototype.setLength = function ( length, headLength, headWidth ) {
 
 ArrowHelper.prototype.setColor = function ( color ) {
 
-	this.line.material.color.set( color );
-	this.cone.material.color.set( color );
+	this.line.material.color.copy( color );
+	this.cone.material.color.copy( color );
 
 };
 

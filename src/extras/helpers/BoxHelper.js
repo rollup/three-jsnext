@@ -37,7 +37,15 @@ BoxHelper.prototype.update = ( function () {
 
 	return function ( object ) {
 
-		box.setFromObject( object );
+		if ( (object && object.isBox3) ) {
+
+			box.copy( object );
+
+		} else {
+
+			box.setFromObject( object );
+
+		}
 
 		if ( box.isEmpty() ) return;
 

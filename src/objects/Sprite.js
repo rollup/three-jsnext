@@ -4,7 +4,6 @@ import { SpriteMaterial } from '../materials/SpriteMaterial';
 import { BufferAttribute } from '../core/BufferAttribute';
 import { BufferGeometry } from '../core/BufferGeometry';
 
-var Particle;
 var Sprite;
 
 /**
@@ -48,7 +47,7 @@ Sprite.prototype.raycast = ( function () {
 		matrixPosition.setFromMatrixPosition( this.matrixWorld );
 
 		var distanceSq = raycaster.ray.distanceSqToPoint( matrixPosition );
-		var guessSizeSq = this.scale.x * this.scale.y;
+		var guessSizeSq = this.scale.x * this.scale.y / 4;
 
 		if ( distanceSq > guessSizeSq ) {
 
@@ -75,9 +74,5 @@ Sprite.prototype.clone = function () {
 
 };
 
-// Backwards compatibility
 
-Particle = Sprite;
-
-
-export { Particle, Sprite };
+export { Sprite };

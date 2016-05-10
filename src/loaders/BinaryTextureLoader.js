@@ -1,4 +1,3 @@
-import { LinearFilter, LinearMipMapLinearFilter, ClampToEdgeWrapping } from '../Three';
 import { XHRLoader } from './XHRLoader';
 import { DataTexture } from '../textures/DataTexture';
 import { DefaultLoadingManager } from './LoadingManager';

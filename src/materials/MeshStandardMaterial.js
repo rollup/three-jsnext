@@ -1,5 +1,4 @@
 import { Material } from './Material';
-import { NoColors, SmoothShading } from '../Three';
 import { Vector2 } from '../math/Vector2';
 import { Color } from '../math/Color';
 
@@ -10,8 +9,6 @@ import { Color } from '../math/Color';
  *  color: <hex>,
  *  roughness: <float>,
  *  metalness: <float>,
-
- *  emissive: <hex>,
  *  opacity: <float>,
  *
  *  map: new THREE.Texture( <Image> ),
@@ -22,8 +19,9 @@ import { Color } from '../math/Color';
  *  aoMap: new THREE.Texture( <Image> ),
  *  aoMapIntensity: <float>
  *
+ *  emissive: <hex>,
+ *  emissiveIntensity: <float>
  *  emissiveMap: new THREE.Texture( <Image> ),
- *  emissiveMapIntensity: <float>
  *
  *  bumpMap: new THREE.Texture( <Image> ),
  *  bumpScale: <float>,
@@ -46,21 +44,12 @@ import { Color } from '../math/Color';
  *
  *  refractionRatio: <float>,
  *
- *  shading: THREE.SmoothShading,
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
- *  depthWrite: <bool>,
- *
  *  wireframe: <boolean>,
  *  wireframeLinewidth: <float>,
  *
- *  vertexColors: THREE.NoColors / THREE.VertexColors / THREE.FaceColors,
- *
  *  skinning: <bool>,
  *  morphTargets: <bool>,
- *  morphNormals: <bool>,
- *
- *	fog: <bool>
+ *  morphNormals: <bool>
  * }
  */
 
@@ -69,13 +58,13 @@ function MeshStandardMaterial ( parameters ) {
 
 	Material.call( this );
 
+	this.defines = { 'STANDARD': '' };
+
 	this.type = 'MeshStandardMaterial';
 
 	this.color = new Color( 0xffffff ); // diffuse
 	this.roughness = 0.5;
 	this.metalness = 0.5;
-
-	this.emissive = new Color( 0x000000 );
 
 	this.map = null;
 
@@ -85,8 +74,9 @@ function MeshStandardMaterial ( parameters ) {
 	this.aoMap = null;
 	this.aoMapIntensity = 1.0;
 
+	this.emissive = new Color( 0x000000 );
+	this.emissiveIntensity = 1.0;
 	this.emissiveMap = null;
-	this.emissiveMapIntensity = 1.0;
 
 	this.bumpMap = null;
 	this.bumpScale = 1;
@@ -109,16 +99,10 @@ function MeshStandardMaterial ( parameters ) {
 
 	this.refractionRatio = 0.98;
 
-	this.fog = true;
-
-	this.shading = SmoothShading;
-
 	this.wireframe = false;
 	this.wireframeLinewidth = 1;
 	this.wireframeLinecap = 'round';
 	this.wireframeLinejoin = 'round';
-
-	this.vertexColors = NoColors;
 
 	this.skinning = false;
 	this.morphTargets = false;
@@ -135,11 +119,11 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 
 	Material.prototype.copy.call( this, source );
 
+	this.defines = { 'STANDARD': '' };
+
 	this.color.copy( source.color );
 	this.roughness = source.roughness;
 	this.metalness = source.metalness;
-
-	this.emissive.copy( source.emissive );
 
 	this.map = source.map;
 
@@ -149,8 +133,9 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 	this.aoMap = source.aoMap;
 	this.aoMapIntensity = source.aoMapIntensity;
 
+	this.emissive.copy( source.emissive );
 	this.emissiveMap = source.emissiveMap;
-	this.emissiveMapIntensity = source.emissiveMapIntensity;
+	this.emissiveIntensity = source.emissiveIntensity;
 
 	this.bumpMap = source.bumpMap;
 	this.bumpScale = source.bumpScale;
@@ -173,16 +158,10 @@ MeshStandardMaterial.prototype.copy = function ( source ) {
 
 	this.refractionRatio = source.refractionRatio;
 
-	this.fog = source.fog;
-
-	this.shading = source.shading;
-
 	this.wireframe = source.wireframe;
 	this.wireframeLinewidth = source.wireframeLinewidth;
 	this.wireframeLinecap = source.wireframeLinecap;
 	this.wireframeLinejoin = source.wireframeLinejoin;
-
-	this.vertexColors = source.vertexColors;
 
 	this.skinning = source.skinning;
 	this.morphTargets = source.morphTargets;

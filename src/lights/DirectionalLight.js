@@ -1,6 +1,5 @@
 import { Light } from './Light';
-import { OrthographicCamera } from '../cameras/OrthographicCamera';
-import { LightShadow } from './LightShadow';
+import { DirectionalLightShadow } from './DirectionalLightShadow';
 import { Object3D } from '../core/Object3D';
 
 /**
@@ -20,7 +19,7 @@ function DirectionalLight ( color, intensity ) {
 
 	this.target = new Object3D();
 
-	this.shadow = new LightShadow( new OrthographicCamera( - 5, 5, 5, - 5, 0.5, 500 ) );
+	this.shadow = new DirectionalLightShadow();
 
 };
 

@@ -1,8 +1,9 @@
 import { Vector3 } from '../../math/Vector3';
 import { Object3D } from '../../core/Object3D';
 import { Line } from '../../objects/Line';
+import { Float32Attribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
-import { Geometry } from '../../core/Geometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/
@@ -21,34 +22,25 @@ function DirectionalLightHelper ( light, size ) {
 	this.matrix = light.matrixWorld;
 	this.matrixAutoUpdate = false;
 
-	size = size || 1;
+	if ( size === undefined ) size = 1;
 
-	var geometry = new Geometry();
-	geometry.vertices.push(
-		new Vector3( - size,   size, 0 ),
-		new Vector3(   size,   size, 0 ),
-		new Vector3(   size, - size, 0 ),
-		new Vector3( - size, - size, 0 ),
-		new Vector3( - size,   size, 0 )
-	);
+	var geometry = new BufferGeometry();
+	geometry.addAttribute( 'position', new Float32Attribute( [
+		- size,   size, 0,
+		  size,   size, 0,
+		  size, - size, 0,
+		- size, - size, 0,
+		- size,   size, 0
+	], 3 ) );
 
 	var material = new LineBasicMaterial( { fog: false } );
-	material.color.copy( this.light.color ).multiplyScalar( this.light.intensity );
 
-	this.lightPlane = new Line( geometry, material );
-	this.add( this.lightPlane );
+	this.add( new Line( geometry, material ) );
 
-	geometry = new Geometry();
-	geometry.vertices.push(
-		new Vector3(),
-		new Vector3()
-	);
+	geometry = new BufferGeometry();
+	geometry.addAttribute( 'position', new Float32Attribute( [ 0, 0, 0, 0, 0, 1 ], 3 ) );
 
-	material = new LineBasicMaterial( { fog: false } );
-	material.color.copy( this.light.color ).multiplyScalar( this.light.intensity );
-
-	this.targetLine = new Line( geometry, material );
-	this.add( this.targetLine );
+	this.add( new Line( geometry, material ));
 
 	this.update();
 
@@ -59,10 +51,13 @@ DirectionalLightHelper.prototype.constructor = DirectionalLightHelper;
 
 DirectionalLightHelper.prototype.dispose = function () {
 
-	this.lightPlane.geometry.dispose();
-	this.lightPlane.material.dispose();
-	this.targetLine.geometry.dispose();
-	this.targetLine.material.dispose();
+	var lightPlane = this.children[ 0 ];
+	var targetLine = this.children[ 1 ];
+
+	lightPlane.geometry.dispose();
+	lightPlane.material.dispose();
+	targetLine.geometry.dispose();
+	targetLine.material.dispose();
 
 };
 
@@ -78,12 +73,14 @@ DirectionalLightHelper.prototype.update = function () {
 		v2.setFromMatrixPosition( this.light.target.matrixWorld );
 		v3.subVectors( v2, v1 );
 
-		this.lightPlane.lookAt( v3 );
-		this.lightPlane.material.color.copy( this.light.color ).multiplyScalar( this.light.intensity );
+		var lightPlane = this.children[ 0 ];
+		var targetLine = this.children[ 1 ];
 
-		this.targetLine.geometry.vertices[ 1 ].copy( v3 );
-		this.targetLine.geometry.verticesNeedUpdate = true;
-		this.targetLine.material.color.copy( this.lightPlane.material.color );
+		lightPlane.lookAt( v3 );
+		lightPlane.material.color.copy( this.light.color ).multiplyScalar( this.light.intensity );
+
+		targetLine.lookAt( v3 );
+		targetLine.scale.z = v3.length();
 
 	};
 

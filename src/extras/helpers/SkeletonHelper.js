@@ -1,7 +1,6 @@
 import { Bone } from '../../objects/Bone';
 import { Matrix4 } from '../../math/Matrix4';
 import { LineSegments } from '../../objects/LineSegments';
-import { VertexColors } from '../../Three';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Color } from '../../math/Color';
 import { Vector3 } from '../../math/Vector3';

@@ -1,4 +1,3 @@
-import { WrapAroundEnding, ZeroSlopeEnding, ZeroCurvatureEnding } from '../../Three';
 import { Interpolant } from '../Interpolant';
 
 /**

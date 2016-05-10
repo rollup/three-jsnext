@@ -1,11 +1,11 @@
-import walk from './walk';
-import Scope from './Scope';
+const walk = require( './walk' );
+const Scope = require( './Scope' );
 
 function getName ( x ) {
 	return x.name;
 }
 
-export default function attachScopes ( ast ) {
+module.exports = function attachScopes ( ast ) {
 	let scope = new Scope();
 
 	function addToScope ( declarator ) {
@@ -68,4 +68,4 @@ export default function attachScopes ( ast ) {
 
 	Object.defineProperty( ast, '_scope', { value: scope });
 	return scope;
-}
+};

@@ -1,5 +1,4 @@
 import { EventDispatcher } from '../core/EventDispatcher';
-import { MirroredRepeatWrapping, ClampToEdgeWrapping, RepeatWrapping, UVMapping, UnsignedByteType, RGBAFormat, LinearMipMapLinearFilter, LinearFilter } from '../Three';
 import { _Math } from '../math/Math';
 import { Vector2 } from '../math/Vector2';
 
@@ -9,7 +8,7 @@ import { Vector2 } from '../math/Vector2';
  * @author szimek / https://github.com/szimek/
  */
 
-function Texture ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
+function Texture ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding ) {
 	this.isTexture = true;
 
 	Object.defineProperty( this, 'id', { value: TextureIdCount() } );
@@ -41,7 +40,14 @@ function Texture ( image, mapping, wrapS, wrapT, magFilter, minFilter, format, t
 	this.generateMipmaps = true;
 	this.premultiplyAlpha = false;
 	this.flipY = true;
-	this.unpackAlignment = 4; // valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+	this.unpackAlignment = 4;	// valid values: 1, 2, 4, 8 (see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml)
+
+
+	// Values of encoding !== THREE.LinearEncoding only supported on map, envMap and emissiveMap.
+	//
+	// Also changing the encoding after already used by a Material will not automatically make the Material
+	// update.  You need to explicitly call Material.needsUpdate to trigger it to recompile.
+	this.encoding = encoding !== undefined ? encoding :  LinearEncoding;
 
 	this.version = 0;
 	this.onUpdate = null;
@@ -55,7 +61,7 @@ Texture.prototype = {
 
 	constructor: Texture,
 
-	set needsUpdate ( value ) {
+	set needsUpdate( value ) {
 
 		if ( value === true ) this.version ++;
 
@@ -92,6 +98,7 @@ Texture.prototype = {
 		this.premultiplyAlpha = source.premultiplyAlpha;
 		this.flipY = source.flipY;
 		this.unpackAlignment = source.unpackAlignment;
+		this.encoding = source.encoding;
 
 		return this;
 
@@ -272,7 +279,7 @@ Texture.prototype = {
 
 };
 
-EventDispatcher.prototype.apply( Texture.prototype );
+Object.assign( Texture.prototype, EventDispatcher.prototype );
 
 var count = 0;
 function TextureIdCount () { return count++; };

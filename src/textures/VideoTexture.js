@@ -17,7 +17,7 @@ function VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter, form
 
 		requestAnimationFrame( update );
 
-		if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+		if ( video.readyState >= video.HAVE_CURRENT_DATA ) {
 
 			scope.needsUpdate = true;
 

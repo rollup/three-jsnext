@@ -1,4 +1,4 @@
-export default function dedupe ( arr ) {
+module.exports = function dedupe ( arr ) {
 	let i = arr.length;
 	while ( i-- ) {
 		const index = arr.indexOf( arr[i] );
@@ -9,4 +9,4 @@ export default function dedupe ( arr ) {
 	}
 
 	return arr;
-}
+};

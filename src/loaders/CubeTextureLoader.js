@@ -19,9 +19,9 @@ CubeTextureLoader.prototype = {
 
 	load: function ( urls, onLoad, onProgress, onError ) {
 
-		var texture = new CubeTexture( [] );
+		var texture = new CubeTexture();
 
-		var loader = new ImageLoader();
+		var loader = new ImageLoader( this.manager );
 		loader.setCrossOrigin( this.crossOrigin );
 		loader.setPath( this.path );
 

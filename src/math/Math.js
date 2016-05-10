@@ -7,6 +7,9 @@ var _Math;
 
 _Math = {
 
+	DEG2RAD: Math.PI / 180,
+	RAD2DEG: 180 / Math.PI,
+
 	generateUUID: function () {
 
 		// http://www.broofa.com/Tools/Math.uuid.htm
@@ -122,29 +125,17 @@ _Math = {
 
 	},
 
-	degToRad: function () {
+	degToRad: function ( degrees ) {
 
-		var degreeToRadiansFactor = Math.PI / 180;
+		return degrees * _Math.DEG2RAD;
 
-		return function ( degrees ) {
+	},
 
-			return degrees * degreeToRadiansFactor;
+	radToDeg: function ( radians ) {
 
-		};
+		return radians * _Math.RAD2DEG;
 
-	}(),
-
-	radToDeg: function () {
-
-		var radianToDegreesFactor = 180 / Math.PI;
-
-		return function ( radians ) {
-
-			return radians * radianToDegreesFactor;
-
-		};
-
-	}(),
+	},
 
 	isPowerOfTwo: function ( value ) {
 

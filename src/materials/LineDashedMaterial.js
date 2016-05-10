@@ -1,5 +1,4 @@
 import { Material } from './Material';
-import { NoColors } from '../Three';
 import { Color } from '../math/Color';
 
 /**
@@ -9,19 +8,11 @@ import { Color } from '../math/Color';
  *  color: <hex>,
  *  opacity: <float>,
  *
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
- *  depthWrite: <bool>,
- *
  *  linewidth: <float>,
  *
  *  scale: <float>,
  *  dashSize: <float>,
- *  gapSize: <float>,
- *
- *  vertexColors: THREE.NoColors / THREE.FaceColors / THREE.VertexColors
- *
- *  fog: <bool>
+ *  gapSize: <float>
  * }
  */
 
@@ -40,9 +31,7 @@ function LineDashedMaterial ( parameters ) {
 	this.dashSize = 3;
 	this.gapSize = 1;
 
-	this.vertexColors = NoColors;
-
-	this.fog = true;
+	this.lights = false;
 
 	this.setValues( parameters );
 
@@ -56,16 +45,12 @@ LineDashedMaterial.prototype.copy = function ( source ) {
 	Material.prototype.copy.call( this, source );
 
 	this.color.copy( source.color );
-	
+
 	this.linewidth = source.linewidth;
 
 	this.scale = source.scale;
 	this.dashSize = source.dashSize;
 	this.gapSize = source.gapSize;
-
-	this.vertexColors = source.vertexColors;
-
-	this.fog = source.fog;
 
 	return this;
 

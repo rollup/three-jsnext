@@ -13,7 +13,7 @@ function AudioListener () {
 
 	this.type = 'AudioListener';
 
-	this.context = new ( window.AudioContext || window.webkitAudioContext )();
+	this.context = AudioContext;
 
 	this.gain = this.context.createGain();
 	this.gain.connect( this.context.destination );
@@ -22,91 +22,93 @@ function AudioListener () {
 
 };
 
-AudioListener.prototype = Object.create( Object3D.prototype );
-AudioListener.prototype.constructor = AudioListener;
+AudioListener.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
-AudioListener.prototype.getInput = function () {
+	constructor: AudioListener,
 
-	return this.gain;
+	getInput: function () {
 
-};
+		return this.gain;
 
-AudioListener.prototype.removeFilter = function ( ) {
+	},
 
-	if ( this.filter !== null ) {
+	removeFilter: function ( ) {
 
-		this.gain.disconnect( this.filter );
-		this.filter.disconnect( this.context.destination );
-		this.gain.connect( this.context.destination );
-		this.filter = null;
+		if ( this.filter !== null ) {
 
-	}
+			this.gain.disconnect( this.filter );
+			this.filter.disconnect( this.context.destination );
+			this.gain.connect( this.context.destination );
+			this.filter = null;
 
-};
+		}
 
-AudioListener.prototype.setFilter = function ( value ) {
+	},
 
-	if ( this.filter !== null ) {
+	getFilter: function () {
 
-		this.gain.disconnect( this.filter );
-		this.filter.disconnect( this.context.destination );
+		return this.filter;
 
-	} else {
+	},
 
-		this.gain.disconnect( this.context.destination );
+	setFilter: function ( value ) {
 
-	}
+		if ( this.filter !== null ) {
 
-	this.filter = value;
-	this.gain.connect( this.filter );
-	this.filter.connect( this.context.destination );
+			this.gain.disconnect( this.filter );
+			this.filter.disconnect( this.context.destination );
 
-};
+		} else {
 
-AudioListener.prototype.getFilter = function () {
+			this.gain.disconnect( this.context.destination );
 
-	return this.filter;
+		}
 
-};
+		this.filter = value;
+		this.gain.connect( this.filter );
+		this.filter.connect( this.context.destination );
 
-AudioListener.prototype.setMasterVolume = function ( value ) {
+	},
 
-	this.gain.gain.value = value;
+	getMasterVolume: function () {
 
-};
+		return this.gain.gain.value;
 
-AudioListener.prototype.getMasterVolume = function () {
+	},
 
-	return this.gain.gain.value;
+	setMasterVolume: function ( value ) {
 
-};
+		this.gain.gain.value = value;
 
+	},
 
-AudioListener.prototype.updateMatrixWorld = ( function () {
+	updateMatrixWorld: ( function () {
 
-	var position = new Vector3();
-	var quaternion = new Quaternion();
-	var scale = new Vector3();
+		var position = new Vector3();
+		var quaternion = new Quaternion();
+		var scale = new Vector3();
 
-	var orientation = new Vector3();
+		var orientation = new Vector3();
 
-	return function updateMatrixWorld( force ) {
+		return function updateMatrixWorld( force ) {
 
-		Object3D.prototype.updateMatrixWorld.call( this, force );
+			Object3D.prototype.updateMatrixWorld.call( this, force );
 
-		var listener = this.context.listener;
-		var up = this.up;
+			var listener = this.context.listener;
+			var up = this.up;
 
-		this.matrixWorld.decompose( position, quaternion, scale );
+			this.matrixWorld.decompose( position, quaternion, scale );
 
-		orientation.set( 0, 0, - 1 ).applyQuaternion( quaternion );
+			orientation.set( 0, 0, - 1 ).applyQuaternion( quaternion );
 
-		listener.setPosition( position.x, position.y, position.z );
-		listener.setOrientation( orientation.x, orientation.y, orientation.z, up.x, up.y, up.z );
+			listener.setPosition( position.x, position.y, position.z );
+			listener.setOrientation( orientation.x, orientation.y, orientation.z, up.x, up.y, up.z );
 
-	};
+		};
 
-} )();
+	} )()
+
+} );
 
 
 export { AudioListener };

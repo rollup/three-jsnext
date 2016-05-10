@@ -19,12 +19,22 @@ FontLoader.prototype = {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
+		var scope = this;
+
 		var loader = new XHRLoader( this.manager );
 		loader.load( url, function ( text ) {
 
-			onLoad( new Font( JSON.parse( text.substring( 65, text.length - 2 ) ) ) );
+			var font = scope.parse( JSON.parse( text.substring( 65, text.length - 2 ) ) );
+
+			if ( onLoad ) onLoad( font );
 
 		}, onProgress, onError );
+
+	},
+
+	parse: function ( json ) {
+
+		return new Font( json );
 
 	}
 

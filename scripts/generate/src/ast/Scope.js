@@ -1,4 +1,4 @@
-export default class Scope {
+module.exports = class Scope {
 	constructor ( options ) {
 		options = options || {};
 

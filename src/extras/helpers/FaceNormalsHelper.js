@@ -114,7 +114,7 @@ FaceNormalsHelper.prototype.update = ( function () {
 
 		return this;
 
-	}
+	};
 
 }() );
 

@@ -2,17 +2,18 @@ import { Points } from '../../objects/Points';
 import { Line } from '../../objects/Line';
 import { Mesh } from '../../objects/Mesh';
 import { SkinnedMesh } from '../../objects/SkinnedMesh';
-import { CullFaceFront, RGBAFormat, NearestFilter, PCFSoftShadowMap, LinearFilter, PCFShadowMap } from '../../Three';
-import { MeshFaceMaterial } from '../../Three.Legacy';
-import { SpotLight } from '../../lights/SpotLight';
-import { Matrix4 } from '../../math/Matrix4';
+import { MultiMaterial } from '../../materials/MultiMaterial';
+import { SpotLightShadow } from '../../lights/SpotLightShadow';
 import { WebGLRenderTarget } from '../WebGLRenderTarget';
 import { PointLight } from '../../lights/PointLight';
 import { ShaderMaterial } from '../../materials/ShaderMaterial';
 import { UniformsUtils } from '../shaders/UniformsUtils';
 import { ShaderLib } from '../shaders/ShaderLib';
+import { MeshDepthMaterial } from '../../materials/MeshDepthMaterial';
 import { Vector4 } from '../../math/Vector4';
 import { Vector3 } from '../../math/Vector3';
+import { Vector2 } from '../../math/Vector2';
+import { Matrix4 } from '../../math/Matrix4';
 import { Frustum } from '../../math/Frustum';
 
 /**
@@ -28,6 +29,10 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 	_frustum = new Frustum(),
 	_projScreenMatrix = new Matrix4(),
 
+	_lightShadows = _lights.shadows,
+
+	_shadowMapSize = new Vector2(),
+
 	_lookTarget = new Vector3(),
 	_lightPositionWorld = new Vector3(),
 
@@ -39,7 +44,9 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 	_NumberOfMaterialVariants = ( _MorphingFlag | _SkinningFlag ) + 1,
 
 	_depthMaterials = new Array( _NumberOfMaterialVariants ),
-	_distanceMaterials = new Array( _NumberOfMaterialVariants );
+	_distanceMaterials = new Array( _NumberOfMaterialVariants ),
+
+	_materialCache = {};
 
 	var cubeDirections = [
 		new Vector3( 1, 0, 0 ), new Vector3( - 1, 0, 0 ), new Vector3( 0, 0, 1 ),
@@ -58,8 +65,9 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 
 	// init
 
-	var depthShader = ShaderLib[ "depthRGBA" ];
-	var depthUniforms = UniformsUtils.clone( depthShader.uniforms );
+	var depthMaterialTemplate = new MeshDepthMaterial();
+	depthMaterialTemplate.depthPacking = RGBADepthPacking;
+	depthMaterialTemplate.clipping = true;
 
 	var distanceShader = ShaderLib[ "distanceRGBA" ];
 	var distanceUniforms = UniformsUtils.clone( distanceShader.uniforms );
@@ -69,27 +77,23 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 		var useMorphing = ( i & _MorphingFlag ) !== 0;
 		var useSkinning = ( i & _SkinningFlag ) !== 0;
 
-		var depthMaterial = new ShaderMaterial( {
-			uniforms: depthUniforms,
-			vertexShader: depthShader.vertexShader,
-			fragmentShader: depthShader.fragmentShader,
-			morphTargets: useMorphing,
-			skinning: useSkinning
-		} );
-
-		depthMaterial._shadowPass = true;
+		var depthMaterial = depthMaterialTemplate.clone();
+		depthMaterial.morphTargets = useMorphing;
+		depthMaterial.skinning = useSkinning;
 
 		_depthMaterials[ i ] = depthMaterial;
 
 		var distanceMaterial = new ShaderMaterial( {
+			defines: {
+				'USE_SHADOWMAP': ''
+			},
 			uniforms: distanceUniforms,
 			vertexShader: distanceShader.vertexShader,
 			fragmentShader: distanceShader.fragmentShader,
 			morphTargets: useMorphing,
-			skinning: useSkinning
+			skinning: useSkinning,
+			clipping: true
 		} );
-
-		distanceMaterial._shadowPass = true;
 
 		_distanceMaterials[ i ] = distanceMaterial;
 
@@ -105,43 +109,43 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 	this.needsUpdate = false;
 
 	this.type = PCFShadowMap;
-	this.cullFace = CullFaceFront;
+
+	this.renderReverseSided = true;
+	this.renderSingleSided = true;
 
 	this.render = function ( scene, camera ) {
-
-		var faceCount, isPointLight;
 
 		if ( scope.enabled === false ) return;
 		if ( scope.autoUpdate === false && scope.needsUpdate === false ) return;
 
+		if ( _lightShadows.length === 0 ) return;
+
 		// Set GL state for depth map.
-		_gl.clearColor( 1, 1, 1, 1 );
+		_state.clearColor( 1, 1, 1, 1 );
 		_state.disable( _gl.BLEND );
-		_state.enable( _gl.CULL_FACE );
-		_gl.frontFace( _gl.CCW );
-		_gl.cullFace( scope.cullFace === CullFaceFront ? _gl.FRONT : _gl.BACK );
 		_state.setDepthTest( true );
 		_state.setScissorTest( false );
 
 		// render depth map
 
-		var shadows = _lights.shadows;
+		var faceCount, isPointLight;
 
-		for ( var i = 0, il = shadows.length; i < il; i ++ ) {
+		for ( var i = 0, il = _lightShadows.length; i < il; i ++ ) {
 
-			var light = shadows[ i ];
+			var light = _lightShadows[ i ];
 
 			var shadow = light.shadow;
 			var shadowCamera = shadow.camera;
-			var shadowMapSize = shadow.mapSize;
+
+			_shadowMapSize.copy( shadow.mapSize );
 
 			if ( (light && light.isPointLight) ) {
 
 				faceCount = 6;
 				isPointLight = true;
 
-				var vpWidth = shadowMapSize.x / 4.0;
-				var vpHeight = shadowMapSize.y / 2.0;
+				var vpWidth = _shadowMapSize.x;
+				var vpHeight = _shadowMapSize.y;
 
 				// These viewports map a cube-map onto a 2D texture with the
 				// following orientation:
@@ -169,6 +173,9 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 				// negative Y
 				cube2DViewPorts[ 5 ].set( vpWidth, 0, vpWidth, vpHeight );
 
+				_shadowMapSize.x *= 4.0;
+				_shadowMapSize.y *= 2.0;
+
 			} else {
 
 				faceCount = 1;
@@ -178,28 +185,17 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 
 			if ( shadow.map === null ) {
 
-				var shadowFilter = LinearFilter;
+				var pars = { minFilter: NearestFilter, magFilter: NearestFilter, format: RGBAFormat };
 
-				if ( scope.type === PCFSoftShadowMap ) {
-
-					shadowFilter = NearestFilter;
-
-				}
-
-				var pars = { minFilter: shadowFilter, magFilter: shadowFilter, format: RGBAFormat };
-
-				shadow.map = new WebGLRenderTarget( shadowMapSize.x, shadowMapSize.y, pars );
-				shadow.matrix = new Matrix4();
-
-				//
-
-				if ( (light && light.isSpotLight) ) {
-
-					shadowCamera.aspect = shadowMapSize.x / shadowMapSize.y;
-
-				}
+				shadow.map = new WebGLRenderTarget( _shadowMapSize.x, _shadowMapSize.y, pars );
 
 				shadowCamera.updateProjectionMatrix();
+
+			}
+
+			if ( (shadow && shadow.isSpotLightShadow) ) {
+
+				shadow.update( light );
 
 			}
 
@@ -269,7 +265,7 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 					var geometry = _objects.update( object );
 					var material = object.material;
 
-					if ( (material && material.isMeshFaceMaterial) ) {
+					if ( (material && material.isMultiMaterial) ) {
 
 						var groups = geometry.groups;
 						var materials = material.materials;
@@ -299,26 +295,12 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 
 			}
 
-			// We must call _renderer.resetGLState() at the end of each iteration of
-			// the light loop in order to force material updates for each light.
-			_renderer.resetGLState();
-
 		}
 
 		// Restore GL state.
 		var clearColor = _renderer.getClearColor(),
 		clearAlpha = _renderer.getClearAlpha();
 		_renderer.setClearColor( clearColor, clearAlpha );
-
-		_state.enable( _gl.BLEND );
-
-		if ( scope.cullFace === CullFaceFront ) {
-
-			_gl.cullFace( _gl.BACK );
-
-		}
-
-		_renderer.resetGLState();
 
 		scope.needsUpdate = false;
 
@@ -328,7 +310,7 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 
 		var geometry = object.geometry;
 
-		var newMaterial = null;
+		var result = null;
 
 		var materialVariants = _depthMaterials;
 		var customMaterial = object.customDepthMaterial;
@@ -352,25 +334,78 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 			if ( useMorphing ) variantIndex |= _MorphingFlag;
 			if ( useSkinning ) variantIndex |= _SkinningFlag;
 
-			newMaterial = materialVariants[ variantIndex ];
+			result = materialVariants[ variantIndex ];
 
 		} else {
 
-			newMaterial = customMaterial;
+			result = customMaterial;
 
 		}
 
-		newMaterial.visible = material.visible;
-		newMaterial.wireframe = material.wireframe;
-		newMaterial.wireframeLinewidth = material.wireframeLinewidth;
+		if ( _renderer.localClippingEnabled &&
+			 material.clipShadows === true &&
+				material.clippingPlanes.length !== 0 ) {
 
-		if ( isPointLight && newMaterial.uniforms.lightPos !== undefined ) {
+			// in this case we need a unique material instance reflecting the
+			// appropriate state
 
-			newMaterial.uniforms.lightPos.value.copy( lightPositionWorld );
+			var keyA = result.uuid, keyB = material.uuid;
+
+			var materialsForVariant = _materialCache[ keyA ];
+
+			if ( materialsForVariant === undefined ) {
+
+				materialsForVariant = {};
+				_materialCache[ keyA ] = materialsForVariant;
+
+			}
+
+			var cachedMaterial = materialsForVariant[ keyB ];
+
+			if ( cachedMaterial === undefined ) {
+
+				cachedMaterial = result.clone();
+				materialsForVariant[ keyB ] = cachedMaterial;
+
+			}
+
+			result = cachedMaterial;
 
 		}
 
-		return newMaterial;
+		result.visible = material.visible;
+		result.wireframe = material.wireframe;
+
+		var side = material.side;
+
+		if ( scope.renderSingleSided && side == DoubleSide ) {
+
+			side = FrontSide;
+
+		}
+
+		if ( scope.renderReverseSided ) {
+
+			if ( side === FrontSide ) side = BackSide;
+			else if ( side === BackSide ) side = FrontSide;
+
+		}
+
+		result.side = side;
+
+		result.clipShadows = material.clipShadows;
+		result.clippingPlanes = material.clippingPlanes;
+
+		result.wireframeLinewidth = material.wireframeLinewidth;
+		result.linewidth = material.linewidth;
+
+		if ( isPointLight && result.uniforms.lightPos !== undefined ) {
+
+			result.uniforms.lightPos.value.copy( lightPositionWorld );
+
+		}
+
+		return result;
 
 	}
 

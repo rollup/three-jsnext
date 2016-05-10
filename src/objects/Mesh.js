@@ -1,9 +1,8 @@
-import { MeshFaceMaterial } from '../Three.Legacy';
+import { MultiMaterial } from '../materials/MultiMaterial';
 import { Geometry } from '../core/Geometry';
 import { BufferGeometry } from '../core/BufferGeometry';
 import { Triangle } from '../math/Triangle';
 import { Face3 } from '../core/Face3';
-import { DoubleSide, BackSide, TrianglesDrawMode } from '../Three';
 import { Vector3 } from '../math/Vector3';
 import { Vector2 } from '../math/Vector2';
 import { Sphere } from '../math/Sphere';
@@ -26,7 +25,7 @@ function Mesh ( geometry, material ) {
 
 	this.type = 'Mesh';
 
-	this.geometry = geometry !== undefined ? geometry : new Geometry();
+	this.geometry = geometry !== undefined ? geometry : new BufferGeometry();
 	this.material = material !== undefined ? material : new MeshBasicMaterial( { color: Math.random() * 0xffffff } );
 
 	this.drawMode = TrianglesDrawMode;
@@ -267,7 +266,7 @@ Mesh.prototype.raycast = ( function () {
 		} else if ( (geometry && geometry.isGeometry) ) {
 
 			var fvA, fvB, fvC;
-			var isFaceMaterial = (material && material.isMeshFaceMaterial);
+			var isFaceMaterial = (material && material.isMultiMaterial);
 			var materials = isFaceMaterial === true ? material.materials : null;
 
 			var vertices = geometry.vertices;

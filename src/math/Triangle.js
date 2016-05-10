@@ -1,5 +1,6 @@
-import { Plane } from './Plane';
 import { Vector3 } from './Vector3';
+import { Line3 } from './Line3';
+import { Plane } from './Plane';
 
 /**
  * @author bhouston / http://clara.io
@@ -186,6 +187,69 @@ Triangle.prototype = {
 		return Triangle.containsPoint( point, this.a, this.b, this.c );
 
 	},
+
+	closestPointToPoint: function () {
+
+		var plane, edgeList, projectedPoint, closestPoint;
+
+		return function closestPointToPoint( point, optionalTarget ) {
+
+			if ( plane === undefined ) {
+
+				plane = new Plane();
+				edgeList = [ new Line3(), new Line3(), new Line3() ];
+				projectedPoint = new Vector3();
+				closestPoint = new Vector3();
+
+			}
+
+			var result = optionalTarget || new Vector3();
+			var minDistance = Infinity;
+
+			// project the point onto the plane of the triangle
+
+			plane.setFromCoplanarPoints( this.a, this.b, this.c );
+			plane.projectPoint( point, projectedPoint );
+
+			// check if the projection lies within the triangle
+
+			if( this.containsPoint( projectedPoint ) === true ) {
+
+				// if so, this is the closest point
+
+				result.copy( projectedPoint );
+
+			} else {
+
+				// if not, the point falls outside the triangle. the result is the closest point to the triangle's edges or vertices
+
+				edgeList[ 0 ].set( this.a, this.b );
+				edgeList[ 1 ].set( this.b, this.c );
+				edgeList[ 2 ].set( this.c, this.a );
+
+				for( var i = 0; i < edgeList.length; i ++ ) {
+
+					edgeList[ i ].closestPointToPoint( projectedPoint, true, closestPoint );
+
+					var distance = projectedPoint.distanceToSquared( closestPoint );
+
+					if( distance < minDistance ) {
+
+						minDistance = distance;
+
+						result.copy( closestPoint );
+
+					}
+
+				}
+
+			}
+
+			return result;
+
+		};
+
+	}(),
 
 	equals: function ( triangle ) {
 

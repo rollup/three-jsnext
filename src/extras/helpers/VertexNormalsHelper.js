@@ -34,7 +34,7 @@ function VertexNormalsHelper ( object, size, hex, linewidth ) {
 
 	} else if ( (objGeometry && objGeometry.isBufferGeometry) ) {
 
-		nNormals = objGeometry.attributes.normal.count
+		nNormals = objGeometry.attributes.normal.count;
 
 	}
 
@@ -149,7 +149,7 @@ VertexNormalsHelper.prototype.update = ( function () {
 
 		return this;
 
-	}
+	};
 
 }() );
 

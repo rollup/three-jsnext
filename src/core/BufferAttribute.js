@@ -8,7 +8,7 @@ import { _Math } from '../math/Math';
  * @author mrdoob / http://mrdoob.com/
  */
 
-function BufferAttribute ( array, itemSize ) {
+function BufferAttribute ( array, itemSize, normalized ) {
 	this.isBufferAttribute = true;
 
 	this.uuid = _Math.generateUUID();
@@ -20,6 +20,7 @@ function BufferAttribute ( array, itemSize ) {
 	this.updateRange = { offset: 0, count: - 1 };
 
 	this.version = 0;
+	this.normalized = normalized === true;
 
 };
 

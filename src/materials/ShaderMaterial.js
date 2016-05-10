@@ -1,34 +1,24 @@
 import { Material } from './Material';
 import { UniformsUtils } from '../renderers/shaders/UniformsUtils';
-import { NoColors, SmoothShading } from '../Three';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  *
  * parameters = {
  *  defines: { "label" : "value" },
- *  uniforms: { "parameter1": { type: "f", value: 1.0 }, "parameter2": { type: "i" value2: 2 } },
+ *  uniforms: { "parameter1": { type: "1f", value: 1.0 }, "parameter2": { type: "1i" value2: 2 } },
  *
  *  fragmentShader: <string>,
  *  vertexShader: <string>,
- *
- *  shading: THREE.SmoothShading,
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
- *  depthWrite: <bool>,
  *
  *  wireframe: <boolean>,
  *  wireframeLinewidth: <float>,
  *
  *  lights: <bool>,
  *
- *  vertexColors: THREE.NoColors / THREE.VertexColors / THREE.FaceColors,
- *
  *  skinning: <bool>,
  *  morphTargets: <bool>,
- *  morphNormals: <bool>,
- *
- *	fog: <bool>
+ *  morphNormals: <bool>
  * }
  */
 
@@ -45,21 +35,16 @@ function ShaderMaterial ( parameters ) {
 	this.vertexShader = 'void main() {\n\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}';
 	this.fragmentShader = 'void main() {\n\tgl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );\n}';
 
-	this.shading = SmoothShading;
-
 	this.linewidth = 1;
 
 	this.wireframe = false;
 	this.wireframeLinewidth = 1;
 
 	this.fog = false; // set to use scene fog
-
 	this.lights = false; // set to use scene lights
-
-	this.vertexColors = NoColors; // set to use "color" attribute stream
+	this.clipping = false; // set to use user-defined clipping planes
 
 	this.skinning = false; // set to use skinning attribute streams
-
 	this.morphTargets = false; // set to use morph targets
 	this.morphNormals = false; // set to use morph normals
 
@@ -108,16 +93,11 @@ ShaderMaterial.prototype.copy = function ( source ) {
 
 	this.defines = source.defines;
 
-	this.shading = source.shading;
-
 	this.wireframe = source.wireframe;
 	this.wireframeLinewidth = source.wireframeLinewidth;
 
-	this.fog = source.fog;
-
 	this.lights = source.lights;
-
-	this.vertexColors = source.vertexColors;
+	this.clipping = source.clipping;
 
 	this.skinning = source.skinning;
 

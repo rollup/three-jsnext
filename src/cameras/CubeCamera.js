@@ -1,6 +1,5 @@
 import { Object3D } from '../core/Object3D';
 import { WebGLRenderTargetCube } from '../renderers/WebGLRenderTargetCube';
-import { LinearFilter, RGBFormat } from '../Three';
 import { Vector3 } from '../math/Vector3';
 import { PerspectiveCamera } from './PerspectiveCamera';
 

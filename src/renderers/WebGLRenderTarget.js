@@ -1,6 +1,5 @@
 import { EventDispatcher } from '../core/EventDispatcher';
 import { Texture } from '../textures/Texture';
-import { LinearFilter } from '../Three';
 import { Vector4 } from '../math/Vector4';
 import { _Math } from '../math/Math';
 
@@ -32,16 +31,15 @@ function WebGLRenderTarget ( width, height, options ) {
 
 	if ( options.minFilter === undefined ) options.minFilter = LinearFilter;
 
-	this.texture = new Texture( undefined, undefined, options.wrapS, options.wrapT, options.magFilter, options.minFilter, options.format, options.type, options.anisotropy );
+	this.texture = new Texture( undefined, undefined, options.wrapS, options.wrapT, options.magFilter, options.minFilter, options.format, options.type, options.anisotropy, options.encoding );
 
 	this.depthBuffer = options.depthBuffer !== undefined ? options.depthBuffer : true;
 	this.stencilBuffer = options.stencilBuffer !== undefined ? options.stencilBuffer : true;
+	this.depthTexture = null;
 
 };
 
-WebGLRenderTarget.prototype = {
-
-	constructor: WebGLRenderTarget,
+Object.assign( WebGLRenderTarget.prototype, EventDispatcher.prototype, {
 
 	setSize: function ( width, height ) {
 
@@ -76,8 +74,7 @@ WebGLRenderTarget.prototype = {
 
 		this.depthBuffer = source.depthBuffer;
 		this.stencilBuffer = source.stencilBuffer;
-
-		this.shareDepthFrom = source.shareDepthFrom;
+		this.depthTexture = source.depthTexture;
 
 		return this;
 
@@ -89,9 +86,7 @@ WebGLRenderTarget.prototype = {
 
 	}
 
-};
-
-EventDispatcher.prototype.apply( WebGLRenderTarget.prototype );
+} );
 
 
 export { WebGLRenderTarget };

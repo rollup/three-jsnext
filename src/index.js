@@ -3,113 +3,12 @@ export {
   CanvasRenderer,
   Projector,
   ImageUtils,
-  GeometryUtils
+  GeometryUtils,
+  Particle,
+  Vertex,
+  Face4
 } from './Three.Legacy.js';
-export {
-  TriangleFanDrawMode,
-  TriangleStripDrawMode,
-  TrianglesDrawMode,
-  WrapAroundEnding,
-  ZeroSlopeEnding,
-  ZeroCurvatureEnding,
-  InterpolateSmooth,
-  InterpolateLinear,
-  InterpolateDiscrete,
-  LoopPingPong,
-  LoopRepeat,
-  LoopOnce,
-  RGBA_PVRTC_2BPPV1_Format,
-  RGBA_PVRTC_4BPPV1_Format,
-  RGB_PVRTC_2BPPV1_Format,
-  RGB_PVRTC_4BPPV1_Format,
-  RGBA_S3TC_DXT5_Format,
-  RGBA_S3TC_DXT3_Format,
-  RGBA_S3TC_DXT1_Format,
-  RGB_S3TC_DXT1_Format,
-  RGBEFormat,
-  LuminanceAlphaFormat,
-  LuminanceFormat,
-  RGBAFormat,
-  RGBFormat,
-  AlphaFormat,
-  UnsignedShort565Type,
-  UnsignedShort5551Type,
-  UnsignedShort4444Type,
-  HalfFloatType,
-  FloatType,
-  UnsignedIntType,
-  IntType,
-  UnsignedShortType,
-  ShortType,
-  ByteType,
-  UnsignedByteType,
-  LinearMipMapLinearFilter,
-  LinearMipMapNearestFilter,
-  LinearFilter,
-  NearestMipMapLinearFilter,
-  NearestMipMapNearestFilter,
-  NearestFilter,
-  MirroredRepeatWrapping,
-  ClampToEdgeWrapping,
-  RepeatWrapping,
-  SphericalReflectionMapping,
-  EquirectangularRefractionMapping,
-  EquirectangularReflectionMapping,
-  CubeRefractionMapping,
-  CubeReflectionMapping,
-  UVMapping,
-  AddOperation,
-  MixOperation,
-  MultiplyOperation,
-  NotEqualDepth,
-  GreaterDepth,
-  GreaterEqualDepth,
-  EqualDepth,
-  LessEqualDepth,
-  LessDepth,
-  AlwaysDepth,
-  NeverDepth,
-  SrcAlphaSaturateFactor,
-  OneMinusDstColorFactor,
-  DstColorFactor,
-  OneMinusDstAlphaFactor,
-  DstAlphaFactor,
-  OneMinusSrcAlphaFactor,
-  SrcAlphaFactor,
-  OneMinusSrcColorFactor,
-  SrcColorFactor,
-  OneFactor,
-  ZeroFactor,
-  MaxEquation,
-  MinEquation,
-  ReverseSubtractEquation,
-  SubtractEquation,
-  AddEquation,
-  CustomBlending,
-  MultiplyBlending,
-  SubtractiveBlending,
-  AdditiveBlending,
-  NormalBlending,
-  NoBlending,
-  VertexColors,
-  FaceColors,
-  NoColors,
-  SmoothShading,
-  FlatShading,
-  DoubleSide,
-  BackSide,
-  FrontSide,
-  PCFSoftShadowMap,
-  PCFShadowMap,
-  BasicShadowMap,
-  FrontFaceDirectionCCW,
-  FrontFaceDirectionCW,
-  CullFaceFrontBack,
-  CullFaceFront,
-  CullFaceBack,
-  CullFaceNone,
-  MOUSE
-} from './Three.js';
+export { AnimationAction } from './animation/AnimationAction.js';
 export { AnimationClip } from './animation/AnimationClip.js';
 export { AnimationMixer } from './animation/AnimationMixer.js';
 export { AnimationObjectGroup } from './animation/AnimationObjectGroup.js';
@@ -125,7 +24,6 @@ export { StringKeyframeTrack } from './animation/tracks/StringKeyframeTrack.js';
 export { VectorKeyframeTrack } from './animation/tracks/VectorKeyframeTrack.js';
 export { Audio } from './audio/Audio.js';
 export { AudioAnalyser } from './audio/AudioAnalyser.js';
-export { AudioBuffer } from './audio/AudioBuffer.js';
 export { AudioListener } from './audio/AudioListener.js';
 export { PositionalAudio } from './audio/PositionalAudio.js';
 export { Camera } from './cameras/Camera.js';
@@ -151,7 +49,6 @@ export { Clock } from './core/Clock.js';
 export { DirectGeometry } from './core/DirectGeometry.js';
 export { EventDispatcher } from './core/EventDispatcher.js';
 export { Face3 } from './core/Face3.js';
-export { Face4 } from './core/Face4.js';
 export { GeometryIdCount, Geometry } from './core/Geometry.js';
 export { InstancedBufferAttribute } from './core/InstancedBufferAttribute.js';
 export { InstancedBufferGeometry } from './core/InstancedBufferGeometry.js';
@@ -182,27 +79,35 @@ export { QuadraticBezierCurve } from './extras/curves/QuadraticBezierCurve.js';
 export { QuadraticBezierCurve3 } from './extras/curves/QuadraticBezierCurve3.js';
 export { SplineCurve } from './extras/curves/SplineCurve.js';
 export { SplineCurve3 } from './extras/curves/SplineCurve3.js';
+export { BoxBufferGeometry } from './extras/geometries/BoxBufferGeometry.js';
 export { CubeGeometry, BoxGeometry } from './extras/geometries/BoxGeometry.js';
 export { CircleBufferGeometry } from './extras/geometries/CircleBufferGeometry.js';
 export { CircleGeometry } from './extras/geometries/CircleGeometry.js';
+export { ConeBufferGeometry } from './extras/geometries/ConeBufferGeometry.js';
+export { ConeGeometry } from './extras/geometries/ConeGeometry.js';
+export { CylinderBufferGeometry } from './extras/geometries/CylinderBufferGeometry.js';
 export { CylinderGeometry } from './extras/geometries/CylinderGeometry.js';
 export { DodecahedronGeometry } from './extras/geometries/DodecahedronGeometry.js';
 export { EdgesGeometry } from './extras/geometries/EdgesGeometry.js';
 export { ExtrudeGeometry } from './extras/geometries/ExtrudeGeometry.js';
 export { IcosahedronGeometry } from './extras/geometries/IcosahedronGeometry.js';
+export { LatheBufferGeometry } from './extras/geometries/LatheBufferGeometry.js';
 export { LatheGeometry } from './extras/geometries/LatheGeometry.js';
 export { OctahedronGeometry } from './extras/geometries/OctahedronGeometry.js';
 export { ParametricGeometry } from './extras/geometries/ParametricGeometry.js';
 export { PlaneBufferGeometry } from './extras/geometries/PlaneBufferGeometry.js';
 export { PlaneGeometry } from './extras/geometries/PlaneGeometry.js';
 export { PolyhedronGeometry } from './extras/geometries/PolyhedronGeometry.js';
+export { RingBufferGeometry } from './extras/geometries/RingBufferGeometry.js';
 export { RingGeometry } from './extras/geometries/RingGeometry.js';
 export { ShapeGeometry } from './extras/geometries/ShapeGeometry.js';
 export { SphereBufferGeometry } from './extras/geometries/SphereBufferGeometry.js';
 export { SphereGeometry } from './extras/geometries/SphereGeometry.js';
 export { TetrahedronGeometry } from './extras/geometries/TetrahedronGeometry.js';
 export { TextGeometry } from './extras/geometries/TextGeometry.js';
+export { TorusBufferGeometry } from './extras/geometries/TorusBufferGeometry.js';
 export { TorusGeometry } from './extras/geometries/TorusGeometry.js';
+export { TorusKnotBufferGeometry } from './extras/geometries/TorusKnotBufferGeometry.js';
 export { TorusKnotGeometry } from './extras/geometries/TorusKnotGeometry.js';
 export { TubeGeometry } from './extras/geometries/TubeGeometry.js';
 export { WireframeGeometry } from './extras/geometries/WireframeGeometry.js';
@@ -225,12 +130,15 @@ export { ImmediateRenderObject } from './extras/objects/ImmediateRenderObject.js
 export { MorphBlendMesh } from './extras/objects/MorphBlendMesh.js';
 export { AmbientLight } from './lights/AmbientLight.js';
 export { DirectionalLight } from './lights/DirectionalLight.js';
+export { DirectionalLightShadow } from './lights/DirectionalLightShadow.js';
 export { HemisphereLight } from './lights/HemisphereLight.js';
 export { Light } from './lights/Light.js';
 export { LightShadow } from './lights/LightShadow.js';
 export { PointLight } from './lights/PointLight.js';
 export { SpotLight } from './lights/SpotLight.js';
+export { SpotLightShadow } from './lights/SpotLightShadow.js';
 export { AnimationLoader } from './loaders/AnimationLoader.js';
+export { AudioLoader } from './loaders/AudioLoader.js';
 export { BufferGeometryLoader } from './loaders/BufferGeometryLoader.js';
 export { Cache } from './loaders/Cache.js';
 export { CompressedTextureLoader } from './loaders/CompressedTextureLoader.js';
@@ -252,11 +160,13 @@ export { MeshDepthMaterial } from './materials/MeshDepthMaterial.js';
 export { MeshLambertMaterial } from './materials/MeshLambertMaterial.js';
 export { MeshNormalMaterial } from './materials/MeshNormalMaterial.js';
 export { MeshPhongMaterial } from './materials/MeshPhongMaterial.js';
+export { MeshPhysicalMaterial } from './materials/MeshPhysicalMaterial.js';
 export { MeshStandardMaterial } from './materials/MeshStandardMaterial.js';
 export { MultiMaterial } from './materials/MultiMaterial.js';
 export { PointsMaterial } from './materials/PointsMaterial.js';
 export { RawShaderMaterial } from './materials/RawShaderMaterial.js';
 export { ShaderMaterial } from './materials/ShaderMaterial.js';
+export { ShadowMaterial } from './materials/ShadowMaterial.js';
 export { SpriteMaterial } from './materials/SpriteMaterial.js';
 export { Box2 } from './math/Box2.js';
 export { Box3 } from './math/Box3.js';
@@ -272,6 +182,7 @@ export { Plane } from './math/Plane.js';
 export { Quaternion } from './math/Quaternion.js';
 export { Ray } from './math/Ray.js';
 export { Sphere } from './math/Sphere.js';
+export { Spherical } from './math/Spherical.js';
 export { Spline } from './math/Spline.js';
 export { Triangle } from './math/Triangle.js';
 export { Vector2 } from './math/Vector2.js';
@@ -291,7 +202,7 @@ export { Mesh } from './objects/Mesh.js';
 export { Points } from './objects/Points.js';
 export { Skeleton } from './objects/Skeleton.js';
 export { SkinnedMesh } from './objects/SkinnedMesh.js';
-export { Particle, Sprite } from './objects/Sprite.js';
+export { Sprite } from './objects/Sprite.js';
 export { WebGLRenderTarget } from './renderers/WebGLRenderTarget.js';
 export { WebGLRenderTargetCube } from './renderers/WebGLRenderTargetCube.js';
 export { WebGLRenderer } from './renderers/WebGLRenderer.js';
@@ -312,6 +223,7 @@ export { WebGLProperties } from './renderers/webgl/WebGLProperties.js';
 export { WebGLShader } from './renderers/webgl/WebGLShader.js';
 export { WebGLShadowMap } from './renderers/webgl/WebGLShadowMap.js';
 export { WebGLState } from './renderers/webgl/WebGLState.js';
+export { WebGLUniforms } from './renderers/webgl/WebGLUniforms.js';
 export { LensFlarePlugin } from './renderers/webgl/plugins/LensFlarePlugin.js';
 export { SpritePlugin } from './renderers/webgl/plugins/SpritePlugin.js';
 export { Fog } from './scenes/Fog.js';
@@ -321,5 +233,6 @@ export { CanvasTexture } from './textures/CanvasTexture.js';
 export { CompressedTexture } from './textures/CompressedTexture.js';
 export { CubeTexture } from './textures/CubeTexture.js';
 export { DataTexture } from './textures/DataTexture.js';
+export { DepthTexture } from './textures/DepthTexture.js';
 export { TextureIdCount, Texture } from './textures/Texture.js';
 export { VideoTexture } from './textures/VideoTexture.js';

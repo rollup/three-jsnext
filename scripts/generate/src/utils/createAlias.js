@@ -9,8 +9,8 @@ function sanitize ( name ) {
 	return name;
 }
 
-export default function createAlias ( keypath ) {
+module.exports = function createAlias ( keypath ) {
 	return keypath === 'THREE.REVISION' ? // TODO handle this better...
 		'"jsnext"' :
 		sanitize( keypath.replace( 'THREE.', '' ) );
-}
+};

@@ -1,14 +1,14 @@
-import { lsrSync, readFileSync, rimrafSync, writeFileSync } from 'sander';
-import { basename, dirname, extname, join, relative, resolve } from 'path';
+const { lsrSync, readFileSync, rimrafSync, writeFileSync } = require( 'sander' );
+const { basename, dirname, extname, join, relative, resolve } = require( 'path' );
 
-import Module from './Module';
-import createAlias from './utils/createAlias';
-import isExport from './utils/isExport';
+const Module = require( './Module' );
+const createAlias = require( './utils/createAlias' );
+const isExport = require( './utils/isExport' );
 
 const srcDir = resolve( __dirname, '../../../three.js/src' );
 const destDir = resolve( __dirname, '../../../src' );
 
-export default function () {
+module.exports = function () {
 	rimrafSync( destDir );
 
 	const files = lsrSync( srcDir ).filter( file => extname( file ) === '.js' ); // .glsl files must be handled differently
@@ -72,4 +72,4 @@ export default function () {
 	});
 
 	writeFileSync( destDir, 'index.js', indexBlock.join( '\n' ) );
-}
+};
