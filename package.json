@@ -20,11 +20,11 @@
     "README.md"
   ],
   "devDependencies": {
-    "acorn": "^2.0.4",
+    "acorn": "^3.1.0",
     "buble": "^0.7.0",
-    "magic-string": "^0.10.2",
-    "rollup": "^0.24.0",
-    "sander": "^0.4.0",
-    "uglify-js": "^2.4.24"
+    "magic-string": "^0.13.0",
+    "rollup": "^0.26.2",
+    "sander": "^0.5.1",
+    "uglify-js": "^2.6.2"
   }
 }

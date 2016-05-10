@@ -161,13 +161,13 @@ module.exports = class Module {
 							// function THREE$Geometry () {...}, to avoid
 							// tricky cyclical headaches.
 							magicString.overwrite( node.start, node.right.start, '' );
-							magicString.insert( node.right.start + 8, ' ' + alias );
+							magicString.insertRight( node.right.start + 8, ' ' + alias );
 
 							// We also add this.isGeometry = true, to avoid
 							// instanceof checks
 							if ( isClass( alias ) ) {
 								const fnBody = node.right.body;
-								magicString.insert( fnBody.start + 1, `\n\tthis.is${alias} = true;` );
+								magicString.insertRight( fnBody.start + 1, `\n\tthis.is${alias} = true;` );
 							}
 
 							node.left._skip = true;
@@ -205,7 +205,7 @@ module.exports = class Module {
 						const keypath = getKeypath( node.right );
 
 						if ( isExport( keypath ) ) {
-							const left = magicString.slice( node.left.start, node.left.end );
+							const left = magicString.original.slice( node.left.start, node.left.end );
 							const name = keypath.slice( 6 );
 
 							magicString.overwrite( node.start, node.end, `(${left} && ${left}.is${name})` );
