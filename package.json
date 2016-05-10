@@ -21,9 +21,6 @@
   ],
   "devDependencies": {
     "acorn": "^2.0.4",
-    "babel": "^6.3.26",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-register": "^6.3.13",
     "buble": "^0.7.0",
     "magic-string": "^0.10.2",
     "rollup": "^0.24.0",
