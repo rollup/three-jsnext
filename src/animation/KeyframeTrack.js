@@ -1,3 +1,4 @@
+import { InterpolateLinear } from '../constants';
 import { StringKeyframeTrack } from './tracks/StringKeyframeTrack';
 import { BooleanKeyframeTrack } from './tracks/BooleanKeyframeTrack';
 import { QuaternionKeyframeTrack } from './tracks/QuaternionKeyframeTrack';
@@ -5,6 +6,7 @@ import { ColorKeyframeTrack } from './tracks/ColorKeyframeTrack';
 import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack';
 import { NumberKeyframeTrack } from './tracks/NumberKeyframeTrack';
 import { AnimationUtils } from './AnimationUtils';
+import { InterpolateSmooth, InterpolateDiscrete } from '../constants';
 import { CubicInterpolant } from '../math/interpolants/CubicInterpolant';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant';
 import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant';

@@ -1,3 +1,4 @@
+import { MultiplyOperation } from '../constants';
 import { Vector2 } from '../math/Vector2';
 import { XHRLoader } from './XHRLoader';
 import { DefaultLoadingManager } from './LoadingManager';

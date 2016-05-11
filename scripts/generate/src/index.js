@@ -2,29 +2,24 @@ const { lsrSync, readFileSync, rimrafSync, writeFileSync } = require( 'sander' )
 const { basename, dirname, extname, join, relative, resolve } = require( 'path' );
 
 const Module = require( './Module' );
+const ConstantsModule = require( './ConstantsModule' );
 const createAlias = require( './utils/createAlias' );
 const isExport = require( './utils/isExport' );
 
 const srcDir = resolve( __dirname, '../../../three.js/src' );
 const destDir = resolve( __dirname, '../../../src' );
 
-const ordered = [
-	'core/Geometry.js',
-	'core/DirectGeometry.js',
-].map( path => resolve( 'three.js/src', path ) );
-
-console.log( 'ordered', ordered )
-
 module.exports = function () {
 	rimrafSync( destDir );
 
 	const files = lsrSync( srcDir ).filter( file => {
-		if ( !/\.js$/.test( file ) ) return false;
+		if ( !/\.js$/.test( file ) ) return false; // .glsl files must be handled differently
 		if ( /Three\.Legacy\.js/.test( file ) ) return false;
+		if ( /Three\.js/.test( file ) ) return false;
 		return true;
-	}); // .glsl files must be handled differently
+	});
 
-	// const files = [ 'cameras/Camera.js' ];
+	// const files = [ 'extras/geometries/BoxGeometry.js' ];
 
 	let prototypeChains = {};
 
@@ -39,8 +34,12 @@ module.exports = function () {
 	// First, figure out which file exports what
 	let pathByExportName = {};
 	let exportNamesByPath = {};
+	let moduleLookup = {};
 
-	modules.forEach( module => {
+	const constantsModule = new ConstantsModule( join( srcDir, 'Three.js' ) );
+	constantsModule.analyse();
+
+	modules.concat( constantsModule ).forEach( module => {
 		exportNamesByPath[ module.file ] = [];
 
 		Object.keys( module.exports ).forEach( name => {
@@ -51,7 +50,26 @@ module.exports = function () {
 			pathByExportName[ name ] = module.file;
 			exportNamesByPath[ module.file ].push( name );
 		});
+
+		moduleLookup[ module.file ] = module;
 	});
+
+
+	// TEMP discover mutual strong dependencies
+	modules.forEach( module => {
+
+		function testKeypath ( keypath ) {
+			const path = pathByExportName[ keypath ];
+			const module = moduleLookup[ path ];
+
+			if ( !module ) {
+				console.log( keypath )
+			}
+		}
+
+		Object.keys( module.strongDeps ).forEach( testKeypath );
+	});
+
 
 	modules.forEach( module => {
 		const rendered = module.render({
@@ -65,24 +83,15 @@ module.exports = function () {
 		}
 	});
 
+	// create constants
+	writeFileSync( destDir, 'constants.js', constantsModule.render() );
+
 	// create index.js
 	let indexBlock = [];
 
-	const paths = Object.keys( exportNamesByPath );
-
-
+	let paths = Object.keys( exportNamesByPath );
 
 	paths
-		.sort( ( a, b ) => {
-			const aIndex = ordered.indexOf( a );
-			const bIndex = ordered.indexOf( b );
-
-			if ( aIndex !== -1 && bIndex !== -1 ) {
-				return aIndex - bIndex;
-			}
-
-			return paths.indexOf( a ) - paths.indexOf( b );
-		})
 		.forEach( path => {
 			const names = exportNamesByPath[ path ]
 				.filter( isExport );

@@ -1,5 +1,6 @@
 import { LineSegments } from '../../objects/LineSegments';
 import { Matrix4 } from '../../math/Matrix4';
+import { VertexColors } from '../../constants';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Color } from '../../math/Color';
 import { Vector3 } from '../../math/Vector3';

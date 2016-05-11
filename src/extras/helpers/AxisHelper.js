@@ -1,4 +1,5 @@
 import { LineSegments } from '../../objects/LineSegments';
+import { VertexColors } from '../../constants';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { BufferAttribute } from '../../core/BufferAttribute';
 import { BufferGeometry } from '../../core/BufferGeometry';

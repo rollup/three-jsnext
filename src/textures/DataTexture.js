@@ -1,4 +1,5 @@
 import { Texture } from './Texture';
+import { NearestFilter } from '../constants';
 
 /**
  * @author alteredq / http://alteredqualia.com/

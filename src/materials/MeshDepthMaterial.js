@@ -1,4 +1,5 @@
 import { Material } from './Material';
+import { BasicDepthPacking } from '../constants';
 
 /**
  * @author mrdoob / http://mrdoob.com/

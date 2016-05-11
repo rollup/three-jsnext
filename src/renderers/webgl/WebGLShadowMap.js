@@ -1,3 +1,4 @@
+import { FrontSide, BackSide, DoubleSide, RGBAFormat, NearestFilter, PCFShadowMap, RGBADepthPacking } from '../../constants';
 import { WebGLRenderTarget } from '../WebGLRenderTarget';
 import { ShaderMaterial } from '../../materials/ShaderMaterial';
 import { UniformsUtils } from '../shaders/UniformsUtils';

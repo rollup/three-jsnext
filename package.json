@@ -22,8 +22,9 @@
   "devDependencies": {
     "acorn": "^3.1.0",
     "buble": "^0.7.0",
+    "console-group": "^0.2.1",
     "magic-string": "^0.13.0",
-    "rollup": "^0.26.2",
+    "rollup": "^0.26.3",
     "sander": "^0.5.1",
     "uglify-js": "^2.6.2"
   }

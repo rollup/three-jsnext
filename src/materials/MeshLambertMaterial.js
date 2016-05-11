@@ -1,4 +1,5 @@
 import { Material } from './Material';
+import { MultiplyOperation } from '../constants';
 import { Color } from '../math/Color';
 
 /**

@@ -1,3 +1,4 @@
+import { InterpolateDiscrete } from '../../constants';
 import { KeyframeTrack } from '../KeyframeTrack';
 
 /**

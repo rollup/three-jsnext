@@ -1,4 +1,6 @@
+import { ZeroCurvatureEnding } from '../../constants';
 import { Interpolant } from '../Interpolant';
+import { WrapAroundEnding, ZeroSlopeEnding } from '../../constants';
 
 /**
  * Fast and simple cubic spline interpolant.

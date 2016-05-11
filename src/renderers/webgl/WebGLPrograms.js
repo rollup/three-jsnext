@@ -1,4 +1,5 @@
 import { WebGLProgram } from './WebGLProgram';
+import { BackSide, DoubleSide, FlatShading, CubeUVRefractionMapping, CubeUVReflectionMapping, GammaEncoding, LinearEncoding } from '../../constants';
 
 function WebGLPrograms ( renderer, capabilities ) {
 	this.isWebGLPrograms = true;

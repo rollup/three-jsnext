@@ -1,4 +1,5 @@
 import { Texture } from './Texture';
+import { NearestFilter, UnsignedShortType, DepthFormat } from '../constants';
 
 /**
  * @author Matt DesLauriers / @mattdesl

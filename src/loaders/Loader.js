@@ -1,3 +1,4 @@
+import { FaceColors, VertexColors, DoubleSide, BackSide, MirroredRepeatWrapping, RepeatWrapping } from '../constants';
 import { _Math } from '../math/Math';
 import { MaterialLoader } from './MaterialLoader';
 import { TextureLoader } from './TextureLoader';

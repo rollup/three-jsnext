@@ -6,8 +6,11 @@ const attachScopes = require( './ast/attachScopes' );
 const walk = require( './ast/walk' );
 const createAlias = require( './utils/createAlias' );
 const dedupe = require( './utils/dedupe' );
+const getKeypath = require( './utils/getKeypath' );
 const isExport = require( './utils/isExport' );
 const isExportPrototype = require( './utils/isExportPrototype' );
+
+require( 'console-group' ).install();
 
 function isIdentifier ( node, parent ) {
 	if ( node.type !== 'Identifier' ) return false;
@@ -25,23 +28,6 @@ function isClass ( className ) {
 
 function isIife ( node, parent ) {
 	return node.type === 'FunctionExpression' && parent && ( parent.type === 'CallExpression' );
-}
-
-function getKeypath ( node ) {
-	if ( node.type !== 'MemberExpression' || node.computed ) return null;
-
-	let keypath = node.property.name;
-
-	node = node.object;
-	while ( node.type === 'MemberExpression' ) {
-		if ( node.computed ) return null;
-		keypath = `${node.property.name}.${keypath}`;
-
-		node = node.object;
-	}
-
-	if ( node.type !== 'Identifier' ) return null;
-	return `${node.name}.${keypath}`;
 }
 
 const iifeOpen = /\(\s*function\s*\(\s*THREE\s*\)\s*\{[\s\r\n]+/;
@@ -161,7 +147,16 @@ module.exports = class Module {
 			delete this.weakDeps[ dep ];
 		});
 
+		Object.keys( this.exports ).forEach( dep => {
+			delete this.strongDeps[ dep ];
+		});
+
 		this.definitions = this.ast._scope.names.slice();
+
+		// console.group( this.file )
+		// console.log( 'strong', Object.keys( this.strongDeps ) );
+		// console.log( 'weak', Object.keys( this.weakDeps ) );
+		// console.groupEnd();
 	}
 
 	render ({ pathByExportName, exportNamesByPath, prototypeChains }) {
