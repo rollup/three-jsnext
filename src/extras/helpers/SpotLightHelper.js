@@ -12,7 +12,7 @@ import { BufferGeometry } from '../../core/BufferGeometry';
 */
 
 function SpotLightHelper ( light ) {
-	this.isSpotLightHelper = true;
+	this.isSpotLightHelper = this.isObject3D = true;
 
 	Object3D.call( this );
 

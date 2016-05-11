@@ -1,10 +1,9 @@
-import { BufferGeometry } from '../../core/BufferGeometry';
-import { Geometry } from '../../core/Geometry';
 import { Matrix3 } from '../../math/Matrix3';
 import { Vector3 } from '../../math/Vector3';
 import { LineSegments } from '../../objects/LineSegments';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Float32Attribute } from '../../core/BufferAttribute';
+import { BufferGeometry } from '../../core/BufferGeometry';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -12,7 +11,7 @@ import { Float32Attribute } from '../../core/BufferAttribute';
 */
 
 function VertexNormalsHelper ( object, size, hex, linewidth ) {
-	this.isVertexNormalsHelper = true;
+	this.isVertexNormalsHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
 
 	this.object = object;
 

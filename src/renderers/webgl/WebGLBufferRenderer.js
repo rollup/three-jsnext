@@ -1,5 +1,3 @@
-import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute';
-
 /**
 * @author mrdoob / http://mrdoob.com/
 */

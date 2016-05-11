@@ -8,14 +8,32 @@ const isExport = require( './utils/isExport' );
 const srcDir = resolve( __dirname, '../../../three.js/src' );
 const destDir = resolve( __dirname, '../../../src' );
 
+const ordered = [
+	'core/Geometry.js',
+	'core/DirectGeometry.js',
+].map( path => resolve( 'three.js/src', path ) );
+
+console.log( 'ordered', ordered )
+
 module.exports = function () {
 	rimrafSync( destDir );
 
-	const files = lsrSync( srcDir ).filter( file => extname( file ) === '.js' ); // .glsl files must be handled differently
+	const files = lsrSync( srcDir ).filter( file => {
+		if ( !/\.js$/.test( file ) ) return false;
+		if ( /Three\.Legacy\.js/.test( file ) ) return false;
+		return true;
+	}); // .glsl files must be handled differently
+
+	// const files = [ 'cameras/Camera.js' ];
+
+	let prototypeChains = {};
 
 	// Scan files - parse them, and extract metadata
 	let modules = files.map( file => {
-		return new Module( join( srcDir, file ) );
+		const module = new Module( join( srcDir, file ) );
+
+		module.analyse( prototypeChains );
+		return module;
 	});
 
 	// First, figure out which file exports what
@@ -38,7 +56,8 @@ module.exports = function () {
 	modules.forEach( module => {
 		const rendered = module.render({
 			pathByExportName,
-			exportNamesByPath
+			exportNamesByPath,
+			prototypeChains
 		});
 
 		if ( rendered ) {
@@ -49,27 +68,42 @@ module.exports = function () {
 	// create index.js
 	let indexBlock = [];
 
-	Object.keys( exportNamesByPath ).map( path => {
-		const names = exportNamesByPath[ path ]
-			.filter( isExport );
+	const paths = Object.keys( exportNamesByPath );
 
-		if ( names.length ) {
-			const relativePath = `./${relative( srcDir, path )}`;
 
-			const exports = names.map( keypath => {
-				const alias = createAlias( keypath );
-				const exported = keypath.slice( 6 );
 
-				return alias === exported ? alias : `${alias} as ${exported}`;
-			});
+	paths
+		.sort( ( a, b ) => {
+			const aIndex = ordered.indexOf( a );
+			const bIndex = ordered.indexOf( b );
 
-			const declaration = exports.length > 3 ?
-				`export {\n  ${exports.join(',\n  ')}\n}` :
-				`export { ${exports.join(', ')} }`;
+			if ( aIndex !== -1 && bIndex !== -1 ) {
+				return aIndex - bIndex;
+			}
 
-			indexBlock.push( `${declaration} from '${relativePath}';` );
-		}
-	});
+			return paths.indexOf( a ) - paths.indexOf( b );
+		})
+		.forEach( path => {
+			const names = exportNamesByPath[ path ]
+				.filter( isExport );
+
+			if ( names.length ) {
+				const relativePath = `./${relative( srcDir, path )}`;
+
+				const exports = names.map( keypath => {
+					const alias = createAlias( keypath );
+					const exported = keypath.slice( 6 );
+
+					return alias === exported ? alias : `${alias} as ${exported}`;
+				});
+
+				const declaration = exports.length > 3 ?
+					`export {\n  ${exports.join(',\n  ')}\n}` :
+					`export { ${exports.join(', ')} }`;
+
+				indexBlock.push( `${declaration} from '${relativePath}';` );
+			}
+		});
 
 	writeFileSync( destDir, 'index.js', indexBlock.join( '\n' ) );
 };

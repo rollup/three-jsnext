@@ -1,6 +1,4 @@
 import { BufferAttribute } from '../../core/BufferAttribute';
-import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute';
-import { Geometry } from '../../core/Geometry';
 import { WebGLGeometries } from './WebGLGeometries';
 
 /**

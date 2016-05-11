@@ -54,7 +54,7 @@ import { Color } from '../math/Color';
  */
 
 function MeshStandardMaterial ( parameters ) {
-	this.isMeshStandardMaterial = true;
+	this.isMeshStandardMaterial = this.isMaterial = true;
 
 	Material.call( this );
 

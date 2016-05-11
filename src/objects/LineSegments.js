@@ -5,7 +5,7 @@ import { Line } from './Line';
  */
 
 function LineSegments ( geometry, material ) {
-	this.isLineSegments = true;
+	this.isLineSegments = this.isLine = this.isObject3D = true;
 
 	Line.call( this, geometry, material );
 

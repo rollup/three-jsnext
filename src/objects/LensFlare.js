@@ -8,7 +8,7 @@ import { Vector3 } from '../math/Vector3';
  */
 
 function LensFlare ( texture, size, distance, blending, color ) {
-	this.isLensFlare = true;
+	this.isLensFlare = this.isObject3D = true;
 
 	Object3D.call( this );
 

@@ -1,18 +1,14 @@
-import { BufferAttribute, Float32Attribute } from './BufferAttribute';
 import { Vector3 } from '../math/Vector3';
-import { Sphere } from '../math/Sphere';
 import { Box3 } from '../math/Box3';
+import { EventDispatcher } from './EventDispatcher';
+import { BufferAttribute, Float32Attribute } from './BufferAttribute';
+import { Sphere } from '../math/Sphere';
 import { DirectGeometry } from './DirectGeometry';
-import { Mesh } from '../objects/Mesh';
-import { Geometry, GeometryIdCount } from './Geometry';
-import { Line } from '../objects/Line';
-import { Points } from '../objects/Points';
 import { Object3D } from './Object3D';
 import { Matrix4 } from '../math/Matrix4';
 import { Matrix3 } from '../math/Matrix3';
-import { InterleavedBufferAttribute } from './InterleavedBufferAttribute';
-import { EventDispatcher } from './EventDispatcher';
 import { _Math } from '../math/Math';
+import { GeometryIdCount } from './Geometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/

@@ -7,7 +7,7 @@ import { Object3D } from '../core/Object3D';
  */
 
 function SpotLight ( color, intensity, distance, angle, penumbra, decay ) {
-	this.isSpotLight = true;
+	this.isSpotLight = this.isLight = this.isObject3D = true;
 
 	Light.call( this, color, intensity );
 

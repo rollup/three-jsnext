@@ -1,5 +1,5 @@
-import { _Math } from '../math/Math';
 import { Matrix4 } from '../math/Matrix4';
+import { _Math } from '../math/Math';
 import { PerspectiveCamera } from './PerspectiveCamera';
 
 /**

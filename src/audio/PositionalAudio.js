@@ -1,6 +1,6 @@
-import { Object3D } from '../core/Object3D';
 import { Vector3 } from '../math/Vector3';
 import { Audio } from './Audio';
+import { Object3D } from '../core/Object3D';
 
 /**
  * @author mrdoob / http://mrdoob.com/

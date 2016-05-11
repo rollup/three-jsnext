@@ -1,8 +1,8 @@
-import { Vector3 } from '../math/Vector3';
 import { Quaternion } from '../math/Quaternion';
-import { Euler } from '../math/Euler';
+import { Vector3 } from '../math/Vector3';
 import { Matrix4 } from '../math/Matrix4';
 import { EventDispatcher } from './EventDispatcher';
+import { Euler } from '../math/Euler';
 import { Layers } from './Layers';
 import { Matrix3 } from '../math/Matrix3';
 import { _Math } from '../math/Math';

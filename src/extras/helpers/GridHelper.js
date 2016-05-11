@@ -9,7 +9,7 @@ import { Color } from '../../math/Color';
  */
 
 function GridHelper ( size, step, color1, color2 ) {
-	this.isGridHelper = true;
+	this.isGridHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
 
 	color1 = new Color( color1 !== undefined ? color1 : 0x444444 );
 	color2 = new Color( color2 !== undefined ? color2 : 0x888888 );

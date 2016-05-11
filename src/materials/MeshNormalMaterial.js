@@ -12,7 +12,7 @@ import { Material } from './Material';
  */
 
 function MeshNormalMaterial ( parameters ) {
-	this.isMeshNormalMaterial = true;
+	this.isMeshNormalMaterial = this.isMaterial = true;
 
 	Material.call( this, parameters );
 

@@ -1,7 +1,4 @@
 import { EventDispatcher } from '../core/EventDispatcher';
-import { Texture } from '../textures/Texture';
-import { Color } from '../math/Color';
-import { Vector3 } from '../math/Vector3';
 import { _Math } from '../math/Math';
 
 /**

@@ -1,5 +1,5 @@
-import { QuaternionLinearInterpolant } from '../../math/interpolants/QuaternionLinearInterpolant';
 import { KeyframeTrack } from '../KeyframeTrack';
+import { QuaternionLinearInterpolant } from '../../math/interpolants/QuaternionLinearInterpolant';
 
 /**
  *

@@ -1,5 +1,5 @@
-import { _Math } from '../math/Math';
 import { LightShadow } from './LightShadow';
+import { _Math } from '../math/Math';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
 
 /**
@@ -7,7 +7,7 @@ import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
  */
 
 function SpotLightShadow () {
-	this.isSpotLightShadow = true;
+	this.isSpotLightShadow = this.isLightShadow = true;
 
 	LightShadow.call( this, new PerspectiveCamera( 50, 1, 0.5, 500 ) );
 

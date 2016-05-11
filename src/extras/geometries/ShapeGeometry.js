@@ -1,8 +1,8 @@
+import { Geometry } from '../../core/Geometry';
 import { Face3 } from '../../core/Face3';
 import { Vector3 } from '../../math/Vector3';
 import { ShapeUtils } from '../ShapeUtils';
 import { ExtrudeGeometry } from './ExtrudeGeometry';
-import { Geometry } from '../../core/Geometry';
 
 /**
  * @author jonobr1 / http://jonobr1.com
@@ -21,7 +21,7 @@ import { Geometry } from '../../core/Geometry';
  **/
 
 function ShapeGeometry ( shapes, options ) {
-	this.isShapeGeometry = true;
+	this.isShapeGeometry = this.isGeometry = true;
 
 	Geometry.call( this );
 

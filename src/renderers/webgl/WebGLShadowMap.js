@@ -1,11 +1,4 @@
-import { Points } from '../../objects/Points';
-import { Line } from '../../objects/Line';
-import { Mesh } from '../../objects/Mesh';
-import { SkinnedMesh } from '../../objects/SkinnedMesh';
-import { MultiMaterial } from '../../materials/MultiMaterial';
-import { SpotLightShadow } from '../../lights/SpotLightShadow';
 import { WebGLRenderTarget } from '../WebGLRenderTarget';
-import { PointLight } from '../../lights/PointLight';
 import { ShaderMaterial } from '../../materials/ShaderMaterial';
 import { UniformsUtils } from '../shaders/UniformsUtils';
 import { ShaderLib } from '../shaders/ShaderLib';

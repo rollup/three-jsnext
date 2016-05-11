@@ -1,5 +1,3 @@
-import { FogExp2 } from '../../../scenes/FogExp2';
-import { Fog } from '../../../scenes/Fog';
 import { Texture } from '../../../textures/Texture';
 import { Vector3 } from '../../../math/Vector3';
 import { Quaternion } from '../../../math/Quaternion';

@@ -1,3 +1,4 @@
+import { Matrix4 } from '../math/Matrix4';
 import { Object3D } from '../core/Object3D';
 import { Group } from '../objects/Group';
 import { Sprite } from '../objects/Sprite';
@@ -14,7 +15,6 @@ import { AmbientLight } from '../lights/AmbientLight';
 import { OrthographicCamera } from '../cameras/OrthographicCamera';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
 import { Scene } from '../scenes/Scene';
-import { Matrix4 } from '../math/Matrix4';
 import { Vector2 } from '../math/Vector2';
 import { Texture } from '../textures/Texture';
 import { ImageLoader } from './ImageLoader';

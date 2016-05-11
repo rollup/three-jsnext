@@ -1,5 +1,4 @@
 import { Vector3 } from './Vector3';
-import { Euler } from './Euler';
 
 /**
  * @author mikael emtinger / http://gomo.se/

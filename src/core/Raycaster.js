@@ -1,5 +1,3 @@
-import { OrthographicCamera } from '../cameras/OrthographicCamera';
-import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
 import { Ray } from '../math/Ray';
 
 /**

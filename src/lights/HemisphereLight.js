@@ -6,7 +6,7 @@ import { Color } from '../math/Color';
  */
 
 function HemisphereLight ( skyColor, groundColor, intensity ) {
-	this.isHemisphereLight = true;
+	this.isHemisphereLight = this.isLight = this.isObject3D = true;
 
 	Light.call( this, skyColor, intensity );
 

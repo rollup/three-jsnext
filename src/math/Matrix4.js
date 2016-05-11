@@ -1,6 +1,5 @@
 import { _Math } from './Math';
 import { Vector3 } from './Vector3';
-import { Euler } from './Euler';
 
 /**
  * @author mrdoob / http://mrdoob.com/

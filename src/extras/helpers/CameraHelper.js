@@ -15,7 +15,7 @@ import { Geometry } from '../../core/Geometry';
  */
 
 function CameraHelper ( camera ) {
-	this.isCameraHelper = true;
+	this.isCameraHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
 
 	var geometry = new Geometry();
 	var material = new LineBasicMaterial( { color: 0xffffff, vertexColors: FaceColors } );

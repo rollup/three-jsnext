@@ -5,7 +5,7 @@ import { WebGLRenderTarget } from './WebGLRenderTarget';
  */
 
 function WebGLRenderTargetCube ( width, height, options ) {
-	this.isWebGLRenderTargetCube = true;
+	this.isWebGLRenderTargetCube = this.isWebGLRenderTarget = true;
 
 	WebGLRenderTarget.call( this, width, height, options );
 

@@ -40,7 +40,7 @@ import { Color } from '../math/Color';
  */
 
 function MeshLambertMaterial ( parameters ) {
-	this.isMeshLambertMaterial = true;
+	this.isMeshLambertMaterial = this.isMaterial = true;
 
 	Material.call( this );
 

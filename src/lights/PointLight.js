@@ -8,7 +8,7 @@ import { LightShadow } from './LightShadow';
 
 
 function PointLight ( color, intensity, distance, decay ) {
-	this.isPointLight = true;
+	this.isPointLight = this.isLight = this.isObject3D = true;
 
 	Light.call( this, color, intensity );
 

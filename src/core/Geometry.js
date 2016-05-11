@@ -1,4 +1,4 @@
-import { Mesh } from '../objects/Mesh';
+import { EventDispatcher } from './EventDispatcher';
 import { Face3 } from './Face3';
 import { Matrix3 } from '../math/Matrix3';
 import { Sphere } from '../math/Sphere';
@@ -8,7 +8,6 @@ import { Matrix4 } from '../math/Matrix4';
 import { Vector2 } from '../math/Vector2';
 import { Color } from '../math/Color';
 import { Object3D } from './Object3D';
-import { EventDispatcher } from './EventDispatcher';
 import { _Math } from '../math/Math';
 
 /**

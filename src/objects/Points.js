@@ -1,17 +1,17 @@
-import { BufferGeometry } from '../core/BufferGeometry';
-import { Vector3 } from '../math/Vector3';
 import { Sphere } from '../math/Sphere';
 import { Ray } from '../math/Ray';
 import { Matrix4 } from '../math/Matrix4';
 import { Object3D } from '../core/Object3D';
+import { Vector3 } from '../math/Vector3';
 import { PointsMaterial } from '../materials/PointsMaterial';
+import { BufferGeometry } from '../core/BufferGeometry';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
 function Points ( geometry, material ) {
-	this.isPoints = true;
+	this.isPoints = this.isObject3D = true;
 
 	Object3D.call( this );
 

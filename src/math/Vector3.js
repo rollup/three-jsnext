@@ -1,7 +1,6 @@
 import { _Math } from './Math';
 import { Matrix4 } from './Matrix4';
 import { Quaternion } from './Quaternion';
-import { Euler } from './Euler';
 
 /**
  * @author mrdoob / http://mrdoob.com/

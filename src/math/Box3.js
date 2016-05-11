@@ -1,7 +1,5 @@
 import { Vector3 } from './Vector3';
 import { Sphere } from './Sphere';
-import { BufferGeometry } from '../core/BufferGeometry';
-import { Geometry } from '../core/Geometry';
 
 /**
  * @author bhouston / http://clara.io

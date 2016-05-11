@@ -1,3 +1,4 @@
+import { CurvePath } from './CurvePath';
 import { Shape } from './Shape';
 import { ShapeUtils } from '../ShapeUtils';
 import { Vector2 } from '../../math/Vector2';
@@ -6,7 +7,6 @@ import { EllipseCurve } from '../curves/EllipseCurve';
 import { CubicBezierCurve } from '../curves/CubicBezierCurve';
 import { QuadraticBezierCurve } from '../curves/QuadraticBezierCurve';
 import { LineCurve } from '../curves/LineCurve';
-import { CurvePath } from './CurvePath';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog

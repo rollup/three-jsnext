@@ -8,7 +8,7 @@ import { UniformsUtils } from '../renderers/shaders/UniformsUtils';
  */
 
 function ShadowMaterial () {
-	this.isShadowMaterial = true;
+	this.isShadowMaterial = this.isShaderMaterial = this.isMaterial = true;
 
 	ShaderMaterial.call( this, {
 		uniforms: UniformsUtils.merge( [

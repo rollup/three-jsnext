@@ -1,8 +1,8 @@
 import { Vector3 } from '../math/Vector3';
 import { Object3D } from '../core/Object3D';
-import { SpriteMaterial } from '../materials/SpriteMaterial';
 import { BufferAttribute } from '../core/BufferAttribute';
 import { BufferGeometry } from '../core/BufferGeometry';
+import { SpriteMaterial } from '../materials/SpriteMaterial';
 
 var Sprite;
 

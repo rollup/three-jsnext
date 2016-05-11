@@ -5,7 +5,7 @@ import { Texture } from './Texture';
  */
 
 function DataTexture ( data, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, encoding ) {
-	this.isDataTexture = true;
+	this.isDataTexture = this.isTexture = true;
 
 	Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding );
 

@@ -9,7 +9,7 @@ import { BufferGeometry } from '../../core/BufferGeometry';
  */
 
 function BoxHelper ( object ) {
-	this.isBoxHelper = true;
+	this.isBoxHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
 
 	var indices = new Uint16Array( [ 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 ] );
 	var positions = new Float32Array( 8 * 3 );

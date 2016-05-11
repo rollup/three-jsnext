@@ -9,7 +9,7 @@ import { MeshStandardMaterial } from './MeshStandardMaterial';
  */
 
 function MeshPhysicalMaterial ( parameters ) {
-	this.isMeshPhysicalMaterial = true;
+	this.isMeshPhysicalMaterial = this.isMeshStandardMaterial = this.isMaterial = true;
 
 	MeshStandardMaterial.call( this );
 

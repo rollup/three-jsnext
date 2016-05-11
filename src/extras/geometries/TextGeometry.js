@@ -1,6 +1,5 @@
 import { ExtrudeGeometry } from './ExtrudeGeometry';
 import { Geometry } from '../../core/Geometry';
-import { Font } from '../core/Font';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
@@ -22,7 +21,7 @@ import { Font } from '../core/Font';
  */
 
 function TextGeometry ( text, parameters ) {
-	this.isTextGeometry = true;
+	this.isTextGeometry = this.isExtrudeGeometry = this.isGeometry = true;
 
 	parameters = parameters || {};
 

@@ -1,7 +1,7 @@
+import { Curve } from './Curve';
 import { Vector3 } from '../../math/Vector3';
 import { Geometry } from '../../core/Geometry';
 import { LineCurve } from '../curves/LineCurve';
-import { Curve } from './Curve';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog

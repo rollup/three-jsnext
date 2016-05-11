@@ -1,12 +1,11 @@
-import { Geometry } from '../core/Geometry';
-import { BufferGeometry } from '../core/BufferGeometry';
-import { LineSegments } from './LineSegments';
-import { Vector3 } from '../math/Vector3';
 import { Sphere } from '../math/Sphere';
 import { Ray } from '../math/Ray';
 import { Matrix4 } from '../math/Matrix4';
 import { Object3D } from '../core/Object3D';
+import { Vector3 } from '../math/Vector3';
 import { LineBasicMaterial } from '../materials/LineBasicMaterial';
+import { BufferGeometry } from '../core/BufferGeometry';
+import { LineSegments } from './LineSegments';
 
 var LinePieces;
 var LineStrip;
@@ -16,7 +15,7 @@ var LineStrip;
  */
 
 function Line ( geometry, material, mode ) {
-	this.isLine = true;
+	this.isLine = this.isObject3D = true;
 
 	if ( mode === 1 ) {
 

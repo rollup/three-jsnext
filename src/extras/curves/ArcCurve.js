@@ -5,7 +5,7 @@ import { EllipseCurve } from './EllipseCurve';
  **************************************************************/
 
 function ArcCurve ( aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise ) {
-	this.isArcCurve = true;
+	this.isArcCurve = this.isEllipseCurve = this.isCurve = true;
 
 	EllipseCurve.call( this, aX, aY, aRadius, aRadius, aStartAngle, aEndAngle, aClockwise );
 

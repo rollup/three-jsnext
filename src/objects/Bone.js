@@ -7,7 +7,7 @@ import { Object3D } from '../core/Object3D';
  */
 
 function Bone ( skin ) {
-	this.isBone = true;
+	this.isBone = this.isObject3D = true;
 
 	Object3D.call( this );
 

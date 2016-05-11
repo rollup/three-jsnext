@@ -5,7 +5,7 @@ import { Texture } from './Texture';
  */
 
 function DepthTexture ( width, height, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy ) {
-	this.isDepthTexture = true;
+	this.isDepthTexture = this.isTexture = true;
 
   Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, DepthFormat, type, anisotropy );
 

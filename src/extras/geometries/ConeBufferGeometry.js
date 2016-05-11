@@ -9,7 +9,7 @@ function ConeBufferGeometry (
 	radius, height,
 	radialSegments, heightSegments,
 	openEnded, thetaStart, thetaLength ) {
-	this.isConeBufferGeometry = true;
+	this.isConeBufferGeometry = this.isBufferGeometry = true;
 
 	CylinderBufferGeometry.call( this,
 		0, radius, height,

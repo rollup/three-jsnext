@@ -5,7 +5,7 @@ import { Texture } from './Texture';
  */
 
 function CompressedTexture ( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, encoding ) {
-	this.isCompressedTexture = true;
+	this.isCompressedTexture = this.isTexture = true;
 
 	Texture.call( this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding );
 

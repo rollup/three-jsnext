@@ -1,6 +1,5 @@
-import { Bone } from '../../objects/Bone';
-import { Matrix4 } from '../../math/Matrix4';
 import { LineSegments } from '../../objects/LineSegments';
+import { Matrix4 } from '../../math/Matrix4';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Color } from '../../math/Color';
 import { Vector3 } from '../../math/Vector3';
@@ -14,7 +13,7 @@ import { Geometry } from '../../core/Geometry';
  */
 
 function SkeletonHelper ( object ) {
-	this.isSkeletonHelper = true;
+	this.isSkeletonHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
 
 	this.bones = this.getBoneList( object );
 

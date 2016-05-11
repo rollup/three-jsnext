@@ -1,13 +1,13 @@
+import { Curve } from '../core/Curve';
 import { Vector2 } from '../../math/Vector2';
 import { CurveUtils } from '../CurveUtils';
-import { Curve } from '../core/Curve';
 
 /**************************************************************
  *	Spline curve
  **************************************************************/
 
 function SplineCurve ( points /* array of Vector2 */ ) {
-	this.isSplineCurve = true;
+	this.isSplineCurve = this.isCurve = true;
 
 	this.points = ( points == undefined ) ? [] : points;
 

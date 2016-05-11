@@ -13,7 +13,7 @@ import { EdgesGeometry } from '../geometries/EdgesGeometry';
  */
 
 function EdgesHelper ( object, hex, thresholdAngle ) {
-	this.isEdgesHelper = true;
+	this.isEdgesHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
 
 	var color = ( hex !== undefined ) ? hex : 0xffffff;
 

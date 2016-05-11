@@ -1,8 +1,4 @@
 import { WebGLProgram } from './WebGLProgram';
-import { FogExp2 } from '../../scenes/FogExp2';
-import { WebGLRenderTarget } from '../WebGLRenderTarget';
-import { Texture } from '../../textures/Texture';
-import { SkinnedMesh } from '../../objects/SkinnedMesh';
 
 function WebGLPrograms ( renderer, capabilities ) {
 	this.isWebGLPrograms = true;

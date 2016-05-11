@@ -1,11 +1,3 @@
-import { Texture } from '../../textures/Texture';
-import { Matrix4 } from '../../math/Matrix4';
-import { Matrix3 } from '../../math/Matrix3';
-import { Vector4 } from '../../math/Vector4';
-import { Vector3 } from '../../math/Vector3';
-import { Vector2 } from '../../math/Vector2';
-import { Color } from '../../math/Color';
-
 var UniformsUtils;
 
 /**

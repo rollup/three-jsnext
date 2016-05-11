@@ -7,7 +7,7 @@ import { Color } from '../math/Color';
  */
 
 function Light ( color, intensity ) {
-	this.isLight = true;
+	this.isLight = this.isObject3D = true;
 
 	Object3D.call( this );
 

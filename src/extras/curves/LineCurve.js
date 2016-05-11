@@ -5,7 +5,7 @@ import { Curve } from '../core/Curve';
  **************************************************************/
 
 function LineCurve ( v1, v2 ) {
-	this.isLineCurve = true;
+	this.isLineCurve = this.isCurve = true;
 
 	this.v1 = v1;
 	this.v2 = v2;

@@ -4,7 +4,6 @@ import { LineSegments } from '../../objects/LineSegments';
 import { LineBasicMaterial } from '../../materials/LineBasicMaterial';
 import { Float32Attribute } from '../../core/BufferAttribute';
 import { BufferGeometry } from '../../core/BufferGeometry';
-import { Geometry } from '../../core/Geometry';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -12,7 +11,7 @@ import { Geometry } from '../../core/Geometry';
 */
 
 function FaceNormalsHelper ( object, size, hex, linewidth ) {
-	this.isFaceNormalsHelper = true;
+	this.isFaceNormalsHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
 
 	// FaceNormalsHelper only supports THREE.Geometry
 

@@ -1,7 +1,5 @@
 import { Mesh } from './Mesh';
 import { Vector4 } from '../math/Vector4';
-import { BufferGeometry } from '../core/BufferGeometry';
-import { Geometry } from '../core/Geometry';
 import { Skeleton } from './Skeleton';
 import { Bone } from './Bone';
 import { Matrix4 } from '../math/Matrix4';
@@ -13,7 +11,7 @@ import { Matrix4 } from '../math/Matrix4';
  */
 
 function SkinnedMesh ( geometry, material, useVertexTexture ) {
-	this.isSkinnedMesh = true;
+	this.isSkinnedMesh = this.isMesh = this.isObject3D = true;
 
 	Mesh.call( this, geometry, material );
 

@@ -1,6 +1,6 @@
+import { Path } from './Path';
 import { ShapeGeometry } from '../geometries/ShapeGeometry';
 import { ExtrudeGeometry } from '../geometries/ExtrudeGeometry';
-import { Path } from './Path';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog

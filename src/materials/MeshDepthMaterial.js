@@ -24,7 +24,7 @@ import { Material } from './Material';
  */
 
 function MeshDepthMaterial ( parameters ) {
-	this.isMeshDepthMaterial = true;
+	this.isMeshDepthMaterial = this.isMaterial = true;
 
 	Material.call( this );
 

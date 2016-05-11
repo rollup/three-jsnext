@@ -8,7 +8,7 @@ import { BufferAttribute } from '../../core/BufferAttribute';
  */
 
 function CircleBufferGeometry ( radius, segments, thetaStart, thetaLength ) {
-	this.isCircleBufferGeometry = true;
+	this.isCircleBufferGeometry = this.isBufferGeometry = true;
 
 	BufferGeometry.call( this );
 

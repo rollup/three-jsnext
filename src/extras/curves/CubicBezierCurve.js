@@ -1,14 +1,14 @@
+import { Curve } from '../core/Curve';
 import { Vector2 } from '../../math/Vector2';
 import { CurveUtils } from '../CurveUtils';
 import { ShapeUtils } from '../ShapeUtils';
-import { Curve } from '../core/Curve';
 
 /**************************************************************
  *	Cubic Bezier curve
  **************************************************************/
 
 function CubicBezierCurve ( v0, v1, v2, v3 ) {
-	this.isCubicBezierCurve = true;
+	this.isCubicBezierCurve = this.isCurve = true;
 
 	this.v0 = v0;
 	this.v1 = v1;

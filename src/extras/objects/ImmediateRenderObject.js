@@ -5,7 +5,7 @@ import { Object3D } from '../../core/Object3D';
  */
 
 function ImmediateRenderObject ( material ) {
-	this.isImmediateRenderObject = true;
+	this.isImmediateRenderObject = this.isObject3D = true;
 
 	Object3D.call( this );
 

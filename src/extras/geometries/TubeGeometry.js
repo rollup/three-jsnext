@@ -1,7 +1,7 @@
+import { Geometry } from '../../core/Geometry';
 import { _Math } from '../../math/Math';
 import { Vector3 } from '../../math/Vector3';
 import { Matrix4 } from '../../math/Matrix4';
-import { Geometry } from '../../core/Geometry';
 import { Face3 } from '../../core/Face3';
 import { Vector2 } from '../../math/Vector2';
 
@@ -20,7 +20,7 @@ import { Vector2 } from '../../math/Vector2';
  */
 
 function TubeGeometry ( path, segments, radius, radialSegments, closed, taper ) {
-	this.isTubeGeometry = true;
+	this.isTubeGeometry = this.isGeometry = true;
 
 	Geometry.call( this );
 

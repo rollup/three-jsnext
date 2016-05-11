@@ -7,6 +7,7 @@ const walk = require( './ast/walk' );
 const createAlias = require( './utils/createAlias' );
 const dedupe = require( './utils/dedupe' );
 const isExport = require( './utils/isExport' );
+const isExportPrototype = require( './utils/isExportPrototype' );
 
 function isIdentifier ( node, parent ) {
 	if ( node.type !== 'Identifier' ) return false;
@@ -20,6 +21,10 @@ function isClass ( className ) {
 	// TODO there may be others... a more robust approach would be
 	// to see which instanceof checks are actually used
 	return !/^(log|error|warn)$/.test( className );
+}
+
+function isIife ( node, parent ) {
+	return node.type === 'FunctionExpression' && parent && ( parent.type === 'CallExpression' );
 }
 
 function getKeypath ( node ) {
@@ -84,27 +89,35 @@ module.exports = class Module {
 			throw err;
 		}
 
-		this.exportDependencies = {};
+		this.strongDeps = {};
+		this.weakDeps = {};
 		this.exports = {};
-
-		this.analyse();
-
-		this.definitions = this.ast._scope.names.slice();
 	}
 
-	analyse () {
+	analyse ( prototypeChains ) {
 		let scope = attachScopes( this.ast );
 		let names = scope.names;
+
+		let depth = -1;
 
 		walk( this.ast, {
 			enter: ( node, parent ) => {
 				if ( node._scope ) {
+					if ( !isIife( node, parent ) ) depth += 1;
 					scope = node._scope;
 				}
 
 				const keypath = getKeypath( node );
 				if ( isExport( keypath ) ) {
-					this.exportDependencies[ keypath ] = true;
+					// we don't want to treat e.g. `geometry instanceof THREE.Geometry`
+					// as a dependency on THREE.Geometry
+					if ( parent.type === 'BinaryExpression' && parent.operator === 'instanceof' && node === parent.right ) return;
+
+					if ( depth > 0 ) {
+						this.weakDeps[ keypath ] = true;
+					} else {
+						this.strongDeps[ keypath ] = true;
+					}
 				}
 
 				// check for assignments to THREE.whatever
@@ -114,18 +127,44 @@ module.exports = class Module {
 					if ( isExport( keypath ) ) {
 						this.exports[ keypath ] = true;
 					}
+
+					if ( isExportPrototype( keypath ) ) {
+						// capture prototype chain
+						if (
+							node.right.type === 'CallExpression' &&
+							node.right.callee.type === 'MemberExpression' &&
+							getKeypath( node.right.callee ) === 'Object.create' &&
+							node.right.arguments.length === 1 &&
+							node.right.arguments[0].type === 'MemberExpression'
+						) {
+							const superClass = getKeypath( node.right.arguments[0] );
+
+							if ( !isExportPrototype( superClass ) ) {
+								throw new Error( 'WTF? ' + superClass );
+							}
+
+							prototypeChains[ keypath ] = superClass;
+						}
+					}
 				}
 			},
 
 			leave: ( node, parent ) => {
 				if ( node._scope ) {
+					if ( !isIife( node, parent ) ) depth -= 1;
 					scope = scope.parent;
 				}
 			}
 		});
+
+		Object.keys( this.strongDeps ).forEach( dep => {
+			delete this.weakDeps[ dep ];
+		});
+
+		this.definitions = this.ast._scope.names.slice();
 	}
 
-	render ({ pathByExportName, exportNamesByPath }) {
+	render ({ pathByExportName, exportNamesByPath, prototypeChains }) {
 		const self = this;
 		const magicString = this.magicString;
 
@@ -166,8 +205,14 @@ module.exports = class Module {
 							// We also add this.isGeometry = true, to avoid
 							// instanceof checks
 							if ( isClass( alias ) ) {
+								let chain = [];
+								let proto = `${keypath}.prototype`;
+								do {
+									chain.push( proto.split( '.' )[1] );
+								} while ( proto = prototypeChains[ proto ] );
+
 								const fnBody = node.right.body;
-								magicString.insertRight( fnBody.start + 1, `\n\tthis.is${alias} = true;` );
+								magicString.insertRight( fnBody.start + 1, `\n\t${chain.map( className => `this.is${className} = `).join( '' )}true;` );
 							}
 
 							node.left._skip = true;
@@ -199,7 +244,7 @@ module.exports = class Module {
 				}
 
 				// rewrite `object instanceof THREE.Geometry` to
-				// `(object && object.isGeometry)`
+				// `(object && object .isGeometry)`
 				if ( node.type === 'BinaryExpression' && node.operator === 'instanceof' ) {
 					if ( node.right.type === 'MemberExpression' ) {
 						const keypath = getKeypath( node.right );
@@ -223,9 +268,10 @@ module.exports = class Module {
 			}
 		});
 
-		let dependencies = {};
+		let strongDependencies = {};
+		let weakDependencies = {};
 
-		const addDependency = ( owner, name ) => {
+		const addDependency = ( dependencies, owner, name ) => {
 			if ( !owner || owner === this.file ) return;
 
 			let relativePath = relative( this.dir, owner ).replace( /\.js$/, '' );
@@ -238,22 +284,27 @@ module.exports = class Module {
 			dependencies[ relativePath ].push( name );
 		};
 
-		Object.keys( this.exportDependencies ).forEach( keypath => {
-			const keys = keypath.split( '.' );
-			let owner;
+		const addDependencies = ( keypaths, dependencies ) => {
+			keypaths.forEach( keypath => {
+				const keys = keypath.split( '.' );
+				let owner;
 
-			while ( keys.length ) {
-				keypath = keys.join( '.' );
-				owner = pathByExportName[ keypath ];
-				if ( owner ) break;
+				while ( keys.length ) {
+					keypath = keys.join( '.' );
+					owner = pathByExportName[ keypath ];
+					if ( owner ) break;
 
-				keys.pop();
-			}
+					keys.pop();
+				}
 
-			if ( !owner ) return;
+				if ( !owner ) return;
 
-			addDependency( owner, createAlias( keypath ) );
-		});
+				addDependency( dependencies, owner, createAlias( keypath ) );
+			});
+		};
+
+		addDependencies( Object.keys( this.strongDeps ), strongDependencies );
+		addDependencies( Object.keys( this.weakDeps ).filter( dep => !this.strongDeps[ dep ] ), weakDependencies );
 
 		const varDeclarationBlock = Object.keys( varsToDeclare )
 			.map( name => `var ${name};` )
@@ -263,10 +314,16 @@ module.exports = class Module {
 			magicString.prepend( varDeclarationBlock + '\n\n' );
 		}
 
-		const importBlock = Object.keys( dependencies ).map( relativePath => {
-			const names = dependencies[ relativePath ];
-			return `import { ${names.join( ', ' )} } from '${relativePath}';`
-		}).join( '\n' );
+		const importBlock = Object.keys( strongDependencies )
+			.map( relativePath => {
+				const names = strongDependencies[ relativePath ];
+				return `import { ${names.join( ', ' )} } from '${relativePath}';`
+			}).concat(
+				Object.keys( weakDependencies ).map( relativePath => {
+					const names = weakDependencies[ relativePath ];
+					return `import { ${names.join( ', ' )} } from '${relativePath}';`
+				})
+			).join( '\n' );
 
 		if ( importBlock ) {
 			magicString.prepend( importBlock + '\n\n' );

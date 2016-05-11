@@ -8,7 +8,7 @@ import { BufferAttribute } from '../../core/BufferAttribute';
  */
 
 function RingBufferGeometry ( innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength ) {
-	this.isRingBufferGeometry = true;
+	this.isRingBufferGeometry = this.isBufferGeometry = true;
 
 	BufferGeometry.call( this );
 

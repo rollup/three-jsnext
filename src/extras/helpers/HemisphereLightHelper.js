@@ -11,7 +11,7 @@ import { Color } from '../../math/Color';
  */
 
 function HemisphereLightHelper ( light, sphereSize ) {
-	this.isHemisphereLightHelper = true;
+	this.isHemisphereLightHelper = this.isObject3D = true;
 
 	Object3D.call( this );
 

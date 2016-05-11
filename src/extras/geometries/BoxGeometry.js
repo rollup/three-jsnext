@@ -9,7 +9,7 @@ var CubeGeometry;
  */
 
 function BoxGeometry ( width, height, depth, widthSegments, heightSegments, depthSegments ) {
-	this.isBoxGeometry = true;
+	this.isBoxGeometry = this.isGeometry = true;
 
 	Geometry.call( this );
 

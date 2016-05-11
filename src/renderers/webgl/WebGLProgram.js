@@ -1,8 +1,6 @@
 import { WebGLUniforms } from './WebGLUniforms';
 import { WebGLShader } from './WebGLShader';
-import { ShaderMaterial } from '../../materials/ShaderMaterial';
 import { ShaderChunk } from '../shaders/ShaderChunk';
-import { RawShaderMaterial } from '../../materials/RawShaderMaterial';
 
 var WebGLProgram;
 

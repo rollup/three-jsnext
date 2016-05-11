@@ -8,7 +8,7 @@ import { _Math } from '../../math/Math';
  */
 
 function EdgesGeometry ( geometry, thresholdAngle ) {
-	this.isEdgesGeometry = true;
+	this.isEdgesGeometry = this.isBufferGeometry = true;
 
 	BufferGeometry.call( this );
 

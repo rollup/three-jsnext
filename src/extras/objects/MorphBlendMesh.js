@@ -1,12 +1,12 @@
-import { _Math } from '../../math/Math';
 import { Mesh } from '../../objects/Mesh';
+import { _Math } from '../../math/Math';
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
 function MorphBlendMesh( geometry, material ) {
-	this.isMorphBlendMesh = true;
+	this.isMorphBlendMesh = this.isMesh = this.isObject3D = true;
 
 	Mesh.call( this, geometry, material );
 

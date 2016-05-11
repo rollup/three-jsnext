@@ -1,5 +1,3 @@
-import { AnimationObjectGroup } from './AnimationObjectGroup';
-
 /**
  *
  * A reference to a real property in the scene graph.

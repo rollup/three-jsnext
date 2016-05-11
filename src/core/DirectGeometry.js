@@ -1,7 +1,8 @@
-import { Vector2 } from '../math/Vector2';
-import { Geometry, GeometryIdCount } from './Geometry';
+import { Geometry } from './Geometry';
 import { EventDispatcher } from './EventDispatcher';
+import { Vector2 } from '../math/Vector2';
 import { _Math } from '../math/Math';
+import { GeometryIdCount } from './Geometry';
 
 /**
  * @author mrdoob / http://mrdoob.com/

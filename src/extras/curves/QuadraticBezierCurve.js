@@ -1,7 +1,7 @@
+import { Curve } from '../core/Curve';
 import { Vector2 } from '../../math/Vector2';
 import { CurveUtils } from '../CurveUtils';
 import { ShapeUtils } from '../ShapeUtils';
-import { Curve } from '../core/Curve';
 
 /**************************************************************
  *	Quadratic Bezier curve
@@ -9,7 +9,7 @@ import { Curve } from '../core/Curve';
 
 
 function QuadraticBezierCurve ( v0, v1, v2 ) {
-	this.isQuadraticBezierCurve = true;
+	this.isQuadraticBezierCurve = this.isCurve = true;
 
 	this.v0 = v0;
 	this.v1 = v1;

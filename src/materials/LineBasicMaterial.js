@@ -16,7 +16,7 @@ import { Color } from '../math/Color';
  */
 
 function LineBasicMaterial ( parameters ) {
-	this.isLineBasicMaterial = true;
+	this.isLineBasicMaterial = this.isMaterial = true;
 
 	Material.call( this );
 

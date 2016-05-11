@@ -1,6 +1,4 @@
-import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute';
 import { BufferGeometry } from '../../core/BufferGeometry';
-import { Geometry } from '../../core/Geometry';
 
 /**
 * @author mrdoob / http://mrdoob.com/

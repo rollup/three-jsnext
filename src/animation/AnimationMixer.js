@@ -1,8 +1,8 @@
+import { AnimationAction } from './AnimationAction';
+import { EventDispatcher } from '../core/EventDispatcher';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant';
 import { PropertyBinding } from './PropertyBinding';
 import { PropertyMixer } from './PropertyMixer';
-import { AnimationAction } from './AnimationAction';
-import { EventDispatcher } from '../core/EventDispatcher';
 
 /**
  *

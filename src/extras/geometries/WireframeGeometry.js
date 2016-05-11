@@ -1,13 +1,12 @@
 import { BufferGeometry } from '../../core/BufferGeometry';
 import { BufferAttribute } from '../../core/BufferAttribute';
-import { Geometry } from '../../core/Geometry';
 
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
 function WireframeGeometry ( geometry ) {
-	this.isWireframeGeometry = true;
+	this.isWireframeGeometry = this.isBufferGeometry = true;
 
 	BufferGeometry.call( this );
 

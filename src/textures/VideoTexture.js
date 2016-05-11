@@ -5,7 +5,7 @@ import { Texture } from './Texture';
  */
 
 function VideoTexture ( video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy ) {
-	this.isVideoTexture = true;
+	this.isVideoTexture = this.isTexture = true;
 
 	Texture.call( this, video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy );
 

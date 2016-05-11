@@ -1,5 +1,5 @@
-import { Object3D } from '../core/Object3D';
 import { Vector3 } from '../math/Vector3';
+import { Object3D } from '../core/Object3D';
 
 /**
  * @author mikael emtinger / http://gomo.se/
@@ -8,7 +8,7 @@ import { Vector3 } from '../math/Vector3';
  */
 
 function LOD () {
-	this.isLOD = true;
+	this.isLOD = this.isObject3D = true;
 
 	Object3D.call( this );
 

@@ -5,7 +5,7 @@ import { BufferAttribute } from './BufferAttribute';
  */
 
 function InstancedBufferAttribute ( array, itemSize, meshPerAttribute ) {
-	this.isInstancedBufferAttribute = true;
+	this.isInstancedBufferAttribute = this.isBufferAttribute = true;
 
 	BufferAttribute.call( this, array, itemSize );
 

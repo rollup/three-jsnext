@@ -5,7 +5,7 @@ import { Light } from './Light';
  */
 
 function AmbientLight ( color, intensity ) {
-	this.isAmbientLight = true;
+	this.isAmbientLight = this.isLight = this.isObject3D = true;
 
 	Light.call( this, color, intensity );
 

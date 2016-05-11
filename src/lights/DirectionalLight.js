@@ -8,7 +8,7 @@ import { Object3D } from '../core/Object3D';
  */
 
 function DirectionalLight ( color, intensity ) {
-	this.isDirectionalLight = true;
+	this.isDirectionalLight = this.isLight = this.isObject3D = true;
 
 	Light.call( this, color, intensity );
 
