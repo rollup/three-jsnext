@@ -1,7 +1,7 @@
 {
   "name": "three-jsnext",
   "description": "three.js, but futuristic",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "jsnext:main": "./src/index.js",
   "main": "./dist/three.js",
   "repository": "https://github.com/rollup/three-jsnext",
