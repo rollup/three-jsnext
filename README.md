@@ -11,7 +11,7 @@ Three.js is an incredible library, which makes it possible for us front-end mort
 
 It's also monolithic and a *bit* on the chunky side.
 
-You could piece together your own WebGL solution using various [small modules](medium.com/@Rich_Harris/small-modules-it-s-not-quite-that-simple-3ca532d65de4), but when you're learning a whole new way of thinking, being able to use a well-thought-through, philosophically coherent library (with [loads of examples](http://threejs.org/examples/) and an active community of people on Stack Overflow waiting to help you) can make the difference between shipping and failing.
+You could piece together your own WebGL solution using various [small modules](https://medium.com/@Rich_Harris/small-modules-it-s-not-quite-that-simple-3ca532d65de4), but when you're learning a whole new way of thinking, being able to use a well-thought-through, philosophically coherent library (with [loads of examples](http://threejs.org/examples/) and an active community of people on Stack Overflow waiting to help you) can make the difference between shipping and failing.
 
 
 ## Having your cake and eating it
