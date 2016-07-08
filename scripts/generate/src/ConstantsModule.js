@@ -6,7 +6,7 @@ const attachScopes = require( './ast/attachScopes' );
 const walk = require( './ast/walk' );
 const getKeypath = require( './utils/getKeypath' );
 
-module.exports = class Module {
+module.exports = class ConstantsModule {
 	constructor ( file ) {
 		this.file = file.replace( 'Three.js', 'constants.js' );
 		this.dir = dirname( file );
@@ -29,7 +29,7 @@ module.exports = class Module {
 		this.exports = {};
 	}
 
-	analyse ( prototypeChains ) {
+	analyse () {
 		let scope = attachScopes( this.ast );
 		let names = scope.names;
 

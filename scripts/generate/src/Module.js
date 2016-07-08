@@ -154,11 +154,6 @@ module.exports = class Module {
 		});
 
 		this.definitions = this.ast._scope.names.slice();
-
-		// console.group( this.file )
-		// console.log( 'strong', Object.keys( this.strongDeps ) );
-		// console.log( 'weak', Object.keys( this.weakDeps ) );
-		// console.groupEnd();
 	}
 
 	render ({ pathByExportName, exportNamesByPath, prototypeChains }) {
@@ -208,8 +203,14 @@ module.exports = class Module {
 									chain.push( proto.split( '.' )[1] );
 								} while ( proto = prototypeChains[ proto ] );
 
-								const fnBody = node.right.body;
-								magicString.insertRight( fnBody.start + 1, `\n\t${chain.map( className => `this.is${className} = `).join( '' )}true;` );
+								// special case...
+								if ( chain[0] === 'KeyframeTrack' && chain.length === 1 ) chain = [];
+								if ( chain[0] === 'KeyframeTrackConstructor' ) chain[0] = 'KeyframeTrack';
+
+								if ( chain.length ) {
+									const fnBody = node.right.body;
+									magicString.insertRight( fnBody.start + 1, `\n\t${chain.map( className => `this.is${className} = `).join( '' )}true;` );
+								}
 							}
 
 							node.left._skip = true;

@@ -3,6 +3,10 @@ const { basename, dirname, extname, join, relative, resolve } = require( 'path' 
 
 const Module = require( './Module' );
 const ConstantsModule = require( './ConstantsModule' );
+const KeyframeTrackModule = require( './KeyframeTrackModule' );
+const KeyframeTrackConstructorModule = require( './KeyframeTrackConstructorModule' );
+const KeyframeTrackPrototypeModule = require( './KeyframeTrackPrototypeModule' );
+const TrackModule = require( './TrackModule' );
 const createAlias = require( './utils/createAlias' );
 const isExport = require( './utils/isExport' );
 
@@ -16,6 +20,7 @@ module.exports = function () {
 		if ( !/\.js$/.test( file ) ) return false; // .glsl files must be handled differently
 		if ( /Three\.Legacy\.js/.test( file ) ) return false;
 		if ( /Three\.js/.test( file ) ) return false;
+		if ( /animation\/KeyframeTrack\.js/.test( file ) ) return false;
 		return true;
 	});
 
@@ -23,7 +28,11 @@ module.exports = function () {
 
 	// Scan files - parse them, and extract metadata
 	let modules = files.map( file => {
-		const module = new Module( join( srcDir, file ) );
+		file = join( srcDir, file );
+
+		const module = /animation\/tracks/.test( file ) ?
+			new TrackModule( file ) : // awkward special case...
+			new Module( file );
 
 		module.analyse( prototypeChains );
 		return module;
@@ -35,9 +44,18 @@ module.exports = function () {
 	let moduleLookup = {};
 
 	const constantsModule = new ConstantsModule( join( srcDir, 'Three.js' ) );
-	constantsModule.analyse();
 
-	modules.concat( constantsModule ).forEach( module => {
+	// KeyframeTrack is a special (and highly awkward) case
+	const keyframeTrackSrc = join( srcDir, 'animation/KeyframeTrack.js' );
+	const keyframeTrackModule = new KeyframeTrackModule( keyframeTrackSrc );
+	const keyframeTrackConstructorModule = new KeyframeTrackConstructorModule( keyframeTrackSrc );
+	const keyframeTrackPrototypeModule = new KeyframeTrackPrototypeModule( keyframeTrackSrc );
+
+	[ constantsModule, keyframeTrackModule, keyframeTrackConstructorModule, keyframeTrackPrototypeModule ].forEach( module => module.analyse( prototypeChains ) );
+
+	modules.push( constantsModule, keyframeTrackModule, keyframeTrackConstructorModule, keyframeTrackPrototypeModule );
+
+	modules.forEach( module => {
 		exportNamesByPath[ module.file ] = [];
 
 		Object.keys( module.exports ).forEach( name => {
@@ -53,36 +71,25 @@ module.exports = function () {
 	});
 
 
-	// TEMP discover mutual strong dependencies
 	modules.forEach( module => {
+		let rendered;
 
-		function testKeypath ( keypath ) {
-			const path = pathByExportName[ keypath ];
-			const module = moduleLookup[ path ];
-
-			if ( !module ) {
-				console.log( keypath )
-			}
+		try {
+			rendered = module.render({
+				pathByExportName,
+				exportNamesByPath,
+				prototypeChains
+			});
+		} catch ( err ) {
+			console.log( 'module.file', module.file );
+			console.log( 'module.constructor.name', module.constructor.name )
+			throw err;
 		}
-
-		Object.keys( module.strongDeps ).forEach( testKeypath );
-	});
-
-
-	modules.forEach( module => {
-		const rendered = module.render({
-			pathByExportName,
-			exportNamesByPath,
-			prototypeChains
-		});
 
 		if ( rendered ) {
 			writeFileSync( module.file.replace( srcDir, destDir ), rendered );
 		}
 	});
-
-	// create constants
-	writeFileSync( destDir, 'constants.js', constantsModule.render() );
 
 	// create index.js
 	let indexBlock = [].concat(
