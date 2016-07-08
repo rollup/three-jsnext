@@ -2,11 +2,11 @@ const { lsrSync, readFileSync, rimrafSync, writeFileSync } = require( 'sander' )
 const { basename, dirname, extname, join, relative, resolve } = require( 'path' );
 
 const Module = require( './Module' );
-const ConstantsModule = require( './ConstantsModule' );
-const KeyframeTrackModule = require( './KeyframeTrackModule' );
-const KeyframeTrackConstructorModule = require( './KeyframeTrackConstructorModule' );
-const KeyframeTrackPrototypeModule = require( './KeyframeTrackPrototypeModule' );
-const TrackModule = require( './TrackModule' );
+const ConstantsModule = require( './special/ConstantsModule' );
+const KeyframeTrackModule = require( './special/KeyframeTrackModule' );
+const KeyframeTrackConstructorModule = require( './special/KeyframeTrackConstructorModule' );
+const KeyframeTrackPrototypeModule = require( './special/KeyframeTrackPrototypeModule' );
+const TrackModule = require( './special/TrackModule' );
 const createAlias = require( './utils/createAlias' );
 const isExport = require( './utils/isExport' );
 

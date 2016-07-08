@@ -2,9 +2,9 @@ const { basename, dirname, extname, relative, resolve } = require( 'path' );
 const { readdirSync, readFileSync } = require( 'sander' );
 const { parse } = require( 'acorn' );
 const MagicString = require( 'magic-string' );
-const attachScopes = require( './ast/attachScopes' );
-const walk = require( './ast/walk' );
-const getKeypath = require( './utils/getKeypath' );
+const attachScopes = require( '../ast/attachScopes' );
+const walk = require( '../ast/walk' );
+const getKeypath = require( '../utils/getKeypath' );
 
 module.exports = class ConstantsModule {
 	constructor ( file ) {

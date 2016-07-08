@@ -2,14 +2,14 @@ const { basename, dirname, extname, relative, resolve } = require( 'path' );
 const { readdirSync, readFileSync } = require( 'sander' );
 const { parse } = require( 'acorn' );
 const MagicString = require( 'magic-string' );
-const attachScopes = require( './ast/attachScopes' );
-const walk = require( './ast/walk' );
-const getKeypath = require( './utils/getKeypath' );
-const Module = require( './Module' );
+const attachScopes = require( '../ast/attachScopes' );
+const walk = require( '../ast/walk' );
+const getKeypath = require( '../utils/getKeypath' );
+const Module = require( '../Module' );
 
 class KeyframeTrackModule {
 	constructor ( file ) {
-		this.file = file.replace( 'KeyframeTrack', 'KeyframeTrackPrototype' );
+		this.file = file.replace( 'KeyframeTrack', 'KeyframeTrackConstructor' );
 		this.dir = dirname( file );
 
 		// manipulate source code
@@ -19,15 +19,12 @@ class KeyframeTrackModule {
 
 		walk( ast, {
 			enter ( node, parent ) {
-				if ( node.type === 'AssignmentExpression' && getKeypath( node.left ) === 'THREE.KeyframeTrack.prototype' ) {
-					magicString.remove( 0, node.start );
-					magicString.remove( node.end, src.length );
+				if ( node.type === 'FunctionExpression' && parent.type === 'AssignmentExpression' && getKeypath( parent.left ) === 'THREE.KeyframeTrack' ) {
+					// constructor
+					magicString.remove( 0, parent.start );
+					magicString.remove( parent.end, src.length );
 
-					magicString.overwrite( node.left.start, node.left.end, 'THREE.KeyframeTrackPrototype' );
-
-					// remove constructor property
-					const index = node.right.properties.findIndex( prop => prop.key.name === 'constructor' );
-					magicString.remove( node.right.properties[ index ].start, node.right.properties[ index + 1 ].start );
+					magicString.insertLeft( parent.left.property.end, 'Constructor' );
 
 					return this.skip();
 				}
