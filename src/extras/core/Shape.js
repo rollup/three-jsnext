@@ -1,6 +1,7 @@
-import { Path } from './Path';
+import { PathPrototype } from './PathPrototype';
 import { ShapeGeometry } from '../geometries/ShapeGeometry';
 import { ExtrudeGeometry } from '../geometries/ExtrudeGeometry';
+import { Path } from './Path';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
@@ -22,7 +23,7 @@ function Shape () {
 
 };
 
-Shape.prototype = Object.assign( Object.create( Path.prototype ), {
+Shape.prototype = Object.assign( Object.create( PathPrototype ), {
 
 	constructor: Shape,
 
