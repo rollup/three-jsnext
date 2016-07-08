@@ -259,7 +259,7 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 
 						if ( this.options && this.options.ignoreZeroRGBs ) {
 
-							if ( value[ 0 ] === 0 && value[ 1 ] === 0 && value[ 1 ] === 0 ) {
+							if ( value[ 0 ] === 0 && value[ 1 ] === 0 && value[ 2 ] === 0 ) {
 
 								// ignore
 
@@ -393,6 +393,18 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 					params.map = this.loadTexture( resolveURL( this.baseUrl, value ) );
 					params.map.wrapS = this.wrap;
 					params.map.wrapT = this.wrap;
+
+					break;
+
+				case 'map_ks':
+
+					// Specular map
+
+					if ( params.specularMap ) break; // Keep the first encountered texture
+
+					params.specularMap = this.loadTexture( resolveURL( this.baseUrl, value ) );
+					params.specularMap.wrapS = this.wrap;
+					params.specularMap.wrapT = this.wrap;
 
 					break;
 
