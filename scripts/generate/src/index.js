@@ -8,7 +8,6 @@ const KeyframeTrackConstructorModule = require( './special/KeyframeTrackConstruc
 const KeyframeTrackPrototypeModule = require( './special/KeyframeTrackPrototypeModule' );
 const PathModule = require( './special/PathModule' );
 const PathPrototypeModule = require( './special/PathPrototypeModule' );
-const TrackModule = require( './special/TrackModule' );
 const createAlias = require( './utils/createAlias' );
 const isExport = require( './utils/isExport' );
 
@@ -31,11 +30,7 @@ module.exports = function () {
 
 	// Scan files - parse them, and extract metadata
 	let modules = files.map( file => {
-		file = join( srcDir, file );
-
-		const module = /animation\/tracks/.test( file ) ?
-			new TrackModule( file ) : // awkward special case...
-			new Module( file );
+		const module = new Module( join( srcDir, file ) );
 
 		module.analyse( prototypeChains );
 		return module;

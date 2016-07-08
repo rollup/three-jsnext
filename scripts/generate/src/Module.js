@@ -71,6 +71,13 @@ module.exports = class Module {
 			this.src = this.src.replace( /\bPath\.prototype\b/, 'PathPrototype' );
 		}
 
+		// special case – animation/tracks/*
+		if ( /animation\/tracks\/.+KeyframeTrack\.js/.test( this.file ) ) {
+			this.src = this.src
+				.replace( 'KeyframeTrack.call', 'KeyframeTrackConstructor.call' )
+				.replace( /\bKeyframeTrack\.prototype/, 'KeyframeTrackPrototype' );
+		}
+
 		this.magicString = new MagicString( this.src );
 
 		// Attempt to parse with acorn
