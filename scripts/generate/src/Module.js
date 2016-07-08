@@ -66,6 +66,11 @@ module.exports = class Module {
 			this.src = this.src.replace( aliasedExport, `var $1 = $2;\nfunction $2` );
 		}
 
+		// special case – extras/core/Shape
+		if ( /\bPath\.prototype\b/.test( this.src ) ) {
+			this.src = this.src.replace( /\bPath\.prototype\b/, 'PathPrototype' );
+		}
+
 		this.magicString = new MagicString( this.src );
 
 		// Attempt to parse with acorn

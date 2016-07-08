@@ -6,6 +6,8 @@ const ConstantsModule = require( './special/ConstantsModule' );
 const KeyframeTrackModule = require( './special/KeyframeTrackModule' );
 const KeyframeTrackConstructorModule = require( './special/KeyframeTrackConstructorModule' );
 const KeyframeTrackPrototypeModule = require( './special/KeyframeTrackPrototypeModule' );
+const PathModule = require( './special/PathModule' );
+const PathPrototypeModule = require( './special/PathPrototypeModule' );
 const TrackModule = require( './special/TrackModule' );
 const createAlias = require( './utils/createAlias' );
 const isExport = require( './utils/isExport' );
@@ -21,6 +23,7 @@ module.exports = function () {
 		if ( /Three\.Legacy\.js/.test( file ) ) return false;
 		if ( /Three\.js/.test( file ) ) return false;
 		if ( /animation\/KeyframeTrack\.js/.test( file ) ) return false;
+		if ( /core\/Path\.js/.test( file ) ) return false;
 		return true;
 	});
 
@@ -51,9 +54,28 @@ module.exports = function () {
 	const keyframeTrackConstructorModule = new KeyframeTrackConstructorModule( keyframeTrackSrc );
 	const keyframeTrackPrototypeModule = new KeyframeTrackPrototypeModule( keyframeTrackSrc );
 
-	[ constantsModule, keyframeTrackModule, keyframeTrackConstructorModule, keyframeTrackPrototypeModule ].forEach( module => module.analyse( prototypeChains ) );
+	// Path is another (cyclical dependency with Shape)
+	const pathSrc = join( srcDir, 'extras/core/Path.js' );
+	const pathModule = new PathModule( pathSrc );
+	const pathPrototypeModule = new PathPrototypeModule( pathSrc );
 
-	modules.push( constantsModule, keyframeTrackModule, keyframeTrackConstructorModule, keyframeTrackPrototypeModule );
+	[
+		constantsModule,
+		keyframeTrackModule,
+		keyframeTrackConstructorModule,
+		keyframeTrackPrototypeModule,
+		pathModule,
+		pathPrototypeModule
+	].forEach( module => module.analyse( prototypeChains ) );
+
+	modules.push(
+		constantsModule,
+		keyframeTrackModule,
+		keyframeTrackConstructorModule,
+		keyframeTrackPrototypeModule,
+		pathModule,
+		pathPrototypeModule
+	);
 
 	modules.forEach( module => {
 		exportNamesByPath[ module.file ] = [];
