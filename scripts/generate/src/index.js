@@ -19,8 +19,6 @@ module.exports = function () {
 		return true;
 	});
 
-	// const files = [ 'extras/geometries/BoxGeometry.js' ];
-
 	let prototypeChains = {};
 
 	// Scan files - parse them, and extract metadata
@@ -87,32 +85,39 @@ module.exports = function () {
 	writeFileSync( destDir, 'constants.js', constantsModule.render() );
 
 	// create index.js
-	let indexBlock = [];
+	let indexBlock = [].concat(
+		require( '../../../three.js/utils/build/includes/extras.json' ),
+		require( '../../../three.js/utils/build/includes/common.json' )
+	).reverse().map( path => {
+		path = resolve( 'three.js', path );
 
-	let paths = Object.keys( exportNamesByPath );
+		let names = exportNamesByPath[ path ];
+		if ( !names ) return null;
 
-	paths
-		.forEach( path => {
-			const names = exportNamesByPath[ path ]
-				.filter( isExport );
+		names = names.filter( isExport );
 
-			if ( names.length ) {
-				const relativePath = `./${relative( srcDir, path )}`;
+		if ( names.length ) {
+			const relativePath = `./${relative( srcDir, path )}`;
 
-				const exports = names.map( keypath => {
-					const alias = createAlias( keypath );
-					const exported = keypath.slice( 6 );
+			const exports = names.map( keypath => {
+				const alias = createAlias( keypath );
+				const exported = keypath.slice( 6 );
 
-					return alias === exported ? alias : `${alias} as ${exported}`;
-				});
+				return alias === exported ? alias : `${alias} as ${exported}`;
+			});
 
-				const declaration = exports.length > 3 ?
-					`export {\n  ${exports.join(',\n  ')}\n}` :
-					`export { ${exports.join(', ')} }`;
+			const declaration = exports.length > 3 ?
+				`export {\n  ${exports.join(',\n  ')}\n}` :
+				`export { ${exports.join(', ')} }`;
 
-				indexBlock.push( `${declaration} from '${relativePath}';` );
-			}
-		});
+			return `${declaration} from '${relativePath}';`;
+		}
 
-	writeFileSync( destDir, 'index.js', indexBlock.join( '\n' ) );
+		// AudioContext is a special case
+		console.error( 'warning: no exports from ' + path );
+	});
+
+	indexBlock.push( `export * from './constants.js';` );
+
+	writeFileSync( destDir, 'index.js', indexBlock.filter( Boolean ).join( '\n' ) );
 };

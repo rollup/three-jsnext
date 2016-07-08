@@ -43,14 +43,16 @@ module.exports = class Module {
 		this.src = readFileSync( file ).toString();
 
 		// special case - ShaderChunk.js. We need to inline all the shaders
-		if ( basename( file ) === 'ShaderChunk.js' ) {
-			readdirSync( file, '../ShaderChunk' ).forEach( shaderFile => {
-				if ( extname( shaderFile ) === '.glsl' ) {
+		if ( /ShaderChunk.js/.test( file ) ) {
+			[ 'ShaderChunk', 'ShaderLib' ].forEach( category => {
+				readdirSync( file, `../${category}` ).forEach( shaderFile => {
+					if ( extname( shaderFile ) !== '.glsl' ) return;
+
 					const name = shaderFile.slice( 0, -5 );
-					const definition = JSON.stringify( readFileSync( file, '../ShaderChunk', shaderFile ).toString() );
+					const definition = JSON.stringify( readFileSync( file, `../${category}`, shaderFile ).toString() );
 
 					this.src += `\nTHREE.ShaderChunk["${name}"] = ${definition};`;
-				}
+				});
 			});
 		}
 
