@@ -1,4 +1,5 @@
-import { KeyframeTrack } from '../KeyframeTrack';
+import { KeyframeTrackConstructor } from '../KeyframeTrackConstructor';
+import { KeyframeTrackPrototype } from '../KeyframeTrackPrototype';
 
 /**
  *
@@ -13,12 +14,12 @@ import { KeyframeTrack } from '../KeyframeTrack';
 function VectorKeyframeTrack ( name, times, values, interpolation ) {
 	this.isVectorKeyframeTrack = true;
 
-	KeyframeTrack.call( this, name, times, values, interpolation );
+	KeyframeTrackConstructor.call( this, name, times, values, interpolation );
 
 };
 
 VectorKeyframeTrack.prototype =
-		Object.assign( Object.create( KeyframeTrack.prototype ), {
+		Object.assign( Object.create( KeyframeTrackPrototype ), {
 
 	constructor: VectorKeyframeTrack,
 
