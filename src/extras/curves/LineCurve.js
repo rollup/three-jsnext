@@ -17,6 +17,12 @@ LineCurve.prototype.constructor = LineCurve;
 
 LineCurve.prototype.getPoint = function ( t ) {
 
+	if ( t === 1 ) {
+
+		return this.v2.clone();
+
+	}
+
 	var point = this.v2.clone().sub( this.v1 );
 	point.multiplyScalar( t ).add( this.v1 );
 

@@ -13,9 +13,7 @@ function AnimationLoader ( manager ) {
 
 };
 
-AnimationLoader.prototype = {
-
-	constructor: AnimationLoader,
+Object.assign( AnimationLoader.prototype, {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -46,7 +44,7 @@ AnimationLoader.prototype = {
 
 	}
 
-};
+} );
 
 
 export { AnimationLoader };

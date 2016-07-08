@@ -13,9 +13,7 @@ function FontLoader ( manager ) {
 
 };
 
-FontLoader.prototype = {
-
-	constructor: FontLoader,
+Object.assign( FontLoader.prototype, {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -24,7 +22,20 @@ FontLoader.prototype = {
 		var loader = new XHRLoader( this.manager );
 		loader.load( url, function ( text ) {
 
-			var font = scope.parse( JSON.parse( text.substring( 65, text.length - 2 ) ) );
+			var json;
+
+			try {
+
+				json = JSON.parse( text );
+
+			} catch ( e ) {
+
+				console.warn( 'THREE.FontLoader: typeface.js support is being deprecated. Use typeface.json instead.' );
+				json = JSON.parse( text.substring( 65, text.length - 2 ) );
+
+			}
+
+			var font = scope.parse( json );
 
 			if ( onLoad ) onLoad( font );
 
@@ -38,7 +49,7 @@ FontLoader.prototype = {
 
 	}
 
-};
+} );
 
 
 export { FontLoader };

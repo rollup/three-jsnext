@@ -7,16 +7,29 @@ import { Object3D } from '../core/Object3D';
  */
 
 function SpotLight ( color, intensity, distance, angle, penumbra, decay ) {
-	this.isSpotLight = this.isLight = this.isObject3D = true;
+	this.isSpotLight = true;
 
 	Light.call( this, color, intensity );
 
 	this.type = 'SpotLight';
 
-	this.position.set( 0, 1, 0 );
+	this.position.copy( Object3D.DefaultUp );
 	this.updateMatrix();
 
 	this.target = new Object3D();
+
+	Object.defineProperty( this, 'power', {
+		get: function () {
+			// intensity = power per solid angle.
+			// ref: equation (17) from http://www.frostbite.com/wp-content/uploads/2014/11/course_notes_moving_frostbite_to_pbr.pdf
+			return this.intensity * Math.PI;
+		},
+		set: function ( power ) {
+			// intensity = power per solid angle.
+			// ref: equation (17) from http://www.frostbite.com/wp-content/uploads/2014/11/course_notes_moving_frostbite_to_pbr.pdf
+			this.intensity = power / Math.PI;
+		}
+	} );
 
 	this.distance = ( distance !== undefined ) ? distance : 0;
 	this.angle = ( angle !== undefined ) ? angle : Math.PI / 3;
@@ -27,45 +40,28 @@ function SpotLight ( color, intensity, distance, angle, penumbra, decay ) {
 
 };
 
-SpotLight.prototype = Object.create( Light.prototype );
-SpotLight.prototype.constructor = SpotLight;
+SpotLight.prototype = Object.assign( Object.create( Light.prototype ), {
 
-Object.defineProperty( SpotLight.prototype, "power", {
+	constructor: SpotLight,
 
-	get: function () {
+	copy: function ( source ) {
 
-		// intensity = power per solid angle.
-		// ref: equation (17) from http://www.frostbite.com/wp-content/uploads/2014/11/course_notes_moving_frostbite_to_pbr.pdf
-		return this.intensity * Math.PI;
+		Light.prototype.copy.call( this, source );
 
-	},
+		this.distance = source.distance;
+		this.angle = source.angle;
+		this.penumbra = source.penumbra;
+		this.decay = source.decay;
 
-	set: function ( power ) {
+		this.target = source.target.clone();
 
-		// intensity = power per solid angle.
-		// ref: equation (17) from http://www.frostbite.com/wp-content/uploads/2014/11/course_notes_moving_frostbite_to_pbr.pdf
-		this.intensity = power / Math.PI;
+		this.shadow = source.shadow.clone();
+
+		return this;
 
 	}
 
 } );
-
-SpotLight.prototype.copy = function ( source ) {
-
-	Light.prototype.copy.call( this, source );
-
-	this.distance = source.distance;
-	this.angle = source.angle;
-	this.penumbra = source.penumbra;
-	this.decay = source.decay;
-
-	this.target = source.target.clone();
-
-	this.shadow = source.shadow.clone();
-
-	return this;
-
-};
 
 
 export { SpotLight };

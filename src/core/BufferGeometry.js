@@ -343,18 +343,19 @@ Object.assign( BufferGeometry.prototype, EventDispatcher.prototype, {
 
 			var direct = geometry.__directGeometry;
 
-			if ( direct === undefined ) {
+			if ( direct === undefined || geometry.elementsNeedUpdate === true ) {
 
 				return this.fromGeometry( geometry );
 
 			}
 
-			direct.verticesNeedUpdate = geometry.verticesNeedUpdate;
-			direct.normalsNeedUpdate = geometry.normalsNeedUpdate;
-			direct.colorsNeedUpdate = geometry.colorsNeedUpdate;
-			direct.uvsNeedUpdate = geometry.uvsNeedUpdate;
-			direct.groupsNeedUpdate = geometry.groupsNeedUpdate;
+			direct.verticesNeedUpdate = geometry.verticesNeedUpdate || geometry.elementsNeedUpdate;
+			direct.normalsNeedUpdate = geometry.normalsNeedUpdate || geometry.elementsNeedUpdate;
+			direct.colorsNeedUpdate = geometry.colorsNeedUpdate || geometry.elementsNeedUpdate;
+			direct.uvsNeedUpdate = geometry.uvsNeedUpdate || geometry.elementsNeedUpdate;
+			direct.groupsNeedUpdate = geometry.groupsNeedUpdate || geometry.elementsNeedUpdate;
 
+			geometry.elementsNeedUpdate = false;
 			geometry.verticesNeedUpdate = false;
 			geometry.normalsNeedUpdate = false;
 			geometry.colorsNeedUpdate = false;
@@ -365,9 +366,11 @@ Object.assign( BufferGeometry.prototype, EventDispatcher.prototype, {
 
 		}
 
+		var attribute;
+
 		if ( geometry.verticesNeedUpdate === true ) {
 
-			var attribute = this.attributes.position;
+			attribute = this.attributes.position;
 
 			if ( attribute !== undefined ) {
 
@@ -382,7 +385,7 @@ Object.assign( BufferGeometry.prototype, EventDispatcher.prototype, {
 
 		if ( geometry.normalsNeedUpdate === true ) {
 
-			var attribute = this.attributes.normal;
+			attribute = this.attributes.normal;
 
 			if ( attribute !== undefined ) {
 
@@ -397,7 +400,7 @@ Object.assign( BufferGeometry.prototype, EventDispatcher.prototype, {
 
 		if ( geometry.colorsNeedUpdate === true ) {
 
-			var attribute = this.attributes.color;
+			attribute = this.attributes.color;
 
 			if ( attribute !== undefined ) {
 
@@ -412,7 +415,7 @@ Object.assign( BufferGeometry.prototype, EventDispatcher.prototype, {
 
 		if ( geometry.uvsNeedUpdate ) {
 
-			var attribute = this.attributes.uv;
+			attribute = this.attributes.uv;
 
 			if ( attribute !== undefined ) {
 
@@ -427,7 +430,7 @@ Object.assign( BufferGeometry.prototype, EventDispatcher.prototype, {
 
 		if ( geometry.lineDistancesNeedUpdate ) {
 
-			var attribute = this.attributes.lineDistance;
+			attribute = this.attributes.lineDistance;
 
 			if ( attribute !== undefined ) {
 
@@ -602,13 +605,14 @@ Object.assign( BufferGeometry.prototype, EventDispatcher.prototype, {
 
 			}
 
-			var positions = this.attributes.position.array;
+			var positions = this.attributes.position;
 
 			if ( positions ) {
 
+				var array = positions.array;
 				var center = this.boundingSphere.center;
 
-				box.setFromArray( positions );
+				box.setFromArray( array );
 				box.center( center );
 
 				// hoping to find a boundingSphere with a radius smaller than the
@@ -616,9 +620,9 @@ Object.assign( BufferGeometry.prototype, EventDispatcher.prototype, {
 
 				var maxRadiusSq = 0;
 
-				for ( var i = 0, il = positions.length; i < il; i += 3 ) {
+				for ( var i = 0, il = array.length; i < il; i += 3 ) {
 
-					vector.fromArray( positions, i );
+					vector.fromArray( array, i );
 					maxRadiusSq = Math.max( maxRadiusSq, center.distanceToSquared( vector ) );
 
 				}

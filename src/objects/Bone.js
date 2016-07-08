@@ -7,7 +7,7 @@ import { Object3D } from '../core/Object3D';
  */
 
 function Bone ( skin ) {
-	this.isBone = this.isObject3D = true;
+	this.isBone = true;
 
 	Object3D.call( this );
 
@@ -17,18 +17,21 @@ function Bone ( skin ) {
 
 };
 
-Bone.prototype = Object.create( Object3D.prototype );
-Bone.prototype.constructor = Bone;
+Bone.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
-Bone.prototype.copy = function ( source ) {
+	constructor: Bone,
 
-	Object3D.prototype.copy.call( this, source );
+	copy: function ( source ) {
 
-	this.skin = source.skin;
+		Object3D.prototype.copy.call( this, source );
 
-	return this;
+		this.skin = source.skin;
 
-};
+		return this;
+
+	}
+
+} );
 
 
 export { Bone };

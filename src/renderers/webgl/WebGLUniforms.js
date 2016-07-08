@@ -1,3 +1,6 @@
+import { CubeTexture } from '../../textures/CubeTexture';
+import { Texture } from '../../textures/Texture';
+
 var WebGLUniforms;
 
 /**
@@ -56,6 +59,9 @@ var WebGLUniforms;
  */
 
 WebGLUniforms = ( function() { // scope
+
+	var emptyTexture = new Texture();
+	var emptyCubeTexture = new CubeTexture();
 
 	// --- Base for inner nodes (including the root) ---
 
@@ -200,7 +206,7 @@ WebGLUniforms = ( function() { // scope
 
 			var unit = renderer.allocTextureUnit();
 			gl.uniform1i( this.addr, unit );
-			if ( v ) renderer.setTexture2D( v, unit );
+			renderer.setTexture2D( v || emptyTexture, unit );
 
 		},
 
@@ -208,7 +214,7 @@ WebGLUniforms = ( function() { // scope
 
 			var unit = renderer.allocTextureUnit();
 			gl.uniform1i( this.addr, unit );
-			if ( v ) renderer.setTextureCube( v, unit );
+			renderer.setTextureCube( v || emptyCubeTexture, unit );
 
 		},
 
@@ -301,8 +307,7 @@ WebGLUniforms = ( function() { // scope
 
 			for ( var i = 0; i !== n; ++ i ) {
 
-				var tex = v[ i ];
-				if ( tex ) renderer.setTexture2D( tex, units[ i ] );
+				renderer.setTexture2D( v[ i ] || emptyTexture, units[ i ] );
 
 			}
 
@@ -317,8 +322,7 @@ WebGLUniforms = ( function() { // scope
 
 			for ( var i = 0; i !== n; ++ i ) {
 
-				var tex = v[ i ];
-				if ( tex ) renderer.setTextureCube( tex, units[ i ] );
+				renderer.setTextureCube( v[ i ] || emptyCubeTexture, units[ i ] );
 
 			}
 
@@ -601,7 +605,6 @@ WebGLUniforms = ( function() { // scope
 	return WebGLUniforms;
 
 } )();
-
 
 
 export { WebGLUniforms };

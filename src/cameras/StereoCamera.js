@@ -32,7 +32,7 @@ Object.assign( StereoCamera.prototype, {
 		var eyeRight = new Matrix4();
 		var eyeLeft = new Matrix4();
 
-		return function update ( camera ) {
+		return function update( camera ) {
 
 			var needsUpdate = focus !== camera.focus || fov !== camera.fov ||
 												aspect !== camera.aspect * this.aspect || near !== camera.near ||

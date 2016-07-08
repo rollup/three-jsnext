@@ -15,7 +15,6 @@ import { AmbientLight } from '../lights/AmbientLight';
 import { OrthographicCamera } from '../cameras/OrthographicCamera';
 import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
 import { Scene } from '../scenes/Scene';
-import { Vector2 } from '../math/Vector2';
 import { Texture } from '../textures/Texture';
 import { ImageLoader } from './ImageLoader';
 import { LoadingManager, DefaultLoadingManager } from './LoadingManager';
@@ -37,9 +36,7 @@ function ObjectLoader ( manager ) {
 
 };
 
-ObjectLoader.prototype = {
-
-	constructor: ObjectLoader,
+Object.assign( ObjectLoader.prototype, {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -418,18 +415,23 @@ ObjectLoader.prototype = {
 				texture.uuid = data.uuid;
 
 				if ( data.name !== undefined ) texture.name = data.name;
+
 				if ( data.mapping !== undefined ) texture.mapping = parseConstant( data.mapping );
-				if ( data.offset !== undefined ) texture.offset = new Vector2( data.offset[ 0 ], data.offset[ 1 ] );
-				if ( data.repeat !== undefined ) texture.repeat = new Vector2( data.repeat[ 0 ], data.repeat[ 1 ] );
-				if ( data.minFilter !== undefined ) texture.minFilter = parseConstant( data.minFilter );
-				if ( data.magFilter !== undefined ) texture.magFilter = parseConstant( data.magFilter );
-				if ( data.anisotropy !== undefined ) texture.anisotropy = data.anisotropy;
-				if ( Array.isArray( data.wrap ) ) {
+
+				if ( data.offset !== undefined ) texture.offset.fromArray( data.offset );
+				if ( data.repeat !== undefined ) texture.repeat.fromArray( data.repeat );
+				if ( data.wrap !== undefined ) {
 
 					texture.wrapS = parseConstant( data.wrap[ 0 ] );
 					texture.wrapT = parseConstant( data.wrap[ 1 ] );
 
 				}
+
+				if ( data.minFilter !== undefined ) texture.minFilter = parseConstant( data.minFilter );
+				if ( data.magFilter !== undefined ) texture.magFilter = parseConstant( data.magFilter );
+				if ( data.anisotropy !== undefined ) texture.anisotropy = data.anisotropy;
+
+				if ( data.flipY !== undefined ) texture.flipY = data.flipY;
 
 				textures[ data.uuid ] = texture;
 
@@ -445,7 +447,7 @@ ObjectLoader.prototype = {
 
 		var matrix = new Matrix4();
 
-		return function ( data, geometries, materials ) {
+		return function parseObject( data, geometries, materials ) {
 
 			var object;
 
@@ -642,7 +644,7 @@ ObjectLoader.prototype = {
 
 	}()
 
-};
+} );
 
 
 export { ObjectLoader };

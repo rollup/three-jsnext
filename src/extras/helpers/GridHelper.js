@@ -9,21 +9,23 @@ import { Color } from '../../math/Color';
  * @author mrdoob / http://mrdoob.com/
  */
 
-function GridHelper ( size, step, color1, color2 ) {
-	this.isGridHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
+function GridHelper ( size, divisions, color1, color2 ) {
+	this.isGridHelper = this.isLineSegments = true;
 
+	divisions = divisions || 1;
 	color1 = new Color( color1 !== undefined ? color1 : 0x444444 );
 	color2 = new Color( color2 !== undefined ? color2 : 0x888888 );
 
-	var vertices = [];
-	var colors = [];
+	var center = divisions / 2;
+	var step = ( size * 2 ) / divisions;
+	var vertices = [], colors = [];
 
-	for ( var i = - size, j = 0; i <= size; i += step ) {
+	for ( var i = 0, j = 0, k = - size; i <= divisions; i ++, k += step ) {
 
-		vertices.push( - size, 0, i, size, 0, i );
-		vertices.push( i, 0, - size, i, 0, size );
+		vertices.push( - size, 0, k, size, 0, k );
+		vertices.push( k, 0, - size, k, 0, size );
 
-		var color = i === 0 ? color1 : color2;
+		var color = i === center ? color1 : color2;
 
 		color.toArray( colors, j ); j += 3;
 		color.toArray( colors, j ); j += 3;

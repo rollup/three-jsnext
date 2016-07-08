@@ -28,7 +28,7 @@ Camera.prototype.getWorldDirection = function () {
 
 	var quaternion = new Quaternion();
 
-	return function ( optionalTarget ) {
+	return function getWorldDirection( optionalTarget ) {
 
 		var result = optionalTarget || new Vector3();
 
@@ -46,7 +46,7 @@ Camera.prototype.lookAt = function () {
 
 	var m1 = new Matrix4();
 
-	return function ( vector ) {
+	return function lookAt( vector ) {
 
 		m1.lookAt( this.position, vector, this.up );
 

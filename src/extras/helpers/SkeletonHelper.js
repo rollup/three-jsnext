@@ -14,7 +14,7 @@ import { Geometry } from '../../core/Geometry';
  */
 
 function SkeletonHelper ( object ) {
-	this.isSkeletonHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
+	this.isSkeletonHelper = this.isLineSegments = true;
 
 	this.bones = this.getBoneList( object );
 

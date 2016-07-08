@@ -20,9 +20,7 @@ function LightShadow ( camera ) {
 
 };
 
-LightShadow.prototype = {
-
-	constructor: LightShadow,
+Object.assign( LightShadow.prototype, {
 
 	copy: function ( source ) {
 
@@ -43,7 +41,7 @@ LightShadow.prototype = {
 
 	}
 
-};
+} );
 
 
 export { LightShadow };

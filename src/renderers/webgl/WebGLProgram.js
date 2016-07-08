@@ -289,8 +289,17 @@ WebGLProgram = ( function () {
 
 		if ( (material && material.isRawShaderMaterial) ) {
 
-			prefixVertex = '';
-			prefixFragment = '';
+			prefixVertex = [
+
+				customDefines
+
+			].filter( filterEmptyLine ).join( '\n' );
+
+			prefixFragment = [
+
+				customDefines
+
+			].filter( filterEmptyLine ).join( '\n' );
 
 		} else {
 

@@ -19,9 +19,7 @@ function BinaryTextureLoader ( manager ) {
 
 };
 
-BinaryTextureLoader.prototype = {
-
-	constructor: BinaryTextureLoader,
+Object.assign( BinaryTextureLoader.prototype, {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -92,4 +90,4 @@ BinaryTextureLoader.prototype = {
 
 	}
 
-};
+} );

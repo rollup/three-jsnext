@@ -7,15 +7,12 @@ import { LineBasicMaterial } from '../materials/LineBasicMaterial';
 import { BufferGeometry } from '../core/BufferGeometry';
 import { LineSegments } from './LineSegments';
 
-var LinePieces;
-var LineStrip;
-
 /**
  * @author mrdoob / http://mrdoob.com/
  */
 
 function Line ( geometry, material, mode ) {
-	this.isLine = this.isObject3D = true;
+	this.isLine = true;
 
 	if ( mode === 1 ) {
 
@@ -33,94 +30,129 @@ function Line ( geometry, material, mode ) {
 
 };
 
-Line.prototype = Object.create( Object3D.prototype );
-Line.prototype.constructor = Line;
+Line.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
-Line.prototype.raycast = ( function () {
+	constructor: Line,
 
-	var inverseMatrix = new Matrix4();
-	var ray = new Ray();
-	var sphere = new Sphere();
+	raycast: ( function () {
 
-	return function raycast( raycaster, intersects ) {
+		var inverseMatrix = new Matrix4();
+		var ray = new Ray();
+		var sphere = new Sphere();
 
-		var precision = raycaster.linePrecision;
-		var precisionSq = precision * precision;
+		return function raycast( raycaster, intersects ) {
 
-		var geometry = this.geometry;
-		var matrixWorld = this.matrixWorld;
+			var precision = raycaster.linePrecision;
+			var precisionSq = precision * precision;
 
-		// Checking boundingSphere distance to ray
+			var geometry = this.geometry;
+			var matrixWorld = this.matrixWorld;
 
-		if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
+			// Checking boundingSphere distance to ray
 
-		sphere.copy( geometry.boundingSphere );
-		sphere.applyMatrix4( matrixWorld );
+			if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
 
-		if ( raycaster.ray.intersectsSphere( sphere ) === false ) return;
+			sphere.copy( geometry.boundingSphere );
+			sphere.applyMatrix4( matrixWorld );
 
-		//
+			if ( raycaster.ray.intersectsSphere( sphere ) === false ) return;
 
-		inverseMatrix.getInverse( matrixWorld );
-		ray.copy( raycaster.ray ).applyMatrix4( inverseMatrix );
+			//
 
-		var vStart = new Vector3();
-		var vEnd = new Vector3();
-		var interSegment = new Vector3();
-		var interRay = new Vector3();
-		var step = (this && this.isLineSegments) ? 2 : 1;
+			inverseMatrix.getInverse( matrixWorld );
+			ray.copy( raycaster.ray ).applyMatrix4( inverseMatrix );
 
-		if ( (geometry && geometry.isBufferGeometry) ) {
+			var vStart = new Vector3();
+			var vEnd = new Vector3();
+			var interSegment = new Vector3();
+			var interRay = new Vector3();
+			var step = (this && this.isLineSegments) ? 2 : 1;
 
-			var index = geometry.index;
-			var attributes = geometry.attributes;
-			var positions = attributes.position.array;
+			if ( (geometry && geometry.isBufferGeometry) ) {
 
-			if ( index !== null ) {
+				var index = geometry.index;
+				var attributes = geometry.attributes;
+				var positions = attributes.position.array;
 
-				var indices = index.array;
+				if ( index !== null ) {
 
-				for ( var i = 0, l = indices.length - 1; i < l; i += step ) {
+					var indices = index.array;
 
-					var a = indices[ i ];
-					var b = indices[ i + 1 ];
+					for ( var i = 0, l = indices.length - 1; i < l; i += step ) {
 
-					vStart.fromArray( positions, a * 3 );
-					vEnd.fromArray( positions, b * 3 );
+						var a = indices[ i ];
+						var b = indices[ i + 1 ];
 
-					var distSq = ray.distanceSqToSegment( vStart, vEnd, interRay, interSegment );
+						vStart.fromArray( positions, a * 3 );
+						vEnd.fromArray( positions, b * 3 );
 
-					if ( distSq > precisionSq ) continue;
+						var distSq = ray.distanceSqToSegment( vStart, vEnd, interRay, interSegment );
 
-					interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
+						if ( distSq > precisionSq ) continue;
 
-					var distance = raycaster.ray.origin.distanceTo( interRay );
+						interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
 
-					if ( distance < raycaster.near || distance > raycaster.far ) continue;
+						var distance = raycaster.ray.origin.distanceTo( interRay );
 
-					intersects.push( {
+						if ( distance < raycaster.near || distance > raycaster.far ) continue;
 
-						distance: distance,
-						// What do we want? intersection point on the ray or on the segment??
-						// point: raycaster.ray.at( distance ),
-						point: interSegment.clone().applyMatrix4( this.matrixWorld ),
-						index: i,
-						face: null,
-						faceIndex: null,
-						object: this
+						intersects.push( {
 
-					} );
+							distance: distance,
+							// What do we want? intersection point on the ray or on the segment??
+							// point: raycaster.ray.at( distance ),
+							point: interSegment.clone().applyMatrix4( this.matrixWorld ),
+							index: i,
+							face: null,
+							faceIndex: null,
+							object: this
+
+						} );
+
+					}
+
+				} else {
+
+					for ( var i = 0, l = positions.length / 3 - 1; i < l; i += step ) {
+
+						vStart.fromArray( positions, 3 * i );
+						vEnd.fromArray( positions, 3 * i + 3 );
+
+						var distSq = ray.distanceSqToSegment( vStart, vEnd, interRay, interSegment );
+
+						if ( distSq > precisionSq ) continue;
+
+						interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
+
+						var distance = raycaster.ray.origin.distanceTo( interRay );
+
+						if ( distance < raycaster.near || distance > raycaster.far ) continue;
+
+						intersects.push( {
+
+							distance: distance,
+							// What do we want? intersection point on the ray or on the segment??
+							// point: raycaster.ray.at( distance ),
+							point: interSegment.clone().applyMatrix4( this.matrixWorld ),
+							index: i,
+							face: null,
+							faceIndex: null,
+							object: this
+
+						} );
+
+					}
 
 				}
 
-			} else {
+			} else if ( (geometry && geometry.isGeometry) ) {
 
-				for ( var i = 0, l = positions.length / 3 - 1; i < l; i += step ) {
+				var vertices = geometry.vertices;
+				var nbVertices = vertices.length;
 
-					vStart.fromArray( positions, 3 * i );
-					vEnd.fromArray( positions, 3 * i + 3 );
+				for ( var i = 0; i < nbVertices - 1; i += step ) {
 
-					var distSq = ray.distanceSqToSegment( vStart, vEnd, interRay, interSegment );
+					var distSq = ray.distanceSqToSegment( vertices[ i ], vertices[ i + 1 ], interRay, interSegment );
 
 					if ( distSq > precisionSq ) continue;
 
@@ -147,54 +179,17 @@ Line.prototype.raycast = ( function () {
 
 			}
 
-		} else if ( (geometry && geometry.isGeometry) ) {
+		};
 
-			var vertices = geometry.vertices;
-			var nbVertices = vertices.length;
+	}() ),
 
-			for ( var i = 0; i < nbVertices - 1; i += step ) {
+	clone: function () {
 
-				var distSq = ray.distanceSqToSegment( vertices[ i ], vertices[ i + 1 ], interRay, interSegment );
+		return new this.constructor( this.geometry, this.material ).copy( this );
 
-				if ( distSq > precisionSq ) continue;
+	}
 
-				interRay.applyMatrix4( this.matrixWorld ); //Move back to world space for distance calculation
-
-				var distance = raycaster.ray.origin.distanceTo( interRay );
-
-				if ( distance < raycaster.near || distance > raycaster.far ) continue;
-
-				intersects.push( {
-
-					distance: distance,
-					// What do we want? intersection point on the ray or on the segment??
-					// point: raycaster.ray.at( distance ),
-					point: interSegment.clone().applyMatrix4( this.matrixWorld ),
-					index: i,
-					face: null,
-					faceIndex: null,
-					object: this
-
-				} );
-
-			}
-
-		}
-
-	};
-
-}() );
-
-Line.prototype.clone = function () {
-
-	return new this.constructor( this.geometry, this.material ).copy( this );
-
-};
-
-// DEPRECATED
-
-LineStrip = 0;
-LinePieces = 1;
+} );
 
 
-export { LinePieces, LineStrip, Line };
+export { Line };

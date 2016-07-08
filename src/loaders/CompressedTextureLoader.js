@@ -19,10 +19,7 @@ function CompressedTextureLoader ( manager ) {
 
 };
 
-
-CompressedTextureLoader.prototype = {
-
-	constructor: CompressedTextureLoader,
+Object.assign( CompressedTextureLoader.prototype, {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -135,10 +132,11 @@ CompressedTextureLoader.prototype = {
 	setPath: function ( value ) {
 
 		this.path = value;
+		return this;
 
 	}
 
-};
+} );
 
 
 export { CompressedTextureLoader };

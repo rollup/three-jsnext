@@ -273,7 +273,7 @@ AnimationAction._new.prototype = {
 
 	halt: function( duration ) {
 
-		return this.warp( this._currentTimeScale, 0, duration );
+		return this.warp( this._effectiveTimeScale, 0, duration );
 
 	},
 
@@ -450,7 +450,7 @@ AnimationAction._new.prototype = {
 					if ( timeScale === 0 ) {
 
 						// motion has halted, pause
-						this.pause = true;
+						this.paused = true;
 
 					} else {
 
@@ -503,7 +503,7 @@ AnimationAction._new.prototype = {
 
 				} else break handle_stop;
 
-				if ( this.clampWhenFinished ) this.pause = true;
+				if ( this.clampWhenFinished ) this.paused = true;
 				else this.enabled = false;
 
 				this._mixer.dispatchEvent( {

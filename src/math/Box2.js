@@ -43,7 +43,7 @@ Box2.prototype = {
 
 		var v1 = new Vector2();
 
-		return function ( center, size ) {
+		return function setFromCenterAndSize( center, size ) {
 
 			var halfSize = v1.copy( size ).multiplyScalar( 0.5 );
 			this.min.copy( center ).sub( halfSize );
@@ -194,7 +194,7 @@ Box2.prototype = {
 
 		var v1 = new Vector2();
 
-		return function ( point ) {
+		return function distanceToPoint( point ) {
 
 			var clampedPoint = v1.copy( point ).clamp( this.min, this.max );
 			return clampedPoint.sub( point ).length();

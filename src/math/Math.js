@@ -18,7 +18,7 @@ _Math = {
 		var uuid = new Array( 36 );
 		var rnd = 0, r;
 
-		return function () {
+		return function generateUUID() {
 
 			for ( var i = 0; i < 36; i ++ ) {
 

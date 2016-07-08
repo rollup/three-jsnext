@@ -5,7 +5,7 @@ import { Object3D } from '../core/Object3D';
  */
 
 function Group () {
-	this.isGroup = this.isObject3D = true;
+	this.isGroup = true;
 
 	Object3D.call( this );
 
@@ -13,8 +13,11 @@ function Group () {
 
 };
 
-Group.prototype = Object.create( Object3D.prototype );
-Group.prototype.constructor = Group;
+Group.prototype = Object.assign( Object.create( Object3D.prototype ), {
+
+	constructor: Group
+
+} );
 
 
 export { Group };

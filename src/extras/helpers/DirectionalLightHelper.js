@@ -67,7 +67,7 @@ DirectionalLightHelper.prototype.update = function () {
 	var v2 = new Vector3();
 	var v3 = new Vector3();
 
-	return function () {
+	return function update() {
 
 		v1.setFromMatrixPosition( this.light.matrixWorld );
 		v2.setFromMatrixPosition( this.light.target.matrixWorld );

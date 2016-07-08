@@ -154,8 +154,8 @@ Material.prototype = {
 
 		if ( (this.color && this.color.isColor) ) data.color = this.color.getHex();
 
-		if ( this.roughness !== 0.5 ) data.roughness = this.roughness;
-		if ( this.metalness !== 0.5 ) data.metalness = this.metalness;
+		if ( this.roughness !== undefined ) data.roughness = this.roughness;
+		if ( this.metalness !== undefined ) data.metalness = this.metalness;
 
 		if ( (this.emissive && this.emissive.isColor) ) data.emissive = this.emissive.getHex();
 		if ( (this.specular && this.specular.isColor) ) data.specular = this.specular.getHex();
@@ -258,6 +258,7 @@ Material.prototype = {
 
 		this.blending = source.blending;
 		this.side = source.side;
+		this.shading = source.shading;
 		this.vertexColors = source.vertexColors;
 
 		this.opacity = source.opacity;

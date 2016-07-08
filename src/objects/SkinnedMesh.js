@@ -11,7 +11,7 @@ import { Matrix4 } from '../math/Matrix4';
  */
 
 function SkinnedMesh ( geometry, material, useVertexTexture ) {
-	this.isSkinnedMesh = this.isMesh = this.isObject3D = true;
+	this.isSkinnedMesh = true;
 
 	Mesh.call( this, geometry, material );
 
@@ -73,114 +73,117 @@ function SkinnedMesh ( geometry, material, useVertexTexture ) {
 };
 
 
-SkinnedMesh.prototype = Object.create( Mesh.prototype );
-SkinnedMesh.prototype.constructor = SkinnedMesh;
+SkinnedMesh.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
-SkinnedMesh.prototype.bind = function( skeleton, bindMatrix ) {
+	constructor: SkinnedMesh,
 
-	this.skeleton = skeleton;
+	bind: function( skeleton, bindMatrix ) {
 
-	if ( bindMatrix === undefined ) {
+		this.skeleton = skeleton;
 
-		this.updateMatrixWorld( true );
+		if ( bindMatrix === undefined ) {
 
-		this.skeleton.calculateInverses();
+			this.updateMatrixWorld( true );
 
-		bindMatrix = this.matrixWorld;
+			this.skeleton.calculateInverses();
 
-	}
+			bindMatrix = this.matrixWorld;
 
-	this.bindMatrix.copy( bindMatrix );
-	this.bindMatrixInverse.getInverse( bindMatrix );
+		}
 
-};
+		this.bindMatrix.copy( bindMatrix );
+		this.bindMatrixInverse.getInverse( bindMatrix );
 
-SkinnedMesh.prototype.pose = function () {
+	},
 
-	this.skeleton.pose();
+	pose: function () {
 
-};
+		this.skeleton.pose();
 
-SkinnedMesh.prototype.normalizeSkinWeights = function () {
+	},
 
-	if ( (this.geometry && this.geometry.isGeometry) ) {
+	normalizeSkinWeights: function () {
 
-		for ( var i = 0; i < this.geometry.skinWeights.length; i ++ ) {
+		if ( (this.geometry && this.geometry.isGeometry) ) {
 
-			var sw = this.geometry.skinWeights[ i ];
+			for ( var i = 0; i < this.geometry.skinWeights.length; i ++ ) {
 
-			var scale = 1.0 / sw.lengthManhattan();
+				var sw = this.geometry.skinWeights[ i ];
 
-			if ( scale !== Infinity ) {
+				var scale = 1.0 / sw.lengthManhattan();
 
-				sw.multiplyScalar( scale );
+				if ( scale !== Infinity ) {
 
-			} else {
+					sw.multiplyScalar( scale );
 
-				sw.set( 1, 0, 0, 0 ); // do something reasonable
+				} else {
+
+					sw.set( 1, 0, 0, 0 ); // do something reasonable
+
+				}
+
+			}
+
+		} else if ( (this.geometry && this.geometry.isBufferGeometry) ) {
+
+			var vec = new Vector4();
+
+			var skinWeight = this.geometry.attributes.skinWeight;
+
+			for ( var i = 0; i < skinWeight.count; i ++ ) {
+
+				vec.x = skinWeight.getX( i );
+				vec.y = skinWeight.getY( i );
+				vec.z = skinWeight.getZ( i );
+				vec.w = skinWeight.getW( i );
+
+				var scale = 1.0 / vec.lengthManhattan();
+
+				if ( scale !== Infinity ) {
+
+					vec.multiplyScalar( scale );
+
+				} else {
+
+					vec.set( 1, 0, 0, 0 ); // do something reasonable
+
+				}
+
+				skinWeight.setXYZW( i, vec.x, vec.y, vec.z, vec.w );
 
 			}
 
 		}
 
-	} else if ( (this.geometry && this.geometry.isBufferGeometry) ) {
+	},
 
-		var vec = new Vector4();
+	updateMatrixWorld: function( force ) {
 
-		var skinWeight = this.geometry.attributes.skinWeight;
+		Mesh.prototype.updateMatrixWorld.call( this, true );
 
-		for ( var i = 0; i < skinWeight.count; i ++ ) {
+		if ( this.bindMode === "attached" ) {
 
-			vec.x = skinWeight.getX( i );
-			vec.y = skinWeight.getY( i );
-			vec.z = skinWeight.getZ( i );
-			vec.w = skinWeight.getW( i );
+			this.bindMatrixInverse.getInverse( this.matrixWorld );
 
-			var scale = 1.0 / vec.lengthManhattan();
+		} else if ( this.bindMode === "detached" ) {
 
-			if ( scale !== Infinity ) {
+			this.bindMatrixInverse.getInverse( this.bindMatrix );
 
-				vec.multiplyScalar( scale );
+		} else {
 
-			} else {
-
-				vec.set( 1, 0, 0, 0 ); // do something reasonable
-
-			}
-
-			skinWeight.setXYZW( i, vec.x, vec.y, vec.z, vec.w );
+			console.warn( 'THREE.SkinnedMesh unrecognized bindMode: ' + this.bindMode );
 
 		}
 
-	}
+	},
 
-};
+	clone: function() {
 
-SkinnedMesh.prototype.updateMatrixWorld = function( force ) {
-
-	Mesh.prototype.updateMatrixWorld.call( this, true );
-
-	if ( this.bindMode === "attached" ) {
-
-		this.bindMatrixInverse.getInverse( this.matrixWorld );
-
-	} else if ( this.bindMode === "detached" ) {
-
-		this.bindMatrixInverse.getInverse( this.bindMatrix );
-
-	} else {
-
-		console.warn( 'THREE.SkinnedMesh unrecognized bindMode: ' + this.bindMode );
+		return new this.constructor( this.geometry, this.material, this.skeleton.useVertexTexture ).copy( this );
 
 	}
 
-};
-
-SkinnedMesh.prototype.clone = function() {
-
-	return new this.constructor( this.geometry, this.material, this.useVertexTexture ).copy( this );
-
-};
+} );
 
 
 export { SkinnedMesh };

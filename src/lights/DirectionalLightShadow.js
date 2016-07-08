@@ -6,14 +6,17 @@ import { OrthographicCamera } from '../cameras/OrthographicCamera';
  */
 
 function DirectionalLightShadow ( light ) {
-	this.isDirectionalLightShadow = this.isLightShadow = true;
+	this.isDirectionalLightShadow = true;
 
 	LightShadow.call( this, new OrthographicCamera( - 5, 5, 5, - 5, 0.5, 500 ) );
 
 };
 
-DirectionalLightShadow.prototype = Object.create( LightShadow.prototype );
-DirectionalLightShadow.prototype.constructor = DirectionalLightShadow;
+DirectionalLightShadow.prototype = Object.assign( Object.create( LightShadow.prototype ), {
+
+	constructor: DirectionalLightShadow
+
+} );
 
 
 export { DirectionalLightShadow };

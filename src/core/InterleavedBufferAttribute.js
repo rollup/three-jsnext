@@ -4,7 +4,7 @@ import { _Math } from '../math/Math';
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 
-function InterleavedBufferAttribute ( interleavedBuffer, itemSize, offset ) {
+function InterleavedBufferAttribute ( interleavedBuffer, itemSize, offset, normalized ) {
 	this.isInterleavedBufferAttribute = true;
 
 	this.uuid = _Math.generateUUID();
@@ -12,6 +12,8 @@ function InterleavedBufferAttribute ( interleavedBuffer, itemSize, offset ) {
 	this.data = interleavedBuffer;
 	this.itemSize = itemSize;
 	this.offset = offset;
+
+	this.normalized = normalized === true;
 
 };
 
@@ -30,6 +32,12 @@ InterleavedBufferAttribute.prototype = {
 	get count() {
 
 		return this.data.count;
+
+	},
+
+	get array() {
+
+		return this.data.array;
 
 	},
 

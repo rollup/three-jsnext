@@ -6,7 +6,7 @@ import { _Math } from '../../math/Math';
  */
 
 function MorphBlendMesh( geometry, material ) {
-	this.isMorphBlendMesh = this.isMesh = this.isObject3D = true;
+	this.isMorphBlendMesh = this.isMesh = true;
 
 	Mesh.call( this, geometry, material );
 

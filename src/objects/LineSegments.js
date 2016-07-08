@@ -5,7 +5,7 @@ import { Line } from './Line';
  */
 
 function LineSegments ( geometry, material ) {
-	this.isLineSegments = this.isLine = this.isObject3D = true;
+	this.isLineSegments = true;
 
 	Line.call( this, geometry, material );
 
@@ -13,8 +13,11 @@ function LineSegments ( geometry, material ) {
 
 };
 
-LineSegments.prototype = Object.create( Line.prototype );
-LineSegments.prototype.constructor = LineSegments;
+LineSegments.prototype = Object.assign( Object.create( Line.prototype ), {
+
+	constructor: LineSegments
+
+} );
 
 
 export { LineSegments };

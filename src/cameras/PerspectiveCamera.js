@@ -9,7 +9,7 @@ import { _Math } from '../math/Math';
  * @author tschw
  */
 
-function PerspectiveCamera( fov, aspect, near, far ) {
+function PerspectiveCamera ( fov, aspect, near, far ) {
 	this.isPerspectiveCamera = true;
 
 	Camera.call( this );
@@ -55,21 +55,6 @@ PerspectiveCamera.prototype = Object.assign( Object.create( Camera.prototype ), 
 		this.filmOffset = source.filmOffset;
 
 		return this;
-
-	},
-
-	/**
-	 * Sets the FOV by focal length (DEPRECATED).
-	 *
-	 * Optionally also sets .filmGauge, otherwise uses it. See .setFocalLength.
-	 */
-	setLens: function ( focalLength, filmGauge ) {
-
-		console.warn( "THREE.PerspectiveCamera.setLens is deprecated. " +
-				"Use .setFocalLength and .filmGauge for a photographic setup." );
-
-		if ( filmGauge !== undefined ) this.filmGauge = filmGauge;
-		this.setFocalLength( focalLength );
 
 	},
 
@@ -171,6 +156,13 @@ PerspectiveCamera.prototype = Object.assign( Object.create( Camera.prototype ), 
 			height: height
 		};
 
+		this.updateProjectionMatrix();
+
+	},
+
+	clearViewOffset: function() {
+
+		this.view = null;
 		this.updateProjectionMatrix();
 
 	},

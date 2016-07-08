@@ -16,7 +16,7 @@ import { Geometry } from '../../core/Geometry';
  */
 
 function CameraHelper ( camera ) {
-	this.isCameraHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
+	this.isCameraHelper = this.isLineSegments = true;
 
 	var geometry = new Geometry();
 	var material = new LineBasicMaterial( { color: 0xffffff, vertexColors: FaceColors } );
@@ -103,7 +103,7 @@ function CameraHelper ( camera ) {
 	LineSegments.call( this, geometry, material );
 
 	this.camera = camera;
-	this.camera.updateProjectionMatrix();
+	if( this.camera.updateProjectionMatrix ) this.camera.updateProjectionMatrix();
 
 	this.matrix = camera.matrixWorld;
 	this.matrixAutoUpdate = false;
@@ -142,7 +142,7 @@ CameraHelper.prototype.update = function () {
 
 	}
 
-	return function () {
+	return function update() {
 
 		geometry = this.geometry;
 		pointMap = this.pointMap;

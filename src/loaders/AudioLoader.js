@@ -12,9 +12,7 @@ function AudioLoader ( manager ) {
 
 };
 
-AudioLoader.prototype = {
-
-	constructor: AudioLoader,
+Object.assign( AudioLoader.prototype, {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -34,7 +32,7 @@ AudioLoader.prototype = {
 
 	}
 
-};
+} );
 
 
 export { AudioLoader };

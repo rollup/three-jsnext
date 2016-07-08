@@ -8,13 +8,13 @@ import { Object3D } from '../core/Object3D';
  */
 
 function DirectionalLight ( color, intensity ) {
-	this.isDirectionalLight = this.isLight = this.isObject3D = true;
+	this.isDirectionalLight = true;
 
 	Light.call( this, color, intensity );
 
 	this.type = 'DirectionalLight';
 
-	this.position.set( 0, 1, 0 );
+	this.position.copy( Object3D.DefaultUp );
 	this.updateMatrix();
 
 	this.target = new Object3D();
@@ -23,20 +23,23 @@ function DirectionalLight ( color, intensity ) {
 
 };
 
-DirectionalLight.prototype = Object.create( Light.prototype );
-DirectionalLight.prototype.constructor = DirectionalLight;
+DirectionalLight.prototype = Object.assign( Object.create( Light.prototype ), {
 
-DirectionalLight.prototype.copy = function ( source ) {
+	constructor: DirectionalLight,
 
-	Light.prototype.copy.call( this, source );
+	copy: function ( source ) {
 
-	this.target = source.target.clone();
+		Light.prototype.copy.call( this, source );
 
-	this.shadow = source.shadow.clone();
+		this.target = source.target.clone();
 
-	return this;
+		this.shadow = source.shadow.clone();
 
-};
+		return this;
+
+	}
+
+} );
 
 
 export { DirectionalLight };

@@ -1,5 +1,5 @@
 import { ShapeUtils } from '../ShapeUtils';
-import { Path } from './Path';
+import { ShapePath } from './Path';
 
 /**
  * @author zz85 / http://www.lab4games.net/zz85/blog
@@ -44,7 +44,7 @@ Object.assign( Font.prototype, {
 
 			if ( ! glyph ) return;
 
-			var path = new Path();
+			var path = new ShapePath();
 
 			var pts = [], b2 = ShapeUtils.b2, b3 = ShapeUtils.b3;
 			var x, y, cpx, cpy, cpx0, cpy0, cpx1, cpy1, cpx2, cpy2, laste;

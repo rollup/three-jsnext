@@ -31,7 +31,7 @@ Sphere.prototype = {
 
 		var box = new Box3();
 
-		return function ( points, optionalCenter ) {
+		return function setFromPoints( points, optionalCenter ) {
 
 			var center = this.center;
 

@@ -3,6 +3,7 @@ import { Object3D } from '../core/Object3D';
 
 /**
  * @author alteredq / http://alteredqualia.com/
+ * @author arose / http://github.com/arose
  */
 
 function OrthographicCamera ( left, right, top, bottom, near, far ) {
@@ -13,6 +14,7 @@ function OrthographicCamera ( left, right, top, bottom, near, far ) {
 	this.type = 'OrthographicCamera';
 
 	this.zoom = 1;
+	this.view = null;
 
 	this.left = left;
 	this.right = right;
@@ -42,8 +44,31 @@ OrthographicCamera.prototype = Object.assign( Object.create( Camera.prototype ),
 		this.far = source.far;
 
 		this.zoom = source.zoom;
+		this.view = source.view === null ? null : Object.assign( {}, source.view );
 
 		return this;
+
+	},
+
+	setViewOffset: function( fullWidth, fullHeight, x, y, width, height ) {
+
+		this.view = {
+			fullWidth: fullWidth,
+			fullHeight: fullHeight,
+			offsetX: x,
+			offsetY: y,
+			width: width,
+			height: height
+		};
+
+		this.updateProjectionMatrix();
+
+	},
+
+	clearViewOffset: function() {
+
+		this.view = null;
+		this.updateProjectionMatrix();
 
 	},
 
@@ -54,7 +79,26 @@ OrthographicCamera.prototype = Object.assign( Object.create( Camera.prototype ),
 		var cx = ( this.right + this.left ) / 2;
 		var cy = ( this.top + this.bottom ) / 2;
 
-		this.projectionMatrix.makeOrthographic( cx - dx, cx + dx, cy + dy, cy - dy, this.near, this.far );
+		var left = cx - dx;
+		var right = cx + dx;
+		var top = cy + dy;
+		var bottom = cy - dy;
+
+		if ( this.view !== null ) {
+
+			var zoomW = this.zoom / ( this.view.width / this.view.fullWidth );
+			var zoomH = this.zoom / ( this.view.height / this.view.fullHeight );
+			var scaleW = ( this.right - this.left ) / this.view.width;
+			var scaleH = ( this.top - this.bottom ) / this.view.height;
+
+			left += scaleW * ( this.view.offsetX / zoomW );
+			right = left + scaleW * ( this.view.width / zoomW );
+			top -= scaleH * ( this.view.offsetY / zoomH );
+			bottom = top - scaleH * ( this.view.height / zoomH );
+
+		}
+
+		this.projectionMatrix.makeOrthographic( left, right, top, bottom, this.near, this.far );
 
 	},
 
@@ -69,6 +113,8 @@ OrthographicCamera.prototype = Object.assign( Object.create( Camera.prototype ),
 		data.object.bottom = this.bottom;
 		data.object.near = this.near;
 		data.object.far = this.far;
+
+		if ( this.view !== null ) data.object.view = Object.assign( {}, this.view );
 
 		return data;
 

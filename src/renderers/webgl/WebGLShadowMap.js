@@ -15,7 +15,7 @@ import { Frustum } from '../../math/Frustum';
  * @author mrdoob / http://mrdoob.com/
  */
 
-function WebGLShadowMap ( _renderer, _lights, _objects ) {
+function WebGLShadowMap ( _renderer, _lights, _objects, capabilities ) {
 	this.isWebGLShadowMap = true;
 
 	var _gl = _renderer.context,
@@ -26,6 +26,7 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 	_lightShadows = _lights.shadows,
 
 	_shadowMapSize = new Vector2(),
+	_maxShadowMapSize = new Vector2( capabilities.maxTextureSize, capabilities.maxTextureSize ),
 
 	_lookTarget = new Vector3(),
 	_lightPositionWorld = new Vector3(),
@@ -127,11 +128,19 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 		for ( var i = 0, il = _lightShadows.length; i < il; i ++ ) {
 
 			var light = _lightShadows[ i ];
-
 			var shadow = light.shadow;
+
+			if ( shadow === undefined ) {
+
+				console.warn( 'THREE.WebGLShadowMap:', light, 'has no shadow.' );
+				continue;
+
+			}
+
 			var shadowCamera = shadow.camera;
 
 			_shadowMapSize.copy( shadow.mapSize );
+			_shadowMapSize.min( _maxShadowMapSize );
 
 			if ( (light && light.isPointLight) ) {
 
@@ -318,8 +327,21 @@ function WebGLShadowMap ( _renderer, _lights, _objects ) {
 
 		if ( ! customMaterial ) {
 
-			var useMorphing = geometry.morphTargets !== undefined &&
-					geometry.morphTargets.length > 0 && material.morphTargets;
+			var useMorphing = false;
+
+			if ( material.morphTargets ) {
+
+				if ( (geometry && geometry.isBufferGeometry) ) {
+
+					useMorphing = geometry.morphAttributes && geometry.morphAttributes.position && geometry.morphAttributes.position.length > 0;
+
+				} else if ( (geometry && geometry.isGeometry) ) {
+
+					useMorphing = geometry.morphTargets && geometry.morphTargets.length > 0;
+
+				}
+
+			}
 
 			var useSkinning = (object && object.isSkinnedMesh) && material.skinning;
 

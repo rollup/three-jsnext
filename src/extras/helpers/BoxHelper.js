@@ -8,8 +8,10 @@ import { BufferGeometry } from '../../core/BufferGeometry';
  * @author mrdoob / http://mrdoob.com/
  */
 
-function BoxHelper ( object ) {
-	this.isBoxHelper = this.isLineSegments = this.isLine = this.isObject3D = true;
+function BoxHelper ( object, color ) {
+	this.isBoxHelper = this.isLineSegments = true;
+
+	if ( color === undefined ) color = 0xffff00;
 
 	var indices = new Uint16Array( [ 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 ] );
 	var positions = new Float32Array( 8 * 3 );
@@ -18,7 +20,7 @@ function BoxHelper ( object ) {
 	geometry.setIndex( new BufferAttribute( indices, 1 ) );
 	geometry.addAttribute( 'position', new BufferAttribute( positions, 3 ) );
 
-	LineSegments.call( this, geometry, new LineBasicMaterial( { color: 0xffff00 } ) );
+	LineSegments.call( this, geometry, new LineBasicMaterial( { color: color } ) );
 
 	if ( object !== undefined ) {
 
@@ -35,7 +37,7 @@ BoxHelper.prototype.update = ( function () {
 
 	var box = new Box3();
 
-	return function ( object ) {
+	return function update( object ) {
 
 		if ( (object && object.isBox3) ) {
 

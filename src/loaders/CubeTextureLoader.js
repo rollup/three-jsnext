@@ -13,9 +13,7 @@ function CubeTextureLoader ( manager ) {
 
 };
 
-CubeTextureLoader.prototype = {
-
-	constructor: CubeTextureLoader,
+Object.assign( CubeTextureLoader.prototype, {
 
 	load: function ( urls, onLoad, onProgress, onError ) {
 
@@ -60,16 +58,18 @@ CubeTextureLoader.prototype = {
 	setCrossOrigin: function ( value ) {
 
 		this.crossOrigin = value;
+		return this;
 
 	},
 
 	setPath: function ( value ) {
 
 		this.path = value;
+		return this;
 
 	}
 
-};
+} );
 
 
 export { CubeTextureLoader };

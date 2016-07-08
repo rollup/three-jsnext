@@ -18,6 +18,12 @@ LineCurve3 = Curve.create(
 
 	function ( t ) {
 
+		if ( t === 1 ) {
+
+			return this.v2.clone();
+
+		}
+
 		var vector = new Vector3();
 
 		vector.subVectors( this.v2, this.v1 ); // diff

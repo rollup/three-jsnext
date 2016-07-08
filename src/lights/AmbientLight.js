@@ -5,7 +5,7 @@ import { Light } from './Light';
  */
 
 function AmbientLight ( color, intensity ) {
-	this.isAmbientLight = this.isLight = this.isObject3D = true;
+	this.isAmbientLight = true;
 
 	Light.call( this, color, intensity );
 
@@ -15,8 +15,11 @@ function AmbientLight ( color, intensity ) {
 
 };
 
-AmbientLight.prototype = Object.create( Light.prototype );
-AmbientLight.prototype.constructor = AmbientLight;
+AmbientLight.prototype = Object.assign( Object.create( Light.prototype ), {
+
+	constructor: AmbientLight
+
+} );
 
 
 export { AmbientLight };

@@ -75,8 +75,6 @@ function Object3D () {
 		}
 	} );
 
-	this.rotationAutoUpdate = true;
-
 	this.matrix = new Matrix4();
 	this.matrixWorld = new Matrix4();
 
@@ -146,7 +144,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var q1 = new Quaternion();
 
-		return function ( axis, angle ) {
+		return function rotateOnAxis( axis, angle ) {
 
 			q1.setFromAxisAngle( axis, angle );
 
@@ -162,7 +160,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var v1 = new Vector3( 1, 0, 0 );
 
-		return function ( angle ) {
+		return function rotateX( angle ) {
 
 			return this.rotateOnAxis( v1, angle );
 
@@ -174,7 +172,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var v1 = new Vector3( 0, 1, 0 );
 
-		return function ( angle ) {
+		return function rotateY( angle ) {
 
 			return this.rotateOnAxis( v1, angle );
 
@@ -186,7 +184,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var v1 = new Vector3( 0, 0, 1 );
 
-		return function ( angle ) {
+		return function rotateZ( angle ) {
 
 			return this.rotateOnAxis( v1, angle );
 
@@ -201,7 +199,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var v1 = new Vector3();
 
-		return function ( axis, distance ) {
+		return function translateOnAxis( axis, distance ) {
 
 			v1.copy( axis ).applyQuaternion( this.quaternion );
 
@@ -217,7 +215,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var v1 = new Vector3( 1, 0, 0 );
 
-		return function ( distance ) {
+		return function translateX( distance ) {
 
 			return this.translateOnAxis( v1, distance );
 
@@ -229,7 +227,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var v1 = new Vector3( 0, 1, 0 );
 
-		return function ( distance ) {
+		return function translateY( distance ) {
 
 			return this.translateOnAxis( v1, distance );
 
@@ -241,7 +239,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var v1 = new Vector3( 0, 0, 1 );
 
-		return function ( distance ) {
+		return function translateZ( distance ) {
 
 			return this.translateOnAxis( v1, distance );
 
@@ -259,7 +257,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var m1 = new Matrix4();
 
-		return function ( vector ) {
+		return function worldToLocal( vector ) {
 
 			return vector.applyMatrix4( m1.getInverse( this.matrixWorld ) );
 
@@ -273,7 +271,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var m1 = new Matrix4();
 
-		return function ( vector ) {
+		return function lookAt( vector ) {
 
 			m1.lookAt( vector, this.position, this.up );
 
@@ -401,7 +399,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 		var position = new Vector3();
 		var scale = new Vector3();
 
-		return function ( optionalTarget ) {
+		return function getWorldQuaternion( optionalTarget ) {
 
 			var result = optionalTarget || new Quaternion();
 
@@ -419,7 +417,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var quaternion = new Quaternion();
 
-		return function ( optionalTarget ) {
+		return function getWorldRotation( optionalTarget ) {
 
 			var result = optionalTarget || new Euler();
 
@@ -436,7 +434,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 		var position = new Vector3();
 		var quaternion = new Quaternion();
 
-		return function ( optionalTarget ) {
+		return function getWorldScale( optionalTarget ) {
 
 			var result = optionalTarget || new Vector3();
 
@@ -454,7 +452,7 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 
 		var quaternion = new Quaternion();
 
-		return function ( optionalTarget ) {
+		return function getWorldDirection( optionalTarget ) {
 
 			var result = optionalTarget || new Vector3();
 
@@ -689,8 +687,6 @@ Object.assign( Object3D.prototype, EventDispatcher.prototype, {
 		this.position.copy( source.position );
 		this.quaternion.copy( source.quaternion );
 		this.scale.copy( source.scale );
-
-		this.rotationAutoUpdate = source.rotationAutoUpdate;
 
 		this.matrix.copy( source.matrix );
 		this.matrixWorld.copy( source.matrixWorld );

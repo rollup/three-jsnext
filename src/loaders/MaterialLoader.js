@@ -15,9 +15,7 @@ function MaterialLoader ( manager ) {
 
 };
 
-MaterialLoader.prototype = {
-
-	constructor: MaterialLoader,
+Object.assign( MaterialLoader.prototype, {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -134,7 +132,7 @@ MaterialLoader.prototype = {
 
 		}
 
-		if ( json.reflectivity ) material.reflectivity = json.reflectivity;
+		if ( json.reflectivity !== undefined ) material.reflectivity = json.reflectivity;
 
 		if ( json.lightMap !== undefined ) material.lightMap = this.getTexture( json.lightMap );
 		if ( json.lightMapIntensity !== undefined ) material.lightMapIntensity = json.lightMapIntensity;
@@ -158,7 +156,7 @@ MaterialLoader.prototype = {
 
 	}
 
-};
+} );
 
 
 export { MaterialLoader };

@@ -20,7 +20,7 @@ Triangle.normal = function () {
 
 	var v0 = new Vector3();
 
-	return function ( a, b, c, optionalTarget ) {
+	return function normal( a, b, c, optionalTarget ) {
 
 		var result = optionalTarget || new Vector3();
 
@@ -49,7 +49,7 @@ Triangle.barycoordFromPoint = function () {
 	var v1 = new Vector3();
 	var v2 = new Vector3();
 
-	return function ( point, a, b, c, optionalTarget ) {
+	return function barycoordFromPoint( point, a, b, c, optionalTarget ) {
 
 		v0.subVectors( c, a );
 		v1.subVectors( b, a );
@@ -89,7 +89,7 @@ Triangle.containsPoint = function () {
 
 	var v1 = new Vector3();
 
-	return function ( point, a, b, c ) {
+	return function containsPoint( point, a, b, c ) {
 
 		var result = Triangle.barycoordFromPoint( point, a, b, c, v1 );
 
@@ -144,7 +144,7 @@ Triangle.prototype = {
 		var v0 = new Vector3();
 		var v1 = new Vector3();
 
-		return function () {
+		return function area() {
 
 			v0.subVectors( this.c, this.b );
 			v1.subVectors( this.a, this.b );

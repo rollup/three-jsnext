@@ -11,6 +11,7 @@ function Scene () {
 
 	this.type = 'Scene';
 
+	this.background = null;
 	this.fog = null;
 	this.overrideMaterial = null;
 
@@ -25,6 +26,7 @@ Scene.prototype.copy = function ( source, recursive ) {
 
 	Object3D.prototype.copy.call( this, source, recursive );
 
+	if ( source.background !== null ) this.background = source.background.clone();
 	if ( source.fog !== null ) this.fog = source.fog.clone();
 	if ( source.overrideMaterial !== null ) this.overrideMaterial = source.overrideMaterial.clone();
 

@@ -16,9 +16,7 @@ function BufferGeometryLoader ( manager ) {
 
 };
 
-BufferGeometryLoader.prototype = {
-
-	constructor: BufferGeometryLoader,
+Object.assign( BufferGeometryLoader.prototype, {
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
@@ -103,7 +101,7 @@ BufferGeometryLoader.prototype = {
 
 	}
 
-};
+} );
 
 
 export { BufferGeometryLoader };

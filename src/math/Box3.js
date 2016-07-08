@@ -76,7 +76,7 @@ Box3.prototype = {
 
 		var v1 = new Vector3();
 
-		return function ( center, size ) {
+		return function setFromCenterAndSize( center, size ) {
 
 			var halfSize = v1.copy( size ).multiplyScalar( 0.5 );
 
@@ -96,7 +96,7 @@ Box3.prototype = {
 
 		var v1 = new Vector3();
 
-		return function ( object ) {
+		return function setFromObject( object ) {
 
 			var scope = this;
 
@@ -123,16 +123,36 @@ Box3.prototype = {
 
 						}
 
-					} else if ( (geometry && geometry.isBufferGeometry) && geometry.attributes[ 'position' ] !== undefined ) {
+					} else if ( (geometry && geometry.isBufferGeometry) ) {
 
-						var positions = geometry.attributes[ 'position' ].array;
+						var attribute = geometry.attributes.position;
 
-						for ( var i = 0, il = positions.length; i < il; i += 3 ) {
+						if ( attribute !== undefined ) {
 
-							v1.fromArray( positions, i );
-							v1.applyMatrix4( node.matrixWorld );
+							var array, offset, stride;
 
-							scope.expandByPoint( v1 );
+							if ( (attribute && attribute.isInterleavedBufferAttribute) ) {
+
+								array = attribute.data.array;
+								offset = attribute.offset;
+								stride = attribute.data.stride;
+
+							} else {
+
+								array = attribute.array;
+								offset = 0;
+								stride = 3;
+
+							}
+
+							for ( var i = offset, il = array.length; i < il; i += stride ) {
+
+								v1.fromArray( array, i );
+								v1.applyMatrix4( node.matrixWorld );
+
+								scope.expandByPoint( v1 );
+
+							}
 
 						}
 
@@ -356,7 +376,7 @@ Box3.prototype = {
 
 		var v1 = new Vector3();
 
-		return function ( point ) {
+		return function distanceToPoint( point ) {
 
 			var clampedPoint = v1.copy( point ).clamp( this.min, this.max );
 			return clampedPoint.sub( point ).length();
@@ -369,7 +389,7 @@ Box3.prototype = {
 
 		var v1 = new Vector3();
 
-		return function ( optionalTarget ) {
+		return function getBoundingSphere( optionalTarget ) {
 
 			var result = optionalTarget || new Sphere();
 
@@ -416,7 +436,7 @@ Box3.prototype = {
 			new Vector3()
 		];
 
-		return function ( matrix ) {
+		return function applyMatrix4( matrix ) {
 
 			// transform of empty box is an empty box.
 			if( this.isEmpty() ) return this;

@@ -7,7 +7,7 @@ import { Color } from '../math/Color';
  */
 
 function Light ( color, intensity ) {
-	this.isLight = this.isObject3D = true;
+	this.isLight = true;
 
 	Object3D.call( this );
 
@@ -20,37 +20,40 @@ function Light ( color, intensity ) {
 
 };
 
-Light.prototype = Object.create( Object3D.prototype );
-Light.prototype.constructor = Light;
+Light.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
-Light.prototype.copy = function ( source ) {
+	constructor: Light,
 
-	Object3D.prototype.copy.call( this, source );
+	copy: function ( source ) {
 
-	this.color.copy( source.color );
-	this.intensity = source.intensity;
+		Object3D.prototype.copy.call( this, source );
 
-	return this;
+		this.color.copy( source.color );
+		this.intensity = source.intensity;
 
-};
+		return this;
 
-Light.prototype.toJSON = function ( meta ) {
+	},
 
-	var data = Object3D.prototype.toJSON.call( this, meta );
+	toJSON: function ( meta ) {
 
-	data.object.color = this.color.getHex();
-	data.object.intensity = this.intensity;
+		var data = Object3D.prototype.toJSON.call( this, meta );
 
-	if ( this.groundColor !== undefined ) data.object.groundColor = this.groundColor.getHex();
+		data.object.color = this.color.getHex();
+		data.object.intensity = this.intensity;
 
-	if ( this.distance !== undefined ) data.object.distance = this.distance;
-	if ( this.angle !== undefined ) data.object.angle = this.angle;
-	if ( this.decay !== undefined ) data.object.decay = this.decay;
-	if ( this.penumbra !== undefined ) data.object.penumbra = this.penumbra;
+		if ( this.groundColor !== undefined ) data.object.groundColor = this.groundColor.getHex();
 
-	return data;
+		if ( this.distance !== undefined ) data.object.distance = this.distance;
+		if ( this.angle !== undefined ) data.object.angle = this.angle;
+		if ( this.decay !== undefined ) data.object.decay = this.decay;
+		if ( this.penumbra !== undefined ) data.object.penumbra = this.penumbra;
 
-};
+		return data;
+
+	}
+
+} );
 
 
 export { Light };

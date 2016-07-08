@@ -45,7 +45,7 @@ function PolyhedronGeometry ( vertices, indices, radius, detail ) {
 		var v2 = p[ indices[ i + 1 ] ];
 		var v3 = p[ indices[ i + 2 ] ];
 
-		faces[ j ] = new Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ], undefined, j );
+		faces[ j ] = new Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ] );
 
 	}
 
@@ -122,9 +122,9 @@ function PolyhedronGeometry ( vertices, indices, radius, detail ) {
 
 	// Approximate a curved face with recursively sub-divided triangles.
 
-	function make( v1, v2, v3, materialIndex ) {
+	function make( v1, v2, v3 ) {
 
-		var face = new Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ], undefined, materialIndex );
+		var face = new Face3( v1.index, v2.index, v3.index, [ v1.clone(), v2.clone(), v3.clone() ] );
 		that.faces.push( face );
 
 		centroid.copy( v1 ).add( v2 ).add( v3 ).divideScalar( 3 );
@@ -149,8 +149,6 @@ function PolyhedronGeometry ( vertices, indices, radius, detail ) {
 		var b = prepare( that.vertices[ face.b ] );
 		var c = prepare( that.vertices[ face.c ] );
 		var v = [];
-
-		var materialIndex = face.materialIndex;
 
 		// Construct all of the vertices for this subdivision.
 
@@ -191,8 +189,7 @@ function PolyhedronGeometry ( vertices, indices, radius, detail ) {
 					make(
 						v[ i ][ k + 1 ],
 						v[ i + 1 ][ k ],
-						v[ i ][ k ],
-						materialIndex
+						v[ i ][ k ]
 					);
 
 				} else {
@@ -200,8 +197,7 @@ function PolyhedronGeometry ( vertices, indices, radius, detail ) {
 					make(
 						v[ i ][ k + 1 ],
 						v[ i + 1 ][ k + 1 ],
-						v[ i + 1 ][ k ],
-						materialIndex
+						v[ i + 1 ][ k ]
 					);
 
 				}

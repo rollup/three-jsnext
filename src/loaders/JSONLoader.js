@@ -30,24 +30,7 @@ function JSONLoader ( manager ) {
 
 };
 
-JSONLoader.prototype = {
-
-	constructor: JSONLoader,
-
-	// Deprecated
-
-	get statusDomElement () {
-
-		if ( this._statusDomElement === undefined ) {
-
-			this._statusDomElement = document.createElement( 'div' );
-
-		}
-
-		console.warn( 'THREE.JSONLoader: .statusDomElement has been removed.' );
-		return this._statusDomElement;
-
-	},
+Object.assign( JSONLoader.prototype, {
 
 	load: function( url, onLoad, onProgress, onError ) {
 
@@ -564,7 +547,7 @@ JSONLoader.prototype = {
 
 	}
 
-};
+} );
 
 
 export { JSONLoader };

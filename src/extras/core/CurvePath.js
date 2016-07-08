@@ -34,8 +34,6 @@ CurvePath.prototype = Object.assign( Object.create( Curve.prototype ), {
 
 	closePath: function () {
 
-		// TODO Test
-		// and verify for vector3 (needs to implement equals)
 		// Add a line curve if start and end of lines are not connected
 		var startPoint = this.curves[ 0 ].getPoint( 0 );
 		var endPoint = this.curves[ this.curves.length - 1 ].getPoint( 1 );
@@ -72,7 +70,8 @@ CurvePath.prototype = Object.assign( Object.create( Curve.prototype ), {
 				var diff = curveLengths[ i ] - d;
 				var curve = this.curves[ i ];
 
-				var u = 1 - diff / curve.getLength();
+				var segmentLength = curve.getLength();
+				var u = segmentLength === 0 ? 0 : 1 - diff / segmentLength;
 
 				return curve.getPointAt( u );
 
@@ -96,6 +95,15 @@ CurvePath.prototype = Object.assign( Object.create( Curve.prototype ), {
 
 		var lens = this.getCurveLengths();
 		return lens[ lens.length - 1 ];
+
+	},
+
+	// cacheLengths must be recalculated.
+	updateArcLengths: function () {
+
+		this.needsUpdate = true;
+		this.cacheLengths = null;
+		this.getLengths();
 
 	},
 
@@ -127,6 +135,67 @@ CurvePath.prototype = Object.assign( Object.create( Curve.prototype ), {
 		this.cacheLengths = lengths;
 
 		return lengths;
+
+	},
+
+	getSpacedPoints: function ( divisions ) {
+
+		if ( ! divisions ) divisions = 40;
+
+		var points = [];
+
+		for ( var i = 0; i <= divisions; i ++ ) {
+
+			points.push( this.getPoint( i / divisions ) );
+
+		}
+
+		if ( this.autoClose ) {
+
+			points.push( points[ 0 ] );
+
+		}
+
+		return points;
+
+	},
+
+	getPoints: function ( divisions ) {
+
+		divisions = divisions || 12;
+
+		var points = [], last;
+
+		for ( var i = 0, curves = this.curves; i < curves.length; i ++ ) {
+
+			var curve = curves[ i ];
+			var resolution = (curve && curve.isEllipseCurve) ? divisions * 2
+				: (curve && curve.isLineCurve) ? 1
+				: (curve && curve.isSplineCurve) ? divisions * curve.points.length
+				: divisions;
+
+			var pts = curve.getPoints( resolution );
+
+			for ( var j = 0; j < pts.length; j++ ) {
+
+				var point = pts[ j ];
+
+				if ( last && last.equals( point ) ) continue; // ensures no consecutive points are duplicates
+
+				points.push( point );
+				last = point;
+
+			}
+
+		}
+
+		if ( this.autoClose && points.length > 1 && !points[ points.length - 1 ].equals( points[ 0 ] ) ) {
+
+			points.push( points[ 0 ] );
+
+		}
+
+		return points;
 
 	},
 

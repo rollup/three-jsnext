@@ -7,33 +7,36 @@ import { PerspectiveCamera } from '../cameras/PerspectiveCamera';
  */
 
 function SpotLightShadow () {
-	this.isSpotLightShadow = this.isLightShadow = true;
+	this.isSpotLightShadow = true;
 
 	LightShadow.call( this, new PerspectiveCamera( 50, 1, 0.5, 500 ) );
 
 };
 
-SpotLightShadow.prototype = Object.create( LightShadow.prototype );
-SpotLightShadow.prototype.constructor = SpotLightShadow;
+SpotLightShadow.prototype = Object.assign( Object.create( LightShadow.prototype ), {
 
-SpotLightShadow.prototype.update = function ( light ) {
+	constructor: SpotLightShadow,
 
-	var fov = _Math.RAD2DEG * 2 * light.angle;
-	var aspect = this.mapSize.width / this.mapSize.height;
-	var far = light.distance || 500;
+	update: function ( light ) {
 
-	var camera = this.camera;
+		var fov = _Math.RAD2DEG * 2 * light.angle;
+		var aspect = this.mapSize.width / this.mapSize.height;
+		var far = light.distance || 500;
 
-	if ( fov !== camera.fov || aspect !== camera.aspect || far !== camera.far ) {
+		var camera = this.camera;
 
-		camera.fov = fov;
-		camera.aspect = aspect;
-		camera.far = far;
-		camera.updateProjectionMatrix();
+		if ( fov !== camera.fov || aspect !== camera.aspect || far !== camera.far ) {
+
+			camera.fov = fov;
+			camera.aspect = aspect;
+			camera.far = far;
+			camera.updateProjectionMatrix();
+
+		}
 
 	}
 
-};
+} );
 
 
 export { SpotLightShadow };

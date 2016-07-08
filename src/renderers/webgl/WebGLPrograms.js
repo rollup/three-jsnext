@@ -154,7 +154,7 @@ function WebGLPrograms ( renderer, capabilities ) {
 
 			vertexColors: material.vertexColors,
 
-			fog: fog,
+			fog: !! fog,
 			useFog: material.fog,
 			fogExp: (fog && fog.isFogExp2),
 

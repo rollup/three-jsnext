@@ -124,7 +124,7 @@ Texture.prototype = {
 
 			} else {
 
-				canvas = document.createElement( 'canvas' );
+				canvas = document.createElementNS( 'http://www.w3.org/1999/xhtml', 'canvas' );
 				canvas.width = image.width;
 				canvas.height = image.height;
 
@@ -162,7 +162,9 @@ Texture.prototype = {
 
 			minFilter: this.minFilter,
 			magFilter: this.magFilter,
-			anisotropy: this.anisotropy
+			anisotropy: this.anisotropy,
+
+			flipY: this.flipY
 		};
 
 		if ( this.image !== undefined ) {
