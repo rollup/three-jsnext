@@ -3,19 +3,21 @@
   "description": "three.js, but futuristic",
   "version": "0.3.0",
   "jsnext:main": "./src/index.js",
-  "main": "./dist/three.js",
+  "main": "./build/three.js",
   "repository": "https://github.com/rollup/three-jsnext",
   "scripts": {
     "generate": "node scripts/generate",
     "prepublish": "npm test",
-    "build": "npm run generate && rollup -i src/index.js -o dist/three.js -f umd -n THREE && uglifyjs -c -m -o dist/three.min.js -- dist/three.js",
-    "test": "echo 'tests coming soon...'",
+    "build": "npm run generate && npm run bundle && uglifyjs -c -m -o build/three.min.js -- build/three.js",
+    "bundle": "rollup -i src/index.js -o build/three.js -f umd -n THREE",
+    "test": "node build/three.js",
     "pretest": "npm run build",
-    "update-three": "rm -rf three.js && git clone https://github.com/mrdoob/three.js && cd three.js && git checkout dev"
+    "update-three": "rm -rf three.js && git clone https://github.com/mrdoob/three.js && rm -rf examples && cp -r three.js/examples examples && cd three.js && git checkout dev",
+    "examples": "open http://localhost:8080/examples && http-server"
   },
   "files": [
     "src/",
-    "dist/",
+    "build/",
     "examples/",
     "README.md"
   ],
@@ -23,6 +25,7 @@
     "acorn": "^3.1.0",
     "buble": "^0.7.0",
     "console-group": "^0.2.1",
+    "http-server": "^0.9.0",
     "magic-string": "^0.13.0",
     "rollup": "^0.26.3",
     "sander": "^0.5.1",
