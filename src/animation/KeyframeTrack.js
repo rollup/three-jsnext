@@ -1,3 +1,4 @@
+import { KeyframeTrackPrototype } from './KeyframeTrackPrototype';
 import { StringKeyframeTrack } from './tracks/StringKeyframeTrack';
 import { BooleanKeyframeTrack } from './tracks/BooleanKeyframeTrack';
 import { QuaternionKeyframeTrack } from './tracks/QuaternionKeyframeTrack';
@@ -5,8 +6,7 @@ import { ColorKeyframeTrack } from './tracks/ColorKeyframeTrack';
 import { VectorKeyframeTrack } from './tracks/VectorKeyframeTrack';
 import { NumberKeyframeTrack } from './tracks/NumberKeyframeTrack';
 import { AnimationUtils } from './AnimationUtils';
-import { KeyframeTrackConstructor } from './KeyframeTrackConstructor.js';
-import { KeyframeTrackPrototype } from './KeyframeTrackPrototype.js';
+import { KeyframeTrackConstructor } from './KeyframeTrackConstructor';
 
 /**
  *
@@ -19,11 +19,11 @@ import { KeyframeTrackPrototype } from './KeyframeTrackPrototype.js';
  */
 
 function KeyframeTrack ( name, times, values, interpolation ) {
-	KeyframeTrackConstructor.call( this, name, times, values, interpolation );
+	KeyframeTrackConstructor.apply( this, arguments );
 };
 
 KeyframeTrack.prototype = KeyframeTrackPrototype;
-KeyframeTrack.prototype.constructor = KeyframeTrack;
+KeyframeTrackPrototype.constructor = KeyframeTrack;
 
 // Static methods:
 

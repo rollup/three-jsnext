@@ -1,11 +1,13 @@
 import { InterpolateLinear } from '../constants';
+import { AnimationUtils } from './AnimationUtils';
 import { InterpolateSmooth, InterpolateDiscrete } from '../constants';
 import { CubicInterpolant } from '../math/interpolants/CubicInterpolant';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant';
 import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant';
-import { AnimationUtils } from './AnimationUtils';
 
-export const KeyframeTrackPrototype = {
+var KeyframeTrackPrototype;
+
+KeyframeTrackPrototype = {
 
 	TimeBufferType: Float32Array,
 	ValueBufferType: Float32Array,
@@ -338,4 +340,6 @@ export const KeyframeTrackPrototype = {
 
 	}
 
-};
+}
+
+export { KeyframeTrackPrototype };
