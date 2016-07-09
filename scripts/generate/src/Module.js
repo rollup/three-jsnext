@@ -40,6 +40,10 @@ module.exports = class Module {
 		this.file = file;
 		this.dir = dirname( file );
 
+		this.strongDeps = {};
+		this.weakDeps = {};
+		this.exports = {};
+
 		this.src = readFileSync( file ).toString();
 
 		// special case - ShaderChunk.js. We need to inline all the shaders
@@ -63,7 +67,10 @@ module.exports = class Module {
 
 		// special case – loaders/BinaryTextureLoader.js
 		if ( aliasedExport.test( this.src ) ) {
-			this.src = this.src.replace( aliasedExport, `var $1 = $2;\nfunction $2` );
+			this.src = this.src.replace( aliasedExport, ( match, $1, $2 ) => {
+				this.exports[ `THREE.${$1}` ] = this.exports[ `THREE.${$2}` ] = true;
+				return `var ${$1} = ${$2};\nfunction ${$2}`;
+			});
 		}
 
 		// special case – extras/core/Shape
@@ -93,10 +100,6 @@ module.exports = class Module {
 			console.log( `error parsing ${file}: ${err.message}` );
 			throw err;
 		}
-
-		this.strongDeps = {};
-		this.weakDeps = {};
-		this.exports = {};
 	}
 
 	analyse ( prototypeChains ) {
