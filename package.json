@@ -9,7 +9,7 @@
     "generate": "node scripts/generate",
     "prepublish": "npm test",
     "build": "npm run generate && npm run bundle && uglifyjs -c -m -o build/three.min.js -- build/three.js",
-    "bundle": "rollup -i src/index.js -o build/three.js -f umd -n THREE",
+    "bundle": "rollup -c",
     "test": "node build/three.js",
     "pretest": "npm run build",
     "update-three": "rm -rf three.js && git clone https://github.com/mrdoob/three.js && cd three.js && git checkout dev && cd .. && rm -rf examples && cp -r three.js/examples examples",
