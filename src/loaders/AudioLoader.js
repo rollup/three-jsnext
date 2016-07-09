@@ -1,3 +1,4 @@
+import { getAudioContext } from '../audio/AudioContext';
 import { XHRLoader } from './XHRLoader';
 import { DefaultLoadingManager } from './LoadingManager';
 
@@ -20,7 +21,7 @@ Object.assign( AudioLoader.prototype, {
 		loader.setResponseType( 'arraybuffer' );
 		loader.load( url, function ( buffer ) {
 
-			var context = AudioContext;
+			var context = getAudioContext();
 
 			context.decodeAudioData( buffer, function ( audioBuffer ) {
 
