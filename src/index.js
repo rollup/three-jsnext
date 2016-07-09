@@ -66,6 +66,7 @@ export { LineDashedMaterial } from './materials/LineDashedMaterial.js';
 export { LineBasicMaterial } from './materials/LineBasicMaterial.js';
 export { MaterialIdCount, Material } from './materials/Material.js';
 export { CompressedTextureLoader } from './loaders/CompressedTextureLoader.js';
+export { BinaryTextureLoader, DataTextureLoader } from './loaders/BinaryTextureLoader.js';
 export { CubeTextureLoader } from './loaders/CubeTextureLoader.js';
 export { TextureLoader } from './loaders/TextureLoader.js';
 export { ObjectLoader } from './loaders/ObjectLoader.js';

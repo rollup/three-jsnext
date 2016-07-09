@@ -91,3 +91,6 @@ Object.assign( BinaryTextureLoader.prototype, {
 	}
 
 } );
+
+
+export { BinaryTextureLoader, DataTextureLoader };
