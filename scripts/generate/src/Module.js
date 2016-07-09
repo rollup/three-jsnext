@@ -78,6 +78,11 @@ module.exports = class Module {
 				.replace( /\bKeyframeTrack\.prototype/, 'KeyframeTrackPrototype' );
 		}
 
+		// special case – audio context
+		if ( /AudioContext/.test( this.src ) ) {
+			this.src = this.src.replace( /AudioContext/, 'getAudioContext()' );
+		}
+
 		this.magicString = new MagicString( this.src );
 
 		// Attempt to parse with acorn

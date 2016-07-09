@@ -8,6 +8,7 @@ const KeyframeTrackConstructorModule = require( './special/KeyframeTrackConstruc
 const KeyframeTrackPrototypeModule = require( './special/KeyframeTrackPrototypeModule' );
 const PathModule = require( './special/PathModule' );
 const PathPrototypeModule = require( './special/PathPrototypeModule' );
+const AudioContextModule = require( './special/AudioContextModule' );
 const createAlias = require( './utils/createAlias' );
 const isExport = require( './utils/isExport' );
 
@@ -23,6 +24,7 @@ module.exports = function () {
 		if ( /Three\.js/.test( file ) ) return false;
 		if ( /animation\/KeyframeTrack\.js/.test( file ) ) return false;
 		if ( /core\/Path\.js/.test( file ) ) return false;
+		if ( /AudioContext/.test( file ) ) return false;
 		return true;
 	});
 
@@ -54,13 +56,17 @@ module.exports = function () {
 	const pathModule = new PathModule( pathSrc );
 	const pathPrototypeModule = new PathPrototypeModule( pathSrc );
 
+	// AudioContext is tricky because it's a getter
+	const audioContextModule = new AudioContextModule( join( srcDir, 'audio/AudioContext.js' ) );
+
 	[
 		constantsModule,
 		keyframeTrackModule,
 		keyframeTrackConstructorModule,
 		keyframeTrackPrototypeModule,
 		pathModule,
-		pathPrototypeModule
+		pathPrototypeModule,
+		audioContextModule
 	].forEach( module => module.analyse( prototypeChains ) );
 
 	modules.push(
@@ -69,7 +75,8 @@ module.exports = function () {
 		keyframeTrackConstructorModule,
 		keyframeTrackPrototypeModule,
 		pathModule,
-		pathPrototypeModule
+		pathPrototypeModule,
+		audioContextModule
 	);
 
 	modules.forEach( module => {
@@ -87,21 +94,12 @@ module.exports = function () {
 		moduleLookup[ module.file ] = module;
 	});
 
-
 	modules.forEach( module => {
-		let rendered;
-
-		try {
-			rendered = module.render({
-				pathByExportName,
-				exportNamesByPath,
-				prototypeChains
-			});
-		} catch ( err ) {
-			console.log( 'module.file', module.file );
-			console.log( 'module.constructor.name', module.constructor.name )
-			throw err;
-		}
+		const rendered = module.render({
+			pathByExportName,
+			exportNamesByPath,
+			prototypeChains
+		});
 
 		if ( rendered ) {
 			writeFileSync( module.file.replace( srcDir, destDir ), rendered );
