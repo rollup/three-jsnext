@@ -58,6 +58,14 @@ module.exports = class Module {
 					this.src += `\nTHREE.ShaderChunk["${name}"] = ${definition};`;
 				});
 			});
+			readdirSync( file, '../ShaderLib' ).forEach( shaderFile => {
+				if ( extname( shaderFile ) === '.glsl' ) {
+					const name = shaderFile.slice( 0, -5 );
+					const definition = JSON.stringify( readFileSync( file, '../ShaderLib', shaderFile ).toString() );
+
+					this.src += `\nTHREE.ShaderChunk["${name}"] = ${definition};`;
+				}
+			});
 		}
 
 		// special case – core/Raycaster.js. Module is wrapped in an IIFE, for some reason
