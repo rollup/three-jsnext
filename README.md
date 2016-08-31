@@ -1,3 +1,5 @@
+# [Three.js now uses ES modules, which means this project is no longer maintained](https://github.com/mrdoob/three.js/pull/9310)
+
 # three-jsnext
 
 [Three.js](http://threejs.org/), ported to ES6 modules
