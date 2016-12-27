@@ -4,7 +4,7 @@
   "version": "0.3.0",
   "jsnext:main": "./src/index.js",
   "main": "./build/three.js",
-  "repository": "https://github.com/rollup/three-jsnext",
+  "repository": "rollup/three-jsnext",
   "scripts": {
     "generate": "node scripts/generate",
     "prepublish": "npm test",
